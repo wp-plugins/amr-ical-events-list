@@ -1,0 +1,1882 @@
+BEGIN:VCALENDAR
+PRODID:-//Google Inc//Google Calendar 70.9054//EN
+VERSION:2.0
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Eccentric Holidays
+X-WR-TIMEZONE:America/New_York
+X-WR-CALDESC:Funny\, weird\, strange\, wacky\, crazy\, and odd holidays to 
+ remind you that every day is special and unique.\n\nThis creation of this c
+ alendar is still in progress\, but will continue to be a growing collection
+  of the weirdest\, wackiest\, and most obscure holidays. Add it to your Goo
+ gle Calendar and watch it grow!\n\nBrought to you by The Smarmy Carny\nhttp
+ ://smarmycarny.com/\n\nCompiled with the help of the following sites:\nhttp
+ ://en.wikipedia.org/wiki/\n\nGot a suggestion for a holiday not listed here
+ ? Suggest it at:\nhttp://smarmycarny.com/about/contact/
+BEGIN:VTIMEZONE
+TZID:America/New_York
+X-LIC-LOCATION:America/New_York
+BEGIN:DAYLIGHT
+TZOFFSETFROM:-0500
+TZOFFSETTO:-0400
+TZNAME:EDT
+DTSTART:19700308T020000
+RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU
+END:DAYLIGHT
+BEGIN:STANDARD
+TZOFFSETFROM:-0400
+TZOFFSETTO:-0500
+TZNAME:EST
+DTSTART:19701101T020000
+RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20061223
+DTEND;VALUE=DATE:20061224
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:23o081q0kbqs7fokcurbvcn5tk@google.com
+CLASS:PUBLIC
+CREATED:20060622T000434Z
+DESCRIPTION:A Festivus for the rest of us! This is an alternative holiday i
+ n response to the commercialization of Christmas\, popularized by an episod
+ e of Seinfeld ("The Strike").\n\nhttp://www.festivusbook.com/\nhttp://en.wi
+ kipedia.org/wiki/Festivus
+LAST-MODIFIED:20071231T160719Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Festivus
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20071109
+DTEND;VALUE=DATE:20071110
+RRULE:FREQ=YEARLY;WKST=SU
+DTSTAMP:20080828T003313Z
+UID:4irdiedidrkhsu0ood6cvtk4ds@google.com
+CLASS:PUBLIC
+CREATED:20071113T000300Z
+DESCRIPTION:This holiday is copyrighted by Thomas and Ruth Roy. http://www.
+ wellcat.com\n\nLet the chef within you clash with your inner Evel Knievel. 
+ Cook something bold and daring\, and make sure it has a truly intense flavo
+ r and/or odor.\n\nhttp://www.wellcat.com/november/cook_something_bold_and_p
+ ungent_.htm
+LAST-MODIFIED:20071113T000300Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Cook Something Bold and Pungent Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20071112
+DTEND;VALUE=DATE:20071113
+RRULE:FREQ=YEARLY;WKST=SU
+DTSTAMP:20080828T003313Z
+UID:t7p64omedj8np5mfda8mtobrag@google.com
+CLASS:PUBLIC
+CREATED:20071112T230715Z
+DESCRIPTION:Call up your local pizzeria and ask for a large pie with pepper
+ oni\, sausage\, mushrooms\, extra cheese\, bacon\, onions\, ground beef\, h
+ am\, chicken\, peppers (green\, red\, and jalapeno!)\, tomatoes\, garlic\, 
+ olives (black and green!)\, pineapple\, salami\, prosciutto\, turkey\, arti
+ choke hearts\, feta cheese\, spinach\, oranges\, oregano\, and capers -- bu
+ t DON'T ask for anchovies!\n\nhttp://yumsugar.com/775285\n
+LAST-MODIFIED:20071112T231604Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:National Pizza with the Works Except Anchovies Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060618
+DTEND;VALUE=DATE:20060619
+RRULE:FREQ=YEARLY;WKST=SU
+DTSTAMP:20080828T003313Z
+UID:p08qve6isc7f4v3jnghemdhgso@google.com
+CLASS:PUBLIC
+CREATED:20060803T031039Z
+DESCRIPTION:Do not walk. Do not run. Do not jog. Saunter instead! Saunterin
+ g is a very casual\, yet stylish\, form of movement from point A to Point B
+ . Try sauntering through life today.\nHost Bob Edwards talks with John Rabe
+  about World Sauntering Day. His father\, W.T. Rabe\, created the "holiday"
+  in the 70's at the Grand Hotel on Mackinac Island\, Michigan.\n\nhttp://ww
+ w.holidayinsights.com/moreholidays/June/saunteringday.htm\nhttp://www.emoti
+ onscards.com/otherholidays/saunteringday.html\nhttp://www.grandhotel.com/ (
+ No WSD info here.)
+LAST-MODIFIED:20070703T052236Z
+LOCATION:
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:World Sauntering Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20070429
+DTEND;VALUE=DATE:20070430
+DTSTAMP:20080828T003313Z
+UID:j8mu9isc88ltsef1hutmoe5tn4@google.com
+CLASS:PUBLIC
+CREATED:20070424T005910Z
+DESCRIPTION:Dance Day is intended to increase the awareness of the importan
+ ce of dance across the continents.\n\nhttp://www.cid-unesco.org/html/dance_
+ day.html
+LAST-MODIFIED:20070424T010123Z
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:International Dance Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20070425
+DTEND;VALUE=DATE:20070426
+DTSTAMP:20080828T003313Z
+UID:5234t4p01s60jo53g04fe7987k@google.com
+CLASS:PUBLIC
+CREATED:20070424T005218Z
+DESCRIPTION:DNA Day was created to commemorate the completion of the Human 
+ Genome Project in April 2003 and the discovery of DNA's double helix.\n\nht
+ tp://www.genome.gov/10506367
+LAST-MODIFIED:20070424T005218Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:DNA Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060702
+DTEND;VALUE=DATE:20060703
+RRULE:FREQ=MONTHLY;INTERVAL=12;BYDAY=1SU;WKST=SU
+DTSTAMP:20080828T003313Z
+UID:d92t90l32iiqlj8uela5ljmkgo@google.com
+CLASS:PUBLIC
+CREATED:20061001T135559Z
+DESCRIPTION:Build a scarecrow today. I would\, if I only had a brain . . . 
+ \nCelebrated the first Sunday in July.
+LAST-MODIFIED:20070424T002842Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Build a Scarecrow Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060506
+DTEND;VALUE=DATE:20060507
+RRULE:FREQ=MONTHLY;INTERVAL=12;BYDAY=1SA;WKST=SU
+DTSTAMP:20080828T003313Z
+UID:p36vr7n0vj0so1ec09vsbhi27c@google.com
+CLASS:PUBLIC
+CREATED:20061001T142000Z
+DESCRIPTION:On this day\, participating comic book shops give away comic bo
+ oks absolutely free to anyone who comes into their stores.\n\nhttp://www.fr
+ eecomicbookday.com/\nhttp://smarmycarny.com/archives/2006/05/06/free-comic-
+ book-2006/
+LAST-MODIFIED:20070424T002707Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Free Comic Book Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060505
+DTEND;VALUE=DATE:20060506
+RRULE:FREQ=MONTHLY;INTERVAL=12;BYDAY=1FR;WKST=SU
+DTSTAMP:20080828T003313Z
+UID:7ktkp81orv4ngk4p7g4fumpluo@google.com
+CLASS:PUBLIC
+CREATED:20061001T141744Z
+DESCRIPTION:Celebrate the freedom associated with not wearing pants.\n\nhtt
+ p://www.nopantsday.com/\nhttp://en.wikipedia.org/wiki/No_Pants_Day
+LAST-MODIFIED:20070424T002609Z
+LOCATION:
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:No Pants Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20081027
+DTEND;VALUE=DATE:20081028
+DTSTAMP:20080828T003313Z
+UID:87m1k4btfp567umptggnb7qelg@google.com
+CLASS:PUBLIC
+CREATED:20061129T195101Z
+DESCRIPTION:Forget about Friday the 13th -- Analysis of a million British i
+ nsurance claims has revealed that accidents are more likely to happen on Mo
+ nday the 27th than on any other day!\n\nhttp://www.dailymail.co.uk/pages/li
+ ve/articles/news/news.html?in_article_id=418824
+LAST-MODIFIED:20061129T195219Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Monday the 27th - Britain's Unlucky Day
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20070827
+DTEND;VALUE=DATE:20070828
+DTSTAMP:20080828T003313Z
+UID:53h07p0rjmr8iv09jjgaophimg@google.com
+CLASS:PUBLIC
+CREATED:20061129T195002Z
+DESCRIPTION:Forget about Friday the 13th -- Analysis of a million British i
+ nsurance claims has revealed that accidents are more likely to happen on Mo
+ nday the 27th than on any other day!\n\nhttp://www.dailymail.co.uk/pages/li
+ ve/articles/news/news.html?in_article_id=418824
+LAST-MODIFIED:20061129T195212Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Monday the 27th - Britain's Unlucky Day
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20090727
+DTEND;VALUE=DATE:20090728
+DTSTAMP:20080828T003313Z
+UID:d6c2vqq5r2vh4mu880396us7so@google.com
+CLASS:PUBLIC
+CREATED:20061129T195151Z
+DESCRIPTION:Forget about Friday the 13th -- Analysis of a million British i
+ nsurance claims has revealed that accidents are more likely to happen on Mo
+ nday the 27th than on any other day!\n\nhttp://www.dailymail.co.uk/pages/li
+ ve/articles/news/news.html?in_article_id=418824
+LAST-MODIFIED:20061129T195151Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Monday the 27th - Britain's Unlucky Day
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20090427
+DTEND;VALUE=DATE:20090428
+DTSTAMP:20080828T003313Z
+UID:fn3b61ch8gh3gbdkqh9nrl9b0o@google.com
+CLASS:PUBLIC
+CREATED:20061129T195132Z
+DESCRIPTION:Forget about Friday the 13th -- Analysis of a million British i
+ nsurance claims has revealed that accidents are more likely to happen on Mo
+ nday the 27th than on any other day!\n\nhttp://www.dailymail.co.uk/pages/li
+ ve/articles/news/news.html?in_article_id=418824
+LAST-MODIFIED:20061129T195132Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Monday the 27th - Britain's Unlucky Day
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20061127
+DTEND;VALUE=DATE:20061128
+DTSTAMP:20080828T003313Z
+UID:6ao0qcgl9h14mqe7llov6cgn5s@google.com
+CLASS:PUBLIC
+CREATED:20061129T194559Z
+DESCRIPTION:Forget about Friday the 13th -- Analysis of a million British i
+ nsurance claims has revealed that accidents are more likely to happen on Mo
+ nday the 27th than on any other day!\n\nhttp://www.dailymail.co.uk/pages/li
+ ve/articles/news/news.html?in_article_id=418824
+LAST-MODIFIED:20061129T194729Z
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Monday the 27th - Britain's Unlucky Day
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060807
+DTEND;VALUE=DATE:20060808
+RRULE:FREQ=YEARLY;WKST=SU
+DTSTAMP:20080828T003313Z
+UID:teqkqedoqbt1u28rnqimcng3lo@google.com
+CLASS:PUBLIC
+CREATED:20061001T142053Z
+DESCRIPTION:Celebrate good ol' Nessie and all the other Sea Serpants today!
+ \n\nhttp://hicards.com/platinum/bizarre/8-7.html\nhttp://www.bonairetalk.co
+ m/newsgroup/messages/23830/107005.html?1060335174
+LAST-MODIFIED:20061001T142053Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Sea Serpant Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060101
+DTEND;VALUE=DATE:20060102
+RRULE:FREQ=YEARLY;WKST=SU
+DTSTAMP:20080828T003313Z
+UID:0l0s2uqfnbfaoq5v4d4j1s7kvo@google.com
+CLASS:PUBLIC
+CREATED:20061001T135827Z
+DESCRIPTION:All thoroughbred horses in the northern hemisphere celebrate th
+ eir birthday today and turn one year older.\n\n(See August 1 for southern h
+ emisphere horses.)
+LAST-MODIFIED:20061001T135827Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Horses' Birthday (Northern Hemisphere)
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060726
+DTEND;VALUE=DATE:20060727
+RRULE:FREQ=YEARLY;WKST=SU
+DTSTAMP:20080828T003313Z
+UID:bi96qsbgljcuchilhhofipsrv8@google.com
+CLASS:PUBLIC
+CREATED:20061001T135750Z
+DESCRIPTION:Give it all or nothing today. (Hint: The day might be more prod
+ uctive if you choose "All".)\n\nhttp://www.holidayinsights.com/moreholidays
+ /July/allornothingday.htm\nhttp://www.kidzworld.com/site/p2265.ht
+LAST-MODIFIED:20061001T135750Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:All or Nothing Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060717
+DTEND;VALUE=DATE:20060718
+RRULE:FREQ=YEARLY;WKST=SU
+DTSTAMP:20080828T003313Z
+UID:4dja7gjbb298j8ndmmv6j9evs4@google.com
+CLASS:PUBLIC
+CREATED:20061001T135622Z
+DESCRIPTION:Yellow Pigs Day celebrates the number 17 and all its qualities.
+  The holiday is celebrated primarily by collegiate mathematicians\, particu
+ larly by those at the Hampshire College Summer Studies in Mathematics.\n\nh
+ ttp://en.wikipedia.org/wiki/Yellow_Pigs_Day\nhttp://www.hcssim.org/\nhttp:/
+ /www.vinc17.org/yp17/index.en.html
+LAST-MODIFIED:20061001T135622Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Yellow Pigs Day
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060701
+DTEND;VALUE=DATE:20060702
+RRULE:FREQ=YEARLY;WKST=SU
+DTSTAMP:20080828T003313Z
+UID:3e73hvilnkh7gjok1ci3jpkd5c@google.com
+CLASS:PUBLIC
+CREATED:20061001T135525Z
+DESCRIPTION:Are you "in the doghouse" again? Repair the situation with flow
+ ers! Also\, note that July 21 is National Get Out of the Doghouse Day.\n\nT
+ his holiday was created by Eden Florist.\nhttp://www.doghouserepairs.com/
+LAST-MODIFIED:20061001T135525Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:National Doghouse Repairs Month
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/New_York:20061030T190000
+DTEND;TZID=America/New_York:20061030T235900
+RRULE:FREQ=YEARLY;WKST=SU
+DTSTAMP:20080828T003313Z
+UID:6ah6icuom9d10436ri5pj2vsl4@google.com
+CLASS:PUBLIC
+CREATED:20061001T135352Z
+DESCRIPTION:This holiday is copyrighted by Thomas and Ruth Roy. http://www.
+ wellcat.com\n\nOpen the refrigerator door\, get down on all fours\, and go 
+ hunting for some scary adventures in the back of the bottom shelf. Where di
+ d that green thing come from\, and did it start out green? It's been a looo
+ ng time since spring cleaning. Slimer from Ghostbusters doesn't have anythi
+ ng on this stuff!
+LAST-MODIFIED:20061001T135352Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Haunted Refrigerator Night
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20061027
+DTEND;VALUE=DATE:20061028
+RRULE:FREQ=YEARLY;WKST=SU
+DTSTAMP:20080828T003313Z
+UID:2efs0922dd0bj9p1pad9lubis8@google.com
+CLASS:PUBLIC
+CREATED:20061001T135331Z
+DESCRIPTION:This holiday is copyrighted by Thomas and Ruth Roy. http://www.
+ wellcat.com\n\nLet your cranky co-workers be their crankiest today. Let the
+ m wallow in their own misery. They may do it all year\, but today is the da
+ y to just let it slide. Perhaps you could be a cranky co-worker today\, too
+ !\n\nhttp://www.wellcat.com/october/cranky_co.htm
+LAST-MODIFIED:20061001T135331Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Cranky Co-Workers Day
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20061014
+DTEND;VALUE=DATE:20061015
+RRULE:FREQ=YEARLY;WKST=SU
+DTSTAMP:20080828T003313Z
+UID:8um70urjfpminq5nhpnqmc2s5s@google.com
+CLASS:PUBLIC
+CREATED:20061001T135307Z
+DESCRIPTION:This holiday is copyrighted by Thomas and Ruth Roy. http://www.
+ wellcat.com\n\nParticularly if you wear a wig or toupee\, take this day to 
+ be proud of your baldness. Give that smooth scalp the freedom it has been s
+ creaming for! Let that light glare off the top of your head! And as for the
+  baldies who don't wear a wig or toupee\, this is your day to be proudest o
+ f all. Slap a "Bald is Beautiful" bumper sticker on your vehicle!\n\nhttp:/
+ /www.wellcat.com/october/be_bald_and_be_free_day.htm
+LAST-MODIFIED:20061001T135307Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Be Bald and Be Free Day
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/New_York:20061012T080000
+DTEND;TZID=America/New_York:20061012T080000
+RRULE:FREQ=YEARLY;WKST=SU
+DTSTAMP:20080828T003313Z
+UID:a4emfm3ofolc0647qh7mcq13n0@google.com
+CLASS:PUBLIC
+CREATED:20061001T135239Z
+DESCRIPTION:This holiday is copyrighted by Thomas and Ruth Roy. http://www.
+ wellcat.com\n\nShare your frustrations along with the rest of the world. At
+  twelve hundred hours (noon) GMT/UTC (08:00 EST)\, go outside and scream fo
+ r thirty seconds.  You will feel better\, and so will everyone else.\n\nhtt
+ p://www.wellcat.com/october/international_moment_of_frustrat.htm
+LAST-MODIFIED:20061001T135239Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:International Moment of Frustration Scream Day
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060909
+DTEND;VALUE=DATE:20060910
+RRULE:FREQ=YEARLY;WKST=SU
+DTSTAMP:20080828T003313Z
+UID:r8p0paj0osnl3mjfqobhjm8fcg@google.com
+CLASS:PUBLIC
+CREATED:20061001T135215Z
+DESCRIPTION:This holiday is copyrighted by Thomas and Ruth Roy. http://www.
+ wellcat.com\n\nThank the weirdos in your life for reminding you to be yours
+ elf every so often.
+LAST-MODIFIED:20061001T135215Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Wonderful Weirdos Day
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060903
+DTEND;VALUE=DATE:20060904
+RRULE:FREQ=YEARLY;WKST=SU
+DTSTAMP:20080828T003313Z
+UID:p2r0u74btbc9engd0ormn2p1vs@google.com
+CLASS:PUBLIC
+CREATED:20061001T135157Z
+DESCRIPTION:Unashamedly preach your commitment to reuniting with lost frien
+ ds and sharing gifts that defy a dollar value. Spatula Awareness Week is a 
+ 7 day celebration and kicks off today.\n\nhttp://www.spatuladay.com/
+LAST-MODIFIED:20061001T135157Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Spatula Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060813
+DTEND;VALUE=DATE:20060814
+RRULE:FREQ=YEARLY;WKST=SU
+DTSTAMP:20080828T003313Z
+UID:ss5pku893hvk2dcgictin6ch7s@google.com
+CLASS:PUBLIC
+CREATED:20061001T135101Z
+DESCRIPTION:On this day\, it is the left-hander's chance to fight back by d
+ esignating personal space as a "lefty zone" where everything must be done l
+ eft-handed! For example\, move the mouse to the left of the keyboard!\n\nht
+ tp://www.lefthandersday.com/\nhttp://en.wikipedia.org/wiki/International_Le
+ fthanders_Day
+LAST-MODIFIED:20061001T135101Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:International Left-handers Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060809
+DTEND;VALUE=DATE:20060810
+RRULE:FREQ=YEARLY;WKST=SU
+DTSTAMP:20080828T003313Z
+UID:n4pvg34ierhggndho1bac1bl6s@google.com
+CLASS:PUBLIC
+CREATED:20061001T134627Z
+DESCRIPTION:Underwear deserves a lot more recognition than it gets. With Na
+ tional Underwear Day\, freshpair.com takes underwear out of the dresser dra
+ wer and into the streets by sending twenty male and female models out into 
+ NYC clad only in their undergarments.\n\nhttp://www.nationalunderwearday.co
+ m/\nhttp://www.freshpair.com/underwear_day.html
+LAST-MODIFIED:20061001T134627Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:National Underwear Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/New_York:20060928T170000
+DTEND;TZID=America/New_York:20060928T235900
+RRULE:FREQ=YEARLY;WKST=SU
+DTSTAMP:20080828T003313Z
+UID:2pc5a4arfvkedqbm4viekk6huc@google.com
+CLASS:PUBLIC
+CREATED:20061001T134354Z
+DESCRIPTION:This holiday is copyrighted by Thomas and Ruth Roy. http://www.
+ wellcat.com\n\nAll year long\, our pet fish and other tank-dwellers are for
+ ced to stay under the spotlight of the tank and keep us entertained. Today 
+ is the day we repay them for their endless show: Gather family and friends 
+ in front of the aquarium and put on a show.\n\nhttp://www.wellcat.com/septe
+ mber/fish_tank_floorshow_night.htm
+LAST-MODIFIED:20061001T134354Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Fish Tank Floorshow Night
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/New_York:20060808T190000
+DTEND;TZID=America/New_York:20060808T235900
+RRULE:FREQ=YEARLY;WKST=SU
+DTSTAMP:20080828T003313Z
+UID:o49944nfo8ukk3cv0m8ddmrrt0@google.com
+CLASS:PUBLIC
+CREATED:20060803T031054Z
+DESCRIPTION:This holiday is copyrighted by Thomas and Ruth Roy. http://www.
+ wellcat.com\n\nAlthough you probably haven't heard of this holiday\, the fu
+ ll instructions are right in the holiday's name. Because zucchini has a rep
+ utation for overwhelming production\, if you have a zucchini plant\, you're
+  probably looking to get rid of some anyway!\n\nhttp://www.wellcat.com/augu
+ st/sneak_some_zucchini_onto_your_ne.htm
+LAST-MODIFIED:20061001T134252Z
+LOCATION:
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Sneak Some Zucchini Onto Your Neighbor's Porch Night
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20070108
+DTEND;VALUE=DATE:20070115
+RRULE:FREQ=MONTHLY;INTERVAL=12;BYDAY=2MO;WKST=SU
+DTSTAMP:20080828T003313Z
+UID:hbctij4qb4o7rgmm3730c1t3so@google.com
+CLASS:PUBLIC
+CREATED:20060920T225135Z
+DESCRIPTION:It's time to get active online. You've got 51 weeks a year to r
+ ead webpages without making your presence known\, but this week\, be sure t
+ o comment wherever possible! DeLurk and come out of the shadows!\n\nNationa
+ l DeLurking Week is celebrated the second full week of January\, running fr
+ om Monday through Sunday.\n\nhttp://papernapkin.typepad.com/papernapkin/200
+ 6/01/hello_out_there.html
+LAST-MODIFIED:20060920T225240Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:National DeLurking Week
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060810
+DTEND;VALUE=DATE:20060811
+RRULE:FREQ=YEARLY;WKST=SU
+DTSTAMP:20080828T003313Z
+UID:4sb4g5g3vtld57tg90vsk6lsds@google.com
+CLASS:PUBLIC
+CREATED:20060809T230156Z
+DESCRIPTION:Go buy some chocolate\, honey graham crackers\, and marshmallow
+ s and enjoy some S'mores . . . and then enjoy s'more S'mores!\n\nhttp://www
+ .holidayinsights.com/other/smoresday.htm
+LAST-MODIFIED:20060809T230157Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:National S'mores Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060801
+DTEND;VALUE=DATE:20060802
+DTSTAMP:20080828T003313Z
+UID:d98a82i10duu8r3j3sb94s4d78@google.com
+CLASS:PUBLIC
+CREATED:20060804T173344Z
+DESCRIPTION:All thoroughbred horses in the southern hemisphere celebrate th
+ eir birthday today and turn one year older.\n\n(See January 1 for northern 
+ hemisphere horses.)
+LAST-MODIFIED:20060804T173533Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Horses' Birthday (Southern Hemisphere)
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060806
+DTEND;VALUE=DATE:20060807
+RRULE:FREQ=YEARLY;WKST=SU
+DTSTAMP:20080828T003313Z
+UID:s77tpkp4i4jm2d94qeafs64o98@google.com
+CLASS:PUBLIC
+CREATED:20060803T031118Z
+DESCRIPTION:What better time than a hot\, sweaty August day to free your to
+ es from the shackles of socks and shoes. Wiggle away!\n\nhttp://www.holiday
+ insights.com/moreholidays/August/wiggleyourtoes.htm
+LAST-MODIFIED:20060803T031118Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Wiggle Your Toes Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060830
+DTEND;VALUE=DATE:20060831
+RRULE:FREQ=YEARLY;WKST=SU
+DTSTAMP:20080828T003313Z
+UID:hbf6bckv1tshhd81rna98q6ebo@google.com
+CLASS:PUBLIC
+CREATED:20060803T031000Z
+DESCRIPTION:Mmmm . . . toasted marshmallows. One of the best holidays to ce
+ lebrate\, start up a fire now that the temperature is starting to drop and 
+ roast a marshmallow -- preferrably until it's a perfect\, toasted brown.\n\
+ nhttp://www.holiday-info-central.com/marshmallow.html\nhttp://www.holidayin
+ sights.com/other/marsh.htm
+LAST-MODIFIED:20060803T031000Z
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:National Toasted Marshmallow Day
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060804
+DTEND;VALUE=DATE:20060807
+RRULE:FREQ=MONTHLY;INTERVAL=12;BYDAY=1FR;WKST=SU
+DTSTAMP:20080828T003313Z
+UID:kodf5pubmodt59npm4r5b7d06g@google.com
+CLASS:PUBLIC
+CREATED:20060803T030941Z
+DESCRIPTION:Twins Days is a festival in Twinsburg\, OH. It was listed in th
+ e in the Guinness Book of World Records as the World's Largest Annual Gathe
+ ring of Twins.\n\nhttp://www.twinsdays.org/
+LAST-MODIFIED:20060803T030941Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Twins Days Festival
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060717
+DTEND;VALUE=DATE:20060718
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:s0uudqoh1kldid4a76klklge24@google.com
+CLASS:PUBLIC
+CREATED:20060718T141801Z
+DESCRIPTION:Are you "in the doghouse" again? Repair the situation today wit
+ h flowers! Also\, note that the entire month of July is National Doghouse R
+ epairs Month.\n\nThis holiday was created by Eden Florist.\nhttp://www.dogh
+ ouserepairs.com/
+LAST-MODIFIED:20060718T141936Z
+LOCATION:
+SEQUENCE:3
+STATUS:CONFIRMED
+SUMMARY:National Get out of the Doghouse Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060922
+DTEND;VALUE=DATE:20060923
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:h4k97bfcblbhu9lea06p1nh1gg@google.com
+CLASS:PUBLIC
+CREATED:20060714T044348Z
+DESCRIPTION:Today is the day to appreciate those endearing\, loyal\, elegan
+ t\, powerful\, heavy\, amusing\, noble\, talented creatures.\n\nhttp://www.
+ himandus.net/elephanteria/eday/main_eday.html
+LAST-MODIFIED:20060714T044348Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Elephant Appreciation Day
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060722
+DTEND;VALUE=DATE:20060723
+RRULE:FREQ=MONTHLY;INTERVAL=12;BYDAY=4SA
+DTSTAMP:20080828T003313Z
+UID:0l3ld12hp2bvl1brv383t2h850@google.com
+CLASS:PUBLIC
+CREATED:20060712T212531Z
+DESCRIPTION:Cow Appreciation Day is celebrated today at the Billings Farm &
+  Museum in Woodstock\, Vermont. Visit the Billings Farm and learn about Jer
+ sey cows during lively educational programs\, the "Cowlege Bowl" competitio
+ n for families\, as well as butter and ice cream making.\n\nChick-fil-A cel
+ ebrates the holiday this year on July 14.\n\nhttp://www.billingsfarm.org/ne
+ ws/cow_day.html
+LAST-MODIFIED:20060712T212834Z
+LOCATION:
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Cow Appreciation Day
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060714
+DTEND;VALUE=DATE:20060715
+RRULE:FREQ=MONTHLY;INTERVAL=12;BYDAY=2FR
+DTSTAMP:20080828T003313Z
+UID:23ogciecnrdis3ugjsm5tq1gks@google.com
+CLASS:PUBLIC
+CREATED:20060711T233108Z
+DESCRIPTION:Appreciate a cow today with a hug or by eating chicken instead!
+  Chick-fil-A offers a free combo to anyone dressed head-to-toe in cow spots
+  on this day. (See below for Chick-fil-A info.)\n\nBillings Farm & Museum i
+ n Woodstock\, Vermont is the original creator of this holiday. They celebra
+ te the holiday this year on July 22.\n\nhttp://www.cowappreciationday.chick
+ -fil-a.com/
+LAST-MODIFIED:20060712T212747Z
+LOCATION:
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Cow Appreciation Day (Observed by Chick-fil-A)
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060711
+DTEND;VALUE=DATE:20060712
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:f9b6ph4as3lius2pv79qn7m7lc@google.com
+CLASS:PUBLIC
+CREATED:20060712T010004Z
+DESCRIPTION:Every year\, July 11 (7/11) marks the day that 7-Eleven observe
+ s its birthday. To celebrate\, participating 7-Eleven stores across America
+  will serve up 3 million free 7.11-ounce Slurpee drinks in special “Happy B
+ irthday!” cups to customers as long as the cups last.\n\nhttp://www.7-eleve
+ n.com/
+LAST-MODIFIED:20060712T133704Z
+LOCATION:
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:7-11's Birthday (Free Slurpee Day)
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20061205
+DTEND;VALUE=DATE:20061206
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:aetndb2hps44n06rjtaf20nej8@google.com
+CLASS:PUBLIC
+CREATED:20060712T012640Z
+DESCRIPTION:Day of the Ninja is a retaliation for International Talk Like a
+  Pirate Day (Sept 14) because ninjas and pirates just don't get along!\n\nT
+ he holiday was originally created by Ninja Burger\, noble ninja who secretl
+ y deliver fast food anywhere and any time in 30 minutes or less.\n\nhttp://
+ ninjaburger.com/dayoftheninja/\nhttp://en.wikipedia.org/wiki/Day_of_the_Nin
+ ja
+LAST-MODIFIED:20060712T012640Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Day of the Ninja
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060727
+DTEND;VALUE=DATE:20060728
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:nvrr43nbvvmse043hbl1l9aaq8@google.com
+ATTENDEE;CUTYPE=GROUP;ROLE=REQ-PARTICIPANT;PARTSTAT=ORGANIZER;CN=Eccentric 
+ Holidays;X-NUM-GUESTS=0:mailto:0bajvp6gevochc6mtodvqcg9o0@group.calendar.go
+ ogle.com
+CLASS:PUBLIC
+CREATED:20060711T235105Z
+DESCRIPTION:Go ahead\, take your pants for a walk today. They haven't been 
+ out since spring\, and they're dying for some fresh air! I'm not sure if th
+ e holiday calls for you to tie a leash around one of the belt loops or to w
+ alk them while they're on your legs\, but just get them out for a walk toda
+ y!\n\nhttp://www.holidayinsights.com/moreholidays/July/takepantswalk.htm
+LAST-MODIFIED:20060712T000354Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Take Your Pants for a Walk Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060618
+DTEND;VALUE=DATE:20060619
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:dbe1jqq1058574861qdj0e41f4@google.com
+CLASS:PUBLIC
+CREATED:20060623T004832Z
+DESCRIPTION:This is a day for everyone to be worried and concerned.\n\nhttp
+ ://www.holidayinsights.com/moreholidays/June/intlpanicday.htm
+LAST-MODIFIED:20060623T004832Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:International Panic Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060719
+DTEND;VALUE=DATE:20060720
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:ldtr9qvtob3h67p3nela1pjks0@google.com
+CLASS:PUBLIC
+CREATED:20060623T004802Z
+DESCRIPTION:Once a year\, a flitch (uncut side of bacon) was given to any m
+ arried couple who could prove they had lived in harmony and fidelity for th
+ e past twelve months. Would you take home the bacon this year?\n\nhttp://hi
+ cards.com/platinum/bizarre/7-19.html
+LAST-MODIFIED:20060623T004802Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Flitch Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20090812
+DTEND;VALUE=DATE:20090813
+DTSTAMP:20080828T003313Z
+UID:6l371k87fsi9fnahmqhr7rtaug@google.com
+CLASS:PUBLIC
+CREATED:20060623T002419Z
+DESCRIPTION:Underwear deserves a lot more recognition than it gets. With Na
+ tional Underwear Day\, freshpair.com takes underwear out of the dresser dra
+ wer and into the streets by sending twenty male and female models out into 
+ NYC clad only in their undergarments.\n\nhttp://www.nationalunderwearday.co
+ m/\nhttp://www.freshpair.com/underwear_day.html
+LAST-MODIFIED:20060623T002419Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:National Underwear Day (Estimated)
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20080813
+DTEND;VALUE=DATE:20080814
+DTSTAMP:20080828T003313Z
+UID:pgdngr7jjbclqlco9l5f8r74gg@google.com
+CLASS:PUBLIC
+CREATED:20060623T002352Z
+DESCRIPTION:Underwear deserves a lot more recognition than it gets. With Na
+ tional Underwear Day\, freshpair.com takes underwear out of the dresser dra
+ wer and into the streets by sending twenty male and female models out into 
+ NYC clad only in their undergarments.\n\nhttp://www.nationalunderwearday.co
+ m/\nhttp://www.freshpair.com/underwear_day.html
+LAST-MODIFIED:20060623T002352Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:National Underwear Day (Estimated)
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20070808
+DTEND;VALUE=DATE:20070809
+DTSTAMP:20080828T003313Z
+UID:4ao9qsu51st2e5krct3753lhpg@google.com
+CLASS:PUBLIC
+CREATED:20060623T002322Z
+DESCRIPTION:Underwear deserves a lot more recognition than it gets. With Na
+ tional Underwear Day\, freshpair.com takes underwear out of the dresser dra
+ wer and into the streets by sending twenty male and female models out into 
+ NYC clad only in their undergarments.\n\nhttp://www.nationalunderwearday.co
+ m/\nhttp://www.freshpair.com/underwear_day.html
+LAST-MODIFIED:20060623T002322Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:National Underwear Day (Estimated)
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060301
+DTEND;VALUE=DATE:20060302
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:75rpdj2qph0etv4dgsckfri128@google.com
+CLASS:PUBLIC
+CREATED:20060623T001600Z
+DESCRIPTION:Recognize and give thanks to domesticated pigs today.\n\nhttp:/
+ /www.holidayinsights.com/other/pigday.htm
+LAST-MODIFIED:20060623T001601Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:National Pig Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20071123
+DTEND;VALUE=DATE:20071124
+DTSTAMP:20080828T003313Z
+UID:md0006ogdtd51vmpa5274r60o0@google.com
+CLASS:PUBLIC
+CREATED:20060623T001101Z
+DESCRIPTION:Eat a snack or meal over the kitchen sink. Celebrated on the da
+ y after Thanksgiving.\n\nhttp://www.sinkie.com/#sinkieday
+LAST-MODIFIED:20060623T001219Z
+LOCATION:
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Sinkie Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20061124
+DTEND;VALUE=DATE:20061125
+DTSTAMP:20080828T003313Z
+UID:frh8kp3bg2ppgrlsofdcs7k9rs@google.com
+CLASS:PUBLIC
+CREATED:20060623T001039Z
+DESCRIPTION:Eat a snack or meal over the kitchen sink. Celebrated on the da
+ y after Thanksgiving.\n\nhttp://www.sinkie.com/#sinkieday
+LAST-MODIFIED:20060623T001208Z
+LOCATION:
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Sinkie Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20091127
+DTEND;VALUE=DATE:20091128
+DTSTAMP:20080828T003313Z
+UID:fs863sco201km8fe0kvuiahfhc@google.com
+CLASS:PUBLIC
+CREATED:20060623T001151Z
+DESCRIPTION:Eat a snack or meal over the kitchen sink. Celebrated on the da
+ y after Thanksgiving.\n\nhttp://www.sinkie.com/#sinkieday
+LAST-MODIFIED:20060623T001151Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Sinkie Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20081128
+DTEND;VALUE=DATE:20081129
+DTSTAMP:20080828T003313Z
+UID:23odmfdr1pv2htaldrun48e3u0@google.com
+CLASS:PUBLIC
+CREATED:20060623T001130Z
+DESCRIPTION:Eat a snack or meal over the kitchen sink. Celebrated on the da
+ y after Thanksgiving.\n\nhttp://www.sinkie.com/#sinkieday
+LAST-MODIFIED:20060623T001131Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Sinkie Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20061015
+DTEND;VALUE=DATE:20061016
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:20pothcvi1ol2v43bduu15cvi8@google.com
+CLASS:PUBLIC
+CREATED:20060623T000826Z
+DESCRIPTION:How to celebrate Brick Day: Sleep in late. Call in sick to work
+ . (If you don't have a job\, call someplace you might work\, and let them k
+ now you won't be in.) Get a brick or two. Find a good dive bar\, someplace 
+ with draught beer on special during daylight hours. When you order your fir
+ st beer\, set your brick on the bar. If the bartender asks you why you have
+  a brick\, give him the ritual response\, "it's Brick Day\, and you should 
+ have one too". Drink yer beer. Have another\, it's Brick Day.\n\nhttp://www
+ .everything2.com/index.pl?node_id=1756586
+LAST-MODIFIED:20060623T000826Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Brick Day
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060420
+DTEND;VALUE=DATE:20060421
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:q3cgmu07g20apu0q133vnejhuo@google.com
+CLASS:PUBLIC
+CREATED:20060622T235206Z
+DESCRIPTION:420 is code for marijuana\, so 4/20 is thus considered Cannabis
+  Day.\n\nhttp://www.snopes.com/language/stories/420.htm\nhttp://en.wikipedi
+ a.org/wiki/420_%28cannabis_culture%29#April_20th_events_and_traditions
+LAST-MODIFIED:20060622T235208Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:International Cannabis Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20090321
+DTEND;VALUE=DATE:20090322
+DTSTAMP:20080828T003313Z
+UID:129f6jto6jc1sf0mj13kaclfog@google.com
+CLASS:PUBLIC
+CREATED:20060622T234700Z
+DESCRIPTION:Attempt to consume 10 corndogs\, 10 beers\, and 10 "units" of t
+ ater tots (100 tots total) and achieve the notorious "triple-double." Natio
+ nal Corndog Day coincides with the Saturday of the final 32 teams in NCAA b
+ asketball tournament. This Saturday is the only day all year that one can w
+ atch a quadruple-header of college basketball games.\n\nhttp://www.corndogd
+ ay.com/
+LAST-MODIFIED:20060622T234846Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:National Corndog Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20080322
+DTEND;VALUE=DATE:20080323
+DTSTAMP:20080828T003313Z
+UID:u68rg0jk5l6da41gurj6fmkep8@google.com
+CLASS:PUBLIC
+CREATED:20060622T234631Z
+DESCRIPTION:Attempt to consume 10 corndogs\, 10 beers\, and 10 "units" of t
+ ater tots (100 tots total) and achieve the notorious "triple-double." Natio
+ nal Corndog Day coincides with the Saturday of the final 32 teams in NCAA b
+ asketball tournament. This Saturday is the only day all year that one can w
+ atch a quadruple-header of college basketball games.\n\nhttp://www.corndogd
+ ay.com/
+LAST-MODIFIED:20060622T234754Z
+LOCATION:
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:National Corndog Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20070317
+DTEND;VALUE=DATE:20070318
+DTSTAMP:20080828T003313Z
+UID:2csfavccs4aatjfi8l2frfaj3g@google.com
+CLASS:PUBLIC
+CREATED:20060622T234557Z
+DESCRIPTION:Attempt to consume 10 corndogs\, 10 beers\, and 10 "units" of t
+ ater tots (100 tots total) and achieve the notorious "triple-double." Natio
+ nal Corndog Day coincides with the Saturday of the final 32 teams in NCAA b
+ asketball tournament. This Saturday is the only day all year that one can w
+ atch a quadruple-header of college basketball games.\n\nhttp://www.corndogd
+ ay.com/
+LAST-MODIFIED:20060622T234557Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:National Corndog Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060318
+DTEND;VALUE=DATE:20060319
+DTSTAMP:20080828T003313Z
+UID:erb051dasuvb2ukc5mlrpdc018@google.com
+CLASS:PUBLIC
+CREATED:20060622T234533Z
+DESCRIPTION:Attempt to consume 10 corndogs\, 10 beers\, and 10 "units" of t
+ ater tots (100 tots total) and achieve the notorious "triple-double." Natio
+ nal Corndog Day coincides with the Saturday of the final 32 teams in NCAA b
+ asketball tournament. This Saturday is the only day all year that one can w
+ atch a quadruple-header of college basketball games.\n\nhttp://www.corndogd
+ ay.com/
+LAST-MODIFIED:20060622T234533Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:National Corndog Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20090930
+DTEND;VALUE=DATE:20091001
+DTSTAMP:20080828T003313Z
+UID:49v7aitvfjms8g6ngo4pciibts@google.com
+CLASS:PUBLIC
+CREATED:20060622T233436Z
+DESCRIPTION:Go ahead. Ask a stupid question. Commonly observed on the last 
+ school day of September.\n\nhttp://en.wikipedia.org/wiki/Ask_a_Stupid_Quest
+ ion_Day
+LAST-MODIFIED:20060622T233436Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Ask a Stupid Question Day (Observed)
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20080930
+DTEND;VALUE=DATE:20081001
+DTSTAMP:20080828T003313Z
+UID:o5t7gana137ou1l834c8joev2g@google.com
+CLASS:PUBLIC
+CREATED:20060622T233403Z
+DESCRIPTION:Go ahead. Ask a stupid question. Commonly observed on the last 
+ school day of September.\n\nhttp://en.wikipedia.org/wiki/Ask_a_Stupid_Quest
+ ion_Day
+LAST-MODIFIED:20060622T233403Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Ask a Stupid Question Day (Observed)
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060929
+DTEND;VALUE=DATE:20060930
+DTSTAMP:20080828T003313Z
+UID:hh07ghk1csrotrhqn6gopgn13s@google.com
+CLASS:PUBLIC
+CREATED:20060622T233316Z
+DESCRIPTION:Go ahead. Ask a stupid question. Commonly observed on the last 
+ school day of September.\n\nhttp://en.wikipedia.org/wiki/Ask_a_Stupid_Quest
+ ion_Day
+LAST-MODIFIED:20060622T233316Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Ask a Stupid Question Day (Observed)
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/New_York:20061023T060200
+DTEND;TZID=America/New_York:20061023T180200
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:bq8nghohohdhfb102gqoag3bes@google.com
+CLASS:PUBLIC
+CREATED:20060622T233212Z
+DESCRIPTION:Today's date and time is 6:02 10/23. Avogadro's number\, which 
+ is approximately 6.02×1023\, defines the number of particles in a mole\, on
+ e of the seven basic SI units.\n\nhttp://www.moleday.org/\nhttp://en.wikipe
+ dia.org/wiki/Mole_Day
+LAST-MODIFIED:20060622T233212Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Mole Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060928
+DTEND;VALUE=DATE:20060929
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:rjko9o1tvsef30r51k3qo98i0s@google.com
+CLASS:PUBLIC
+CREATED:20060622T233153Z
+DESCRIPTION:Go ahead. Ask a stupid question. Commonly observed on the last 
+ school day of September.\n\nhttp://en.wikipedia.org/wiki/Ask_a_Stupid_Quest
+ ion_Day
+LAST-MODIFIED:20060622T233153Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Ask a Stupid Question Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060922
+DTEND;VALUE=DATE:20060923
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:g6p533jfnrm5hcraupgvnbr3g0@google.com
+CLASS:PUBLIC
+CREATED:20060622T233134Z
+DESCRIPTION:Celebrate Bilbo and Frodo Baggins' birthday by throwing a party
+  or simply by going barefoot.\n\nhttp://en.wikipedia.org/wiki/Hobbit_Day
+LAST-MODIFIED:20060622T233134Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Hobbit Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060728
+DTEND;VALUE=DATE:20060729
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:atqj6hv8l2nmg9l3l3c5g5n05c@google.com
+CLASS:PUBLIC
+CREATED:20060622T233108Z
+DESCRIPTION:Talking in elevators can be fun and interesting and contribute 
+ to a friendlier society.\n\nOriginated by Scott at http://www.hellomynameis
+ scott.com/
+LAST-MODIFIED:20060622T233108Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:National Talk In Elevators Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060525
+DTEND;VALUE=DATE:20060526
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:uh7lqr6e0bpp6174i0b1c4f9kc@google.com
+CLASS:PUBLIC
+CREATED:20060622T233043Z
+DESCRIPTION:Carry your towel with you throughout the day to show your parti
+ cipation and mourning of Douglas Adams.\n\nhttp://www.towelday.kojv.net/\nh
+ ttp://smarmycarny.com/archives/2006/05/25/towel-day-2006/\nhttp://en.wikipe
+ dia.org/wiki/Towel_Day
+LAST-MODIFIED:20060622T233043Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Towel Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060215
+DTEND;VALUE=DATE:20060216
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:2thc12hhckgoq53ckbn8jqk9fk@google.com
+CLASS:PUBLIC
+CREATED:20060622T233014Z
+DESCRIPTION:Proudly stand up today and show that it is OKAY to be single!\n
+ \nhttp://www.singlesawareness.com/
+LAST-MODIFIED:20060622T233014Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Singles Awareness Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060125
+DTEND;VALUE=DATE:20060201
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:56cfhjncbatjhrjjopv4rjh270@google.com
+CLASS:PUBLIC
+CREATED:20060622T232957Z
+DESCRIPTION:This holiday celebrates video games and the people that play th
+ em\n\nhttp://www.wintereenmas.com/
+LAST-MODIFIED:20060622T232957Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Winter-Een-Mas
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060606
+DTEND;VALUE=DATE:20060607
+DTSTAMP:20080828T003313Z
+UID:1g2532bhjul85mqkav5uthsbic@google.com
+CLASS:PUBLIC
+CREATED:20060622T011942Z
+DESCRIPTION:Eviiiiiil! Eviiiiil! 6/6/6!\n\nhttp://smarmycarny.com/archives/
+ 2006/06/06/six-six-oh-six/
+LAST-MODIFIED:20060622T015019Z
+LOCATION:
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Evil Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060919
+DTEND;VALUE=DATE:20060920
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:bn6flggc83qup8k94t0sjqdnbk@google.com
+CLASS:PUBLIC
+CREATED:20060622T004222Z
+DESCRIPTION:Talking like a pirate is fun. It's really that simple. It adds 
+ a zest\, a swagger\, to your every day conversation. Do you need another re
+ ason?\n\nhttp://www.talklikeapirate.com/\nhttp://smarmycarny.com/archives/2
+ 005/09/21/pirate-day/\nhttp://www.miami.com/mld/miamiherald/living/columnis
+ ts/dave_barry/4018055.htm\nhttp://www.talklikeapirateday.com/\nhttp://en.wi
+ kipedia.org/wiki/International_Talk_Like_a_Pirate_Day
+LAST-MODIFIED:20060622T013139Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:International Talk Like a Pirate Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060309
+DTEND;VALUE=DATE:20060310
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:q3u5lc20lhf58luf9v153vqgjg@google.com
+CLASS:PUBLIC
+CREATED:20060622T013016Z
+DESCRIPTION:Today is the day to get over . . . whatever or whoever it is yo
+ u need to get over.\n\nhttp://www.getoveritday.com/\nhttp://smarmycarny.com
+ /archives/2006/03/09/get-over-it-day/
+LAST-MODIFIED:20060622T013017Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Get Over It Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20250505
+DTEND;VALUE=DATE:20250506
+DTSTAMP:20080828T003313Z
+UID:hakb8ao6k53lie5pa192kv0dcc@google.com
+CLASS:PUBLIC
+CREATED:20060622T011228Z
+DESCRIPTION:This rare holiday celebrates days in which the day and month ar
+ e square roots of the year. The holiday is celebrated 9 times a century: 1/
+ 1/01\, 2/2/04\, 3/3/09\, 4/4/16\, 5/5/25\, 6/6/36\, 7/7/49\, 8/8/64\, 9/9/8
+ 1.\n\nhttp://en.wikipedia.org/wiki/Square_root_day
+LAST-MODIFIED:20060622T011228Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Square Root Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20160404
+DTEND;VALUE=DATE:20160405
+DTSTAMP:20080828T003313Z
+UID:a1vsede8m9lj854h4cp4o7l9ik@google.com
+CLASS:PUBLIC
+CREATED:20060622T011204Z
+DESCRIPTION:This rare holiday celebrates days in which the day and month ar
+ e square roots of the year. The holiday is celebrated 9 times a century: 1/
+ 1/01\, 2/2/04\, 3/3/09\, 4/4/16\, 5/5/25\, 6/6/36\, 7/7/49\, 8/8/64\, 9/9/8
+ 1.\n\nhttp://en.wikipedia.org/wiki/Square_root_day
+LAST-MODIFIED:20060622T011204Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Square Root Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20040202
+DTEND;VALUE=DATE:20040203
+DTSTAMP:20080828T003313Z
+UID:ibf6ladbpc1pgduj3plev1nam0@google.com
+CLASS:PUBLIC
+CREATED:20060622T011119Z
+DESCRIPTION:This rare holiday celebrates days in which the day and month ar
+ e square roots of the year. The holiday is celebrated 9 times a century: 1/
+ 1/01\, 2/2/04\, 3/3/09\, 4/4/16\, 5/5/25\, 6/6/36\, 7/7/49\, 8/8/64\, 9/9/8
+ 1.\n\nhttp://en.wikipedia.org/wiki/Square_root_day
+LAST-MODIFIED:20060622T011119Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Square Root Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20090303
+DTEND;VALUE=DATE:20090304
+DTSTAMP:20080828T003313Z
+UID:cihcp8bmttq60bpt7mu9ua1q2c@google.com
+CLASS:PUBLIC
+CREATED:20060622T011053Z
+DESCRIPTION:This rare holiday celebrates days in which the day and month ar
+ e square roots of the year. The holiday is celebrated 9 times a century: 1/
+ 1/01\, 2/2/04\, 3/3/09\, 4/4/16\, 5/5/25\, 6/6/36\, 7/7/49\, 8/8/64\, 9/9/8
+ 1.\n\nhttp://en.wikipedia.org/wiki/Square_root_day
+LAST-MODIFIED:20060622T011053Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Square Root Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060504
+DTEND;VALUE=DATE:20060505
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:pnv031j28nq50sutag3ofisea0@google.com
+CLASS:PUBLIC
+CREATED:20060622T010644Z
+DESCRIPTION:Why May 4? Because <i><b>May the fourth</b></i> be with you.\n\
+ nhttp://buzz.yahoo.com/buzzlog/6453/may-the-fourth-be-with-you
+LAST-MODIFIED:20060622T010645Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Star Wars Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060314
+DTEND;VALUE=DATE:20060315
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:vhtbujsk308u589f3befko96m4@google.com
+CLASS:PUBLIC
+CREATED:20060622T010249Z
+DESCRIPTION:Pi Day is celebrated today at 1:59 (a.m. or p.m. -- your choice
+ ) in recognition of the six-digit approximation: 3.14159.\n\nhttp://www.pid
+ ay.org/\nhttp://www.wikihow.com/Celebrate-Pi-Day\nhttp://en.wikipedia.org/w
+ iki/Pi_Day
+LAST-MODIFIED:20060622T010250Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Pi Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060922
+DTEND;VALUE=DATE:20060923
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:837pqs0cqkq23st3jtsi9b7b34@google.com
+CLASS:PUBLIC
+CREATED:20060622T003751Z
+DESCRIPTION:Appropriately one of the most eccentric of eccentric holidays. 
+ IDM is not one consecutive month\, but rather celebrated each year on Febru
+ ary 4\, March 28\, April 1\, July 15\, August 2\, August 7\, August 16\, Au
+ gust 26\, September 18\, September 22\, October 1\, October 17\, and Octobe
+ r 26. zimzim urallala zimzim urallala zimzim zanzibar zimzalla zam.\n\nhttp
+ ://www.harpers.org/ThatsTheMatterWithKansas.html\nhttp://www2.ljworld.com/n
+ ews/2005/dec/24/mayor_says_its_time_nonsense/?city_local\nhttp://en.wikiped
+ ia.org/wiki/International_Dadaism_Month
+LAST-MODIFIED:20060622T003752Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:International Dadaism Month - Day 10
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060918
+DTEND;VALUE=DATE:20060919
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:s192f1a2vhisf04ibfcu51c9es@google.com
+CLASS:PUBLIC
+CREATED:20060622T003725Z
+DESCRIPTION:Appropriately one of the most eccentric of eccentric holidays. 
+ IDM is not one consecutive month\, but rather celebrated each year on Febru
+ ary 4\, March 28\, April 1\, July 15\, August 2\, August 7\, August 16\, Au
+ gust 26\, September 18\, September 22\, October 1\, October 17\, and Octobe
+ r 26. zimzim urallala zimzim urallala zimzim zanzibar zimzalla zam.\n\nhttp
+ ://www.harpers.org/ThatsTheMatterWithKansas.html\nhttp://www2.ljworld.com/n
+ ews/2005/dec/24/mayor_says_its_time_nonsense/?city_local\nhttp://en.wikiped
+ ia.org/wiki/International_Dadaism_Month
+LAST-MODIFIED:20060622T003726Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:International Dadaism Month - Day 9
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20061026
+DTEND;VALUE=DATE:20061027
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:mp7duhvoh5dgvh2v1t403gul9k@google.com
+CLASS:PUBLIC
+CREATED:20060622T003329Z
+DESCRIPTION:Appropriately one of the most eccentric of eccentric holidays. 
+ IDM is not one consecutive month\, but rather celebrated each year on Febru
+ ary 4\, March 28\, April 1\, July 15\, August 2\, August 7\, August 16\, Au
+ gust 26\, September 18\, September 22\, October 1\, October 17\, and Octobe
+ r 26. zimzim urallala zimzim urallala zimzim zanzibar zimzalla zam.\n\nhttp
+ ://www.harpers.org/ThatsTheMatterWithKansas.html\nhttp://www2.ljworld.com/n
+ ews/2005/dec/24/mayor_says_its_time_nonsense/?city_local\nhttp://en.wikiped
+ ia.org/wiki/International_Dadaism_Month
+LAST-MODIFIED:20060622T003330Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:International Dadaism Month - Final Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20061017
+DTEND;VALUE=DATE:20061018
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:eosita6staj0umol0d5n945eb8@google.com
+CLASS:PUBLIC
+CREATED:20060622T003122Z
+DESCRIPTION:Appropriately one of the most eccentric of eccentric holidays. 
+ IDM is not one consecutive month\, but rather celebrated each year on Febru
+ ary 4\, March 28\, April 1\, July 15\, August 2\, August 7\, August 16\, Au
+ gust 26\, September 18\, September 22\, October 1\, October 17\, and Octobe
+ r 26. zimzim urallala zimzim urallala zimzim zanzibar zimzalla zam.\n\nhttp
+ ://www.harpers.org/ThatsTheMatterWithKansas.html\nhttp://www2.ljworld.com/n
+ ews/2005/dec/24/mayor_says_its_time_nonsense/?city_local\nhttp://en.wikiped
+ ia.org/wiki/International_Dadaism_Month
+LAST-MODIFIED:20060622T003123Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:International Dadaism Month - Day 12
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20061001
+DTEND;VALUE=DATE:20061002
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:2obgchl7sli29bc3i1da32faq8@google.com
+CLASS:PUBLIC
+CREATED:20060622T003057Z
+DESCRIPTION:Appropriately one of the most eccentric of eccentric holidays. 
+ IDM is not one consecutive month\, but rather celebrated each year on Febru
+ ary 4\, March 28\, April 1\, July 15\, August 2\, August 7\, August 16\, Au
+ gust 26\, September 18\, September 22\, October 1\, October 17\, and Octobe
+ r 26. zimzim urallala zimzim urallala zimzim zanzibar zimzalla zam.\n\nhttp
+ ://www.harpers.org/ThatsTheMatterWithKansas.html\nhttp://www2.ljworld.com/n
+ ews/2005/dec/24/mayor_says_its_time_nonsense/?city_local\nhttp://en.wikiped
+ ia.org/wiki/International_Dadaism_Month
+LAST-MODIFIED:20060622T003057Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:International Dadaism Month - Day 11
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060401
+DTEND;VALUE=DATE:20060402
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:1bkccfcp1v53ns6hc5jl6tt7nc@google.com
+CLASS:PUBLIC
+CREATED:20060622T002853Z
+DESCRIPTION:Appropriately one of the most eccentric of eccentric holidays. 
+ IDM is not one consecutive month\, but rather celebrated each year on Febru
+ ary 4\, March 28\, April 1\, July 15\, August 2\, August 7\, August 16\, Au
+ gust 26\, September 18\, September 22\, October 1\, October 17\, and Octobe
+ r 26. zimzim urallala zimzim urallala zimzim zanzibar zimzalla zam.\n\nhttp
+ ://www.harpers.org/ThatsTheMatterWithKansas.html\nhttp://www2.ljworld.com/n
+ ews/2005/dec/24/mayor_says_its_time_nonsense/?city_local\nhttp://en.wikiped
+ ia.org/wiki/International_Dadaism_Month
+LAST-MODIFIED:20060622T002853Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:International Dadaism Month - Day 3
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060826
+DTEND;VALUE=DATE:20060827
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:eolt9hol4rgs7u962mk1plbno4@google.com
+CLASS:PUBLIC
+CREATED:20060622T002815Z
+DESCRIPTION:Appropriately one of the most eccentric of eccentric holidays. 
+ IDM is not one consecutive month\, but rather celebrated each year on Febru
+ ary 4\, March 28\, April 1\, July 15\, August 2\, August 7\, August 16\, Au
+ gust 26\, September 18\, September 22\, October 1\, October 17\, and Octobe
+ r 26. zimzim urallala zimzim urallala zimzim zanzibar zimzalla zam.\n\nhttp
+ ://www.harpers.org/ThatsTheMatterWithKansas.html\nhttp://www2.ljworld.com/n
+ ews/2005/dec/24/mayor_says_its_time_nonsense/?city_local\nhttp://en.wikiped
+ ia.org/wiki/International_Dadaism_Month
+LAST-MODIFIED:20060622T002818Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:International Dadaism Month - Day 8
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060816
+DTEND;VALUE=DATE:20060817
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:36qtnmov3otu5alr6q1im4om5g@google.com
+CLASS:PUBLIC
+CREATED:20060622T002733Z
+DESCRIPTION:Appropriately one of the most eccentric of eccentric holidays. 
+ IDM is not one consecutive month\, but rather celebrated each year on Febru
+ ary 4\, March 28\, April 1\, July 15\, August 2\, August 7\, August 16\, Au
+ gust 26\, September 18\, September 22\, October 1\, October 17\, and Octobe
+ r 26. zimzim urallala zimzim urallala zimzim zanzibar zimzalla zam.\n\nhttp
+ ://www.harpers.org/ThatsTheMatterWithKansas.html\nhttp://www2.ljworld.com/n
+ ews/2005/dec/24/mayor_says_its_time_nonsense/?city_local\nhttp://en.wikiped
+ ia.org/wiki/International_Dadaism_Month
+LAST-MODIFIED:20060622T002735Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:International Dadaism Month - Day 7
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060807
+DTEND;VALUE=DATE:20060808
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:5dkkm76ge6brahe2f3tdm03si4@google.com
+CLASS:PUBLIC
+CREATED:20060622T002646Z
+DESCRIPTION:Appropriately one of the most eccentric of eccentric holidays. 
+ IDM is not one consecutive month\, but rather celebrated each year on Febru
+ ary 4\, March 28\, April 1\, July 15\, August 2\, August 7\, August 16\, Au
+ gust 26\, September 18\, September 22\, October 1\, October 17\, and Octobe
+ r 26. zimzim urallala zimzim urallala zimzim zanzibar zimzalla zam.\n\nhttp
+ ://www.harpers.org/ThatsTheMatterWithKansas.html\nhttp://www2.ljworld.com/n
+ ews/2005/dec/24/mayor_says_its_time_nonsense/?city_local\nhttp://en.wikiped
+ ia.org/wiki/International_Dadaism_Month
+LAST-MODIFIED:20060622T002649Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:International Dadaism Month - Day 6
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060802
+DTEND;VALUE=DATE:20060803
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:liq7k5h0tdom1vh6hkbi5scgfg@google.com
+CLASS:PUBLIC
+CREATED:20060622T002611Z
+DESCRIPTION:Appropriately one of the most eccentric of eccentric holidays. 
+ IDM is not one consecutive month\, but rather celebrated each year on Febru
+ ary 4\, March 28\, April 1\, July 15\, August 2\, August 7\, August 16\, Au
+ gust 26\, September 18\, September 22\, October 1\, October 17\, and Octobe
+ r 26. zimzim urallala zimzim urallala zimzim zanzibar zimzalla zam.\n\nhttp
+ ://www.harpers.org/ThatsTheMatterWithKansas.html\nhttp://www2.ljworld.com/n
+ ews/2005/dec/24/mayor_says_its_time_nonsense/?city_local\nhttp://en.wikiped
+ ia.org/wiki/International_Dadaism_Month
+LAST-MODIFIED:20060622T002612Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:International Dadaism Month - Day 5
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060715
+DTEND;VALUE=DATE:20060716
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:citnmcj4hkcgou2d3c97viue68@google.com
+CLASS:PUBLIC
+CREATED:20060622T002532Z
+DESCRIPTION:Appropriately one of the most eccentric of eccentric holidays. 
+ IDM is not one consecutive month\, but rather celebrated each year on Febru
+ ary 4\, March 28\, April 1\, July 15\, August 2\, August 7\, August 16\, Au
+ gust 26\, September 18\, September 22\, October 1\, October 17\, and Octobe
+ r 26. zimzim urallala zimzim urallala zimzim zanzibar zimzalla zam.\n\nhttp
+ ://www.harpers.org/ThatsTheMatterWithKansas.html\nhttp://www2.ljworld.com/n
+ ews/2005/dec/24/mayor_says_its_time_nonsense/?city_local\nhttp://en.wikiped
+ ia.org/wiki/International_Dadaism_Month
+LAST-MODIFIED:20060622T002533Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:International Dadaism Month - Day 4
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060328
+DTEND;VALUE=DATE:20060329
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:uep33kitpff0kljao3eogcin6o@google.com
+CLASS:PUBLIC
+CREATED:20060622T002022Z
+DESCRIPTION:Appropriately one of the most eccentric of eccentric holidays. 
+ IDM is not one consecutive month\, but rather celebrated each year on Febru
+ ary 4\, March 28\, April 1\, July 15\, August 2\, August 7\, August 16\, Au
+ gust 26\, September 18\, September 22\, October 1\, October 17\, and Octobe
+ r 26. zimzim urallala zimzim urallala zimzim zanzibar zimzalla zam.\n\nhttp
+ ://www.harpers.org/ThatsTheMatterWithKansas.html\nhttp://www2.ljworld.com/n
+ ews/2005/dec/24/mayor_says_its_time_nonsense/?city_local\nhttp://en.wikiped
+ ia.org/wiki/International_Dadaism_Month
+LAST-MODIFIED:20060622T002022Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:International Dadaism Month - Day 2
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060204
+DTEND;VALUE=DATE:20060205
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:eqomf8mnnerelaqhm0jnlrhtcc@google.com
+CLASS:PUBLIC
+CREATED:20060622T001900Z
+DESCRIPTION:Appropriately one of the most eccentric of eccentric holidays. 
+ IDM is not one consecutive month\, but rather celebrated each year on Febru
+ ary 4\, March 28\, April 1\, July 15\, August 2\, August 7\, August 16\, Au
+ gust 26\, September 18\, September 22\, October 1\, October 17\, and Octobe
+ r 26. zimzim urallala zimzim urallala zimzim zanzibar zimzalla zam.\n\nhttp
+ ://www.harpers.org/ThatsTheMatterWithKansas.html\nhttp://www2.ljworld.com/n
+ ews/2005/dec/24/mayor_says_its_time_nonsense/?city_local\nhttp://en.wikiped
+ ia.org/wiki/International_Dadaism_Month
+LAST-MODIFIED:20060622T001901Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:International Dadaism Month - Day 1
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060720
+DTEND;VALUE=DATE:20060721
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:pknd29rjsde3dh37n6vaha37ug@google.com
+CLASS:PUBLIC
+CREATED:20060622T000004Z
+DESCRIPTION:This is a secular holiday commemorates the wondrous accomplishm
+ ents achieved by the Human Beings of Planet Earth\, particularly the first 
+ manned Moon Landing.\n\nhttp://www.evoloterra.com/\nhttp://en.wikipedia.org
+ /wiki/Evoloterra
+LAST-MODIFIED:20060622T000004Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Evoloterra
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060616
+DTEND;VALUE=DATE:20060617
+RRULE:FREQ=YEARLY
+DTSTAMP:20080828T003313Z
+UID:o5f6gvcnmg4c5jmsdjb6jstdgk@google.com
+CLASS:PUBLIC
+CREATED:20060621T235240Z
+DESCRIPTION:Celebrate the life of James Joyce and commemorate the events in
+  his novel Ulysses\, which took place on June 16\, 1904.\n\nhttp://www.npr.
+ org/templates/story/story.php?storyId=1959559\nhttp://en.wikipedia.org/wiki
+ /Bloomsday
+LAST-MODIFIED:20060621T235241Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Bloomsday
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20090213
+DTEND;VALUE=DATE:20090214
+DTSTAMP:20080828T003313Z
+UID:hogdnoqrm5s74hnegukj5krl1k@google.com
+CLASS:PUBLIC
+CREATED:20060621T234535Z
+DESCRIPTION:On this day\, redirect the blame for anything to anyone besides
+  yourself.\n\nThe first Friday the 13th of the year.\n\nhttp://pittsburghli
+ ve.com/x/tribune-review/s_326847.html\nhttp://en.wikipedia.org/wiki/Blame_S
+ omeone_Else_Day
+LAST-MODIFIED:20060621T234908Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Blame Someone Else Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20080613
+DTEND;VALUE=DATE:20080614
+DTSTAMP:20080828T003313Z
+UID:9crefdb1bqr15fbba01mam4bsk@google.com
+CLASS:PUBLIC
+CREATED:20060621T234505Z
+DESCRIPTION:On this day\, redirect the blame for anything to anyone besides
+  yourself.\n\nThe first Friday the 13th of the year.\n\nhttp://pittsburghli
+ ve.com/x/tribune-review/s_326847.html\nhttp://en.wikipedia.org/wiki/Blame_S
+ omeone_Else_Day
+LAST-MODIFIED:20060621T234857Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Blame Someone Else Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20070413
+DTEND;VALUE=DATE:20070414
+DTSTAMP:20080828T003313Z
+UID:cq7frrrmbc89t0g9l54n882568@google.com
+CLASS:PUBLIC
+CREATED:20060621T234428Z
+DESCRIPTION:On this day\, redirect the blame for anything to anyone besides
+  yourself.\n\nThe first Friday the 13th of the year.\n\nhttp://pittsburghli
+ ve.com/x/tribune-review/s_326847.html\nhttp://en.wikipedia.org/wiki/Blame_S
+ omeone_Else_Day
+LAST-MODIFIED:20060621T234845Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Blame Someone Else Day
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20060113
+DTEND;VALUE=DATE:20060114
+DTSTAMP:20080828T003313Z
+UID:stq5o7hie1qjpqln4fuilnh2g4@google.com
+CLASS:PUBLIC
+CREATED:20060621T234255Z
+DESCRIPTION:On this day\, redirect the blame for anything to anyone besides
+  yourself.\n\nThe first Friday the 13th of the year.\n\nhttp://pittsburghli
+ ve.com/x/tribune-review/s_326847.html\nhttp://en.wikipedia.org/wiki/Blame_S
+ omeone_Else_Day
+LAST-MODIFIED:20060621T234835Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Blame Someone Else Day
+TRANSP:TRANSPARENT
+END:VEVENT
+END:VCALENDAR
