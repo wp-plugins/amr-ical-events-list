@@ -1,0 +1,97 @@
+/* AmRiCal Style for List Type 1 - with 2 columns */
+.alt {background-color: #eee;}   /* remove if already catered for in your theme */
+
+ul.amrical {	margin: 0; padding: 0.5em;  } /* we need this padding, for some reasonn, it keeps the list style switched off */
+ul.amrical ul {margin: 0; padding: 0.2em;}
+
+
+ul#wamrical,
+ul#wamrical li,
+div#content ul.amrical,  /* for sandbox and classic */
+ul.amrical,
+ul.amrical li {
+	list-style-type: none; 
+	list-style-image: none;
+	margin: 0; padding: 0;
+	font-size: 100%;}  /* to override the classic theme which has li reducing each time, must be 100% or 1em*/
+
+ul.amrical span.map 
+	{padding: 0  1em;}
+
+ul.amrical ul.amrrow { 
+		font-size: 90%;	
+		overflow: hidden; 
+		width: 100%;	} /* To force the row to contain the column cells */
+		
+ul.amrical ul.amrcol { float:left;	} /* to turn the ul's into "columns" */
+
+.entry ul.amrical,
+li#amrical0, 
+li#amrical1, 
+li#amrical2, 
+li#amrical3, 
+li#amrical0  ul, 
+li#amrical1  ul, 
+li#amrical2  ul, 
+li#amrical3  ul,
+li#amrical0  li , 
+li#amrical1  li, 
+li#amrical2  li,  
+li#amrical3  li  {}
+
+
+ul.calprop,
+.multiprop,
+.multiprop li,
+.calprop li.cal ul.amrrow,
+.amrrow, 
+.amrcol, 
+.amrcol li
+	{padding:  0 0.5em 0.5em 0; 
+	 margin: 0; }  /* we have many nested lists if groupings are used, so need to  reduce nesting whitespace */
+
+li#amrical0 h3, 
+li#amrical1 h3, 
+li#amrical2 h3, 
+li#amrical3 ul.amrcol ,	
+li#amrical2 ul.amrcol ,	
+li#amrical1 ul.amrcol ,	
+li#amrical0 ul.amrcol ,
+li.amrrow
+	{padding: 0.5em;}   /* add back white space at lowest level */
+	
+/* Need #menu for classic theme widget? */	
+#menu li#wamrical0  li,
+#menu li#wamrical0  li {padding: 0; color: #000;} /* Fix the classic theme so calendar is not too faint */
+
+/* ul.amrcol li.x-wr-calname,
+ul.amrcol li.x-wr-timezone, */
+ul.amrcol li.StartTime,
+ul.amrcol li.EndTime,
+ul.amrcol li.StartTime,
+ul.amrcol li.EndTime { /* Optional float these items up next to each other  - depends on type pf data nad space */
+/*	float: left; 
+	padding: 0 1em 0 0;
+*/
+	}
+
+	
+#menu li#wamrical0  ul.amrcol1 li.SUMMARY ,	
+li#wamrical0  ul.amrcol1 li.SUMMARY {clear: both; }
+
+
+ul.amrical ul.amrcol1 { width: 20%; 	}    
+ul.amrical ul.amrcol2 	{ width: 50%; }	
+
+ul.calprop ul.amrcol1 { width: 60%; 	} 
+ul.calprop ul.amrcol2 	{ width: 20%; }	
+
+
+/*	use these for more columns 
+ul.amrical ul.amrcol2 	{ width: 20%; }	
+ul.amrical ul.amrcol3 	{ width: 50%; }
+*/	
+ul.amrical ul.amrcol2 li 
+	{ padding: 0.1em;}
+
+
