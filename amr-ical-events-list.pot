@@ -1,0 +1,137 @@
+# SOME DESCRIPTIVE TITLE.
+# This file is put in the public domain.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/amr-ical-events-list\n"
+"POT-Creation-Date: 2008-09-01 04:30+0000\n"
+"PO-Revision-Date: 2008-09-04 22:01+1000\n"
+"Last-Translator: Anna-marie Redpath <anmari@anmari.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Dutch\n"
+
+#: amr-ical-events-list.php:131
+#, fuzzy
+msgid "map"
+msgstr "_Abbilden"
+
+#: amr-ical-events-list.php:134
+#, fuzzy
+msgid "Event Link"
+msgstr "Ausgewählter Link"
+
+#: amr-ical-events-list.php:135
+#, fuzzy
+msgid " - invalid"
+msgstr "ungültig"
+
+#: amr-ical-events-list.php:228
+msgid "All day"
+msgstr "Alle Tage"
+
+#: amr-ical-events-list.php:587
+#, php-format
+msgid "Week  %u"
+msgstr "Woche"
+
+#: ical-list-admin.php:21
+#, fuzzy
+msgid "Upcoming Events"
+msgstr "DirectInput-Ereignisse"
+
+#: ical-list-admin.php:51
+#, fuzzy
+msgid "Title"
+msgstr "Titel"
+
+#: ical-list-admin.php:53
+msgid "List Type from plugin settings"
+msgstr ""
+
+#: ical-list-admin.php:55
+msgid "Number of Events"
+msgstr "Zahl der Veranstaltungen"
+
+#: ical-list-admin.php:57
+#, fuzzy
+msgid "Link to Calendar"
+msgstr "Die symbolische Verknüpfung »%s« konnte nicht gelesen werden: %s"
+
+#: ical-list-admin.php:60
+msgid "Urls"
+msgstr ""
+
+#: ical-list-admin.php:203
+#, fuzzy
+msgid "Options  <strong>Updated</strong>. "
+msgstr "Besondere Optionen bei »Language«:\n"
+
+#: ical-list-admin.php:216
+msgid "Define date and time formats:"
+msgstr "Definieren Sie Datum und Uhrzeit-Formate"
+
+#: ical-list-admin.php:261
+msgid "Define maximums:"
+msgstr "Definieren Sie Maxima"
+
+#: ical-list-admin.php:279
+#, fuzzy
+msgid "Select components to show:"
+msgstr "Einen _Bereich auswählen"
+
+#: ical-list-admin.php:299
+#, fuzzy
+msgid "Define grouping:"
+msgstr "Polygonalen Bereich festlegen"
+
+#: ical-list-admin.php:315
+#, fuzzy
+msgid "Calendar properties"
+msgstr "Materialeinstellungen"
+
+#: ical-list-admin.php:336
+#, fuzzy
+msgid "Specify component contents:"
+msgstr "Logtexte löschen"
+
+#: ical-list-admin.php:377
+msgid "AmR ICal Global Options"
+msgstr ""
+
+#: ical-list-admin.php:378
+#, fuzzy
+msgid "Number of Ical Lists:"
+msgstr "%s:%d: Zahl nach # fehlt"
+
+#: ical-list-admin.php:383
+#, fuzzy
+msgid "Update Options"
+msgstr "Erweiterte Einstellungen"
+
+#: ical-list-admin.php:384
+#, fuzzy
+msgid "Reset to Default"
+msgstr "Auf die Standardwerte zurücksetzen"
+
+#: ical-list-admin.php:395
+#, fuzzy, php-format
+msgid "List Type %d"
+msgstr "Art der Sicherung"
+
+#. Plugin Name of an extension
+msgid "AmR iCal Events List"
+msgstr ""
+
+#. Plugin URI of an extension
+msgid "http://anmari.com"
+msgstr "http://anmari.com"
+
+#. Description of an extension
+msgid "Display events from an iCal source in a list fashion for css styling (not a box calender)."
+msgstr ""
+
