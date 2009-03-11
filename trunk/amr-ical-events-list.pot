@@ -1,0 +1,338 @@
+# SOME DESCRIPTIVE TITLE.
+# This file is put in the public domain.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/amr-ical-events-list\n"
+"POT-Creation-Date: 2009-02-15 06:28+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: amr-ical-config.php:176
+msgid "When"
+msgstr ""
+
+#: amr-ical-config.php:177
+msgid "What"
+msgstr ""
+
+#: amr-ical-config.php:178
+msgid "Where"
+msgstr ""
+
+#: amr-ical-config.php:270
+msgid "Show location in Google Maps"
+msgstr ""
+
+#: amr-ical-config.php:272
+msgid "Show in Google map"
+msgstr ""
+
+#: amr-ical-config.php:290
+msgid "Venue"
+msgstr ""
+
+#: amr-ical-config.php:291
+msgid "Description"
+msgstr ""
+
+#: amr-ical-config.php:302
+msgid "Date"
+msgstr ""
+
+#: amr-ical-config.php:303
+msgid "Class"
+msgstr ""
+
+#: amr-ical-config.php:304
+msgid "Room"
+msgstr ""
+
+#: amr-ical-config.php:473
+msgid "Upcoming Events"
+msgstr ""
+
+#: amr-ical-events-list.php:55 amr-ical-events-list.php:58
+msgid "Add to Google Calendar"
+msgstr ""
+
+#: amr-ical-events-list.php:72
+msgid "Add event to your Google Calendar"
+msgstr ""
+
+#: amr-ical-events-list.php:74
+msgid "Add event to google"
+msgstr ""
+
+#: amr-ical-events-list.php:164
+msgid "Refresh Calendars "
+msgstr ""
+
+#: amr-ical-events-list.php:166
+msgid "Refresh calendars"
+msgstr ""
+
+#: amr-ical-events-list.php:182 amr-ical-events-list.php:478
+msgid "Subscribe to calendar"
+msgstr ""
+
+#: amr-ical-events-list.php:365
+#, php-format
+msgid "%u year"
+msgid_plural "%u years"
+msgstr[0] ""
+msgstr[1] ""
+
+#: amr-ical-events-list.php:370
+#, php-format
+msgid "%u month "
+msgid_plural "%u months "
+msgstr[0] ""
+msgstr[1] ""
+
+#: amr-ical-events-list.php:375
+#, php-format
+msgid "%u week "
+msgid_plural "%u weeks"
+msgstr[0] ""
+msgstr[1] ""
+
+#: amr-ical-events-list.php:380
+#, php-format
+msgid "%u day"
+msgid_plural "%u days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: amr-ical-events-list.php:385
+#, php-format
+msgid "%u hour"
+msgid_plural "%u hours"
+msgstr[0] ""
+msgstr[1] ""
+
+#: amr-ical-events-list.php:390
+#, php-format
+msgid "%u minute"
+msgid_plural "%u minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: amr-ical-events-list.php:395
+#, php-format
+msgid "%u second"
+msgid_plural "%u seconds"
+msgstr[0] ""
+msgstr[1] ""
+
+#: amr-ical-events-list.php:475
+msgid "Event Link"
+msgstr ""
+
+#: amr-ical-events-list.php:481
+msgid "calendar"
+msgstr ""
+
+#: amr-ical-events-list.php:563
+msgid "Status"
+msgstr ""
+
+#: amr-ical-events-list.php:886
+#, php-format
+msgid "Week  %u"
+msgstr ""
+
+#: amr-ical-list-admin.php:39
+msgid "Title"
+msgstr ""
+
+#: amr-ical-list-admin.php:41
+msgid "List Type from plugin settings"
+msgstr ""
+
+#: amr-ical-list-admin.php:43
+msgid "Number of Events"
+msgstr ""
+
+#: amr-ical-list-admin.php:45
+msgid "Link to calendar page in this website"
+msgstr ""
+
+#: amr-ical-list-admin.php:48
+msgid "Urls"
+msgstr ""
+
+#: amr-ical-list-admin.php:64
+msgid "Calendar Events list settings "
+msgstr ""
+
+#: amr-ical-list-admin.php:66
+msgid "iCal Events List"
+msgstr ""
+
+#: amr-ical-list-admin.php:68
+msgid "AmR iCal Event List Configuration"
+msgstr ""
+
+#: amr-ical-list-admin.php:265
+msgid "Options  <strong>Updated</strong>. "
+msgstr ""
+
+#: amr-ical-list-admin.php:281
+msgid " Define date and time formats:"
+msgstr ""
+
+#: amr-ical-list-admin.php:283
+msgid "Use "
+msgstr ""
+
+#: amr-ical-list-admin.php:284
+msgid " Php manual - date datetime formats"
+msgstr ""
+
+#: amr-ical-list-admin.php:287
+msgid "date "
+msgstr ""
+
+#: amr-ical-list-admin.php:288
+msgid " or "
+msgstr ""
+
+#: amr-ical-list-admin.php:289
+msgid " Php manual - Strftime datetime formats"
+msgstr ""
+
+#: amr-ical-list-admin.php:292
+msgid "strftime"
+msgstr ""
+
+#: amr-ical-list-admin.php:338
+msgid "Define maximums:"
+msgstr ""
+
+#: amr-ical-list-admin.php:356
+msgid "Select components to show:"
+msgstr ""
+
+#: amr-ical-list-admin.php:376
+msgid "Define grouping:"
+msgstr ""
+
+#: amr-ical-list-admin.php:392
+msgid "Calendar properties"
+msgstr ""
+
+#: amr-ical-list-admin.php:413
+msgid "Specify component contents:"
+msgstr ""
+
+#: amr-ical-list-admin.php:442
+msgid "Column Headings"
+msgstr ""
+
+#: amr-ical-list-admin.php:524
+msgid "AmR iCal Events List "
+msgstr ""
+
+#: amr-ical-list-admin.php:530
+msgid "Your Wordpress timezone for date and time calculations is "
+msgstr ""
+
+#: amr-ical-list-admin.php:538
+msgid "AmR ICal Global Options"
+msgstr ""
+
+#: amr-ical-list-admin.php:539
+msgid "Number of Ical Lists:"
+msgstr ""
+
+#: amr-ical-list-admin.php:542
+msgid "Use own css not default"
+msgstr ""
+
+#: amr-ical-list-admin.php:550
+msgid "Update"
+msgstr ""
+
+#: amr-ical-list-admin.php:551
+msgid "Reset"
+msgstr ""
+
+#: amr-ical-list-admin.php:552
+msgid "Uninstall"
+msgstr ""
+
+#: amr-ical-list-admin.php:563
+msgid "List Type "
+msgstr ""
+
+#: amr-ical-uninstall.php:6
+msgid "AmR iCal Options deleted from Database"
+msgstr ""
+
+#: amr-ical-uninstall.php:9
+msgid "AmR iCal Widget Options deleted from Database"
+msgstr ""
+
+#: amr-ical-uninstall.php:25
+msgid "Uninstall AmR iCal Events List Options"
+msgstr ""
+
+#: amr-ical-uninstall.php:26
+msgid ""
+"Note this function removes the options from the database.  To completely "
+"uninstall, one should continue on to use the standard wordpress functions to "
+"deactivate the plugin and delete the files.  It is not necessary to run this "
+"separately as the uninstall will also run as part of the wordpress delete "
+"plug-in files."
+msgstr ""
+
+#: amr-ical-uninstall.php:27
+msgid ""
+"The function is provided here as an aid to someone who has perhaps got their "
+"wordpress install in a knot and wishes to temporarily remove the options "
+"from the database as part of their debugging or cleanup.  Consider also the "
+"use of the RESET."
+msgstr ""
+
+#: amr-ical-uninstall.php:35
+msgid ""
+"Note: Navigating to \"Manage AmR ICal Settings\" will RELOAD default options "
+"- negating the uninstall."
+msgstr ""
+
+#: amr-ical-uninstall.php:37
+msgid "Continue to Plugin list to delete files as well"
+msgstr ""
+
+#: amr-ical-uninstall.php:48
+msgid "Cancel"
+msgstr ""
+
+#: amr-ical-uninstall.php:49
+msgid "Really Uninstall Options?"
+msgstr ""
+
+#. Plugin Name of an extension
+msgid "AmR iCal Events List"
+msgstr ""
+
+#. Plugin URI of an extension
+msgid "http://webdesign.anmari.com/web-tools/plugins-and-widgets/ical-events-list/"
+msgstr ""
+
+#. Description of an extension
+msgid ""
+"Display list of events from iCal sources.  <a "
+"href=\"options-general.php?page=manage_amr_ical\">Manage Settings Page</a> "
+"and  <a href=\"widgets.php\">Manage Widget</a> or <a "
+"href=\"page-new.php\">Write Calendar Page</a>"
+msgstr ""
