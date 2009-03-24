@@ -1,0 +1,100 @@
+/* AmRiCal Style for first calendar on page - need to add css for any further calendars  */
+
+.alt { /* make  and alt look different */
+	background-color: #eee;
+	}   
+	
+#calprop0,
+#compprop0,
+#compprop0 {
+}
+#compprop0 thead tr {
+	font-size: larger;
+	}
+#compprop0 .group  {/* make groupings look different */
+
+	}
+
+#compprop0 tfoot a,   /* make footer (where credits are look subtle */
+#wcompprop0 tfoot a {
+	color: #777;
+	}
+
+#compprop0,
+#calprop0 {	
+	width: 90%;   /* force the calendar  to take as much space as it can so floated items don't force a wrap */
+	margin: auto;
+	}
+	
+#calprop0 li,
+#compprop0 li,	
+#calprop0 ul,
+#compprop0 ul {
+	padding: 0; margin: 0;
+}	
+
+#wcompprop0 ul li,
+#calprop0 ul  li,
+#compprop0 ul li {  /* remove list bullets */
+	list-style: none;
+	text-indent: 0;
+	padding: 0;
+	margin: 0;
+}
+
+
+#compprop0 img ,
+#calprop0 img {
+	border: none;
+	vertical-align: text-bottom;
+	}
+
+#calprop0 ul li {  /* float calendar information onto one line */
+	float: left;
+	padding: 0 1em 0 0; 
+}
+#compprop0 li.addevent,
+#compprop0 li.icsurl ,
+#compprop0 li.map,
+#calprop0 li.addtogoogle,
+#calprop0 li.icsurl ,
+#calprop0 li.icalrefresh ,
+#calprop0 li.x-wr-timezone {
+	float: right;
+	padding: 0;
+}
+
+#compprop0 li.StartTime,
+#compprop0 li.EndTime,
+#wcompprop0 li.EventDate,
+#wcompprop0 li.StartTime,
+#wcompprop0 li.EndDate,
+#wcompprop0 li.EndTime { /* Optional float these items up next to each other  - depends on type of data nad space */
+	float: left; 
+	padding: 0 0.5em 0 0; 
+	}
+	
+#wcompprop0 li.SUMMARY {
+	clear: left;
+}
+
+#calprop0 th,
+#calprop0 td,
+#compprop0 th,
+#compprop0 td {
+	padding: 0.5em;
+	text-align: left;
+	}
+
+#calprop0 li,
+#compprop0 li
+	{padding: 0 1em 0 0 ;
+	}
+
+#compprop0 .recur {  /* style recurring events differently perhaps? */
+}	
+
+#menu #wcompprop0  ul { /* to override classic theme where all appears greyed out */
+	color: #000;
+}
+
