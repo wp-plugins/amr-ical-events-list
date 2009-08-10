@@ -1,0 +1,4 @@
+/* AmRiCal Style for printed pages  */
+.amr-bling { /* not display the clickable icons  */
+	display:none;
+}
