@@ -966,8 +966,8 @@ function amr_format_date( $format, $datestamp) { /* want a  integer timestamp an
 	}
 	else {
 //		return($dateO->format($format));
-//		return (date_i18n($format, $dateInt));  - supposed to localise, but is returning incorrect times - may be dateInt's problem?
-		return( date_i18n( $format, strtotime($dateInt)));
+		return (date_i18n($format, $dateInt)); // 
+
 		}
 
 }
@@ -1501,8 +1501,8 @@ function amr_do_ical_shortcode ($atts, $content = null) {
  * Internationalization functionality
  */
 /* $textdomain, path from abspath, path from plugins folder */
-//	load_plugin_textdomain('amr-ical-events-list', false , dirname(plugin_basename(__FILE__)).'/lang' );
-	load_textdomain('amr',false,'/lang');
+	load_plugin_textdomain('amr-ical-events-list', false , dirname(plugin_basename(__FILE__)).'/lang' );
+//	load_textdomain('amr-ical-events-list',false,'/lang');
 
 }
 /* -------------------------------------------------------------------------------------------------------------*/
@@ -1522,9 +1522,8 @@ function amr_do_ical_shortcode ($atts, $content = null) {
 
 /* -------------------------------------------------------------------------------------------------------------*/
 
-	add_action( 'init', 'amr_ical_load_text' );	
-	add_action( 'admin_init', 'amr_ical_load_text' );	
 
+//	add_action( 'load_textdomain', 'amr-ical-events-list', '/lang/amr-ical-events-list/'.WPLANG );
 
 	if (is_admin() )	{
 		add_action('admin_head', 'AmRIcal_options_style');
@@ -1534,6 +1533,8 @@ function amr_do_ical_shortcode ($atts, $content = null) {
 		add_action('wp_print_styles', 'amr_ical_events_style');
 		
 	add_action('plugins_loaded', 'amr_ical_widget_init');	
+	add_action('plugins_loaded', 'amr_ical_load_text' );	
+//	add_action( 'admin_init', 'amr_ical_load_text' );	
 	add_filter('plugin_action_links', 'amr_plugin_action', 8, 2);	
 	add_shortcode('iCal', 'amr_do_ical_shortcode');
 
