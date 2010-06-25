@@ -37,8 +37,9 @@ class amr_ical_widget extends WP_widget {
 	$amrW = 'w';	 /* to maintain consistency with previous version */
 	if (isset($doeventsummarylink) and !($doeventsummarylink)) $amrW = '';	 	
 
+	$moreurl = trim($moreurl," ");
 	$moreurl = (empty($moreurl)) ? null : $moreurl ;
-	if (isset ($moreurl)) $title = '<a href= "'.$moreurl.'">'.$title.'</a>';
+	if (!empty ($moreurl)) $title = '<a href= "'.$moreurl.'">'.$title.'</a>';
 	
 	If (ICAL_EVENTS_DEBUG) {echo '<br><br> urls '; print_r($urls);}	
 
