@@ -546,7 +546,7 @@ function amr_derive_summary (&$e) {
 	/* If not a widget, not listype 4, then if no url, do not need or want a link */
 	/* Correction - we want a link to the bookmark anchor on the calendar page***/
 	if (empty($e_url))  {
-		if ($amrW)  {
+		if (!($amrW == 'w_no_url'))  {
 			if (!empty($amrwidget_options['moreurl'])) {
 				$e_url = ' href="'.$amrwidget_options['moreurl'].'#'.$e['Bookmark'].'" ';
 			}
@@ -1529,6 +1529,9 @@ function amr_process_icalspec($criteria, $icalno=0) {
 	global $amr_listtype;
 	global $amrW;
 	
+	if (!empty($amrW)) $w = 'w';
+	else $w = '';
+	
 //	if (empty($criteria)) return ('');
 	if (!empty($criteria['urls'])) {
 		foreach ($criteria['urls'] as $i => $url) {
@@ -1576,7 +1579,7 @@ function amr_process_icalspec($criteria, $icalno=0) {
 /* amr here is the main calling code  *** */	
 		$calprophtml =  amr_list_properties ($icals);		
 		if (isset($calprophtml) and (!(empty($calprophtml))) and (!($calprophtml === ''))) {
-			$calprophtml  = '<table id="'.$amrW.'calprop'.$icalno.'" class="'.$amrW.'icalprop">'.$calprophtml.'</table>'.AMR_NL;
+			$calprophtml  = '<table id="'.$w.'calprop'.$icalno.'" class="'.$w.'icalprop">'.$calprophtml.'</table>'.AMR_NL;
 		}  			
 		$thecal = $calprophtml;
 		
@@ -1588,7 +1591,7 @@ function amr_process_icalspec($criteria, $icalno=0) {
 		}
 		else {
 				$thecal .= 
-				AMR_NL.'<table id="'.$amrW.'compprop'.$icalno.'" class="'.$amrW.'ical">'				
+				AMR_NL.'<table id="'.$w.'compprop'.$icalno.'" class="'.$w.'ical">'				
 				.amr_list_events($components )
 				.AMR_NL.'</table>'.AMR_NL;
 			}

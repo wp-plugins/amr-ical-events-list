@@ -35,7 +35,7 @@ class amr_ical_widget extends WP_widget {
 		echo('no url data for events widget');
 
 	$amrW = 'w';	 /* to maintain consistency with previous version */
-	if (isset($doeventsummarylink) and !($doeventsummarylink)) $amrW = '';	 	
+	if (isset($doeventsummarylink) and !($doeventsummarylink)) $amrW = 'w_no_url';	 	
 
 	$moreurl = trim($moreurl," ");
 	$moreurl = (empty($moreurl)) ? null : $moreurl ;
