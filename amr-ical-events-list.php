@@ -3,7 +3,7 @@
 Plugin Name: AmR iCal Events List
 Author URI: http://anmari.com/
 Plugin URI: http://icalevents.anmari.com
-Version: 2.8
+Version: 2.9
 Text Domain: amr-ical-events-list 
 Domain Path:  /lang
 
@@ -54,7 +54,7 @@ Data Structure:
     for more details.
 */
 
-define('AMR_ICAL_VERSION', '2.8');
+define('AMR_ICAL_VERSION', '2.9');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 define( 'AMR_BASENAME', plugin_basename( __FILE__ ) );
 
@@ -555,7 +555,7 @@ function amr_derive_summary (&$e) {
 					$e_url = ' class="url" href="'
 						.$amr_options[$amr_listtype]['general']['Default Event URL'].'" ';
 					}
-				else 					$e_url = ' href="#no-url-available" '; /*empty anchor as defined by w3.org */			
+				else $e_url = ' href="#no-url-available" '; /*empty anchor as defined by w3.org */			
 				/* not a widget */
 			}
 		}
@@ -1072,7 +1072,7 @@ function amr_event_should_be_shown($event, $astart, $aend) {
 					return (true);
 				}
 				else {
-					if (ICAL_EVENTS_DEBUG) { echo '<br />date not untimed or not same day' ; debug_print_event($event); echo '<hr>';}
+					if (ICAL_EVENTS_DEBUG) { echo '<br />date not untimed or not same day' ;  echo '<hr>';}
 					return (false);
 					}
 			}
@@ -1105,37 +1105,34 @@ function amr_arrayobj_unique2 (&$arr) {
 			Note: Mozilla does not seem to generate a SEQUENCE ID, but does do a X-MOZ-GENERATION.
 		*/	
 		$limit = count ($arr);	
-		if (isset($_REQUEST['debugexc'])) {echo '<br><br>Check for modifications or exceptions for array of '.$limit.' records'; }	
+		if (isset($_REQUEST['debugexc'])) {echo '<br><br>Check for modifications or exceptions for array of '.$limit.' records<br>'; }	
 		krsort ($arr);  /***  sort numerically  We can then walk through and "toss" the lower sequence numbers for a given uid and date instance */
 
-		if (isset($_REQUEST['debugexc'])) foreach ($arr as $i=> $a) {echo '..'.$i;}  /* Check the sorting */
-		
+		if (isset($_REQUEST['debugexc'])) foreach ($arr as $i=> $a) {echo '<br>..'.$i;}  /* Check the sorting */		
 		$seqprev = '';
 		$uiddateprev = '';
-		foreach ($arr as $i => $e) {	
-		
+		foreach ($arr as $i => $e) {			
 				if ($seqstart = strrpos($i, " ")) {
 					$seq = (int) substr($i, $seqstart, 100); 
 					$uiddate = substr ($i, 0, $seqstart);
 				}
-				else break; /* not an ical event, must be a unique post event */
+				else {if (isset($_REQUEST['debugexc'])) echo '<hr/>Must be a unique event? as key does not match pattern'; break;} /* not an ical event, must be a unique post event */
 				if (isset($_REQUEST['debugexc'])) { 
-					echo '<br />'.substr($i,0,6).'...'.substr($i,$seqstart-26,200);
+					echo '<br />seq='.$seq.' '.substr($i,0,6).'...'.substr($i,$seqstart-26,200);
 					echo '<br />uidate: '.$uiddate;
 					echo '<br />uidprv: '.$uiddateprev;
 				} 
 				if ($uiddate == $uiddateprev) {
 					if ($seq < $seqprev ) {
 						unset ($arr[$i]);
-						if (isset($_REQUEST['debugexc'])) echo '<br /><b>Delete seq: Seq was ='.$seq.' and $seqprev was: '.$seqprev	.'</b>';
-						
+						if (isset($_REQUEST['debugexc'])) echo '<br /><b>Delete seq: Seq was ='.$seq.' and $seqprev was: '.$seqprev	.'</b>';						
 						}
 					else if ($seqprev < $seq) {
 						if (isset ($iprev)) unset ($arr[$iprev]);
 						if (isset($_REQUEST['debugexc'])) 
 							echo '<br /><b>Delete seqprev Seq was ='.$seq.' and seqprev was: '.$seqprev.'</b>';
 					}
-					else echo '<br ><b>What happened? seqprev = '.$seqprev.' and seq = '.$seq.'</b>';
+					else echo '<br ><b>Unexpected inability to sort modification from original.  Please inform administrator. ? seqprev = '.$seqprev.' and seq = '.$seq.'</b>';
 					/* Note that while sequence numbers can be the same for a recurrencid, the plugn will add 999 for a recurrence id */
 				}
 
@@ -1147,8 +1144,6 @@ function amr_arrayobj_unique2 (&$arr) {
 //				}
 
 			}
-				
-	
 	}
 
 	/* ========================================================================= */			
@@ -1288,7 +1283,7 @@ function amr_process_single_icalevents(&$event, $astart, $aend, $limit) {
 		}
 
 		/* To handle modifications, use a key to the events, so can match any later mods with a repeating event we may have generated */
-		$seq = empty($event['SEQUENCE']) ? 'NoSeq' : $event['SEQUENCE']; /* begin setting up the event key that will help us check for modifocations - semingly duplicates!*/
+		$seq = empty($event['SEQUENCE']) ? '0' : $event['SEQUENCE']; /* begin setting up the event key that will help us check for modifications - semingly duplicates!*/
 		if (!isset($event['UID'])) $event['UID'] = 'NoUID';
 		 /* there is no repeating rule, so just copy over */			
 
@@ -1324,7 +1319,7 @@ function amr_process_single_icalevents(&$event, $astart, $aend, $limit) {
 			else {
 				if (isset ($_GET['debugexc'])) {
 					echo '<br /> '.$recdate.' not in range and '.$dtstart->format('c').' not in range' ;
-					debug_print_event ($event);
+//					debug_print_event ($event);
 					}
 				return(false); /* the modification and the instance that it relates to are not in our date range */
 			}
@@ -1387,7 +1382,7 @@ global $amr_limits;
 	
 		$newevents = amr_process_icalevents($events, $start, $end, $limit);	
 				
-		if (ICAL_EVENTS_DEBUG) { echo '<br>New events'; var_dump($newevents); }
+		if (ICAL_EVENTS_DEBUG) { echo '<br>New events count: '. count($newevents); }
 		
 		if (count($newevents) < 1) 	return (false);
 		$newevents = amr_sort_by_key($newevents , 'EventDate');	
@@ -1438,7 +1433,7 @@ function amr_process_icalevents($events, $astart, $aend, $limit) {
 		$dates = array();
 
 		foreach ($events as $i=> $event) {		
-			if (ICAL_EVENTS_DEBUG) {echo '<hr>'; echo '<strong>Process event</strong>'; debug_print_event ($event);}
+
 			amr_derive_dates ($event); /* basic clean up only - removing unnecessary arrays etc */
 			$more = amr_process_single_icalevents($event, $astart, $aend, $limit);
 			if (ICAL_EVENTS_DEBUG) { 
@@ -1450,13 +1445,13 @@ function amr_process_icalevents($events, $astart, $aend, $limit) {
 			if (ICAL_EVENTS_DEBUG) { echo '<hr>'; foreach ($dates as $i=>$a) echo ' '.$i;}
 		}
 		
-		if (ICAL_EVENTS_DEBUG) {echo '<hr>No.Dates= '.count($dates); var_dump($dates); } // 	
+		if (ICAL_EVENTS_DEBUG) {echo '<hr>No.Dates= '.count($dates);  } // 	
 		
 		if ((is_array($dates)) and (count($dates) > 1)) { /* must be > 1 for tere to be a duplicate! */
 			amr_arrayobj_unique2($dates); /* remove any duplicate in the values , check UID and Seq*/
 			if (ICAL_EVENTS_DEBUG) { echo '<br>Now have '.count($dates). ' after  duplicates check.';}	
 		}
-		if (ICAL_EVENTS_DEBUG) {echo '<hr>'; echo '<strong>Dates</strong> '; var_dump($dates);}		
+	
 		return ($dates) ; 
 	}
 
@@ -1486,12 +1481,12 @@ global $amr_limits;
 function amr_echo_parameters() {
 global $amr_limits;
 
-	$text = '<br />';
+	$text = '';
 	foreach ($amr_limits as $i=> $v) {
 		$text .= __($i,'amr-ical-events-list').' = ';
 		if (is_object($v)) $text .= $v->format('j M i:s');
 		else $text .= $v;
-		$text .= '<br />';
+		$text .= ', ';
 	}
 	return ($text);
 	
@@ -1552,7 +1547,7 @@ function amr_process_icalspec($criteria, $icalno=0) {
 			if (isset($icals)) $icals = array_merge($icals, $icals2 );
 			else $icals = $icals2;
 		}
-		else suggest_other_icalplugin ();
+		else suggest_other_icalplugin (__('Events from Posts','amr-ical-events-list' ));
 	}
 		
 	/* now we have potentially  a bunch of calendars in the ical array, each with properties and items */
@@ -1582,14 +1577,10 @@ function amr_process_icalspec($criteria, $icalno=0) {
 		$calprophtml =  amr_list_properties ($icals);		
 		if (isset($calprophtml) and (!(empty($calprophtml))) and (!($calprophtml === ''))) {
 			$calprophtml  = '<table id="'.$amrW.'calprop'.$icalno.'" class="'.$amrW.'icalprop">'.$calprophtml.'</table>'.AMR_NL;
-		}  	
-		
-		
+		}  			
 		$thecal = $calprophtml;
-		if (ICAL_EVENTS_DEBUG)  { echo '<br />Components'; var_dump($components);}
 		
 		$components = amr_constrain_components($components, $amr_limits['start'], $amr_limits['end'], $amr_limits ['events']);	
-
 
 		if (count($components) === 0) {
 			if (isset($amr_options['noeventsmessage'])) 
@@ -1640,7 +1631,8 @@ function amr_get_params ($attributes=array()) {
 	'days' => $amr_options[$amr_listtype]['limit']['days'],
 	'events' => $amr_options[$amr_listtype]['limit']['events'],
 	'tz' => '',
-	'months' => '0'      /* if we have months, start at begin of month and ignore days? */
+	'months' => '0',      /* if we have months, start at begin of month and ignore days? */
+	'hours' => '0'
 	);
 
 	$atts = shortcode_atts( $defaults, $attributes ) ;  /*  get the parameters we want out of the attributes */
@@ -1673,7 +1665,8 @@ function amr_get_params ($attributes=array()) {
 		}
 		else if  (($i === 'days') OR ($i==='events') or ($i === 'months')) {
 			if (isset($_REQUEST[$i])) {
-				if (function_exists ('filter_var') and (filter_var($_REQUEST[$i], FILTER_VALIDATE_INT, $pos_int_options))) $amr_limits[$i] = $_REQUEST[$i];
+				if (function_exists ('filter_var') and (filter_var($_REQUEST[$i], FILTER_VALIDATE_INT, $pos_int_options))) 
+					$amr_limits[$i] = $_REQUEST[$i];
 				else $amr_limits[$i] = $atts[$i];
 			}
 			else $amr_limits[$i] = $atts[$i];
@@ -1719,12 +1712,15 @@ function amr_get_params ($attributes=array()) {
 	$amr_formats = $amr_options[$amr_listtype]['format'];
 	
 	$daysoffset = (int)($amr_limits['startoffset']);
-	if ($daysoffset >= 0) $daysoffset = '+'.(string)$daysoffset.' days';
+
+	if ($daysoffset = 0) {} /* the unst only unsets locally and for some reason the globals unset is not working */
+	else if ($daysoffset > 0) $daysoffset = '+'.(string)$daysoffset.' days';
 	else $daysoffset = (string)$daysoffset.' days';
 	date_modify($amr_limits['start'],$daysoffset) ;	
 	
 	$hrsoffset = (int)($amr_limits['hoursoffset']);
-	if ($hrsoffset >= 0) $hrsoffset = '+'.(string)$hrsoffset.' hours';	
+	if ($hrsoffset = 0) unset ($amr_limits['hoursoffset']);
+	else if ($hrsoffset > 0) $hrsoffset = '+'.(string)$hrsoffset.' hours';	
 	else $hrsoffset = (string)$hrsoffset.' hours';	
 	date_modify($amr_limits['start'],$hrsoffset) ; /*** as per request from jd  */
 	
@@ -1733,7 +1729,13 @@ function amr_get_params ($attributes=array()) {
 	else $mthsoffset = (string)$mthsoffset.' months';	
 	date_modify($amr_limits['start'],$mthsoffset) ; 
 
-	
+	if (isset($amr_limits['hours'])) {
+		if ($amr_limits['hours']>0) {  /* then set the time to the beginning of the day */
+			date_time_set ($amr_limits['start'],$amr_limits['start']->format('G'),0,0);	/* set the time to beginning of the hour */			
+			unset ($amr_limits['days']);
+			unset ($amr_limits['months']);
+		}
+	}		
 	if (isset($amr_limits['months'])) {
 		if ($amr_limits['months']>0) {  /* then set the date to the beginning of the month */
 			$days = (int) $amr_limits['start']->format('d');
@@ -1742,18 +1744,24 @@ function amr_get_params ($attributes=array()) {
 			unset ($amr_limits['days']);
 		}
 		else unset ($amr_limits['months']);
-	}	
-	
-	$amr_limits['end'] = clone ($amr_limits['start']);
-	if (isset($amr_limits['months'])) {
-		date_modify($amr_limits['end'],'+'.($amr_limits['months']).' months') ;	
-		date_modify($amr_limits['end'],'-1 second') ;	
-		}
-	else {
-		date_modify($amr_limits['end'],'+'.($amr_limits['days']).' days') ;	
 	}
 
-	If (ICAL_EVENTS_DEBUG) echo amr_echo_parameters();
+	if (isset($amr_limits['days'])) {
+		if ($amr_limits['days']>0) {  /* then set the time to the beginning of the day */
+			date_time_set ($amr_limits['start'],0,0,0);
+		}
+	}
+
+	$amr_limits['end'] = clone ($amr_limits['start']);
+	if (isset($amr_limits['hours'])) 
+		date_modify($amr_limits['end'],'+'.($amr_limits['hours']).' hours') ;			
+	if (isset($amr_limits['months'])) 
+		date_modify($amr_limits['end'],'+'.($amr_limits['months']).' months') ;	
+	if (isset($amr_limits['days'])) 
+		date_modify($amr_limits['end'],'+'.($amr_limits['days']).' days') ;	
+	date_modify($amr_limits['end'],'-1 second') ; /* so that we do not include events starting in the next time period */
+
+	If (ICAL_EVENTS_DEBUG) {echo '<hr>'.amr_echo_parameters();}
 
 	return ($others);
 }
@@ -1831,7 +1839,7 @@ function amr_ical_exception_handler($exception) {
   _e('<br /><br />An error in the input data may prevent correct display of this page.  Please advise the administrator as soon as possible.');
 }
 
-set_exception_handler('amr_ical_exception_handler');
+	set_exception_handler('amr_ical_exception_handler');
 //	add_action( 'load_textdomain', 'amr-ical-events-list', '/lang/amr-ical-events-list/'.WPLANG );
 
 	if (is_admin() )	{

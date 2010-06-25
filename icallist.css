@@ -46,6 +46,10 @@ then you will need to add css for any further calendars - simply copy the comppr
 	border-right: 2px solid !important;
 	border-left: 0px !important;
 }
+.ical tr.today {  /* row borders do not always work ? but a 1 col widget looks funny with above css */
+	border: 2px solid !important;
+}
+
 .ical tr.history td.amrcol1 ,
 .ical tr.history td.lastcol,
 .ical tr.history td {  /* un style today's historical  */

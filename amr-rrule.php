@@ -118,7 +118,7 @@ global $amr_globaltz;
 
 /* Now test for negtaives, and fix or remove them for special handling  amr do we need thsi here? handle in the special by's anyway? */
 			
-		foreach (array('byyearday','byweekno', 'day') as $i => $b)	{
+		foreach (array('byyearday','byweekno', /* 'day' */) as $i => $b)	{
 			if (isset ($p[$b])) {
 				foreach ($p[$b] as $j => $k) {
 					if ($k < 0) {  /* special treatment required - handle separately */
@@ -188,7 +188,11 @@ BYMINUTE, BYSECOND and BYSETPOS */
 		}	
 */
 		$tz = date_timezone_get($date); /* save the timezone of the date that we are using,so we can create others using it  */
+
 		$d = date_parse ($date->format('Y-M-j H:i:s'));	/* gives $d['year']  etc */	
+		if (ICAL_EVENTS_DEBUG) {echo '<br />The parsed date:'; 	 var_dump($d);	}
+		
+
 		$d2[0] = $d;  /* the first in an array of start dates is our default date */
 		if (isset ($p['month'])) {
 			/* set the first month , and create more records of there are othr months */
@@ -225,18 +229,37 @@ BYMINUTE, BYSECOND and BYSETPOS */
 				/* now add the new d2's to the previous set */
 			}		
 		}
-		
-		foreach ($d2 as $i => $try) {
-			$d = new DateTime (
+			
+		foreach ($d2 as $i => $try) { 				
+			if ($try['day'] < 0) { /* we have a negative bymonthday, so must every iteration, work back from the last day */
+				$d = new DateTime (
+					$try['year'] .'-'.
+					$try['month'] . '-'.
+					'01 '.
+					$try['hour'] . ':'.
+					$try['minute'] . ':'.
+					$try['second'], $tz);  /* must use the same timezone, not the php default as else daylight saving etc could cause havoc with recurring entries */
+				$d = amr_get_last_xday_of_month ($d, $try['day']); 	
+				if (ICAL_EVENTS_DEBUG)  {
+					echo '<br /> Got last '.$try['day'].' day of month: '.$d->format('c');
+				}
+				}
+			else {	
+				$d = new DateTime (
 				$try['year'] .'-'.
 				$try['month'] . '-'.
 				$try['day'] . ' '.
 				$try['hour'] . ':'.
 				$try['minute'] . ':'.
 				$try['second'], $tz);  /* must use the same timezone, not the php default as else daylight saving etc could cause havoc with recurring entries */
+			}	
 			$start[] = $d;
 		}
-
+		if (isset($p['day']) or isset($p['bymonthday'])) {   /* Note: BYMONTHDAY and BYDAY can occur at same time and must be used together */
+			echo '<hr><h3>GOT IT</h3>';
+			var_dump($p);
+		}
+		
 		if (isset ($p['byday'])) {
 			foreach ($start as $i => $s) {
 				$start2[] = amr_process_byday ($s, $p['byday'], $wkst );
@@ -262,7 +285,7 @@ function amr_increment_datetime ($dateobject, $int) {
 	return ($dateobject);
 }
 /* -------------------------------------------------------------------------------- */
-function amr_check_bys($do, $bys) {
+function amr_check_bys($do, $bys) { /* Do we really need this ?*/
 /* check whther the date passed meets any 'bys' criteria 
 negday, byyearday, byweekno, negday (was bymonthday)
  bydays - can be be BYDAY=SU,MO,TU,WE,TH,FR,SA
@@ -270,19 +293,16 @@ BYDAY=1FR  1st friday, or BYDAY=1SU,-1SU 1st and last sunday
 BYDAY=-2MO 2nd to last mon
 return false if not a match with the by's */
 
+if (ICAL_EVENTS_DEBUG)  echo '<br />Checking the bys';
 foreach ($bys as $i => $b) {
 	switch ($i) {
 		case 'day': {
-			$d = ($do->format('j'));
+			$d = ($do->format('j')); /* Day of the month without leading zeros */
 			foreach ($b as $j => $k) {
-				if ($k<1)  {
-					echo 'Negative '.$i.' not yet supported '; }
-				else {
-					if ($d === $k) return (true);
-				}
+				if ($k<1) {} //{	echo 'Negative '.$i.' not yet supported '; }
+				else if (!($d === $k)) return (false); 
 			}
-			if (ICAL_EVENTS_DEBUG) echo ' -- Reject day of month. ';
-			return (false);  /*if a spec exists and it doesn't mathc any - must be reject */
+
 			break;
 		}	
 		case 'byweekno': {/* need week start too */
@@ -294,36 +314,26 @@ foreach ($bys as $i => $b) {
 //			if (ICAL_EVENTS_DEBUG) echo '<br>WDay '.$d.' for '. $do->format('c');
 	
 			foreach ($bys['byday'] as $j => $day) {
-				if (substr ($day, 0, 1) === '-') {
-					echo 'Negative day of week not yet supported '; }
-				else {
-					if ($d === $day) return (true);
+				if (substr ($day, 0, 1) === '-') {$day = substr($day, 1,2);}
+				if (!($d === $day)) return(false);
 				}
 			}
-			if (ICAL_EVENTS_DEBUG) echo '<br>not byday '.$d;
-			return (false);  /*if a spec exists and it doesn't match any - must be reject */
-			break;
-		}
-		
+			break;		
 		case 'month': {
-			$d = ($do->format('n'));
+			$d = ($do->format('n')); /* numeric month */
 			if (ICAL_EVENTS_DEBUG) echo '<br>Month is '.$d.' for '. $do->format('c');
 
 			foreach ($b as $j => $k) {
-				if ($k<1)  {
-					echo 'Negative '.$i.' not yet supported '; }
-				else {
-					if ($d === $k) return (true);
-				}
+				if ($k<1)	echo 'Negative '.$i.' not yet supported '; 
+				else if (!($d === $k)) return(false);
 			}
-			if (ICAL_EVENTS_DEBUG) echo ' reject ';
-			return (false);  /*if a spec exists and it doesn't mathc any - must be reject */
 			break;
 		}
 		case 'wkst': 
 		default: echo '<br>Unsupported BY '.$i.' found in data';
 	}
 }
+return(true);
 }
 
 /* -------------------------------------------------------------------------------- */
@@ -335,10 +345,13 @@ function amr_get_repeats (
 	$int, /* array of intervals */
 	$bys = null /* and arry of (bydays, byweekno, byyearday arrays */
 	) {
-		$i = 0;	
-		$repeats = array();
+	$i = 0;	
+	$repeats = array();
 		// v2.3.2 $try = new DateTime();		/* our work object - don't need, as clone will create object */	
-		foreach ($starts as $s => $d) {		
+		
+		
+		foreach ($starts as $s => $d) {	
+			if (!(is_object($d)))  { echo '<br />Unexpected non date value'.$d.'<br />'; return (false); }		
 			$try = new DateTime();
 			$try = clone ($d);
 
@@ -346,17 +359,30 @@ function amr_get_repeats (
 			/* increment and see if that is valid.	Note that the count here is just to limit the search, we may still end up with too many and will check that later*/		
 
 				if ($try->format('c') >= $dstart->format('c')) {  /* start our counts from here */
-				/*** amr add BYDAY etc checks in here>? */		
-
+				/* we may need to check days of week etc here becuase if there is a combination rule, it may be tricky  */		
 					if (!isset($bys) or amr_check_bys($try, $bys)) {
+						if (ICAL_EVENTS_DEBUG)  echo '<br />bys ok <br />';
 						$repeats[$i] = new DateTime();				
 						$repeats[$i] = clone ($try);
 						$i = $i+1;
 					}
+					else if (ICAL_EVENTS_DEBUG)  echo '<br />No bys or bys wrong';
 				}
 				else if (ICAL_EVENTS_DEBUG) { echo '<br>Date '.$try->format('c').' too early';}
 	
 				$try = amr_increment_datetime ($try, $int);		
+				
+				if (ICAL_EVENTS_DEBUG) {echo '<hr>bys:'; var_dump($bys);}
+							
+				if (isset ($bys['day'])) {
+					
+					$days = intval($bys['day']);
+					echo ' got them from'.$bys['day'].' to '.$days;
+					if ($days < 0) { 
+						$try=amr_get_last_xday_of_month($try,$days );
+						if (ICAL_EVENTS_DEBUG) {echo '<br />Adjusted increment to last '.$bys['day'].'  day of month ';}
+					}
+				}
 			}
 		}
 	
@@ -412,13 +438,13 @@ function amr_process_RRULE($p, $start, $end )  {
 		if (count($p) === 0) {$p=null; }  /* If that was all we had, get rid of it anyway */
 			
 		/*** we should leap forward until within one FREQ of our current start date ? or will that mess up th e numeric options?  leave for now*/
-			
+		
 		if (!empty($p)) {
 			if (isset ($p['specbyday'])) {
 				if (ICAL_EVENTS_DEBUG) {echo '<br /><br /><h3>Special By day:</h3>';var_dump($p['specbyday']);}
 				$repeats = amr_process_numericbydays($start, $p, $wkst, $count, $until, $int);
 			}
-			else {
+			else { 		
 				$poss = amr_process_easybys ($start, $p, $wkst);  /* get the easy date by's and setup initial starting dates */
 				if (!empty($poss)) $repeats = amr_get_repeats ($poss, $start, $until, $count, $int, $p );
 			}
@@ -434,13 +460,32 @@ function amr_process_RRULE($p, $start, $end )  {
 	return ($repeats);
 	
 	}
-		/* ---------------------------------------------------------------------------- */
-function amr_get_last_day ($date, $format)	{
+/* ---------------------------------------------------------------------------- */
+function amr_get_last_xday_of_month ($date, $x=-1)	{ /* helper function format passed is NB.  Can be used for last day of year and last day of month*/
+/* php 'last day of month' not working? */
+		$last = date_create ($date->format('Y-m-01 H:i:s'), $date->getTimezone()); /* set to first of month  */
+		$last->modify('+1 month');
+		$x = (int) $x;
+		$last->modify($x.' days');
+		return ($last);
+}
+/* ---------------------------------------------------------------------------- */
+function amr_get_last_day_of_year ($date)	{ /* helper function format passed is NB.  Can be used for last day of year and last day of month*/
+/* php 'last day of month' not working? */
+		$last = date_create ($date->format('Y-12-01 H:i:s'), $date->getTimezone()); /* set to first of month  */
+		$last->modify('+1 month');
+		$last->modify('-1 day');
+		return ($last);
+}
+/* ---------------------------------------------------------------------------- */
+function amr_get_last_day ($date, $format)	{ /* helper function format passed is NB.  Can be used for last day of year and last day of month*/
+/* php 'last day of month' not working? */
 		$last = date_create ($date->format($format), $date->getTimezone()); /* set to first of month  */
 		$last->modify('+1 month');
 		$last->modify('-1 day');
 		return ($last);
 }
+
 	/* ---------------------------------------------------------------------------- */
 function amr_goto_byday ($dd, $byday, $sign='+')	{
 /* from the given date, check the current day move forward, or backward a day at time till the day of week is the one we want  */

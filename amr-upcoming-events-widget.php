@@ -20,7 +20,6 @@ class amr_ical_widget extends WP_widget {
 
 	amr_getset_options ();
 
-	$amrW = 'w';	
 	$amr_listtype = '4';  /* default only */
 	extract ($args, EXTR_SKIP); /* this is for the before / after widget etc*/
 	extract ($instance, EXTR_SKIP); /* this is for the before / after widget etc*/	
@@ -35,9 +34,8 @@ class amr_ical_widget extends WP_widget {
 	else 
 		echo('no url data for events widget');
 
-
-		
-//	if (!empty($limit)) $amr_limits['events'] = $limit ; /* overwrite with the number of events specified in the widget */
+	$amrW = 'w';	 /* to maintain consistency with previous version */
+	if (isset($doeventsummarylink) and !($doeventsummarylink)) $amrW = '';	 	
 
 	$moreurl = (empty($moreurl)) ? null : $moreurl ;
 	if (isset ($moreurl)) $title = '<a href= "'.$moreurl.'">'.$title.'</a>';
@@ -63,6 +61,7 @@ class amr_ical_widget extends WP_widget {
 		$instance['title'] = strip_tags($new_instance['title']);
 		$instance['shortcode_urls'] = strip_tags($new_instance['shortcode_urls']);
 		$instance['moreurl'] = 	strip_tags($new_instance['moreurl']);
+		$instance['doeventsummarylink'] = 	strip_tags($new_instance['doeventsummarylink']);
 		
 		if (get_option('amr-ical-widget') ) delete_option('amr-ical-widget'); /* if t exists - leave code for a while for conversion */
 		return $instance;
@@ -72,15 +71,19 @@ class amr_ical_widget extends WP_widget {
 	
 /* ============================================================================================== */
 	function form($instance) { /* this does the display form */
+	global $amrW;
 	
         $instance = wp_parse_args( (array) $instance, array( 
 			'title' => __('Upcoming Events','amr-ical-events-list') ,
 			'shortcode_urls' => 'http://www.google.com/calendar/ical/0bajvp6gevochc6mtodvqcg9o0%40group.calendar.google.com/public/basic.ics',
-			'moreurl' => '' ) );
+			'moreurl' => '',
+			'doeventsummarylink' => true
+			) );
 			
 		$title = $instance['title'];	
 		$moreurl = $instance['moreurl'];
 		$shortcode_urls = $instance['shortcode_urls'];
+		$doeventsummarylink = $instance['doeventsummarylink'];
 			
 		if ($opt = get_option('amr-ical-widget')) {  /* delete the old option in the save */	
 			if (isset ($opt['urls']) ) $shortcode_urls = str_replace(',', ' ',$opt['urls']);  /* in case anyone had multiple urls separate by commas - change to spaces*/
@@ -99,6 +102,11 @@ class amr_ical_widget extends WP_widget {
 	<p><label for="<?php echo $this->get_field_id('moreurl'); ?>"><?php _e('Calendar page url in this website, for event title links', 'amr-ical-events-list'); ?> 
 	<input id="<?php echo $this->get_field_id('moreurl'); ?>" name="<?php echo $this->get_field_name('moreurl'); ?>" type="text" style="width: 200px;" 
 	value="<?php echo attribute_escape($moreurl); ?>" /></label></p>
+	<p><label for="<?php echo $this->get_field_id('doeventsummarylink'); ?>"><?php 
+	_e('Do an event summary hyperlink with event description as title text?', 'amr-ical-events-list'); ?> 
+	<input id="<?php echo $this->get_field_id('doeventsummarylink'); ?>" name="<?php 
+	echo $this->get_field_name('doeventsummarylink'); ?>" type="checkbox" 
+	value="true" <?php if ($doeventsummarylink) echo 'checked="checked"';?> /></label></p>
 	<p><label for="<?php echo $this->get_field_id('shortcode_urls');?>"><?php _e('Urls (plus optional shortcode parameters)', 'amr-ical-events-list'); ?> </label>
 	<a href="http://icalevents.anmari.com" title="<?php _e('See plugin website','amr-ical-events-list'); ?>">?</a>
 	<textarea cols="25" rows="10" id="<?php echo $this->get_field_id('shortcode_urls');?>" name="<?php echo $this->get_field_name('shortcode_urls'); ?>" ><?php
@@ -106,14 +114,6 @@ class amr_ical_widget extends WP_widget {
 	
 <?php }
 /* ============================================================================================== */
-}
-function amr_check_convert_widget ($instance) {
-
-if ($opt = get_option('amr-ical-widget')) {
-
-	
-}
-
 }
 
 ?>

@@ -4,8 +4,8 @@
 			fieldset.alt {background: #eee;}
 			div#AmRIcal fieldset {float: left; width: 40em; margin: 0.5em 0;}
 			div#AmRIcal fieldset#amrglobal label {margin-top: 1em;}
-			div#AmRIcal fieldset#amrglobal { width: 35em; }
-			div#AmRIcal fieldset#submit {width: 20em; margin: 0.5em 0;}
+			div#AmRIcal fieldset#amrglobal { width: 35em; margin-top: 2em; }
+			div#AmRIcal fieldset#submit {width: 20em; margin: 2.5em 0;}
 			div#AmRIcal fieldset#ListTypes {width: 350em; margin-bottom: 1em; }	
 			div#AmRIcal fieldset#ListTypes fieldset { padding: 0 0.5em; }				
 			

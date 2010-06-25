@@ -36,7 +36,6 @@
 	global $amr_options;
 		$cache_path = (ICAL_EVENTS_CACHE_LOCATION. '/ical-events-cache');
 		if (!file_exists($cache_path)) { /* if there is no folder */
-			If (ICAL_EVENTS_DEBUG) echo '<br>Cache folder does not exist'.$cache_path;		
 			if (wp_mkdir_p($cache_path, 0777)) {
 				printf('<br />'.__('Your cache directory %s has been created','amr-ical-events-list'),'<code>'.$cache_path.'</code>');
 			}
@@ -45,7 +44,6 @@
 			}
 
 		}
-		else If (ICAL_EVENTS_DEBUG) echo '<br />Cache folder exists: '.$cache_path;	
 		return $cache_path;
 	}
 /* ---------------------------------------------------------------------- */
@@ -69,18 +67,16 @@
 	global $amr_lastcache;
 	global $amr_globaltz;	
 
+		If (ICAL_EVENTS_DEBUG) echo '<br />url: '.$url; 	
 		$file = get_cache_file($url);
 		if ( file_exists($file) ) {
 			$c = filemtime($file);		
 			if ($c) $amr_lastcache = date_create(strftime('%c',$c));
 			else $amr_lastcache = '';
-			If (ICAL_EVENTS_DEBUG)		echo '<br />We have a file '.$file.' Last cached at '.$amr_lastcache->format('c'); 
-
 		}
 		else {
 			$c = false;
 			$amr_lastcache = date_create(strftime('%c',0));	
-			If (ICAL_EVENTS_DEBUG)		echo '<br />No cached file exists.';
 			}
 
 		if ( isset($_REQUEST['nocache']) or isset($_REQUEST['refresh']) 
@@ -99,14 +95,12 @@
 			if (( is_wp_error($check) ) or  (isset ($check['response']['code']) and ($check['response']['code'] == 404))
 			or (isset ($check[0]) and preg_match ('#404#', $check[0]))) {  /* is the last bit still meaningful or needed ? */
 			
-				If (ICAL_EVENTS_DEBUG) echo '<br />Error with remote file';
-			
 				if (is_wp_error($check)) $text = $check->get_error_message();
 				else $text = '';
 //				$text .= '&nbsp;'.sprintf(__('Error getting calendar file: %s','amr-ical-events-list'), $url);		
 				if ( file_exists($file) ) { 
 					$text .= '&nbsp;'.sprintf(__('Using File last cached at %s','amr-ical-events-list'), $amr_lastcache->format('D c'));	
-					echo '<br /><span style="text-align:center; font-size:small;"><em>'.__('Warning: Events may be out of date. ','amr-ical-events-list').$text.'</span>';	
+					echo '<br /><span style="text-align:center; font-size:small;"><em>'.__('Warning: Events may be out of date. ','amr-ical-events-list').$text.'</em></span>';	
 
 					return($file);
 					}
@@ -164,8 +158,8 @@
 		global $utczobj;
 
 		/*  	19970714T133000            ;Local time
-			19970714T173000Z           ;UTC time */
-		If (isset ($_REQUEST['tzdebug'])) echo '<br />Got date spec '.$d.'<br />';
+			19970714T173000Z           ;UTC time 
+			tz dealt with already ?*/
 			
 		if ((substr($d, strlen($d)-1, 1) === 'Z')) {  /*datetime is specifed in UTC */
 			//echo '<br>we got a Z'.$d;
@@ -188,15 +182,7 @@
 			echo '<br />Unable to create DateTime object.<br />'.$e->getMessage();
 			return (false);
 		}
-		If (isset ($_REQUEST['tzdebug'])) echo ' Create date  as ' .$dt->format('Ymd His').' in '.$tzobj->getName(). '<br />';
-		
-//		if (!($tzobj->getName() === $amr_globaltz->getName() )) {
-//			$dt->setTimezone($amr_globaltz);  /* V2.3.1   shift date time to our desired timezone */
-//			If (isset ($_REQUEST['tzdebug'])) {
-//				echo 'Shift to tz: '.$amr_globaltz->getName().' giving '.$dt->format('Ymd His').'<br />';
-//				}
-//		}
-		
+	
 	return ($dt);
     }
 	/* ---------------------------------------------------------------------- */
@@ -401,7 +387,6 @@ global $amr_globaltz;
 	$p0 = explode (';', $parts[0], 2);  /* Looking for ; VALUE = something...;   or TZID=... or both???*/
 	if (isset($p0[1])) { /* ie if we have some modifiers like TZID, or maybe just VALUE=DATE */
 		parse_str($p0[1]);/*  (will give us if exists $value = 'xxx', or $tzid= etc) */
-
 		if (isset($TZID)) { /* Normal TZ, not the one with the path eg:  DTSTART;TZID=US-Eastern:19980119T020000*/
 			$tzobj = timezone_open($TZID);
 		}  /* should create datetime object with it's own TZ, datetime maths works correctly with TZ's */
