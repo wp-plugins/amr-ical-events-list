@@ -53,7 +53,7 @@ global $amr_globaltz;
 		if (isset ($BYMONTH)) {	
 			$p['month'] = explode (',',$BYMONTH);	
 			if (isset($FREQ) and ($FREQ === 'MONTHLY')) {
-				echo '</br>Incompatible FREQ=MONTHLY and BYMONTH, corrected: FREQ set to YEARLY</br>';
+				echo '</br>Incompatible FREQ=MONTHLY and BYMONTH, correction attempted: FREQ set to YEARLY</br>';
 				$FREQ = 'YEARLY';  /* if Freq was left out, we can still "recover from that */
 			} 
 			foreach ($p['month'] as $j => $k) { 
@@ -64,7 +64,7 @@ global $amr_globaltz;
 		if (isset ($BYMONTHDAY)) {
 			$p['day'] = explode (',',$BYMONTHDAY);
 			if (isset($FREQ) and ($FREQ === 'DAILY')) {
-				echo '</br>Incompatible FREQ=DAILY and BYMONTHDAY, corrected: FREQ set to MONTHLY</br>';
+				echo '</br>Incompatible FREQ=DAILY and BYMONTHDAY, correction attempted: FREQ set to MONTHLY</br>';
 				$FREQ = 'MONTHLY'; /* if Freq was left out, we can still "recover from that */
 			}		
 		}
@@ -124,7 +124,7 @@ global $amr_globaltz;
 					if ($k < 0) {  /* special treatment required - handle separately */
 						$p['neg'.$b][] = $k;
 						unset ($p[$b][$j]);
-						echo '<br>Negative '.$b.' '.$k.' not yet supported ';
+						echo '<br>Negative '.$b.' '.$k.' not yet supported.  An Event may be incorrect. ';
 					}
 					else $by2[] = $k;
 				}
@@ -256,8 +256,7 @@ BYMINUTE, BYSECOND and BYSETPOS */
 			$start[] = $d;
 		}
 		if (isset($p['day']) or isset($p['bymonthday'])) {   /* Note: BYMONTHDAY and BYDAY can occur at same time and must be used together */
-			echo '<hr><h3>GOT IT</h3>';
-			var_dump($p);
+			/* still unsupported - need code here */
 		}
 		
 		if (isset ($p['byday'])) {
@@ -299,7 +298,10 @@ foreach ($bys as $i => $b) {
 		case 'day': {
 			$d = ($do->format('j')); /* Day of the month without leading zeros */
 			foreach ($b as $j => $k) {
-				if ($k<1) {} //{	echo 'Negative '.$i.' not yet supported '; }
+				if ($k<1) {	
+					if (ICAL_EVENTS_DEBUG)	echo 'Negative BYMONTHDAY not yet supported. An event may be incorrect or missing.'; 
+					return(false); 
+					}
 				else if (!($d === $k)) return (false); 
 			}
 
@@ -377,7 +379,7 @@ function amr_get_repeats (
 				if (isset ($bys['day'])) {
 					
 					$days = intval($bys['day']);
-					echo ' got them from'.$bys['day'].' to '.$days;
+					if (ICAL_EVENTS_DEBUG) { echo ' got them from'.$bys['day'].' to '.$days;}
 					if ($days < 0) { 
 						$try=amr_get_last_xday_of_month($try,$days );
 						if (ICAL_EVENTS_DEBUG) {echo '<br />Adjusted increment to last '.$bys['day'].'  day of month ';}

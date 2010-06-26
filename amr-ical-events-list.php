@@ -3,7 +3,7 @@
 Plugin Name: AmR iCal Events List
 Author URI: http://anmari.com/
 Plugin URI: http://icalevents.anmari.com
-Version: 2.9
+Version: 2.9.1
 Text Domain: amr-ical-events-list 
 Domain Path:  /lang
 
@@ -54,7 +54,7 @@ Data Structure:
     for more details.
 */
 
-define('AMR_ICAL_VERSION', '2.9');
+define('AMR_ICAL_VERSION', '2.9.1');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 define( 'AMR_BASENAME', plugin_basename( __FILE__ ) );
 
@@ -1262,7 +1262,7 @@ function amr_process_single_icalevents(&$event, $astart, $aend, $limit) {
 				$dt = empty($event['DTSTART']) ? '' : $event['DTSTART']->format('c'); /* begin setting up the event key that will help us check for modifocations - semingly duplicates! - overwrite for repeats */
 			}
 			else {
-				echo('DTSTART is not an object'); return (false); /* it is set, but it is not an aobject ? */
+				if (ICAL_EVENTS_DEBUG) echo('DTSTART is not an object'); return (false); /* it is set, but it is not an aobject ? */
 				}
 			}
 		else { /* possibly an undated, non repeating VTODO or Vjournal- no repeating to be done if no DTSTART, and no RDATE */

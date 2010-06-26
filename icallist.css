@@ -6,10 +6,6 @@ In the configuration, you can specify your own css file for the plugin to use (A
 If you have multiple icals on a page (ie not multiple urls in a shortcode, but multiple instances of the shortcode,
 then you will need to add css for any further calendars - simply copy the compprop0 to compprop1 */
 
-.wical .alt,
-.ical .alt { /* make  and alt look different. if your theme has an "alt" styling, then remove this for consistency with your theme's styling. */
- 	background-color: #eee; 
-	} 
 .history
 { /* make  and alt look different. if your theme has an "alt" styling, then remove this for consistency with your theme's styling. */
 	opacity: .7; /*  for all other browsers*/
@@ -18,54 +14,12 @@ then you will need to add css for any further calendars - simply copy the comppr
 	zoom:1 /* so the element "hasLayout"
     /* or, to trigger "hasLayout" set a width or height */
 }
-	} 
-	
-.wical,
-.ical  {  
-	border-collapse:collapse;  /* required to get the today rown border styling loooking good  */
-	border: none;
-}
-
 .ical td {
 	vertical-align: top;
 }
-
-
-.ical tr.today td {  /* style today's events differently perhaps? */
-	border-top: 2px solid !important;
-	border-bottom: 2px solid !important;
-	border-left: 0px;
-	border-right: 0px;
-}
-
-.ical tr.today td.amrcol1 {  /* style today's events differently perhaps? */
-	border-left: 2px solid !important;
-	border-right: 0px !important;
-}
-.ical tr.today td.lastcol {  /* style today's events differently perhaps? */
-	border-right: 2px solid !important;
-	border-left: 0px !important;
-}
-.ical tr.today {  /* row borders do not always work ? but a 1 col widget looks funny with above css */
-	border: 2px solid !important;
-}
-
-.ical tr.history td.amrcol1 ,
-.ical tr.history td.lastcol,
-.ical tr.history td {  /* un style today's historical  */
-	border: 0 !important;
-}
-.wical  {  /* style recurring events differently perhaps? */
-	border: 0;
-}
-
-.wical td.today {  /* style recurring events differently perhaps? */
+.wical td.today {  
 	font-weight: bolder !important;
 }	
-
-.ical .group  {/* make groupings look different maybe */
-
-	}
 /* -------------------------------------------------------------------------------------*/
 /* Table related definitions - delete these if your theme does tables nicely already  */
 	.ical thead tr { /* Make the table heading row a bit bigger */
@@ -84,13 +38,7 @@ then you will need to add css for any further calendars - simply copy the comppr
 		padding: 0.5em;
 		text-align: left;
 		}	
-
-/*	td.amrcol1 {
-/*		width: 20%; /* we want the first column to stay a certain width  for better presentation  */
-/*		}	
-/* end of table */	
 /* -------------------------------------------------------------------------------------*/	
-
 	
 .ical li.summary h3{ /* make the summaries take on whatever the theme's h3 is, but not extra space above */
 	padding-top: 0;
@@ -160,7 +108,6 @@ then you will need to add css for any further calendars - simply copy the comppr
 	vertical-align: text-bottom;
 	}
 
-
 .icalprop ul li {  /* float calendar information onto one line */
 	float: left;
 	padding: 0 1em 0 0; 
@@ -224,7 +171,6 @@ then you will need to add css for any further calendars - simply copy the comppr
 	padding:2%; 
 	overflow: none;
 }
-	
 
 .ical tbody,
 .wical tbody   { border:none;}
