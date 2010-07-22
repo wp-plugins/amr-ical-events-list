@@ -3,7 +3,7 @@
 Plugin Name: AmR iCal Events List
 Author URI: http://anmari.com/
 Plugin URI: http://icalevents.anmari.com
-Version: 2.9.1
+Version: 2.9.2
 Text Domain: amr-ical-events-list 
 Domain Path:  /lang
 
@@ -54,7 +54,7 @@ Data Structure:
     for more details.
 */
 
-define('AMR_ICAL_VERSION', '2.9.1');
+define('AMR_ICAL_VERSION', '2.9.2');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 define( 'AMR_BASENAME', plugin_basename( __FILE__ ) );
 
@@ -125,6 +125,7 @@ global $amr_options;
 /*--------------------------------------------------------------------------------*/
 function add_event_to_google($e) {
 global $amr_options;
+	if (!isset($e['EventDate'])) return('');
 	if (isset($e['LOCATION'])) $l = str_replace(' ','%20',htmlentities($e['LOCATION'] ));
 	else $l = '';
 	if (!isset($e['DESCRIPTION'])) $e['DESCRIPTION'] = '';
@@ -533,6 +534,16 @@ function amr_format_bookmark ($text) {
 	return ('<a id="'.$text.'"></a>');  /* ***/
 }
 /* --------------------------------------------------------- */
+function amr_format_rrule ($rule) {
+
+	$c = '';
+	foreach ($rule as $i => $v) {			
+		if (!(empty($v))) {$c .= 	amr_format_value ($v, $k) .'<br />';}
+	}
+	return ($c);
+
+}
+/* --------------------------------------------------------- */
 function amr_derive_summary (&$e) {
 	global $amr_options;
 	global $amr_listtype;
@@ -540,7 +551,8 @@ function amr_derive_summary (&$e) {
 	global $amrwidget_options;
 /* If there is a event url, use that as href, else use icsurl, use description as title */
 
-	$e['SUMMARY'] = htmlspecialchars(amr_just_flatten_array ($e['SUMMARY'] ));
+	if (isset($e['SUMMARY'])) $e['SUMMARY'] = htmlspecialchars(amr_just_flatten_array ($e['SUMMARY'] ));
+	else return ('');
 	if (isset($e['URL'])) $e_url = amr_just_flatten_array($e['URL']);
 	else $e_url = '';	
 	/* If not a widget, not listype 4, then if no url, do not need or want a link */
@@ -573,9 +585,7 @@ function amr_derive_summary (&$e) {
 	}
 	else $e_desc =  __('No event description available', 'amr-ical-events-list');
 
-	$e_url = '<a '.$e_url.' title="'.$e_desc.'">'
-	.$e['SUMMARY']
-	.'</a>';
+	$e_url = '<a '.$e_url.' title="'.$e_desc.'">'. $e['SUMMARY'].'</a>';
 	
 	return( $e_url );
 
@@ -609,12 +619,15 @@ what about all day?
 				return (amr_format_date ($amr_formats['Time'], $content)); 
 			case 'DTSTART': /* probably will never display these */
 			case 'DTEND':
-			case 'until':
+			case 'UNTIL':
 				return ( amr_format_date ($amr_formats['Day'], $content).' '.amr_format_date ($amr_formats['Time'], $content)); 	
-
+			case 'X-WR-TIMEZONE': { /* amr  need to add code to reformat the timezone as per admin entry.  Also only show if timezone different ? */
+				return(timezone_name_get($content));
+			}	
 			case 'TZID': { /* amr  need to add code to reformat the timezone as per admin entry.  Also only show if timezone different ? */
 				return(amr_format_tz (timezone_name_get($content)));
 			}	
+
 			default: 	/* should not be any */
 
 				return (amr_format_date ($amr_formats['DateTime'], $content)); 	
@@ -622,6 +635,13 @@ what about all day?
 	}
 	else if (is_array($content)) {
 		if ($k === 'DURATION') { return( amr_format_duration ($content)); }
+		else if (($k === 'RRULE') or ($k === 'EXRULE')) { 
+			$rule = amr_prepare_pretty_rrule ($content);
+			return( amr_prettyprint_rule ($rule)); }
+		else if (($k === 'RDATE') or ($k === 'EXDATE')) { 
+			$dates = amr_prettyprint_r_ex_date ($content);
+			return( $dates); 
+			}			
 		else {  /* don't think wee need to list the items separately eg: multiple comments or descriptions - just line  */
 			$c = '';
 			foreach ($content as $i => $v) {			
@@ -700,10 +720,14 @@ function amr_derive_dates (&$e) {
 } 
 /* ------------------------------------------------------------------------------------*/
 function amr_derive_eventdates_further (&$e) {	
+global $amr_globaltz;
 /* Derive any date dependent data - requires EventDate at least to have been set */
-	$now = date_create();
+	$now = date_create('now',$amr_globaltz );
+	
+	if (isset($e['EventDate'])) { date_timezone_set($e['EventDate'],$amr_globaltz );}
 	if (!isset($e['Classes'])) $e['Classes'] = '';
 	if (isset($e['EndDate'])) {
+		date_timezone_set($e['EndDate'],$amr_globaltz );
 		if (amr_is_before($e['EndDate'], $now)) $e['Classes'] .= ' history'; 
 		}
 	else /* ie there is no end date, just an event date */ if (amr_is_before($e['EventDate'], $now)) $e['Classes'] .= ' history'; 	
@@ -744,7 +768,7 @@ function amr_derive_eventdates_further (&$e) {
 		}
 		else $e['Classes'] .= ' multiday'; 
 	}
-	$e['addevent'] = add_event_to_google($e);
+	
 
 	return($e);
 }
@@ -769,14 +793,20 @@ global $amrW;
 	if (isset ($e['STATUS']) ){
 		$e['Classes'] .= ' '.amr_just_flatten_array($e['STATUS']);  /* would have values like 'CONFIRMED'*/ 
 	}
-	$e['Classes'] .= ' '.$e['name'].' '.$e['type'];  /* so we can style events, todo's differently */
+	if (isset($e['name']))  $e['Classes'] .= ' '.$e['name'];
+	if (isset($e['type']))  $e['Classes'] .= ' '.$e['type'];  /* so we can style events, todo's differently */
+	if (isset($e['CATEGORIES'])) 
+		$e['Classes'] .= ' '.str_replace(',',' ',amr_just_flatten_array($e['CATEGORIES']));
 
-	$e['Bookmark'] = 'a'.str_replace('@','',$e['UID']).$bookm;  /* must be before summary as it is used there .  Must be a char to start not a number and get rid of odd chars for validation*/
+	if (isset($e['UID'])) $e['Bookmark'] = 'a'.str_replace('@','',$e['UID']).$bookm;  /* must be before summary as it is used there .  Must be a char to start not a number and get rid of odd chars for validation*/
 	$e['SUMMARY'] = amr_derive_summary ($e);
 	if (isset ($e['GEO'])) {	$e['map'] = amr_ical_showmap($e['GEO']); }
 	else if ((isset ($e['LOCATION'])) and (!empty($e['LOCATION']))) { 
 			$e['map'] = amr_ical_showmap($e['LOCATION']); 	
 	}
+	
+	if ($g = add_event_to_google($e))  $e['addevent'] = $g;
+	
 }
 /* --------------------------------------------------  */
 function amr_just_flatten_array ($arr) {
@@ -812,7 +842,7 @@ function add_querystring_var($url, $key, $value) {
 	   } else {
 			return ($url . '&' . $key . '=' . $value);
 	   }
-	 } 
+} 
 /* --------------------------------------------------  */
 
 function amr_list_events($events, $g=null) {
@@ -870,8 +900,10 @@ function amr_list_events($events, $g=null) {
 		}
 		$html .= $rc.$hdc;
 		$html .= $ft.$r.'>'.$d.'colspan="'.$no_cols.'"  >';
+		if (!empty($amr_limits)) {
 			if (function_exists('amr_semi_paginate')) $html .= amr_semi_paginate();
 			else $html .= amr_ngiyabonga();
+		}
 //		if (!($amrW)) {$html .= amr_show_refresh_option ();}
 		$html .= $dc.$rc.$ftc;
 		$html .= $bd;
@@ -1008,7 +1040,8 @@ global 	$amr_options,
 
 	if (isset ($amr_options ['date_localise'])) $method = $amr_options ['date_localise'];
 	else $method = 'none';
-	date_timezone_set ($datestamp, $amr_globaltz);
+
+	date_timezone_set ($datestamp, $amr_globaltz);  /* Converting here, but then some derivations wrong eg: unsetting of end date */
 
 	if ($method === 'wp') return amr_wp_format_date ( $format, $datestamp, false);
 	else if ($method === 'wpgmt') return amr_wp_format_date ( $format, $datestamp, true);
@@ -1154,6 +1187,7 @@ function amr_repeat_anevent($event, $astart, $aend, $limit) {
 	
 	$repeatstart = $event['DTSTART'];
 		if (isset($event['RRULE']))	{	
+			if (ICAL_EVENTS_DEBUG) { echo '<br>RRULE =  '; var_dump($event['RRULE']);}	
 			foreach ($event['RRULE'] as $i => $rrule) {			
 				$reps = amr_process_RRULE($rrule, $repeatstart, $aend, $limit);	
 				if (is_array($reps) and count($reps) > 0) {
@@ -1334,7 +1368,7 @@ function amr_process_single_icalevents(&$event, $astart, $aend, $limit) {
 				if (isset($event['RRULE']) or (isset($event['RDATE']))) { 
 							/* if have, must use dtstart in case we are dependent on it's characteristics,. We can exclude too early dates later on */
 					$repeats = amr_repeat_anevent($event,$astart,$aend, $limit );  /**** try for a more efficient start? */					
-					if (ICAL_EVENTS_DEBUG) {echo '<br>Num of Repeats to be created'.count($repeats).'<br>';}	
+					if (ICAL_EVENTS_DEBUG) {echo '<br>Num of Repeats to be created: '.count($repeats).'<br>';}	
 					/* now need to convert back to a full event by copying the event data for each repeat */						
 					if (is_array($repeats) and (count($repeats) > 0)) {
 
@@ -1381,8 +1415,8 @@ function amr_constrain_components($events, $start, $end, $limit) {
 global $amr_limits;
 	
 		$newevents = amr_process_icalevents($events, $start, $end, $limit);	
-				
-		if (ICAL_EVENTS_DEBUG) { echo '<br>New events count: '. count($newevents); }
+
+		/* should we be moving to destination date  */
 		
 		if (count($newevents) < 1) 	return (false);
 		$newevents = amr_sort_by_key($newevents , 'EventDate');	
@@ -1401,7 +1435,7 @@ global $amr_limits;
 					{					
 					$constrained[] = $event;
 					if (ICAL_EVENTS_DEBUG) { 
-						echo '<br>Choosing '.$k.' '. $event['EventDate']->format('c');}		
+						echo '<br>Choosing no: '.$k.' '. $event['EventDate']->format('c');}		
 					++$count;	
 				}
 			}
@@ -1416,9 +1450,6 @@ global $amr_limits;
 			else suggest_other_icalplugin(__('Events Offset','amr-ical-events-list'));
 		
 		}
-		
-		
-		if (ICAL_EVENTS_DEBUG) { echo '<br>Constrained records chosen = '.count($constrained);}
 		return $constrained;
 	}
 			
@@ -1466,13 +1497,11 @@ global $amr_limits;
 			echo '<br>'.sprintf(__('Unable to load or cache ical calendar %s','amr-ical-events-list'),$url);	
 			return;	
 		}
-	else if (ICAL_EVENTS_DEBUG) { echo '<br>Have cached file '.$file;}	
 	$ical = amr_parse_ical($file);
 	if (! (is_array($ical) )) {
 			echo sprintf('Error finding or parsing ical calendar %s',$url);
 			return($ical);
 		}
-	else if (ICAL_EVENTS_DEBUG) { echo '<br>Have file parsed into array of '.count($ical);}		
 	$ical['icsurl'] = $url; 	
 	return ($ical);	
 }
@@ -1528,6 +1557,9 @@ function amr_process_icalspec($criteria, $icalno=0) {
 	global $amr_limits;
 	global $amr_listtype;
 	global $amrW;
+	global $amr_doing_icallist; /* use to prevent the eventinfo shortcode echoing data to the screen when in ical event list mode */
+	
+	$amr_doing_icallist = true;
 	
 	if (!empty($amrW)) $w = 'w';
 	else $w = '';
@@ -1547,7 +1579,9 @@ function amr_process_icalspec($criteria, $icalno=0) {
 		if (function_exists('amr_ical_from_posts')) {
 			if (ICAL_EVENTS_DEBUG) echo '<h3>Get events from posts </h3>';
 			$icals2 = amr_ical_from_posts($criteria);
-			if (isset($icals)) $icals = array_merge($icals, $icals2 );
+			if (ICAL_EVENTS_DEBUG) { echo '<br>Got x events from posts '.count($icals2); var_dump($icals2);}
+			
+			if (isset($icals) ) $icals = array_merge($icals, $icals2 );
 			else $icals = $icals2;
 		}
 		else suggest_other_icalplugin (__('Events from Posts','amr-ical-events-list' ));
@@ -1557,21 +1591,21 @@ function amr_process_icalspec($criteria, $icalno=0) {
 	
 	/* Merge then constrain  by options */
 	$components = array();  /* all components actually, not just events */
-	if (isset ($icals) ) {	/* if we have some parse data */
+	if (isset ($icals) and is_array($icals)) {	/* if we have some parse data */
 		foreach ($icals as $j => $ical) { /* for each  Ics file within an ICal spec*/
 			if ((!isset($amr_options[$amr_listtype]['component'])) or (count($amr_options[$amr_listtype]['component']) < 1)) 
 				_e('No ical components requested for display','amr-ical-events-list');
-			foreach ($amr_options[$amr_listtype]['component'] as $i => $c) {  /* for each component type requested */		
-				if (ICAL_EVENTS_DEBUG)  { echo '<br />Will do component '.$i;}
-				if ($c) {		/* If this component was requested, merge the items from Ical items into events */	
-					if (isset($ical[$i])) {  /* Eg: if we have an array $ical['VEVENT'] etc*/		
-						if (ICAL_EVENTS_DEBUG)  { echo '<br />Have ical with '.$i;}					
-						foreach ($ical[$i] as $k => $a) { /*  save the compenent type so we can style accordingly */
-							$ical[$i][$k]['type'] = $i;
-							$ical[$i][$k]['name'] = 'cal'.$j; /* save the name for styling */
+			else {	
+				foreach ($amr_options[$amr_listtype]['component'] as $i => $c) {  /* for each component type requested */		
+					if ($c) {		/* If this component was requested, merge the items from Ical items into events */	
+						if (isset($ical[$i])) {  /* Eg: if we have an array $ical['VEVENT'] etc*/					
+							foreach ($ical[$i] as $k => $a) { /*  save the compenent type so we can style accordingly */
+								$ical[$i][$k]['type'] = $i;
+								$ical[$i][$k]['name'] = 'cal'.$j; /* save the name for styling */
+							}
+							if (!empty($components) ) {$components = array_merge ($components, $ical[$i]);	}
+							else $components = $ical[$i];	
 						}
-						if (!empty($components) ) {$components = array_merge ($components, $ical[$i]);	}
-						else $components = $ical[$i];	
 					}
 				}
 			}
@@ -1583,7 +1617,7 @@ function amr_process_icalspec($criteria, $icalno=0) {
 		}  			
 		$thecal = $calprophtml;
 		
-		$components = amr_constrain_components($components, $amr_limits['start'], $amr_limits['end'], $amr_limits ['events']);	
+		if (!empty($amr_limits)) $components = amr_constrain_components($components, $amr_limits['start'], $amr_limits['end'], $amr_limits ['events']);	
 
 		if (count($components) === 0) {
 			if (isset($amr_options['noeventsmessage'])) 
@@ -1620,7 +1654,6 @@ function amr_get_params ($attributes=array()) {
 	if (isset($_REQUEST['listtype'])) $amr_listtype = $_REQUEST['listtype'];
 	else if (isset($attributes['listtype'])) $amr_listtype = $attributes['listtype'];
 	else if (!(isset($amr_listtype))) $amr_listtype = 1;
-	If (ICAL_EVENTS_DEBUG) {echo '<br>Listtype :'.$amr_listtype;}	
 	
 	$amr_limits = $amr_options[$amr_listtype]['limit']; /* get the default limits */
 	
@@ -1774,17 +1807,14 @@ function amr_do_ical_shortcode ($atts, $content = null) {
 // This is the main function.  It replaces [iCal:URL]'s with events. Each as a separate list 
 /* Allow multiple urls and only one listtype */
 /*  merge atts with this array, so we will have a default list */
-    global $amr_listtype;
-	global $amr_limits;
 	global $amr_icalno; /* used to give each ical  table a unique id on a page or post */
 
 	$criteria =	amr_get_params ($atts);  /* strip out and set any other attstributes  - they will set the limits table */
 	/* separate out the other possible variables like list type, then just have the urls */
-	
 
-		if (!(isset($amr_icalno))) $amr_icalno = 0;
-		else $amr_icalno= $amr_icalno + 1;
-		$content = amr_process_icalspec($criteria, $amr_icalno);
+	if (!(isset($amr_icalno))) $amr_icalno = 0;
+	else $amr_icalno= $amr_icalno + 1;
+	$content = amr_process_icalspec($criteria, $amr_icalno);
 		
   return ($content);
 }

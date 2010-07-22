@@ -300,7 +300,7 @@ $amr_compprop = array
 
 	/* -------------------------------------------------------------------------------------------------------------*/
 	
-	function amr_ical_showmap ($text) {
+	function amr_ical_showmap ($text) { /* the address text */
 	global $amr_options;
 		$t1 = __('Show in Google map','amr-ical-events-list');
 		if (isset ($amr_options['no_images']) and $amr_options['no_images']) $t3 = $t1;

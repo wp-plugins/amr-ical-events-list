@@ -123,7 +123,7 @@
 						case 'Column': 
 							if (function_exists( 'filter_var') )
 							{	if (filter_var($pv, FILTER_VALIDATE_INT, 
-								array("options" => array("min_range"=>1, "max_range"=>20))))
+								array("options" => array("min_range"=>0, "max_range"=>20))))
 								$amr_options[$i]['calprop'][$c][$p]= $pv;
 								else 	$amr_options[$i]['calprop'][$c][$p]= 0;
 							}
@@ -133,7 +133,7 @@
 						case 'Order':
 							if (function_exists( 'filter_var') )
 							{	if (filter_var($pv, FILTER_VALIDATE_INT, 
-								array("options" => array("min_range"=>1, "max_range"=>99))))
+								array("options" => array("min_range"=>0, "max_range"=>99))))
 								$amr_options[$i]['calprop'][$c][$p] = $pv;break;
 							}
 							else $amr_options[$i]['calprop'][$c][$p] = $pv;break;
@@ -160,7 +160,7 @@
 							case 'Column': 
 								if (function_exists( 'filter_var') )
 								{	if (filter_var($pv, FILTER_VALIDATE_INT, 
-									array("options" => array("min_range"=>1, "max_range"=>20))))
+									array("options" => array("min_range"=>0, "max_range"=>20))))
 									$amr_options[$i]['compprop'][$si][$c][$p]= $pv;
 									else 	$amr_options[$i]['compprop'][$si][$c][$p]= 0;
 									break;
@@ -170,8 +170,10 @@
 							case 'Order':
 								if (function_exists( 'filter_var') )
 								{	if (filter_var($pv, FILTER_VALIDATE_INT, 
-									array("options" => array("min_range"=>1, "max_range"=>99))))
-									$amr_options[$i]['compprop'][$si][$c][$p] = $pv; break;
+									array("options" => array("min_range"=>0, "max_range"=>99))))
+									$amr_options[$i]['compprop'][$si][$c][$p] = $pv; 
+									else 	$amr_options[$i]['compprop'][$si][$c][$p]= 0;
+									break;
 								}
 								else $amr_options[$i]['compprop'][$si][$c][$p] = $pv; 
 								break;

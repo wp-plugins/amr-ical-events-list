@@ -4,8 +4,8 @@ Donate link: http://webdesign.anmari.com/web-tools/donate/
 Tags: calendar, events, event calendar, events calendar, ical, ics, ics calendar, upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar
 Requires at least: 2.8
 Tested up to: 3.0 
-Version: 2.9.1
-Stable tag: 2.9.1
+Version: 2.9.2
+Stable tag: 2.9.2
 
 == Description ==
 
@@ -56,7 +56,7 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 = Date, Times and Timezone =
 
 *   Note: wordpress 2.8 up now allows the timezone to be specified by city which should cater for daylight saving differences.   Please check very carefully that times are correct and that you understand what the times should be.
-*   Timezones - there is your server's timezone, the timezone of the calendar files, and your wordpress timezone.  The plugin will try for the timezone string (either from wordpress 2.8 or the automatic timezone plugin.  Failing that it wiull try for gmt_offset, and attempt to convert it to a timezone string.   Failingthat it will use UTC time.  If anyone needs more sophisticated functionality such as allowing a selection of timezones, please contact me.
+*   Timezones - there is your server's timezone, the timezone of the calendar files, and your wordpress timezone.  The plugin will try for the timezone string (either from wordpress 2.8 or the automatic timezone plugin.  Failing that it wiull try for gmt_offset, and attempt to convert it to a timezone string.   Failing that it will use UTC time.  If anyone needs more sophisticated functionality such as allowing a selection of timezones, please contact me.
 
 = Testing =
 *    Can pass URL's, Listtypes and nocache/debug options via the url query string for ease of testing. see plugin homepage for examples.
@@ -84,6 +84,12 @@ Some inputs/ideas for the ical import parsing, from:
 *  [Horde] (http://www.horde.org/kronolith/) 
 
 == Changelog ==
+= Version 2.9.2 =
+*   Offers event styling by event categories. IE: if there are categories in the ics file, these will be echoed as classes on the event row.  See (styling of events) [http://icalevents.anmari.com/2382-styling-of-ical-events/]
+*   Fix for display bug noticed by [shanafourder] (http://wordpress.org/support/topic/426964?replies=3#post-1610258) where if the ics event spanned 2 days in it's original timezone. (since some ical generators reduce all events to the UTC timezone, since this very possible).  In this instance the end date would still be shown even if on conversion to display timezone it was the same day as the start date (normally suppressed).  Behaviour has been adjusted so that decision not to show end date is made in the display timezone.
+*    Update of Danish translation from GeorgWP
+
+
 = Version 2.9.1 =
 *   Removed debug statements relating to unreleased new features - should NOT have been in 2.9.1. If you have 2.9, please update to 2.9.1 asap.
 *   Simplified the css a bit, to let theme styling take more effect - removed the box around "today's" events and removed the alt styling on the rows.  If you liked these, then create a custom css in the plugin folder, copy the css from one of the older files.

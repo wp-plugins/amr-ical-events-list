@@ -88,37 +88,37 @@ global $amr_globaltz;
 				}
 		}
 		if (isset ($BYDAY)) {
-			$p['byday'] = explode(',', $BYDAY);
-			foreach ($p['byday'] as $j => $k) {
+			$p['BYDAY'] = explode(',', $BYDAY);
+			foreach ($p['BYDAY'] as $j => $k) {
 					$l = strlen($k); 
 					if ($l > 2) {  /* special treatment required - flag to re handle, keep as we want to isolate a subset anyway */
 						$p['specbyday'][] = $k;
-						$p['byday'][$j] = substr($k, $l-2, $l);
+						$p['BYDAY'][$j] = substr($k, $l-2, $l);
 					}
 					else $by2[] = $k;
 				}	
 			
 		}
-		if (isset ($BYWEEKNO)) 	{$p['byweekno'] = explode(',', $BYWEEKNO);}
-		if (isset ($BYYEARDAY)) {$p['byyearday'] = explode(',', $BYYEARDAY);  }
-		if (isset ($UNTIL)) 	{$p['until'] = amr_parseDateTime($UNTIL, $amr_globaltz);}
-		if (isset ($COUNT)) 	{$p['count'] = $COUNT;}
-		if (isset ($INTERVAL)) 	{$p['interval'] = $INTERVAL;}
-		if (isset ($FREQ)) 		{$p['freq'] = $FREQ;}
+		if (isset ($BYWEEKNO)) 	{$p['BYWEEKNO'] = explode(',', $BYWEEKNO);}
+		if (isset ($BYYEARDAY)) {$p['BYYEARDAY'] = explode(',', $BYYEARDAY);  }
+		if (isset ($UNTIL)) 	{$p['UNTIL'] = amr_parseDateTime($UNTIL, $amr_globaltz);}
+		if (isset ($COUNT)) 	{$p['COUNT'] = $COUNT;}
+		if (isset ($INTERVAL)) 	{$p['INTERVAL'] = $INTERVAL;}
+		if (isset ($FREQ)) 		{$p['FREQ'] = $FREQ;}
 		if (isset ($WKST)) 		{
-			$p['wkst'] = $WKST;
+			$p['WKST'] = $WKST;
 		}
 		else {
-			$p['wkst'] = $amr_wkst;
+			$p['WKST'] = $amr_wkst;
 		}
 
 		if (isset ($BYSETPOS)) {
 			echo '<br>bysetpos not yet supported';	
-			$p['bysetpos'] = BYSETPOS;}
+			$p['BYSETPOS'] = $BYSETPOS;}
 
 /* Now test for negtaives, and fix or remove them for special handling  amr do we need thsi here? handle in the special by's anyway? */
 			
-		foreach (array('byyearday','byweekno', /* 'day' */) as $i => $b)	{
+		foreach (array('BYYEARDAY','BYWEEKNO', /* 'day' */) as $i => $b)	{
 			if (isset ($p[$b])) {
 				foreach ($p[$b] as $j => $k) {
 					if ($k < 0) {  /* special treatment required - handle separately */
@@ -259,9 +259,9 @@ BYMINUTE, BYSECOND and BYSETPOS */
 			/* still unsupported - need code here */
 		}
 		
-		if (isset ($p['byday'])) {
+		if (isset ($p['BYDAY'])) {
 			foreach ($start as $i => $s) {
-				$start2[] = amr_process_byday ($s, $p['byday'], $wkst );
+				$start2[] = amr_process_byday ($s, $p['BYDAY'], $wkst );
 			}
 		unset($start);
 		$start = array();
@@ -307,15 +307,15 @@ foreach ($bys as $i => $b) {
 
 			break;
 		}	
-		case 'byweekno': {/* need week start too */
+		case 'BYWEEKNO': {/* need week start too */
 			echo '<br>BYWEEKNO not supported yet';
 			break;
 		}
-		case 'byday': {
+		case 'BYDAY': {
 			$d = strtoupper(substr(($do->format('D')), 0 , 2));
 //			if (ICAL_EVENTS_DEBUG) echo '<br>WDay '.$d.' for '. $do->format('c');
 	
-			foreach ($bys['byday'] as $j => $day) {
+			foreach ($bys['BYDAY'] as $j => $day) {
 				if (substr ($day, 0, 1) === '-') {$day = substr($day, 1,2);}
 				if (!($d === $day)) return(false);
 				}
@@ -331,7 +331,7 @@ foreach ($bys as $i => $b) {
 			}
 			break;
 		}
-		case 'wkst': 
+		case 'WKST': 
 		default: echo '<br>Unsupported BY '.$i.' found in data';
 	}
 }
@@ -342,7 +342,7 @@ return(true);
 function amr_get_repeats (
 	$starts, /* an array of date strings */
 	$dstart, 
-	$until, /* array of parameters such as $p['until']*/
+	$until, /* array of parameters such as $p['UNTIL']*/
 	$count,
 	$int, /* array of intervals */
 	$bys = null /* and arry of (bydays, byweekno, byyearday arrays */
@@ -376,8 +376,7 @@ function amr_get_repeats (
 				
 				if (ICAL_EVENTS_DEBUG) {echo '<hr>bys:'; var_dump($bys);}
 							
-				if (isset ($bys['day'])) {
-					
+				if (isset ($bys['day'])) {					
 					$days = intval($bys['day']);
 					if (ICAL_EVENTS_DEBUG) { echo ' got them from'.$bys['day'].' to '.$days;}
 					if ($days < 0) { 
@@ -401,7 +400,7 @@ function amr_parseRRULE($rrule)  {
 	}
 
 /* --------------------------------------------------------------------------------------------------- */
-function amr_process_RRULE($p, $start, $end )  {    
+function amr_process_RRULE($p, $start, $end, $limit )  {    
 	 /* RRULE a parsed array.  If the specified event repeats between the given start and
 	 * end times, return one or more nonrepeating date strings in array 
 	 */
@@ -410,33 +409,33 @@ function amr_process_RRULE($p, $start, $end )  {
 		/* now we should have if they are there: $p[freq], $p[interval, $until, $wkst, $ count, $byweekno etc */	
 		/* check  / set limits  NB don't forget the distinction between the two kinds of limits  */
 		
-		if (!isset($p['count'])) { $count = AMR_MAX_REPEATS; } /* to avoid any chance of infinite loop! */
-		else $count = $p['count'];
+		if (!isset($p['COUNT'])) { $count = AMR_MAX_REPEATS; } /* to avoid any chance of infinite loop! */
+		else $count = $p['COUNT'];
 		if (ICAL_EVENTS_DEBUG) echo '<br />Limiting the number of repeats to '.$count;
-		if (!isset($p['until']))  $until = $end;	
+		if (!isset($p['UNTIL']))  $until = $end;	
 		else { 
-			$until = $p['until']; 
+			$until = $p['UNTIL']; 
 			if ($until > $end) {	$until = $end;	}		
 		}
 		if (amr_is_before ($until, $start )) { return(false); }/* if it ends before our start, then skip */
 				
 		/* now prepare out "intervales array for date incrementing eg: p[monthly] = 2 etc... Actualy there should only be 1 */
 
-		if (isset($p["freq"])) { /* so know yearly, daily or weekly etc  - setup increments eg 2 yearsly or what */
-			if (!isset ($p['interval'])) $p['interval'] = 1;	
-			switch ($p['freq']) {
-				case 'WEEKLY': $int['day'] = $p['interval'] * 7; break;
+		if (isset($p['FREQ'])) { /* so know yearly, daily or weekly etc  - setup increments eg 2 yearsly or what */
+			if (!isset ($p['INTERVAL'])) $p['INTERVAL'] = 1;	
+			switch ($p['FREQ']) {
+				case 'WEEKLY': $int['day'] = $p['INTERVAL'] * 7; break;
 				default: {
-					$inttype = $amr_timeperiod_conv[$p['freq']];
-					$int[$inttype] = $p['interval']; 
+					$inttype = $amr_timeperiod_conv[$p['FREQ']];
+					$int[$inttype] = $p['INTERVAL']; 
 				}
 			}
 		}
 		else {/** log error **/ error_log( 'No freq - aborting for this recurrence');  return (false);}
 			
-		unset ($p['until']);  /* unset so we can use other params more cleanly */
-		unset ($p['count']); unset ($p['freq']); unset ($p['interval']); 	
-		$wkst = $p['wkst']; unset($p['wkst']);
+		unset ($p['UNTIL']);  /* unset so we can use other params more cleanly */
+		unset ($p['COUNT']); unset ($p['FREQ']); unset ($p['INTERVAL']); 	
+		$wkst = $p['WKST']; unset($p['WKST']);
 		if (count($p) === 0) {$p=null; }  /* If that was all we had, get rid of it anyway */
 			
 		/*** we should leap forward until within one FREQ of our current start date ? or will that mess up th e numeric options?  leave for now*/
@@ -513,7 +512,7 @@ function amr_process_numericbydays ($start, $p, $wkst, $count, $until, $int)	{
 	$repeats = array();
 	if (is_array($p['specbyday'])) {
 		foreach ($p['specbyday'] as $i=> $spec) {
-			$reps = amr_process_numericbyday ($start, $spec, $p['byday'][$i], $wkst, $count, $until, $int);
+			$reps = amr_process_numericbyday ($start, $spec, $p['BYDAY'][$i], $wkst, $count, $until, $int);
 			if (is_array($reps)) $repeats = array_merge($repeats, $reps);
 		}
 		/* limit the results to "count".  But they must be in date order */

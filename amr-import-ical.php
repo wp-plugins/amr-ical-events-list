@@ -210,7 +210,7 @@
 		   19970526,19970704,19970901,19971014,19971128,19971129,19971225
 		   VALUE=DATE;TZID=/mozilla.org/20070129_1/Europe/Berlin:20061223
 	*/	
-		If (isset ($_REQUEST['tzdebug'])) {	echo '<br />Got dates '.$text.'<br />';	}
+
 		$p = explode (',',$text); 	/* if only a single will still return one array value */
 		foreach ($p as $i => $v) {
 			try {
@@ -227,17 +227,12 @@
 	/* ------------------------------------------------------------------ */
 	function amr_parseTZDate ($value, $tzid) {	
 		$tzobj = timezone_open($tzid);		
-		If (isset ($_REQUEST['tzdebug'])) {
-				echo '<br />Parsing TZ date '.$value.' with tz = '.$tzid.', ';
-		}	
 		if (!($d = amr_parseDateTime ($value, $tzobj))) return(false);
 		else return ($d);
 	}
 	/* ------------------------------------------------------------------ */	
    function amr_parseTZID($text)    {	/* accept long and short TZ's, returns false if not valid */
-   		If (isset ($_REQUEST['tzdebug'])) {
-				echo '<h4>Parsing TZid with tz = '.$text.'</h4>';
-		}	
+
 		try {
 				$tz =  timezone_open($text);	
 			}	
@@ -369,9 +364,35 @@ global $amr_last_modified;
 if (empty ($amr_last_modified)) $amr_last_modified = date_create('0000-00-00 00:00:01');
 if ($date->format('c') > $amr_last_modified->format('c')) {
 	$amr_last_modified = clone ($date);
-	if (isset($_GET['debugexc'])) echo '<br />Latest modification of calendar updated to '.$amr_last_modified->format('c');
 	}
+}
+/* ---------------------------------------------------------------------- */
+function amr_parseRDATE ($string, $tzobj ) {
+/* could be multiple dates after value */
 
+	$rdate = explode(':',$string);   /* $VALUE=DATE: and a series of dates (no time) */
+	if (isset($rdate[0])) {
+		if (($rdate[0] = 'VALUE=DATE') and (isset($rdate[1])) ) {
+			$rdate =  explode(',',$rdate[1]); /* that' sall we are doing for now */
+			foreach ($rdate as $i => $r)  {
+					$dates[$i] = array_shift(amr_parseValue ('DATE', $r, $tzobj)); 
+					/*returns array, but there should only be 1 value */
+			}
+			return($dates);
+		}
+		else if (($rdate[0] = 'VALUE=PERIOD') and (isset($rdate[1])) ) {
+		 "HELP cannot yet deal with RDATE with VALUE=PERIOD"; return (false);
+			}
+			else {
+				parse_str($string);
+				if (isset ($TZID)) return (amr_parseTZDate ($string, $TZID));
+				else {	/* must be just a date */
+					if (!($d = amr_parseDateTime ( $string, $tzobj))) return (false);
+					else return ($d); 
+				}
+			}
+	}			
+	else return (false);
 }
 /* ---------------------------------------------------------------------- */
 
@@ -428,15 +449,8 @@ global $amr_globaltz;
 			return (amr_parseDate ($parts[1])); 
 		
 		case 'EXDATE':
-		case 'RDATE':  /* could be multiple dates after value */
-				if (isset($VALUE)) 	return (amr_parseValue ($VALUE, $parts[1], $tzobj));
-				/* This could be simplified */
-				else if (isset ($TZID)) return (amr_parseTZDate ($parts[1], $TZID));
-				else {	/* must be just a date */
-					if (!($d = amr_parseDateTime ( $parts[1], $tzobj))) return (false);
-					else return ($d); 
-				}
-		
+		case 'RDATE':  
+			return (amr_parseRDATE ($parts[1],$tzobj)); 
 		case 'TRIGGER': /* not supported yet, check for datetime and / or duration */
 		case 'DURATION':
 			return (amr_parseDuration ($parts[1])); 
@@ -480,7 +494,6 @@ function amr_parse_component($type)	{	/* so we know we have a vcalendar at lines
 	global $amr_validrepeatableproperties;
 	global $amr_globaltz;
 
-//	if (ICAL_EVENTS_DEBUG) { echo '<br>Parsing component ____________'.$type;}	
 	while (($amr_n < $amr_totallines)	)	{
 			$amr_n++;
 			$parts = explode (':', $amr_lines[$amr_n],2 ); /* explode faster than the preg, just split first : */
@@ -555,7 +568,6 @@ function amr_parse_ical ( $cal_file ) {
 		// a CRLF and then a single white space character.
 		// We will allow it to be CRLF, CR or LF or any repeated sequence
 		// so long as there is a single white space character next.
-		If (ICAL_EVENTS_DEBUG) echo '<br>'.$line.' lines in Source file';
 		
 		/**** we may also need to cope with backslahed backslashes, commas, semicolons as per http://www.kanzaki.com/docs/ical/text.html*/
 		
@@ -567,7 +579,6 @@ function amr_parse_ical ( $cal_file ) {
 		$amr_n = 0;
 	    $amr_lines = explode ( "\n", $data );
 		$amr_totallines = count ($amr_lines) - 1; /* because we start from 0 */
-		If (ICAL_EVENTS_DEBUG) echo '<br>'.$amr_totallines.' lines after unfolding lines </br>';
 		
 		$parts = explode (':', $amr_lines[$amr_n],2 ); /* explode faster than the preg, just split first : */
 		if ($parts[0] === 'BEGIN') {
