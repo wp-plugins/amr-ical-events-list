@@ -3,7 +3,7 @@
 Plugin Name: AmR iCal Events List
 Author URI: http://anmari.com/
 Plugin URI: http://icalevents.anmari.com
-Version: 2.9.2
+Version: 2.9.3
 Text Domain: amr-ical-events-list 
 Domain Path:  /lang
 
@@ -54,7 +54,7 @@ Data Structure:
     for more details.
 */
 
-define('AMR_ICAL_VERSION', '2.9.2');
+define('AMR_ICAL_VERSION', '2.9.3');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 define( 'AMR_BASENAME', plugin_basename( __FILE__ ) );
 
@@ -227,7 +227,7 @@ global $amr_globaltz, $amr_lastcache, $amr_options, $amr_last_modified;
 		
 	if (isset ($amr_options['no_images']) and $amr_options['no_images']) $t3 = $text; 	
 	else $t3 = '<img src="'.IMAGES_LOCATION.REFRESHIMAGE
-		.'" class="amr-bling" title="'.$text2.' '.$text2.'" alt="'.$text.'" />';
+		.'" class="amr-bling" title="'.__('Click to refresh','amr-ical-events-list').' '.$text2.'" alt="'.$text.'" />';
 
 	return ( '<a class="refresh" href="'.$uri.'" title="'.$text.' '.$text2.'">'.$t3.'</a>');
 }
@@ -567,7 +567,7 @@ function amr_derive_summary (&$e) {
 					$e_url = ' class="url" href="'
 						.$amr_options[$amr_listtype]['general']['Default Event URL'].'" ';
 					}
-				else $e_url = ' href="#no-url-available" '; /*empty anchor as defined by w3.org */			
+				else $e_url = ''; /*empty anchor as defined by w3.org */			
 				/* not a widget */
 			}
 		}
@@ -583,9 +583,11 @@ function amr_derive_summary (&$e) {
     if (!empty($e_desc)) {
 		$e_desc = (str_replace( '\n', '  ', (htmlspecialchars($e_desc))));
 	}
-	else $e_desc =  __('No event description available', 'amr-ical-events-list');
+	else $e_desc =  '';
 
-	$e_url = '<a '.$e_url.' title="'.$e_desc.'">'. $e['SUMMARY'].'</a>';
+	if (!empty ($e_url)) 
+		$e_url = '<a '.$e_url.' title="'.$e_desc.'">'. $e['SUMMARY'].'</a>';
+	else $e_url = $e['SUMMARY'];
 	
 	return( $e_url );
 
@@ -1186,7 +1188,7 @@ function amr_repeat_anevent($event, $astart, $aend, $limit) {
 	$exclusions = array();
 	
 	$repeatstart = $event['DTSTART'];
-		if (isset($event['RRULE']))	{	
+	if (isset($event['RRULE']))	{	
 			if (ICAL_EVENTS_DEBUG) { echo '<br>RRULE =  '; var_dump($event['RRULE']);}	
 			foreach ($event['RRULE'] as $i => $rrule) {			
 				$reps = amr_process_RRULE($rrule, $repeatstart, $aend, $limit);	
@@ -1197,7 +1199,7 @@ function amr_repeat_anevent($event, $astart, $aend, $limit) {
 			if (ICAL_EVENTS_DEBUG) { echo '<br>Got '.count($repeats). ' after RRULE';}	
 		}
 			
-		if (isset($event['RDATE']))	{		
+	if (isset($event['RDATE']))	{		
 				foreach ($event['RDATE'] as $i => $rdate) {			
 					$reps = amr_process_RDATE  ($rdate, $repeatstart, $aend, $limit);
 					if (is_array($reps) and count($reps) > 0) {
@@ -1207,8 +1209,8 @@ function amr_repeat_anevent($event, $astart, $aend, $limit) {
 				if (ICAL_EVENTS_DEBUG) { echo '<br>Got '.count($repeats). ' after RDATE';}
 			}
 			
-		if (isset($event['EXRULE']))	{	
-			if (ICAL_EVENTS_DEBUG) { echo '<br><h3>Have EXRULE </h3>';}			
+	if (isset($event['EXRULE']))	{	
+			if (ICAL_EVENTS_DEBUG) { echo '<br><h3>Have EXRULE </h3>';var_dump($event['EXRULE']);}			
 			foreach ($event['EXRULE'] as $i => $exrule) {			
 				$reps = amr_process_RRULE($exrule, $repeatstart, $aend, $limit);
 				if (is_array($reps) and count($reps) > 0) {			
@@ -1708,7 +1710,10 @@ function amr_get_params ($attributes=array()) {
 			else $amr_limits[$i] = $atts[$i];
 		}
 		else if (!(($i === 'tz') OR ($i === 'listtype') )) { /* then it's a number  like days, events, startoffset, houroffset*/
-			if (isset($_REQUEST[$i])) {
+		
+			
+		
+			if (isset($_REQUEST[$i])) {		
 				if (filter_var($_REQUEST[$i], FILTER_VALIDATE_INT, $neg_int_options)) $amr_limits[$i] = $_REQUEST[$i];
 				else $amr_limits[$i] = $atts[$i];
 			}
@@ -1742,20 +1747,20 @@ function amr_get_params ($attributes=array()) {
 			}
 			else $others['urls'] = array($spec); /* replace the urls with the one that is passed */
 		}	
-
-	If (ICAL_EVENTS_DEBUG) { echo '<br>We got parameters'; foreach ($others as $i=>$v) {echo '<br/>'.$i.'='.$v;}}
 	
 	$amr_formats = $amr_options[$amr_listtype]['format'];
 	
 	$daysoffset = (int)($amr_limits['startoffset']);
 
-	if ($daysoffset = 0) {} /* the unst only unsets locally and for some reason the globals unset is not working */
+
+	if ($daysoffset === 0) {} /* the unst only unsets locally and for some reason the globals unset is not working */
 	else if ($daysoffset > 0) $daysoffset = '+'.(string)$daysoffset.' days';
 	else $daysoffset = (string)$daysoffset.' days';
+	
 	date_modify($amr_limits['start'],$daysoffset) ;	
 	
 	$hrsoffset = (int)($amr_limits['hoursoffset']);
-	if ($hrsoffset = 0) unset ($amr_limits['hoursoffset']);
+	if ($hrsoffset === 0) unset ($amr_limits['hoursoffset']);
 	else if ($hrsoffset > 0) $hrsoffset = '+'.(string)$hrsoffset.' hours';	
 	else $hrsoffset = (string)$hrsoffset.' hours';	
 	date_modify($amr_limits['start'],$hrsoffset) ; /*** as per request from jd  */

@@ -407,12 +407,16 @@
 			    break;
 
 			$utctz= new DateTimeZone('UTC');
-			$d = new DateTime( "@{$tr['ts']}",$utctz );
-			date_timezone_set ($d,$amr_globaltz );
-			printf('<br />'.__('Switches to %s on %s. GMT offset: %d (%s)'),
-				 $tr['isdst'] ? "DST" : "standard time",
-				$d->format('d M Y @ H:i'), $tr['offset']/(60*60), $tr['abbr']
-			);
+			if (isset ($tr['ts']) ) {
+				try {$d = new DateTime( "@{$tr['ts']}",$utctz );}
+				catch(Exception $e) { break;}
+
+				date_timezone_set ($d,$amr_globaltz );
+				printf('<br />'.__('Switches to %s on %s. GMT offset: %d (%s)'),
+					 $tr['isdst'] ? "DST" : "standard time",
+					$d->format('d M Y @ H:i'), $tr['offset']/(60*60), $tr['abbr']
+				);
+			}
 			
 			echo '<br /><br />'.__('Current time (unlocalised): ','amr-ical-events-list')
 			.$now->format('r').'<br />';
