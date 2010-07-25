@@ -4,8 +4,8 @@ Donate link: http://webdesign.anmari.com/web-tools/donate/
 Tags: calendar, events, event calendar, events calendar, ical, ics, ics calendar, upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar
 Requires at least: 2.8
 Tested up to: 3.0 
-Version: 2.9.3
-Stable tag: 2.9.3
+Version: 2.9.4
+Stable tag: 2.9.4
 
 == Description ==
 
@@ -84,6 +84,9 @@ Some inputs/ideas for the ical import parsing, from:
 *  [Horde] (http://www.horde.org/kronolith/) 
 
 == Changelog ==
+= Version 2.9.4 =
+*   Some php installs have a datemodify function that issues a warning when passed a 0 (Not on my site, so sorry I did not pick it up!).   Calls to the php function, now check first modified to prevent this warning.
+
 = Version 2.9.3 =
 *   Fixed a very small bug that crept in after hoursoffset was added I think.  Offset were not working correctly.
 *   Last refresh time (displayed on hover of refresh icon was being repeated - fixed.

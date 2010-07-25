@@ -3,7 +3,7 @@
 Plugin Name: AmR iCal Events List
 Author URI: http://anmari.com/
 Plugin URI: http://icalevents.anmari.com
-Version: 2.9.3
+Version: 2.9.4
 Text Domain: amr-ical-events-list 
 Domain Path:  /lang
 
@@ -54,7 +54,7 @@ Data Structure:
     for more details.
 */
 
-define('AMR_ICAL_VERSION', '2.9.3');
+define('AMR_ICAL_VERSION', '2.9.4');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 define( 'AMR_BASENAME', plugin_basename( __FILE__ ) );
 
@@ -698,7 +698,7 @@ function amr_add_duration_to_date (&$e, $d) {
 	foreach ($d as $i => $v)  {  /* the duration array must be in the right order */
 		if (!($i === 'sign')) { $dmod .= $v.' '.$i ;}
 	}
-	date_modify ($e, $dmod );
+	if (!empty($dmod)) date_modify ($e, $dmod );
 	return ($e);		
   }
  /* ------------------------------------------------------------------------------------*/
@@ -1710,15 +1710,16 @@ function amr_get_params ($attributes=array()) {
 			else $amr_limits[$i] = $atts[$i];
 		}
 		else if (!(($i === 'tz') OR ($i === 'listtype') )) { /* then it's a number  like days, events, startoffset, houroffset*/
-		
-			
-		
+
 			if (isset($_REQUEST[$i])) {		
 				if (filter_var($_REQUEST[$i], FILTER_VALIDATE_INT, $neg_int_options)) $amr_limits[$i] = $_REQUEST[$i];
 				else $amr_limits[$i] = $atts[$i];
 			}
 			else $amr_limits[$i] = $atts[$i];
 		};
+	}
+	if (!empty( $_REQUEST['daysoffset'])) { /* keeping startoffset for old version compatibility, but allowing for daysoffset for compatibility with other offsets */
+		if (filter_var($_REQUEST['daysoffset'], FILTER_VALIDATE_INT, $neg_int_options)) $amr_limits['startoffset'] = $_REQUEST['daysoffset'];
 	}
 	
 	/* check for urls that are either passed by query or form, or are in the shortcode with a number or not  */
@@ -1753,22 +1754,25 @@ function amr_get_params ($attributes=array()) {
 	$daysoffset = (int)($amr_limits['startoffset']);
 
 
-	if ($daysoffset === 0) {} /* the unst only unsets locally and for some reason the globals unset is not working */
-	else if ($daysoffset > 0) $daysoffset = '+'.(string)$daysoffset.' days';
-	else $daysoffset = (string)$daysoffset.' days';
-	
-	date_modify($amr_limits['start'],$daysoffset) ;	
+	if (!($daysoffset === 0)) {
+		if ($daysoffset > 0) $daysoffset = '+'.(string)$daysoffset.' days';
+		else $daysoffset = (string)$daysoffset.' days';
+		date_modify($amr_limits['start'],$daysoffset) ;	
+	}	
 	
 	$hrsoffset = (int)($amr_limits['hoursoffset']);
-	if ($hrsoffset === 0) unset ($amr_limits['hoursoffset']);
-	else if ($hrsoffset > 0) $hrsoffset = '+'.(string)$hrsoffset.' hours';	
-	else $hrsoffset = (string)$hrsoffset.' hours';	
-	date_modify($amr_limits['start'],$hrsoffset) ; /*** as per request from jd  */
+	if (!($hrsoffset === 0)) {
+		if ($hrsoffset > 0) $hrsoffset = '+'.(string)$hrsoffset.' hours';	
+		else $hrsoffset = (string)$hrsoffset.' hours';	
+		date_modify($amr_limits['start'],$hrsoffset) ; /*** as per request from jd  */
+	}	
 	
 	$mthsoffset = (int)($amr_limits['monthsoffset']);
-	if ($mthsoffset >= 0) $mthsoffset = '+'.(string)$mthsoffset.' months';	
-	else $mthsoffset = (string)$mthsoffset.' months';	
-	date_modify($amr_limits['start'],$mthsoffset) ; 
+	if (!($mthsoffset === 0)) {
+		if ($mthsoffset >= 0) $mthsoffset = '+'.(string)$mthsoffset.' months';	
+		else $mthsoffset = (string)$mthsoffset.' months';	
+		date_modify($amr_limits['start'],$mthsoffset) ; 
+	}
 
 	if (isset($amr_limits['hours'])) {
 		if ($amr_limits['hours']>0) {  /* then set the time to the beginning of the day */
@@ -1794,11 +1798,11 @@ function amr_get_params ($attributes=array()) {
 	}
 
 	$amr_limits['end'] = clone ($amr_limits['start']);
-	if (isset($amr_limits['hours'])) 
+	if (!empty($amr_limits['hours'])) 
 		date_modify($amr_limits['end'],'+'.($amr_limits['hours']).' hours') ;			
-	if (isset($amr_limits['months'])) 
+	if (!empty($amr_limits['months'])) 
 		date_modify($amr_limits['end'],'+'.($amr_limits['months']).' months') ;	
-	if (isset($amr_limits['days'])) 
+	if (!empty($amr_limits['days'])) 
 		date_modify($amr_limits['end'],'+'.($amr_limits['days']).' days') ;	
 	date_modify($amr_limits['end'],'-1 second') ; /* so that we do not include events starting in the next time period */
 
