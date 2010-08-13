@@ -1586,7 +1586,7 @@ function amr_process_icalspec($criteria, $icalno=0) {
 			if (isset($icals) ) $icals = array_merge($icals, $icals2 );
 			else $icals = $icals2;
 		}
-		else suggest_other_icalplugin (__('Events from Posts','amr-ical-events-list' ));
+//		else suggest_other_icalplugin (__('Events from Posts','amr-ical-events-list' ));
 	}
 		
 	/* now we have potentially  a bunch of calendars in the ical array, each with properties and items */
