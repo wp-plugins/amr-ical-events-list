@@ -9,11 +9,17 @@ Stable tag: 2.9.4
 
 == Description ==
 
-A thorough Ical web calendar parser. It needs a url for a ics file which is output by most calendar applications (for example google calendar).  It will checking every cache interval for updates.   It produces a very stylable list of events, notes, todo's or freebusy info. Lots of css hooks to style it the way you want. Displays events from multiple calendars in out the box or with customised grouping, formatting and styling. Multiple pages or post or widget or both.    Implements more of the ical spec [RFC 2445](http://www.kanzaki.com/docs/ical/) than other plugins (eg: 2nd to last monday of month) - further implementations (eg: last day of year, etc) can be requested, and may be coming! See [plugin website](http://icalevents.anmari.com/1957-ical-specifications/) for more details.
+Encourage viewers to bookmark your events on their calendars.  This plugin offers a thorough Ical calendar parser - copes with all the ical recurrence possibilities, and a large part of the rest of the spec. 
 
-Generates multiple css tags including for hcalendar miccroformat support.
+This free version accepts one or many ical urls for ics files.  It produces a very stylable list of events, notes, todo's or freebusy info. If you want a complete "inhouse" solution where you can create events in wordpress with multiple event classification options, and produce your own ics feeds from those, please see [amr-events](http://icalevents.anmari.com). amr-events is an extension of this plugin and will use any configuration from it. 
 
-List upcoming recurring or single events, notes, journal, freebusy information from many ical feeds. Offers a range of defaults and customisation options. Including the possiblity of grouping events by month/week/day or many other for presentation and styling. Offers your viewers the option to subscribe or add the events or the whole calendar to their calendars (google or other).  
+Displays events from multiple calendars in out the box or with customised grouping, formatting and styling. Multiple pages or post or widget or both.
+
+Lots of css hooks to style it the way you want. - Generate multiple css tags including for hcalendar miccroformat support.
+
+List upcoming recurring or single events, notes, journal, freebusy information from many ical feeds. Offers a range of defaults and customisation options. 
+
+Group events by month/week/day or many other for presentation and styling. Offers your viewers the option to subscribe or add the events or the whole calendar to their calendars (google or other).  
 
 NB: Plugin requires php 5 >= 5.2, and the php DATETIME Class enabled (this is standard in php 5.2).  You may get a parse error,something like 
 "syntax error, unexpected T_VARIABLE in...." if you are not on a version of PHP that has the "clone" function.  
@@ -37,7 +43,7 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 = Content =
 *   If the information is available in your calendar, include additional fields and/or add some bling: .. links to google maps if location or geo exists, "add event" icons or "add calendar" (not just the icsfile) to help clients remember your events!  Add calendar is by individual event, or subscribe to the whoel calendar. 
 *   Include other calendars for your viewers info.  Many are available on the web and can be "sorted" into your calendar: public holidays, world events, school terms, eccentric dates etc.
-*   Will handle any html in the text fields.
+*   Will handle any html in the text fields, including image links.
 *   Allocate fields to columns and order within the columns and use css for example to float end time up next to start time.
 *   Offers a refresh link with date and time last cached - may be useful if your calendar has many updates on one day a week, with long gaps inbetween. Prevents unnecessary downloads.
 *   Optionally choose timezone.
@@ -61,29 +67,30 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 = Testing =
 *    Can pass URL's, Listtypes and nocache/debug options via the url query string for ease of testing. see plugin homepage for examples.
 
-= General Logic =
-1. Check if page has iCal Urls, and then parse URL's (cacheing or refreshing as necessary)
-2. Merge events, todo's, notes etc if multiple urls specified
-3. Expand recurring events and Limit the total list, so it does not go on for ever
-4. Sort by datetime
-5. Group (or rather issue grouping code on change of group) if requested 
-6. Generate any special display situations such as:
+= Some special logic =
+
+1. Generate any special display situations such as:
 *   If event is all day, remove start time, set css class
 *   If start time equals end time, set end time to empty string
 *   If end date = start date, don't display end date
 *   If url in text, convert to a hyperlink
 *   If location or geo exists and map requested, add a map link to google maps. Include the calendar location if the location text is short, to help google find it. 
-*   Allow html in descriptions, and convert any url's to links if not already converted.  
-
-This version of the plugin has been rewritten significantly, so while ideas have come from a number of sources, in many cases the code is new - developed based on the [RFC 2445](http://www.kanzaki.com/docs/ical/).   In various other code scripts originally used, problems were being experienced with Recurrence, Duplications (due to exceptions in Recurrences) and Timezones.   Recurrence can be incredibly complex and some plugins opt for simply not implementing many possibilities.   
-
-Some inputs/ideas for the ical import parsing, from:
-*  [import_ical.php](http://cvs.sourceforge.net/viewcvs.py/webcalendar/webcalendar/import_ical.php?rev=HEAD) from the [WebCalendar](http://sourceforge.net/projects/webcalendar/) project. 
-*  [dwc's plugin] (http://dev.webadmin.ufl.edu/~dwc/2005/03/10/ical-events-plugin/)
-*  [PhpIcalendar] (http://phpicalendar.net/)
-*  [Horde] (http://www.horde.org/kronolith/) 
+*   Allow html in descriptions, and convert any url's to links if not already converted.   
 
 == Changelog ==
+= Version 3.0 =
+*   Fixed a minor bug with dates that did have an end date,but duration was 0.  Some php datetime installations did not take kindly to being told to add 0 anything.
+*   Almost Totally rewrote the recurrence engine - it will now cater for ALL valid recurrence rules 
+*   Woo hoo - hopefully a big improvement in listing options - the start of many more!
+*   Caters for all kinds of weird and wonderful timezone ids (in response to [lespaul](http://wordpress.org/support/topic/plugin-amr-ical-events-list-date-time-problem?replies=7).  See also [this note] (http://icalevents.anmari.com/2613-what-every-developer-ought-to-know-about-timezones-wrt-calendar-files/)
+
+= Version 2.9.5 =
+*   Will now cope with ics files that have their dates TZID's enclosed in quotes.
+*   Offers options other than a table for the styling - this will help with themes that do not like tables in their widgets
+*   Does not issue tabel header html if there is no heading
+*   Adds a list type (increase your number of list types to 7 to see it) for eventinfo of plugin amr-events
+*   Finally fixed the extra slashes that kep appearing in the week format string (use wordpress stripslashes_deep).  Now you can have Week x ! (use "\W\e\e\k W')
+
 = Version 2.9.4 =
 *   Some php installs have a datemodify function that issues a warning when passed a 0 (Not on my site, so sorry I did not pick it up!).   Calls to the php function, now check first modified to prevent this warning.
 
@@ -96,7 +103,6 @@ Some inputs/ideas for the ical import parsing, from:
 *   Offers event styling by event categories. IE: if there are categories in the ics file, these will be echoed as classes on the event row.  See (styling of events) [http://icalevents.anmari.com/2382-styling-of-ical-events/]
 *   Fix for display bug noticed by [shanafourder] (http://wordpress.org/support/topic/426964?replies=3#post-1610258) where if the ics event spanned 2 days in it's original timezone. (since some ical generators reduce all events to the UTC timezone, since this very possible).  In this instance the end date would still be shown even if on conversion to display timezone it was the same day as the start date (normally suppressed).  Behaviour has been adjusted so that decision not to show end date is made in the display timezone.
 *    Update of Danish translation from GeorgWP
-
 
 = Version 2.9.1 =
 *   Removed debug statements relating to unreleased new features - should NOT have been in 2.9.1. If you have 2.9, please update to 2.9.1 asap.
@@ -386,24 +392,33 @@ can also see events that might have just started.
 == Installation ==
 
 Pre-installation: check that you have a version of PHP 5 > 5.20.  This is required for the timezone and datetime functionality.
+The php DATETIME Class must be enabled (this is standard in php 5.2).  You may get a parse error,something like 
+"syntax error, unexpected T_VARIABLE in...." if you are not on a version of PHP that has the "clone" function.  
 
-1. Unzip the folder into your wordpress plugins folder.
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Add one or more [iCal http://yoururl.ics] to a page or post (Note post usage may result in non-validating code, due to multiple occurences of "id" tags on same web page
-4. Manage the plugin through the settings screen.
+1. Download and activate as per usual in wordpress
+2. Create a page (or post) and add one or more [iCal http://yoururl.ics] to a page or post.  NB (NOT As a hyperlink, must be plain text)
 
-= Further tweaks: =
-5. Change/salt the css as desired.
-6. Check Date and Time formats. Note: language specific date formats depend on the specifications in the Date and Time Formats in the settings area.  Wordpress does not set locale, but does do some localisation of the "date" format strings, so use those rather than the strftime strings.
-7. Check wordpress timezone, and ics events timezones- Check your wordpress timezone settings are set to what you wnat them to be.  The plugin will handle timezone differences and assumes that you want the wordpress timezone as your main timezone, not the ics file timezone
-8. play with date and event limits - balance performance against the volume of events you are likely to have. (eg: don't do days=1000 and events=5 if you know that almost always you have about 3 events a month!
+That's it!
+
+For the widget
+
+1.  Drag it to the chosen sidebar
+2.  Enter http://yoururl.ics in the large text area, Save
+
+
+= Customisation: =
+Optionally customise the layout etc through the plugins settings.
+*  Change/salt the css as desired.
+*  Check Date and Time formats. Note: language specific date formats depend on the specifications in the Date and Time Formats in the settings area.  Wordpress does not set locale, but does do some localisation of the "date" format strings, so use those rather than the strftime strings.
+*  Check wordpress timezone, and ics events timezones- Check your wordpress timezone settings are set to what you wnat them to be.  The plugin will handle timezone differences and assumes that you want the wordpress timezone as your main timezone, not the ics file timezone
+*  play with date and event limits - balance performance against the volume of events you are likely to have. (eg: don't do days=1000 and events=5 if you know that almost always you have about 3 events a month!
 
 = Note =   
 The ics file feed must be PUBLIC - if you cannot access it in a browser without being logged in, then the plugin will not be able to access it either.
 
 
 == Frequently Asked Questions ==
- see also the plugin website [Troubleshooting](http://icalevents.anmari.com/troubleshooting/)
+ see also the [plugin website] (http://icalevents.anmari.com)
 
 = How can I control the output of this plugin? =
 
@@ -479,17 +494,6 @@ The ical spec allows for a event URL.  Often there is not one in the ics file.  
 So for listtype 4 only, If there is no URL, and NO default url in the admin configuration(eg: full calendar page) has been specified, then the Plugin will generate a dummy bookmark, with info cursor style and event description as hover text/title.  The dummy bookmark is to stop the page reloading and to make the link non-active.  All code validates.
 
 If you wish the same behaviour for other liststypes, you can enter either a good URL in the default event iurl field in the admin settings, or a dumjmy bookmark like "#noeventurl".
-
-= Support for more of Ical? =
-
-There is partial support for all the ICAL components and properties.  
-Allowance has been made to potentially support all features.  You will notice this particularly in the Admin section.
-However since this is a single volunteer effort at this stage, the key areas that may be used have been targeted.
-If you find that a particular implementation is needed for your website, contact me and we can discuss the possibility of including it.
-
-For example:
-Change Management Fields are not parsed
-The PHP timezone definition is used.  Any TimeZone definitions component and subcomponents if specified are not parsed and used.  However the timezone of your calendar and of any item is noted and the time duly calculated with that timezone.
 
 == Screenshots ==
 

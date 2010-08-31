@@ -13,9 +13,10 @@ function amr_date_i18n( $dateformatstring, $dateobj = null) {
 	$datefunc = 'date';
 
 	if ( ( !empty( $wp_locale->month ) ) && ( !empty( $wp_locale->weekday ) ) ) {
-		$datemonth = $wp_locale->get_month( $dateobj->format('m') );
-		$datemonth_abbrev = $wp_locale->get_month_abbrev( $datemonth );
-		$dateweekday = $wp_locale->get_weekday( $dateobj->format('w') );
+		$datemonth = $wp_locale->get_month( $dateobj->format('m') ); 
+		$datemonth_abbrev = $wp_locale->get_month_abbrev( $datemonth ); 
+		$w = $dateobj->format('w'); if ($w == '-1') {$w = get_oldweekdays($dateobj);} /* php seems to break around 1760 and google passed a zero year date */
+		$dateweekday = $wp_locale->get_weekday( $w ); 
 		$dateweekday_abbrev = $wp_locale->get_weekday_abbrev( $dateweekday );
 		$datemeridiem = $wp_locale->get_meridiem( $dateobj->format('a') );
 		$datemeridiem_capital = $wp_locale->get_meridiem( $dateobj->format( 'A') );

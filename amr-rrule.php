@@ -1,41 +1,688 @@
 <?php
-
-global	$timeperiod_conv; 
-global	$amr_day_of_week;
-global  $amr_day_of_week_no;
-global 	$amr_bys;  /* an array containing all the diificuly by's such as negative bymonthdays, byday 9days of week) etc */
-global $amr_wkst;   /* alpha */
-global $amr_rulewkst; /* local to rule and numeric */
-
+global	$timeperiod_conv,
+		$amr_day_of_week,
+		$amr_day_of_week_no,
+		$amr_day_of_week_from_no,
+		$amr_bys,  /* an array containing all the diificuly by's such as negative bymonthdays, byday 9days of week) etc */
+		$amr_wkst,   /* alpha */
+		$amr_rulewkst; /* local to rule and numeric */
 $amr_timeperiod_conv = array (
 /* used to convert from ical FREQ to gnu relative items for date strings useed by php datetime to do maths */
-			'DAILY' => 'day',
-			'MONTHLY' => 'month',
-			'YEARLY' =>  'year',
-			'WEEKLY' => 'week',
-			'HOURLY' => 'hour',
-			'MINUTELY' => 'minute',
-			'SECONDLY' => 'second'
-			);
+	'DAILY' => 'day',
+	'MONTHLY' => 'month',
+	'YEARLY' =>  'year',
+	'WEEKLY' => 'week',
+	'HOURLY' => 'hour',
+	'MINUTELY' => 'minute',
+	'SECONDLY' => 'second'
+	);
 $amr_day_of_week	= array (
-			'MO' => 'Monday',
-			'TU' => 'Tuesday',
-			'WE' => 'Wednesday',
-			'TH' => 'Thursday',
-			'FR' => 'Friday',
-			'SA' => 'Saturday',
-			'SU' => 'Sunday'
-			);
+	'MO' => 'Monday',
+	'TU' => 'Tuesday',
+	'WE' => 'Wednesday',
+	'TH' => 'Thursday',
+	'FR' => 'Friday',
+	'SA' => 'Saturday',
+	'SU' => 'Sunday'
+	);
 $amr_day_of_week_no	= array (
-			'MO' => 1,
-			'TU' => 2,
-			'WE' => 3,
-			'TH' => 4,
-			'FR' => 5,
-			'SA' => 6,
-			'SU' => 7
-			);			
+	'MO' => 1,
+	'TU' => 2,
+	'WE' => 3,
+	'TH' => 4,
+	'FR' => 5,
+	'SA' => 6,
+	'SU' => 7
+	);
+$amr_day_of_week_from_no	= array ( /* convert php day of week number  (0 (sunday) to 6 (saturday)) to ical format */
+	0 => 'SU',
+	1 => 'MO',
+	2 => 'TU',
+	3 => 'WE',
+	4 => 'TH',
+	5 => 'FR',
+	6 => 'SA'
+	);		
+/* --------------------------------------------------------------------------------------------------- */
+function amr_get_date_parts ($dateobj) { /* breaks date into the parts */
+	if (!is_object($dateobj)) return (false);
+	$parts['year'] 		= $dateobj->format('Y');
+	$parts['month'] 	= $dateobj->format('n');
+	$parts['day'] 		= $dateobj->format('j');
+	$parts['hour'] 		= $dateobj->format('G');
+	$parts['minute'] 	= $dateobj->format('i');
+	$parts['second'] 	= $dateobj->format('s');
+	$parts['date'] 		= new datetime();
+	$parts['date'] 		= clone $dateobj; /* save a cope so we don't have to recreate */
+	return ($parts);
+}	
+/* --------------------------------------------------------------------------------------------------- */
+function print_date_array($datearray) {
+	if (isset ($_GET['rdebug'])) {
+		foreach ($datearray as $j=> $datea) {
+			echo '<br>'.$j. '    ';
+			print_date_array1($datea);
+//		if (!is_object($parts)) echo ' '.str_pad($parts,2,'_',STR_PAD_LEFT);
+		}
+		echo '<hr>';
+	}	
+}
+/* --------------------------------------------------------------------------------------------------- */
+function print_date_array1($datea) {
+global $ical_timezone;
+	if (isset ($_GET['rdebug'])) {		
+		foreach ($datea as $i => $parts) if (!is_object($parts)) {
+			echo ' '.str_pad($parts,2,'_',STR_PAD_LEFT);
+		}
+		$dateobj = amr_create_date_from_parts ($datea, $ical_timezone);
+		echo ' '.$dateobj->format('l');
+	}	
+}
+/* --------------------------------------------------------------------------------------------------- */	
+function amr_sort_date_array(&$datearray) {
+	// Obtain a list of columns
+	if (empty ($datearray)) return (null);
+	foreach ($datearray as $key => $row) {
+	    $year[$key]  	= $row['year'];
+	    $month[$key] 	= $row['month'];
+		$day[$key]  	= $row['day'];
+	    $hour[$key] 	= $row['hour'];
+		$minute[$key]  	= $row['minute'];
+	    $second[$key] 	= $row['second'];		
+	}
+	// Sort the data 
+	// Add $data as the last parameter, to sort by the common key
+	array_multisort($year, SORT_ASC, $month, SORT_ASC, $day, SORT_ASC, $minute, SORT_ASC, $second, SORT_ASC, $datearray);	
+	if (isset ($_GET['rdebug'])) print_date_array($datearray);	
+	return ($datearray);
+}
+/* --------------------------------------------------------------------------------------------------- */
+function amr_limit_by_setpos(&$datearray, $by) {
+	$total = count($datearray);	
+	foreach ($by as $i => $pos) {
+		if (!empty($pos)) $pos = (int) $pos;
+		else break;
+		if ($pos < 0) 	{
+			if ( (-$pos) > $total) break;
+			else if (isset($datearray[$total+$pos]))
+				$limitedarray[$total+$pos] = $datearray[$total+$pos];
+			}
+		else {
+			if ($pos > $total) break;
+			else if (isset($datearray[$pos-1]))
+			$limitedarray[$pos-1] = $datearray[$pos-1];
+		}
+	}
+	if (!empty($limitedarray) ) return($limitedarray);
+	else return(null);
+}
+/* --------------------------------------------------------------------------------------------------- */
+function amr_expand_by_weekno (&$datearray, $pby /* the array of week nos */, $tz) {  /* Only ever done YEARLY ***** what if negative */
+	global	$amr_wkst;	
 
+	$newdatearray = array();
+	foreach ($datearray as $i => $d) {	
+		$w1d1 		= amr_create_date_from_parts ( array (
+					'year' => $d['year'], 
+					'month' => '01',
+					'day' => '04',   /* jan 4 is always in week 1 */
+					'hour' => $d['hour'],
+					'minute' => $d['minute'],
+					'second' => $d['second']
+					), $tz);
+//		http://en.wikipedia.org/wiki/ISO_week_date#Last_week - says the the ISO 8601 spec defines the last week as the week with December 28 in it	
+		$lastweekd1 = amr_create_date_from_parts ( array (
+					'year' => $d['year'], 
+					'month' => '12',
+					'day' => '31',   /* last week always includes the last day even if it is also in next years week 1 (ie: 53=1)*/
+					'hour' => $d['hour'],
+					'minute' => $d['minute'],
+					'second' => $d['second']
+					), $tz);		
+		$w1d1 		= amr_get_start_of_week ($w1d1, $amr_wkst); /* this is now the start of week 1 */
+		$lastweekd1 = amr_get_start_of_week ($lastweekd1, $amr_wkst); /* this is now the start of the last week */
+		if (isset($_GET['rdebug'])) { 	echo '<br />Start of week1 :'.$w1d1->format('Ymd l');
+										echo '<br />Start of last week :'.$lastweekd1->format('Ymd l');}
+		$dateobj = new DateTime;
+		foreach ($pby as $weekno) {			
+			
+			if ($weekno < 0) {
+				$dateobj = clone ($lastweekd1);
+				if ($weekno < -1) date_modify ($dateobj,(($weekno+1)*7).' days'); /* $weekno is negative - now we have the start of the week we want */
+			}
+			else if ($weekno > 0){
+				$dateobj = clone ($w1d1);
+				if ($weekno > 1) date_modify ($dateobj,'+'.(($weekno-1)*7).' days'); /* now we have the start of the week we want */
+			}	
+			/* else just ignore a zero, as it should not exist */
+			
+			$new[0] =  amr_get_date_parts($dateobj);
+			for ($i = 1; $i <= 6; $i++) {
+				date_modify ($dateobj,'+1 days'); /* need to do it with a date modify so that we don't have to worry about going over a month end */
+				$new[$i] =  amr_get_date_parts($dateobj);
+			}
+			if (isset($_GET['rdebug'])) { echo '<br /><b>expanded by week :'.$weekno.' </b> Got '.count($new).'</br>';}
+			$newdatearray = array_merge ($newdatearray, $new);
+		}	
+	}
+	return ($newdatearray);
+}	
+
+/* --------------------------------------------------------------------------------------------------- */
+function amr_expand_by_yearday (&$datearray, $pbyrdy, $tz) { /* array of y,m,d,h,m,s, and array of by 'x'*/
+	/* set the first one and then copy and set the rest */
+	if (empty($datearray)) return(false);
+	$first = true;
+	$sofar = count($datearray);
+	if (isset($_GET['rdebug'])) { echo '<br /><b>Expanding byyearday </b>....So far have '.$sofar.' dates to apply bys = '; print_r ($pbyrdy); }
+	
+	$newdatearray = array();
+	foreach ($pbyrdy as $j => $yd) { /* eg  8,200,360 */
+		if (false and $first) {
+			foreach ($datearray as $i => $d) { /* get the date object again , adjust the month and day */		
+				$dateobj = amr_create_date_from_parts ( array (
+					'year' => $d['year'], 
+					'month' => '01',
+					'day' => '01',
+					'hour' => $d['hour'],
+					'minute' => $d['minute'],
+					'second' => $d['second']
+					), $tz);
+				date_modify ($dateobj, '+'.($yd-1).' days');	
+				$datearray[$i] = amr_get_date_parts($dateobj);
+			}
+			$first= false;
+			$newdatearray = $datearray;
+		}
+		else {
+			$new = $datearray;
+			foreach ($new as $i => $d) { /* get the date object again , adjust the month and day */	
+				if ($yd > 0) {
+					$d['month'] = '01';
+					$d['day'] 	= '01';
+					$adjustment = ($yd-1);
+				}
+				else if ($yd < 0) {
+					$d['month'] = '12';
+					$d['day'] 	= '31';
+					$adjustment = ($yd+1);				
+				}
+				else break;
+				$dateobj = amr_create_date_from_parts ( $d, $tz);
+				if (isset($_GET['rdebug'])) { echo '<br />Stat with '.$dateobj->format('YMD l').' adjust by '.$adjustment;}
+				if (!($adjustment == 0)) date_modify ($dateobj, $adjustment.' days');	
+				$new[$i] = amr_get_date_parts($dateobj);
+					
+			}			
+		}
+		if (!empty ($new)) $newdatearray = array_merge ($newdatearray, $new); 		
+	}	
+//	if (isset($_GET['rdebug'])) {echo '<hr>New date array: '.count($newdatearray); print_date_array($newdatearray);}
+	return($newdatearray);
+}
+
+/* --------------------------------------------------------------------------------------------------- */
+function amr_expand (&$datearray, $pby, $type,$tz) { /* array of y,m,d,h,m,s, and array of by 'x'.  Note could be negative !! */
+	/* set the first one and then copy and set the rest */
+	if (empty($datearray)) return(false);
+	$first = true;
+	$sofar = count($datearray);
+	if (isset($_GET['rdebug'])) { echo '<br /><b>Expanding with ' .$type. ' </b>....So far have '.$sofar.' dates to apply bys = '; print_r ($pby); }
+	$newdatearray = array();
+//	$new = $datearray;
+	foreach ($datearray as $i => $datea) {		
+		foreach ($pby as $j => $m) { /* eg j = bymonth, and $m = 8,9,10,11,12 , or neg */
+			$new = $datea; 
+			if ($m < 1) { 
+				$day = amr_create_date_from_parts ($datea, $tz);
+				$daysinmonth = $day->format('t');
+				$lastxdayofmonth = ($daysinmonth+1)+$m;			
+				$new[$type] = $lastxdayofmonth;				
+			}
+			else {
+				$new[$type] = $m;
+			}
+			if (!empty ($new)) $newdatearray[] = $new; 		
+		}
+	}	
+	return($newdatearray);
+}
+/* --------------------------------------------------------------------------------------------------- */
+
+function amr_limit (&$datearray, $pby, $type) { /* array of y,m,d,h,m,s, and array of by 'x'*/
+	/* set the first one and then copy and set the rest */
+	if (empty($datearray)) return(false);
+	if (isset($_GET['rdebug'])) { echo '<br /><b>Limiting ' .$type. ' </b>....So far have '.count($datearray).' dates to apply bys = '; print_r ($pby); }
+	foreach ($datearray as $i => $datea) {
+		if (!(in_array($datea[$type], $pby))) unset ($datearray[$i]); 
+	}	
+	if (isset($_GET['rdebug'])) {echo '<hr>After limiting: '.count($datearray).' <br />';print_date_array($datearray);}
+	return($datearray);
+}
+
+/* --------------------------------------------------------------------------------------------------- */
+function amr_special_expand_by_day_of_week_and_yearly (&$datearray, $pbys, $tz) { /* note 2 */
+	if (isset($_GET['rdebug'])) { echo '<hr>'.'starting special expand by day of week and yearly ';	print_r($pbys); print_date_array($datearray);}
+	/* For each date array - take the year and the month - get the first of the month, then the get the first day with that day of week, then get them all or the nbyday  */
+	if (isset($pbys['BYDAY']))  $pbyday = $pbys['BYDAY'];
+	else if (isset($pbys['NBYDAY']))  $pbyday = $pbys['NBYDAY'];
+	else return ($datearray);
+	foreach ($datearray as $i=> $datea) {
+		$d = $datea;
+		$d['day'] 	= 1;
+		$d['month'] = 1;
+		$first 		= amr_create_date_from_parts ($d, $tz);
+		$d['day']	= 31;
+		$d['month'] = 12;
+		$last 		= amr_create_date_from_parts ($d, $tz);	
+		$dateobj 	= new DateTime();
+		if (isset($_GET['rdebug'])) echo '<br />Starting from '.$first->format('Ymd l').' till '.$last->format('Ymd l');
+		foreach ($pbyday as $byday => $bool ) { /* get the first day that is that day of week */
+			$firstbyday  = amr_goto_byday ($first, $byday, '+'); /* so we should have the first 'byday' of the year */
+			$lastbyday 	= amr_goto_byday ($last, $byday, '-');		
+			if (isset($_GET['rdebug'])) echo '<br />Doing '.$byday. ' with 1st '.$firstbyday ->format('Ymd l').' or last '.$lastbyday->format('Ymd l');
+			if (is_array($bool)) {/* then have numeric - possibly many */
+				foreach ($bool as $num) {
+					if ($num < 0) { /* should never actually be 0 */ /* *** go to end and work back */
+						$num=$num+1;
+						$dateobj = clone ($lastbyday);
+						if (!($num == 0)) date_modify($dateobj,(($num)*7).' days');	
+						if (($dateobj->format('Y') == $datea['year']))  {/* If still in the same year */
+							$newdatearray[] = amr_get_date_parts ($dateobj);
+							if (isset($_GET['rdebug'])) echo '<br />Saved '.$dateobj->format('Ymd l');
+						}						
+					} 
+					else if ($num > 0) {
+						$num=$num-1;
+						$dateobj = clone($firstbyday);
+						if (!($num == 0)) date_modify($dateobj,'+'.(($num)*7).' days');	
+						if (($dateobj->format('Y') == $datea['year'])) { /* If still in the same year */
+							$newdatearray[] = amr_get_date_parts ($dateobj);
+							if (isset($_GET['rdebug'])) echo '<br />Saved '.$dateobj->format('Ymd l');
+						}
+					}
+					
+				}
+			}
+			else {
+				$dateobj = clone ($firstbyday);
+				while ($dateobj <= $lastbyday) {
+					$newdatearray[] = amr_get_date_parts ($dateobj);
+					if (isset($_GET['rdebug'])) echo '<br />saved '.$dateobj->format('Ymd l');
+					date_modify($dateobj,'+7 days');				
+				}	
+			}	
+		}
+	}
+	if (isset($_GET['rdebug'])) {print_date_array($newdatearray);    echo '<hr>';}
+	return ($newdatearray);
+}
+/* --------------------------------------------------------------------------------------------------- */
+function amr_expand_by_day_of_week_for_weekly (&$datearray, $pbys, $tz, $wkst) { /* Note 1 in monthly frequency only  */
+	if (isset($_GET['rdebug'])) { echo '<hr><b>starting special expand by day of week in weekly with wkst:'.$wkst.' </b>';	
+		var_dump($pbys);
+		print_date_array($datearray);}
+	if (isset($pbys['BYDAY']))  $pbyday = $pbys['BYDAY'];
+	else if (isset($pbys['NBYDAY']))  $pbyday = $pbys['NBYDAY'];
+	else return ($datearray);
+	/* For each date array -  get the first day with that day of week, then get the next byday  */
+	$dateobj = new DateTime();
+	foreach ($datearray as $i=> $datea) {
+		$day 	= amr_create_date_from_parts ($datea, $tz);
+		$day1 	= amr_get_start_of_week($day, $wkst);
+		if (isset($_GET['rdebug'])) echo '<br />Got start of week'.$day1->format('Ymd l');
+		foreach ($pbyday as $byday => $bool ) { 
+			if (isset($_GET['rdebug'])) echo '<br />BYDAY='.$byday.' ';
+			if (!(is_array($bool)))  {/* else have numeric - possibly many  - skip for weekly is meaningless */
+				$dateobj = amr_goto_byday ($day1, $byday, '+');/* get the first day that is that day of week */
+				$newdatearray[] = amr_get_date_parts ($dateobj);
+			}
+		}
+	}
+	if (isset($_GET['rdebug'])) echo '<hr>';
+	if (!empty($newdatearray)) return ($newdatearray);
+	else return (null);
+}
+/* -------------------------------------------------------------------------------------------------------------- */
+function amr_special_expand_by_day_of_week_and_month_note2 (&$datearray, $pbys, $tz) { /* Note 2 First and Last are relative to the year and the month is a check */
+	if (isset($_GET['rdebug'])) { echo '<hr><b>starting special expand by day of week and month in year freq </b>';	print_date_array($datearray);}
+		if (isset($pbys['BYDAY']))  $pbyday = $pbys['BYDAY'];
+	else if (isset($pbys['NBYDAY']))  $pbyday = $pbys['NBYDAY'];
+	else return ($datearray);
+	/* For each date array - take the year - get the first day, then the get the first day with that day of week, then get them all or the nbyday  */
+	foreach ($datearray as $i=> $datea) {
+		$d = $datea;
+		$d['day'] = 1;
+		$d['month'] = 1;
+		$firstdayofyear = amr_create_date_from_parts ($d, $tz);
+		$d['day'] = 31;
+		$d['month'] = 12;
+		$lastdayofyear = amr_create_date_from_parts ($d, $tz);		
+		$dateobj = new DateTime();
+		foreach ($pbyday as $byday => $bool ) { 
+			if (isset($_GET['rdebug'])) echo '<br />'.$byday.' ';
+			if (is_array($bool)) {/* then have numeric - possibly many */
+				foreach ($bool as $num) {
+					if (($num < 0) and ($num >= -53)) { /* *** go to end and work back */						
+						$dateobj = clone ($lastdayofyear);						
+						if (isset($_GET['rdebug'])) { echo '<br/> got end of year '.$dateobj->format('Ymd l');}
+						$dateobj = amr_goto_byday ($dateobj, $byday, '-');/* get the last day that is that day of week */
+						if (isset($_GET['rdebug'])) { echo ' get day '.$dateobj->format('Ymd l');}
+						$num = ($num+1)*7;  /* num is negative */
+						if (!($num == 0)) date_modify($dateobj,$num.' days');	/* date modify deos not like zero in some phps */
+						if (isset($_GET['rdebug'])) { echo ' and then adjust back '.$num.' '.$dateobj->format('Ymd l');}
+						if (($datea['month'] == $dateobj->format('m')) and
+							($datea['year'] == $dateobj->format('Y') )	)  {/* if still in the same month and same year  */
+							$newdatearray[] = amr_get_date_parts ($dateobj);
+							if (isset($_GET['rdebug']))  echo ' -Save';
+						}	
+					} 
+					else if ($num <= 53){
+						date_modify($dateobj,'+'.($num*7-1).' days');	
+						$newdatearray[] = amr_get_date_parts ($dateobj);
+					}
+					else return($datearray);/* invalid numeric byday */
+				}
+			}
+			else {
+				$dateobj = amr_goto_byday ($firstdayofyear, $byday, '+');/* get the first day that is that day of week */
+//				$dayofyear = $dateobj->format('z'); /*  day of the year */
+				while ($dateobj <= $lastdayofyear) {
+					$d['day'] = $dateobj->format('d'); 
+					$d['month'] = $dateobj->format('m'); 
+					$newdatearray[] = $d;
+					date_modify($dateobj,'+7 days');	
+				}
+			}
+		}
+	}
+	if (isset($_GET['rdebug'])) echo '<hr>';
+	return ($newdatearray);
+}
+/* --------------------------------------------------------------------------------------------------- */
+
+function amr_special_expand_by_day_of_week_and_month_note1 (&$datearray, $pbys, $tz) { /* Note 1 in monthly frequency only  */
+	if (isset($_GET['rdebug'])) { echo '<hr><b>starting special expand by day of week in monthly </b>';	print_date_array($datearray);}
+	if (isset($pbys['BYDAY']))  $pbyday = $pbys['BYDAY'];
+	else if (isset($pbys['NBYDAY']))  $pbyday = $pbys['NBYDAY'];
+	else return ($datearray);
+	/* For each date array - take the year and the month - get the first of the month, then the get the first day with that day of week, then get them all or the nbyday  */
+	$dateobj = new DateTime();
+	foreach ($datearray as $i=> $datea) {
+		$d = $datea;
+		$d['day'] = 1;
+		$day1 = amr_create_date_from_parts ($d, $tz);
+		$daysinmonth = $day1->format('t');	
+		foreach ($pbyday as $byday => $bool ) { 
+			if (isset($_GET['rdebug'])) echo '<br />BYDAY='.$byday.' ';
+			if (is_array($bool)) {/* then have numeric - possibly many */
+				foreach ($bool as $num) {
+					if (($num < 0) and ($num >= -5)) { /* *** go to end and work back */						
+						$dateobj = clone ($day1);
+						date_modify($dateobj,'+'.($daysinmonth-1).' days');	
+						if (isset($_GET['rdebug'])) { echo ' got end of month '.$dateobj->format('Ymd l');}
+						$dateobj = amr_goto_byday ($dateobj, $byday, '-');/* get the last day that is that day of week */
+						if (isset($_GET['rdebug'])) { echo ' get day '.$dateobj->format('Ymd l');}
+						$num = ($num+1)*7;
+						if (!($num == 0)) date_modify($dateobj,'-'.$num.' days');	/* date modify deos not like zero in some phps */
+						if (isset($_GET['rdebug'])) { echo ' and then adjust by '.$num.' '.$dateobj->format('Ymd l');}
+					} 
+					else if ($num <= 5){
+						$dateobj = clone ($day1);
+						$dateobj = amr_goto_byday ($dateobj, $byday, '+');/* get the last day that is that day of week */
+						$num = (($num-1)*7);
+						if (!($num == 0)) date_modify($dateobj,'+'.$num.' days');	
+						if (isset($_GET['rdebug'])) { echo ' num = '.$num.' '.$dateobj->format('Ymd l');}
+					}
+					/* else invalid numeric byday */
+					if ($datea['month'] == $dateobj->format('m'))  /* if still in the same month */
+						$newdatearray[] = amr_get_date_parts ($dateobj);
+				}
+			}
+			else {
+				$dateobj = amr_goto_byday ($day1, $byday, '+');/* get the first day that is that day of week */
+				$nextday = $dateobj->format('j'); /*  */
+				if ($nextday < 0) $nextday = get_oldweekdays($dateobj); /* php seems to break around 1760 */
+				while ($nextday <= $daysinmonth) {
+					$d['day'] = $nextday; 
+					$newdatearray[] = $d;
+					$nextday = $nextday + 7;
+				}
+			}
+		}
+	}
+	if (isset($_GET['rdebug'])) echo '<hr>';
+	if (!empty($newdatearray)) return ($newdatearray);
+	else return (null);
+}
+/* --------------------------------------------------------------------------------------------------- */
+function amr_expand_by_day_of_week_for_year (&$datearray, $pbys, $tz) {
+	/* we know the BYDAY exists, lets also check for others as per Note 2 in the limit/expand table */
+		/* set the first one and then copy and set the rest */
+	if (empty($datearray)) return(false);
+	$first = true;
+	$sofar = count($datearray);
+	if (isset($_GET['rdebug'])) { echo '<br /><b>Dealing with by_day_of_week_for_year </b>....So far have '.$sofar.' dates to apply bys = '; print_r ($pbys); }
+	if (isset($pbys['BYWEEKNO'])) { /* if byweekno was also set -  special  expand for weekly and day of week .  We should already have the week's expanded ? */
+			$newdatearray = amr_limit_by_day_of_week ($datearray, $pbys['BYDAY'], $tz );
+		}
+	if (isset($pbys['month'])) { /* if bymonth was also set - special monthly expand by day of week - month expand already done */
+			$newdatearray = amr_special_expand_by_day_of_week_and_month_note2 ($datearray, $pbys, $tz);
+		}
+	else $newdatearray = amr_special_expand_by_day_of_week_and_yearly ($datearray, $pbys, $tz);
+	
+	if (isset($_GET['rdebug'])) {echo '<hr>New date array: '.count($newdatearray); print_date_array($datearray);}
+	return($newdatearray);
+}
+
+/* --------------------------------------------------------------------------------------------------- */
+function amr_limit_by_yearday (&$datearray, $pbyyearday, $tz) {
+	if (isset($_GET['rdebug'])) { echo '<br>Limit by year day';}
+	foreach ($datearray as $i=> $d) {
+		$dateobj = amr_create_date_from_parts ($d, $tz);
+		$dateyearday = $dateobj->format('z')+1;
+		if (!in_array($dateyearday,$pbyyearday) ) unset ($datearray[$i]);
+	}
+	return ($datearray);
+}
+/* --------------------------------------------------------------------------------------------------- */
+function amr_limit_by_day_of_week (&$datearray, $pby, $tz) {
+	global $amr_day_of_week_from_no; /* MO=> 1, 'TU' => 2... 'SU'=> 6 etc */
+	if (isset($_GET['rdebug'])) { echo '<br>Limit by day of week '; print_r($pby);}
+	foreach ($datearray as $i=> $d) {
+		$dateobj = amr_create_date_from_parts ($d, $tz);
+		$w = $dateobj->format('w');
+		if ($w == '-1') {$w = get_oldweekdays($dateobj);} /* php seems to break around 1760 and google passed a zero year date in an ics file  */
+		$w = $amr_day_of_week_from_no[$w];		
+		if (!isset($pby[$w]) ) { if (isset($_GET['rdebug'])) { echo '<br>Day of week is '.$w.' reject';}
+			unset ($datearray[$i]);
+			}
+	}
+	return ($datearray);
+}
+/* --------------------------------------------------------------------------------------------------- */
+function amr_create_date_from_parts ($d, $tz) { /* createa date object from the parts array, with the TZ passed */
+	new DateTime();		
+	$datestring = $d['year'].'-'.$d['month'].'-'.$d['day'].' '.$d['hour'].':'.$d['minute'].':'.$d['second'];
+	try { $possdate =  new DateTime($datestring, $tz);
+		} 
+	catch (Exception $e) {   
+				echo '<b>'.__('Unexpected error creating date with string: '.$datestring,'amr-ical-events-list').'</b>';
+				echo $e->getMessage();   
+				return (false);
+				}
+	return ($possdate );			
+}
+/* --------------------------------------------------------------------------------------------------- */
+function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {    
+	 /* RRULE a parsed array.  If the specified event repeats between the given start and
+	 * end times, return one or more nonrepeating date strings in array 
+	 */
+	global	$amr_wkst,
+			$amr_timeperiod_conv; /* converts daily to day etc */
+	/* now we should have if they are there: $p[freq], $p[interval, $until, $wkst, $ count, $byweekno etc */	
+	/* check  / set limits  NB don't forget the distinction between the two kinds of limits  */
+	$tz = date_timezone_get($start);
+	if (isset($_GET['rdebug'])) {echo '<br />&nbsp;start='.$start->format('c').' <br />astart='.$astart->format('c') .'<br />';
+		foreach ($p as $k => $i) { echo $k. ' '; print_r($i); echo  '<br />';}
+	}		
+	if (!isset($p['COUNT']))   $count = AMR_MAX_REPEATS;  /* to avoid any chance of infinite loop! */
+	else $count = $p['COUNT'];
+	if (ICAL_EVENTS_DEBUG) echo '<br />Limiting the repeats to '.$count;
+	if (!isset($p['UNTIL']))  $until = $aend;	
+	else { 
+		$until = $p['UNTIL']; 
+		if ($until > $aend)	$until = $aend;	
+	}
+	if (amr_is_before ($until, $astart )) { return(false); }/* if it ends before our overall start, then skip */		
+	/* now prepare out "intervales array for date incrementing eg: p[monthly] = 2 etc... Actualy there should only be 1 */
+	if (isset($p['FREQ'])) { /* so know yearly, daily or weekly etc  - setup increments eg 2 yearsly or what */
+		if (!isset ($p['INTERVAL'])) $p['INTERVAL'] = 1;	
+		switch ($p['FREQ']) {
+			case 'WEEKLY': $int['day'] = $p['INTERVAL'] * 7; break;
+			default: {
+				$inttype = $amr_timeperiod_conv[$p['FREQ']];
+				$int[$inttype] = $p['INTERVAL']; 
+			}
+		}
+		$freq = $p['FREQ'];
+	}	
+	unset ($p['UNTIL']);  /* unset so we can use other params more cleanly */
+	unset ($p['COUNT']); unset ($p['FREQ']); unset ($p['INTERVAL']); 
+	if (!empty($p['WKST'])) {	$wkst = $p['WKST']; unset($p['WKST']);}
+	else $wkst = $amr_wkst;	
+	if (count($p) === 0) {$p=null; }  /* If that was all we had, get rid of it anyway */		
+	/*  use the freq increment to get close to our listing start time.  If we are within one freq of our listing start, we should be safe in calculating the odd rrules. */
+	$closerstart = new datetime();
+	$closerstart = clone $start; 
+	while ($closerstart < $astart ) {
+//		if (isset($_GET['rdebug'])) { echo '<br />Main start= '. $astart->format('c'). ' '. $closerstart->format('c');}
+		$closerstart = amr_increment_datetime ($closerstart, $int) ;
+		if ($closerstart < $astart) $start = $closerstart;
+	}
+	if (isset($_GET['rdebug'])) {echo '<br />closer start was '.$closerstart->format('c');echo '<br />using start of__'.$start->format('c');}
+	unset($closerstart);
+	/* process one interval (one iteration of freq at a time */
+//	if (isset ($p['NBYDAY'])) { /* if we separated these in the parsing process, merge them here,    NOOO - will cause problems with the +1's and bool */
+//		$p['BYDAY'] = array_merge ($p['NBYDAY'], $p['BYDAY']);
+//	}
+	while ($start <= $until) {	 /* don't check a start here - may miss some */
+		$datearray[] = amr_get_date_parts($start);
+		switch ($freq) { /* the 'bys' are now in an array $p .  NOTE THE sequence here is important */
+			case 'SECONDLY':
+				if (isset($p['month'])) 		$datearray = amr_limit ($datearray, $p['month'], 'month');
+				/* BYWEEK NO not applicable here */
+				if (isset($p['BYYEARDAY'])) 	$datearray = amr_limit_by_yearday ($datearray, $p['BYYEARDAY'],$tz);
+				if (isset($p['day'])) 			$datearray = amr_limit   ($datearray, $p['day'], 'day');
+				if (isset($p['BYDAY'])) 		$datearray = amr_limit_by_day_of_week ($datearray, $p['BYDAY'],$tz);				
+//				foreach ($p as $i => $by) amr_limit_dates_withby($dates);
+				if (isset($p['hour'])) 			$datearray = amr_limit 	($datearray, $p['hour'],'hour');
+				if (isset($p['minute'])) 		$datearray = amr_limit  ($datearray, $p['minute'],'minute');
+				if (isset($p['second'])) 		$datearray = amr_limit	($datearray, $p['second'],'second');
+				break;
+			case 'MINUTELY':
+				if (isset($p['month'])) 		$datearray = amr_limit ($datearray, $p['month'], 'month');
+				/* BYWEEK NO not applicable here */
+				if (isset($p['BYYEARDAY'])) 	$datearray = amr_limit_by_yearday ($datearray, $p['BYYEARDAY'],$tz);
+				if (isset($p['day'])) 			$datearray = amr_limit  ($datearray, $p['day'], 'day');
+				if (isset($p['BYDAY'])) 		$datearray = amr_limit_by_day_of_week ($datearray, $p['BYDAY'],$tz);
+				if (isset($p['hour'])) 			$datearray = amr_limit 	($datearray, $p['hour'], 'hour');
+				if (isset($p['minute'])) 		$datearray = amr_limit  ($datearray, $p['minute'],'minute');
+				if (isset($p['second'])) 		$datearray = amr_expand ($datearray, $p['second'],'second',$tz);
+				break;
+			case 'HOURLY':
+				if (isset($p['month'])) 		$datearray = amr_limit ($datearray, $p['month'], 'month');	
+				/* BYWEEK NO not applicable here */
+				if (isset($p['BYYEARDAY'])) 	$datearray = amr_limit_by_yearday ($datearray, $p['BYYEARDAY'],$tz);				
+				if (isset($p['day'])) 			$datearray = amr_limit   ($datearray, $p['day'], 'day');
+				if (isset($p['BYDAY'])) 		$datearray = amr_limit_by_day_of_week ($datearray, $p['BYDAY'],$tz);				
+				if (isset($p['hour'])) 			$datearray = amr_limit 	($datearray, $p['hour'],'hour',$tz);
+				if (isset($p['minute'])) 		$datearray = amr_expand ($datearray, $p['minute'],'minute',$tz);
+				if (isset($p['second'])) 		$datearray = amr_expand ($datearray, $p['second'],'second',$tz);				
+				break;
+			case 'DAILY':
+				if (isset($p['month'])) 		$datearray = amr_limit  ($datearray, $p['month'], 'month');
+				/* BYWEEK NO and BYYEARDAY not applicable here */				
+				if (isset($p['day'])) 			$datearray = amr_limit   ($datearray, $p['day'], 'day');
+				if (isset($p['BYDAY'])) 		$datearray = amr_limit_by_day_of_week ($datearray, $p['BYDAY'],$tz);				
+				if (isset($p['hour'])) 			$datearray = amr_expand ($datearray, $p['hour'],'hour',$tz);
+				if (isset($p['minute'])) 		$datearray = amr_expand ($datearray, $p['minute'],'minute',$tz);
+				if (isset($p['second'])) 		$datearray = amr_expand ($datearray, $p['second'],'second',$tz);				
+			break;
+			case 'WEEKLY':
+				if (isset($p['month'])) 		$datearray = amr_limit ($datearray, $p['month'], 'month');
+				/* BYWEEK NO and BYYEARDAY and BYMONTH DAY not applicable here */
+				if (isset($p['BYDAY'])) 		$datearray = amr_expand_by_day_of_week_for_weekly ($datearray, $p,$tz,$wkst);
+				if (isset($p['hour'])) 			$datearray = amr_expand ($datearray, $p['hour'],'hour',$tz);
+				if (isset($p['minute'])) 		$datearray = amr_expand ($datearray, $p['minute'],'minute',$tz);
+				if (isset($p['second'])) 		$datearray = amr_expand ($datearray, $p['second'],'second',$tz);
+			break;
+			case 'MONTHLY':
+				if (isset($p['month'])) 		$datearray = amr_limit ($datearray, $p['month'], 'month');	
+				/* BYWEEK NO and BYYEARDAY not applicable here */
+				if (isset($p['day'])) 			$datearray = amr_expand ($datearray, $p['day'], 'day',$tz);					
+				if ((isset($p['BYDAY'])) or (isset($p['NBYDAY']))) 		{/* as per note 1  on page 44 of http://www.rfc-archive.org/getrfc.php?rfc=5545 */
+					if (isset($p['day'])) /* BYDAY limits if BYMONTH DAY is present , else a special expand for monthly */
+												$datearray = amr_limit_by_day_of_week ($datearray, $p);
+					else 						$datearray = amr_special_expand_by_day_of_week_and_month_note1 ($datearray, $p,$tz);
+				}
+				if (isset($p['hour'])) 			$datearray = amr_expand ($datearray, $p['hour'],'hour',$tz);
+				if (isset($p['minute'])) 		$datearray = amr_expand ($datearray, $p['minute'],'minute',$tz);
+				if (isset($p['second'])) 		$datearray = amr_expand ($datearray, $p['second'],'second',$tz);
+				break;
+			case 'YEARLY': 
+			
+				if (isset($p['month'])) 		$datearray = amr_expand ($datearray, $p['month'], 'month',$tz);
+				if (isset($p['BYWEEKNO'])) 		$datearray = amr_expand_by_weekno ($datearray, $p['BYWEEKNO'],$tz);
+				if (isset($p['BYYEARDAY'])) 	$datearray = amr_expand_by_yearday ($datearray, $p['BYYEARDAY'],$tz);
+				if (isset($p['day'])) 			$datearray = amr_expand ($datearray, $p['day'], 'day',$tz);			
+				if (isset($p['BYDAY'])) {
+					if (isset($p['day']) or isset($p['BYYEARDAY'])) /*Note 2:  BYDAY limits if BYMONTH DAY or BYYEARDAY  is present */
+												$datearray = amr_limit_by_day_of_week ($datearray, $p['BYDAY'],$tz);
+					else 						$datearray = amr_expand_by_day_of_week_for_year ($datearray, $p,$tz);
+				}
+				if (isset($p['NBYDAY'])) {
+					if (isset($p['day']) or isset($p['BYYEARDAY'])) /*Note 2:  BYDAY limits if BYMONTH DAY or BYYEARDAY  is present */
+												$datearray = amr_limit_by_day_of_week ($datearray, $p['NBYDAY'],$tz);
+					else 						$datearray = amr_expand_by_day_of_week_for_year ($datearray, $p,$tz);
+				}
+				if (isset($p['hour'])) 			$datearray = amr_expand ($datearray, $p['hour'],'hour',$tz);
+				if (isset($p['minute'])) 		$datearray = amr_expand ($datearray, $p['minute'],'minute',$tz);
+				if (isset($p['second'])) 		$datearray = amr_expand ($datearray, $p['second'],'second',$tz);
+				break;								
+		}
+		$datearray = amr_sort_date_array(&$datearray);
+		if (!empty($p['BYSETPOS'])) 	{ 
+			$datearray = amr_limit_by_setpos ($datearray, $p['BYSETPOS']);
+			if (isset ($_GET['rdebug'])) {echo '<br />Selected after bysetpos:'; print_r($p['BYSETPOS']); echo '</br>'; print_date_array($datearray);	}			
+			$datearray = amr_sort_date_array(&$datearray); /* sort again as the set position may have trashed it */
+		}	
+		$num_events = count($datearray);
+		if (isset ($_GET['rdebug'])) {echo '<br />We have '. $num_events.' events.  We want max:'.$count;	}
+		if ($num_events > $count)  $datearray = array_slice($datearray,0, $count);
+		if (isset ($_GET['rdebug'])) {echo '<br />Limit date array, now have :'.count($datearray);	
+			echo '<br>From  '.$astart->format('Y m d h:i').' until '.$until->format('Y m d h:i');
+		}	
+		if (!empty ($datearray)) {
+			foreach ($datearray as $d) { /* create the date object and check if it is within date limits  */
+				$possdate = amr_create_date_from_parts ($d, $tz);
+				if (isset ($_GET['rdebug'])) echo '<br>Possdate='.$possdate->format('Y m d h:i:s');
+				if 	(($possdate <= $until) and ($possdate >= $astart)) {
+					$repeats[] = $possdate;
+					if (isset ($_GET['rdebug'])) echo ' - saved';
+				}
+			}
+		}
+		unset ($datearray);
+		/* now get next start */
+		$start = amr_increment_datetime ($start, $int);
+		if (isset ($_GET['rdebug'])) echo '<hr>Next start data after incrementing = '.$start->format('Y m d l h:i:s');	
+	} /* end while*/
+	if (isset ($_GET['rdebug'])) if (empty ($repeats)) echo '<b>No repeats</b><hr>'; else echo '<b>'.count($repeats).' repeats</b><hr>';
+	if (empty ($repeats)) return(null);
+	return ($repeats);
+	
+	}
 /* ---------------------------------------------------------------------------- */
 
 function amr_parse_RRULEparams ( $args)	{
@@ -46,29 +693,18 @@ global $amr_wkst;
 global $amr_rulewkst;
 global $amr_globaltz;
 
+		if (!is_array($args)) return false;
 		foreach ($args as $i => $a) parse_str ($a);
-		/* now we should have if they are there: $freq, $interval, $until, $wkst, $ count, $byweekno etc */
-		
-			
+		/* now we should have if they are there: $freq, $interval, $until, $wkst, $ count, $byweekno etc */		
 		if (isset ($BYMONTH)) {	
 			$p['month'] = explode (',',$BYMONTH);	
-			if (isset($FREQ) and ($FREQ === 'MONTHLY')) {
-				echo '</br>Incompatible FREQ=MONTHLY and BYMONTH, correction attempted: FREQ set to YEARLY</br>';
-				$FREQ = 'YEARLY';  /* if Freq was left out, we can still "recover from that */
-			} 
 			foreach ($p['month'] as $j => $k) { 
 				if ($k < 0) { $p['month'][$j] = 13 + $k; }
 			}
-		}
-		
+		}		
 		if (isset ($BYMONTHDAY)) {
 			$p['day'] = explode (',',$BYMONTHDAY);
-			if (isset($FREQ) and ($FREQ === 'DAILY')) {
-				echo '</br>Incompatible FREQ=DAILY and BYMONTHDAY, correction attempted: FREQ set to MONTHLY</br>';
-				$FREQ = 'MONTHLY'; /* if Freq was left out, we can still "recover from that */
-			}		
-		}
-			
+		}			
 		if (isset ($BYHOUR)) {	
 				$p['hour'] = explode (',', $BYHOUR);  
 				foreach ($p['hour'] as $j => $k) { 
@@ -90,377 +726,76 @@ global $amr_globaltz;
 		if (isset ($BYDAY)) {
 			$p['BYDAY'] = explode(',', $BYDAY);
 			foreach ($p['BYDAY'] as $j => $k) {
-					$l = strlen($k); 
-					if ($l > 2) {  /* special treatment required - flag to re handle, keep as we want to isolate a subset anyway */
-						$p['specbyday'][] = $k;
-						$p['BYDAY'][$j] = substr($k, $l-2, $l);
-					}
-					else $by2[] = $k;
-				}	
-			
-		}
-		if (isset ($BYWEEKNO)) 	{$p['BYWEEKNO'] = explode(',', $BYWEEKNO);}
-		if (isset ($BYYEARDAY)) {$p['BYYEARDAY'] = explode(',', $BYYEARDAY);  }
-		if (isset ($UNTIL)) 	{$p['UNTIL'] = amr_parseDateTime($UNTIL, $amr_globaltz);}
-		if (isset ($COUNT)) 	{$p['COUNT'] = $COUNT;}
-		if (isset ($INTERVAL)) 	{$p['INTERVAL'] = $INTERVAL;}
-		if (isset ($FREQ)) 		{$p['FREQ'] = $FREQ;}
-		if (isset ($WKST)) 		{
-			$p['WKST'] = $WKST;
-		}
-		else {
-			$p['WKST'] = $amr_wkst;
-		}
-
-		if (isset ($BYSETPOS)) {
-			echo '<br>bysetpos not yet supported';	
-			$p['BYSETPOS'] = $BYSETPOS;}
-
-/* Now test for negtaives, and fix or remove them for special handling  amr do we need thsi here? handle in the special by's anyway? */
-			
-		foreach (array('BYYEARDAY','BYWEEKNO', /* 'day' */) as $i => $b)	{
-			if (isset ($p[$b])) {
-				foreach ($p[$b] as $j => $k) {
-					if ($k < 0) {  /* special treatment required - handle separately */
-						$p['neg'.$b][] = $k;
-						unset ($p[$b][$j]);
-						echo '<br>Negative '.$b.' '.$k.' not yet supported.  An Event may be incorrect. ';
-					}
-					else $by2[] = $k;
+				$l = strlen($k); 
+				if ($l > 2) {  /* special treatment required - flag to re handle, keep as we want to isolate a subset anyway */
+					$thenumber = substr($k, 0, $l-2);
+					$theday = substr($k, $l-2, $l);
+					$p['NBYDAY'][$theday][] = $thenumber; /* could be multiple numeric for same day eg first and last */
+					unset ($p['BYDAY'][$j]);
 				}
-				if (isset ($by2)) $p[$b] = $by2;
-				else unset ($p[$b]);
-			}	
+				else {
+					$p['BYDAY'][$k] = true;
+					unset ($p['BYDAY'][$j]);
+				}
+			}				
 		}
-		return ($p);  /* Need the array values to reindex the array so can acess start positions */	
+		if (isset($p['BYDAY']) and ( count($p['BYDAY']) < 1)) unset ($p['BYDAY']);
+		if (isset ($BYWEEKNO)) 	{$p['BYWEEKNO'] 	= explode(',', $BYWEEKNO);}
+		if (isset ($BYYEARDAY)) {$p['BYYEARDAY'] 	= explode(',', $BYYEARDAY);  }
+		if (isset ($UNTIL)) 	{$p['UNTIL'] 		= amr_parseDateTime($UNTIL, $amr_globaltz);}
+		if (isset ($COUNT)) 	{$p['COUNT']	 	= $COUNT;}
+		if (isset ($INTERVAL)) 	{$p['INTERVAL'] 	= $INTERVAL;}
+		if (isset ($FREQ)) 		{$p['FREQ'] 		= $FREQ;}
+		if (isset ($BYSETPOS))  {$p['BYSETPOS'] = explode(',', $BYSETPOS);}
+		if (isset ($WKST)) 		{
+								 $p['WKST'] = $WKST;
+								 $amr_wkst = $WKST;
+		}
+		if (!empty($p))	return ($p);  /* Need the array values to reindex the array so can acess start positions */	
+		else return (false);
 	}	
 
 /* ---------------------------------------------------------------------------- */
-function amr_process_byday ($d, $bd /* an array of bydays */, $wkst)	{
-/* very tricky - could be 1MO (first monday) or -1MO (last monday) 
-	or TU, WE, TH
-	need to generate all th's for params given
-	want to return a set of starts, not repeats wha if the iteration was something else?
-	Still need to check the bydays later in case the iteration was not weekly or was neg
-	
-*/
-global  $amr_day_of_week_no;
-		$amr_rulewkst = $amr_day_of_week_no[$wkst];
-	
-		if (ICAL_EVENTS_DEBUG) echo '<br>Jump back '.$amr_rulewkst.' days to get start dates for current week from '.$d->format('c');
-		
-		$dd = new DateTime();
-		$dd = clone ($d);
-		date_modify ($dd,'-'.$amr_rulewkst.' day');		
-		$x = 0;
-		while ($x < 7) {
-			$ax = strtoupper(substr($dd->format('D'), 0, 2));
-			if (ICAL_EVENTS_DEBUG) echo '<br>Trying '.$ax. ' for '.$dd->format('c');
-			if (in_array($ax, $bd)) { 
-				$d2[$x] = new DateTime();
-				$d2[$x] = clone ($dd); 
-				if (ICAL_EVENTS_DEBUG) echo ' Use this one! no'.count($d2);
-			}
-			date_modify ($dd,'+1 day');		
-			$x = $x+1;
-		}
 
-	if (ICAL_EVENTS_DEBUG) {  echo '<br>Number of day of week records = '.count($d2); foreach ($d2 as $i => $e) {echo '<BR>'.$e->format('c');};}
-	return ($d2);
-}		
-
+function amr_get_start_of_week (&$dateobj, $wkst) { /* get the start of the week according to the wkst parameter (Sat/Sun/Mon), returns new dat object  */	
+	global  $amr_day_of_week_no;
+	$wkst_no = $amr_day_of_week_no[$wkst];	/* from 1=Mo to 7=SU */
+	$dayofweek = $dateobj->format('w');
+	if ($dayofweek == '-1') $dayofweek = get_oldweekdays($dateobj); /* php seems to break around year 1760   */
+	if ($dayofweek < $wkst_no) 
+		$adj = $wkst_no - $dayofweek;
+	else 
+		$adj = $dayofweek - $wkst_no;
+	$string = '-'.$adj.' days';	
+	date_modify ($dateobj,$string);	
+	return ($dateobj);
+}
 /* ---------------------------------------------------------------------------- */
-function amr_process_easybys ($date, $p, $wkst)	{
-
-global  $amr_day_of_week_no;
-
-/* THis should process the 'By's and generate an array of start dates to repeat with the FREQ 
-/* now we need to ascertain our starting points with the byday, bymonth etc before we can start repeating with freq , interval */
-/* BYMONTH, BYWEEKNO, BYYEARDAY, BYMONTHDAY, BYDAY, BYHOUR,
-BYMINUTE, BYSECOND and BYSETPOS */
-	
-/*		if (isset ($p[  ]) and (isset ($FREQ) and $FREQ='YEARLY'))	{ 
-		/* LATER then we need to check for wkst - default is MO and week no uses MO, but what if it is different? *** */
-/*			if (isset ($WKST) and 
-				!(substr(date_format($date,'D'), 0,2 ) === $WKST)) {
-				date_modify ( $date, 'next '.$amr_day_of_week[$WKST]);
-			}
-		}	
-*/
-		$tz = date_timezone_get($date); /* save the timezone of the date that we are using,so we can create others using it  */
-
-		$d = date_parse ($date->format('Y-M-j H:i:s'));	/* gives $d['year']  etc */	
-		if (ICAL_EVENTS_DEBUG) {echo '<br />The parsed date:'; 	 var_dump($d);	}
-		
-
-		$d2[0] = $d;  /* the first in an array of start dates is our default date */
-		if (isset ($p['month'])) {
-			/* set the first month , and create more records of there are othr months */
-			$d2[0]['month'] = $p['month'][0]; 
-			$d2i = 1;
-			while ($d2i < count($p['month'])) {  /* create a new start record for each additional month type */
-				$d2[$d2i] = $d2[0];
-				$d2[$d2i]['month'] = $p['month'][$d2i];
-				$d2i = $d2i + 1;
-			}		
-		}	
-/* ------------------------------------------- */
-
-		$others = array ('day', 'hour', 'minute', 'second');
-		foreach ($others as $oi => $o) {		
-			if (isset ($p[$o])) {	
-				$d3i = 0;
-				foreach ($d2 as $i => $d3) {
-					/* set the day of all the previous starts to the first monthday, create new records for others  */
-					$d2[$i][$o] = $p[$o][0];
-					$pi = 1;
-					while ($pi < count($p[$o])) {  /* create a new start record for each additional month day type */
-						$mored2[$d3i] = $d2[$i];  /* copy over all the values */
-						$mored2[$d3i][$o] = $p[$o][$pi];    /* adjust the one value we are working with here */
-										
-						$d3i = $d3i + 1;
-						$pi = $pi + 1;
-					}				
-				}
-				if (isset($mored2)) {
-					$d2 = array_merge ($d2, $mored2);
-					unset($mored2);
-				}
-				/* now add the new d2's to the previous set */
-			}		
-		}
-			
-		foreach ($d2 as $i => $try) { 				
-			if ($try['day'] < 0) { /* we have a negative bymonthday, so must every iteration, work back from the last day */
-				$d = new DateTime (
-					$try['year'] .'-'.
-					$try['month'] . '-'.
-					'01 '.
-					$try['hour'] . ':'.
-					$try['minute'] . ':'.
-					$try['second'], $tz);  /* must use the same timezone, not the php default as else daylight saving etc could cause havoc with recurring entries */
-				$d = amr_get_last_xday_of_month ($d, $try['day']); 	
-				if (ICAL_EVENTS_DEBUG)  {
-					echo '<br /> Got last '.$try['day'].' day of month: '.$d->format('c');
-				}
-				}
-			else {	
-				$d = new DateTime (
-				$try['year'] .'-'.
-				$try['month'] . '-'.
-				$try['day'] . ' '.
-				$try['hour'] . ':'.
-				$try['minute'] . ':'.
-				$try['second'], $tz);  /* must use the same timezone, not the php default as else daylight saving etc could cause havoc with recurring entries */
-			}	
-			$start[] = $d;
-		}
-		if (isset($p['day']) or isset($p['bymonthday'])) {   /* Note: BYMONTHDAY and BYDAY can occur at same time and must be used together */
-			/* still unsupported - need code here */
-		}
-		
-		if (isset ($p['BYDAY'])) {
-			foreach ($start as $i => $s) {
-				$start2[] = amr_process_byday ($s, $p['BYDAY'], $wkst );
-			}
-		unset($start);
-		$start = array();
-			foreach ($start2 as $i => $s) {
-				$start = array_merge($start, $s);
-			}
-		}
-
-		return ($start);   /* these are the parsed arrays */			
-}		
 
 /* ---------------------------------------------------------------------------------------------------- */
 function amr_increment_datetime ($dateobject, $int) {
 	/* note we are only incrementing by the freq - can only be one?   */ 	/* Now increment and try next repeat  
 	check we have not fallen foul of a by -or is that elsewhere ?? */
 	if ((!isset ($int)) or (!is_array($int))) {echo 'unexpected error: no interval';return (false);}
+	
 	foreach ($int as $i=>$interval) {  /* There should actually only be one */
 		date_modify($dateobject,'+'.$interval.' '.$i);
 	}
 	return ($dateobject);
 }
 /* -------------------------------------------------------------------------------- */
-function amr_check_bys($do, $bys) { /* Do we really need this ?*/
-/* check whther the date passed meets any 'bys' criteria 
-negday, byyearday, byweekno, negday (was bymonthday)
- bydays - can be be BYDAY=SU,MO,TU,WE,TH,FR,SA
-BYDAY=1FR  1st friday, or BYDAY=1SU,-1SU 1st and last sunday
-BYDAY=-2MO 2nd to last mon
-return false if not a match with the by's */
 
-if (ICAL_EVENTS_DEBUG)  echo '<br />Checking the bys';
-foreach ($bys as $i => $b) {
-	switch ($i) {
-		case 'day': {
-			$d = ($do->format('j')); /* Day of the month without leading zeros */
-			foreach ($b as $j => $k) {
-				if ($k<1) {	
-					if (ICAL_EVENTS_DEBUG)	echo 'Negative BYMONTHDAY not yet supported. An event may be incorrect or missing.'; 
-					return(false); 
-					}
-				else if (!($d === $k)) return (false); 
-			}
-
-			break;
-		}	
-		case 'BYWEEKNO': {/* need week start too */
-			echo '<br>BYWEEKNO not supported yet';
-			break;
-		}
-		case 'BYDAY': {
-			$d = strtoupper(substr(($do->format('D')), 0 , 2));
-//			if (ICAL_EVENTS_DEBUG) echo '<br>WDay '.$d.' for '. $do->format('c');
-	
-			foreach ($bys['BYDAY'] as $j => $day) {
-				if (substr ($day, 0, 1) === '-') {$day = substr($day, 1,2);}
-				if (!($d === $day)) return(false);
-				}
-			}
-			break;		
-		case 'month': {
-			$d = ($do->format('n')); /* numeric month */
-			if (ICAL_EVENTS_DEBUG) echo '<br>Month is '.$d.' for '. $do->format('c');
-
-			foreach ($b as $j => $k) {
-				if ($k<1)	echo 'Negative '.$i.' not yet supported '; 
-				else if (!($d === $k)) return(false);
-			}
-			break;
-		}
-		case 'WKST': 
-		default: echo '<br>Unsupported BY '.$i.' found in data';
-	}
-}
-return(true);
-}
-
-/* -------------------------------------------------------------------------------- */
-function amr_get_repeats (
-	$starts, /* an array of date strings */
-	$dstart, 
-	$until, /* array of parameters such as $p['UNTIL']*/
-	$count,
-	$int, /* array of intervals */
-	$bys = null /* and arry of (bydays, byweekno, byyearday arrays */
-	) {
-	$i = 0;	
-	$repeats = array();
-		// v2.3.2 $try = new DateTime();		/* our work object - don't need, as clone will create object */	
-		
-		
-		foreach ($starts as $s => $d) {	
-			if (!(is_object($d)))  { echo '<br />Unexpected non date value'.$d.'<br />'; return (false); }		
-			$try = new DateTime();
-			$try = clone ($d);
-
-			while (($i < $count) and ($try->format('c') <= $until->format('c')) )   {
-			/* increment and see if that is valid.	Note that the count here is just to limit the search, we may still end up with too many and will check that later*/		
-
-				if ($try->format('c') >= $dstart->format('c')) {  /* start our counts from here */
-				/* we may need to check days of week etc here becuase if there is a combination rule, it may be tricky  */		
-					if (!isset($bys) or amr_check_bys($try, $bys)) {
-						if (ICAL_EVENTS_DEBUG)  echo '<br />bys ok <br />';
-						$repeats[$i] = new DateTime();				
-						$repeats[$i] = clone ($try);
-						$i = $i+1;
-					}
-					else if (ICAL_EVENTS_DEBUG)  echo '<br />No bys or bys wrong';
-				}
-				else if (ICAL_EVENTS_DEBUG) { echo '<br>Date '.$try->format('c').' too early';}
-	
-				$try = amr_increment_datetime ($try, $int);		
-				
-				if (ICAL_EVENTS_DEBUG) {echo '<hr>bys:'; var_dump($bys);}
-							
-				if (isset ($bys['day'])) {					
-					$days = intval($bys['day']);
-					if (ICAL_EVENTS_DEBUG) { echo ' got them from'.$bys['day'].' to '.$days;}
-					if ($days < 0) { 
-						$try=amr_get_last_xday_of_month($try,$days );
-						if (ICAL_EVENTS_DEBUG) {echo '<br />Adjusted increment to last '.$bys['day'].'  day of month ';}
-					}
-				}
-			}
-		}
-	
-	return ($repeats);
-}
-/* --------------------------------------------------------------------------------------------------- */
 function amr_parseRRULE($rrule)  {    
 	 /* RRULE's can vary so much!  Some examples:
 		FREQ=YEARLY;INTERVAL=3;COUNT=10;BYYEARDAY=1,100,200
 		FREQ=WEEKLY;UNTIL=19971007T000000Z;WKST=SU;BYDAY=TU,TH
 	 */
+		if (empty($rrule)) return (null);
 		$p = amr_parse_RRULEparams (explode (';', $rrule));
 		return ($p);
 	}
 
-/* --------------------------------------------------------------------------------------------------- */
-function amr_process_RRULE($p, $start, $end, $limit )  {    
-	 /* RRULE a parsed array.  If the specified event repeats between the given start and
-	 * end times, return one or more nonrepeating date strings in array 
-	 */
-	global	$amr_timeperiod_conv; /* converts daily to day etc */
 
-		/* now we should have if they are there: $p[freq], $p[interval, $until, $wkst, $ count, $byweekno etc */	
-		/* check  / set limits  NB don't forget the distinction between the two kinds of limits  */
-		
-		if (!isset($p['COUNT'])) { $count = AMR_MAX_REPEATS; } /* to avoid any chance of infinite loop! */
-		else $count = $p['COUNT'];
-		if (ICAL_EVENTS_DEBUG) echo '<br />Limiting the number of repeats to '.$count;
-		if (!isset($p['UNTIL']))  $until = $end;	
-		else { 
-			$until = $p['UNTIL']; 
-			if ($until > $end) {	$until = $end;	}		
-		}
-		if (amr_is_before ($until, $start )) { return(false); }/* if it ends before our start, then skip */
-				
-		/* now prepare out "intervales array for date incrementing eg: p[monthly] = 2 etc... Actualy there should only be 1 */
-
-		if (isset($p['FREQ'])) { /* so know yearly, daily or weekly etc  - setup increments eg 2 yearsly or what */
-			if (!isset ($p['INTERVAL'])) $p['INTERVAL'] = 1;	
-			switch ($p['FREQ']) {
-				case 'WEEKLY': $int['day'] = $p['INTERVAL'] * 7; break;
-				default: {
-					$inttype = $amr_timeperiod_conv[$p['FREQ']];
-					$int[$inttype] = $p['INTERVAL']; 
-				}
-			}
-		}
-		else {/** log error **/ error_log( 'No freq - aborting for this recurrence');  return (false);}
-			
-		unset ($p['UNTIL']);  /* unset so we can use other params more cleanly */
-		unset ($p['COUNT']); unset ($p['FREQ']); unset ($p['INTERVAL']); 	
-		$wkst = $p['WKST']; unset($p['WKST']);
-		if (count($p) === 0) {$p=null; }  /* If that was all we had, get rid of it anyway */
-			
-		/*** we should leap forward until within one FREQ of our current start date ? or will that mess up th e numeric options?  leave for now*/
-		
-		if (!empty($p)) {
-			if (isset ($p['specbyday'])) {
-				if (ICAL_EVENTS_DEBUG) {echo '<br /><br /><h3>Special By day:</h3>';var_dump($p['specbyday']);}
-				$repeats = amr_process_numericbydays($start, $p, $wkst, $count, $until, $int);
-			}
-			else { 		
-				$poss = amr_process_easybys ($start, $p, $wkst);  /* get the easy date by's and setup initial starting dates */
-				if (!empty($poss)) $repeats = amr_get_repeats ($poss, $start, $until, $count, $int, $p );
-			}
-		}
-		else { /* No by's just one start */
-			$poss[] = $start;
-			if (!empty($poss)) $repeats = amr_get_repeats ($poss, $start, $until, $count, $int, $p );
-		}
-		if (ICAL_EVENTS_DEBUG and !(empty($repeats))) {
-			echo '<hr>Possible Repeats:'; 
-			foreach ($repeats as $i =>$r) {echo '<br>'.$r->format('D,c');};
-		}			
-	return ($repeats);
-	
-	}
 /* ---------------------------------------------------------------------------- */
 function amr_get_last_xday_of_month ($date, $x=-1)	{ /* helper function format passed is NB.  Can be used for last day of year and last day of month*/
 /* php 'last day of month' not working? */
@@ -487,103 +822,20 @@ function amr_get_last_day ($date, $format)	{ /* helper function format passed is
 		return ($last);
 }
 
-	/* ---------------------------------------------------------------------------- */
-function amr_goto_byday ($dd, $byday, $sign='+')	{
-/* from the given date, check the current day move forward, or backward a day at time till the day of week is the one we want  */
-		$x = 0;
+/* ---------------------------------------------------------------------------- */	function amr_goto_byday ($dateobj, $byday, $sign)	{	global $amr_day_of_week_no;			$dayofweek = $dateobj->format('w'); /* 0=sunday, 6 = saturday */
+		if ($dayofweek == '-1') $dayofweek = get_oldweekdays($dateobj); /* php seems to break around 1760   */		$target 	= $amr_day_of_week_no[$byday]; /*  mo=1 ,su=7  */
+		$adjustment = $target - $dayofweek;		if (isset ($_GET['rdebug'])) echo '<br />'.$dateobj->format('Ymd l').$sign.$byday.' Target = '.$target.' Dayofweek = '.$dayofweek.' '.$dateobj->format('l').' Adjustment = '.	$adjustment;
+		if ($sign === '+') {			if ($adjustment < 0) $adjustment = $adjustment + 7;		
+		}
+		else if ($adjustment > 0) $adjustment = $adjustment-7;			
+		if (isset ($_GET['rdebug'])) echo ' Adj = '.	$adjustment;
 		$d2 = new DateTime();
-		$d2 = clone ($dd); 		
-		while ($x < 7) {
-			$ax = strtoupper(substr($d2->format('D'), 0, 2));
-//			echo '<br>Looking for '.$byday.'Trying '.$ax. ' for '.$d2->format('c');
-			if ($ax === $byday)  {	return ($d2);	}
-			else {
-				date_modify ($d2,$sign.'1 day');		
-				$x = $x+1;
-//				echo ' Got '.$ax.'so Add a day ';
-			}
-		}
-		return (false);
-}			
-/* ---------------------------------------------------------------------------- */
-function amr_process_numericbydays ($start, $p, $wkst, $count, $until, $int)	{
-/* we may have multiple bydays, however the count applies to the whole set, so we need to relimit here  */
-
-	$repeats = array();
-	if (is_array($p['specbyday'])) {
-		foreach ($p['specbyday'] as $i=> $spec) {
-			$reps = amr_process_numericbyday ($start, $spec, $p['BYDAY'][$i], $wkst, $count, $until, $int);
-			if (is_array($reps)) $repeats = array_merge($repeats, $reps);
-		}
-		/* limit the results to "count".  But they must be in date order */
-		asort($repeats);
-		$repeats = array_slice($repeats, 0, $count); /* return only the number of iterations requested */	
-	} else { echo '<br />Unexpected Error in recurring rule: '; var_dump($p); }
-	return ($repeats); 
-}					
-/* ---------------------------------------------------------------------------- */
-function amr_process_numericbyday ($start, $specbyday, $byday, $wkst, $count, $until, $int)	{
-/* we may have multiple bydays */
-
-	$i = 0;	
-	$try = new DateTime();
-	$try = clone ($start);
-	$thenumber = (int) (str_replace($byday,'', $specbyday));
-	if (ICAL_EVENTS_DEBUG) { echo '<br />specybyday='.$specbyday.' byday='.$byday.' the number is '.$thenumber;}
-	$loops = 0;
-
-	while (($i < $count) and (amr_is_before ($try->format('c'),$until->format('c')) ))   {
-		$loops = $loops+1;
-		if ($loops > 100) {die ('Unexpected long loop?');}
-
-		if (substr($specbyday, 0 , 1) === '-') {
-					/* then we are dealing with a negative by day */
-					if (ICAL_EVENTS_DEBUG) { echo '<br />Dealing with neg '.$specbyday;}
-					if (isset($int['month'])) $last = amr_get_last_day($try,'Y-m-01 H:i:s');
-					else if (isset($int['year']))  $last = amr_get_last_day($try,'Y-12-01 H:i:s');
-					if (ICAL_EVENTS_DEBUG) {echo '<br /> Last day of month: '.$last->format('D c');}
-					$try = amr_goto_byday($last,$byday,'-' );
-					if (ICAL_EVENTS_DEBUG) { echo '<br/>Start with '.$try->format('D c').' and go back '.$thenumber;}
-					if (is_object($try)) {
-						if ($thenumber < -1) $try->modify(($thenumber+1).' weeks');  /* minus one because we are at the first already, so if looking for -2, we just need -1 more */
-						if (ICAL_EVENTS_DEBUG) { echo '<br/>It is the '.$specbyday.'....'.$try->format('D c');}
-					}
-					else  {echo 'Unexpected Error, could  not find day of week: '.$byday; return (false);}	
+		$d2 = clone ($dateobj); 		
+		date_modify ($d2,$adjustment.' days');	
+		if (isset ($_GET['rdebug'])) echo ' Got date = '.	$d2->format('Ymd l');
+	return ($d2);
+	}		
 					
-				}
-		else { /* We are dealing with positive numeric bydays */
-			
-				if (isset($int['month'])) $first = date_create ($try->format('Y-m-01 H:i:s'), $try->getTimezone()); /* set to first of month or interval  */
-				else if (isset($int['year']))  $first = date_create ($try->format('Y-01-01 H:i:s'), $try->getTimezone()); /* set to first year */
-				else echo'<br>Unexpected frequency in recurring byday rule';
-				if (ICAL_EVENTS_DEBUG) {echo '<br /> First '.$first->format('D c').' '. $first->getTimezone()->getName();}
-				$try = amr_goto_byday($first,$byday,'+' );
-
-				if (is_object($try)) {
-					$try->modify(($thenumber-1).' weeks');  /* minus one because we are at the first already, so if looking for 2, we just need 1 more */
-					if (ICAL_EVENTS_DEBUG) echo '<br/>It is the '.$specbyday.'....'.$try->format('D c');
-					}
-				else  {echo 'Unexpected Error, could  not find day of week: '.$byday; return (false);}	
-		}
-				
-		if (amr_falls_between($try, $start, $until)) {
-				if (ICAL_EVENTS_DEBUG) echo ' In range<br /> ';
-				$reps[$i] = new DateTime();
-				$reps[$i]  = clone ($try);
-				$i = $i+1;	
-				if (ICAL_EVENTS_DEBUG) echo '<br/>We have '.$i.' of these bydays now, and count limit = '.$count;
-									
-		}
-		else { /* not in our valid date range yet? */
-			if (ICAL_EVENTS_DEBUG) echo ' but not in range....';
-		}
-		$try = amr_increment_datetime ($try, $int);
-		
-	}
-
-//	var_dump($reps);
-	return ($reps);
-}	
 /* --------------------------------------------------------------------------------------------------- */
 function amr_process_RDATE($p, $start, $end, $limit)  {    
 	 /* RDATE or EXDATE processes  a parsed array.  If the specified event repeats between the given start and
@@ -605,9 +857,7 @@ function amr_process_RDATE($p, $start, $end, $limit)  {
 		}
 	else 	
 	if (is_array($p)) {
-
 		foreach ($p as $i => $r) {
-
 			if (amr_falls_between($r, $start, $end))  $repeats[] = $r;
 		}
 	}

@@ -138,6 +138,56 @@
     /**
      * Parse a Time Period field.
      */
+    function amr_parseOrganiser($arraybycolon)    { /* receive full string parsed to array 
+	[0]=>ORGANIZER;SENT-BY="mailto
+	[1]=>dwood@uoguelph.ca":mailto:ovcweb@uoguelph.ca
+	
+	or 
+	[0]=>ORGANIZER;CN=Webmaster - OVC;SENT-BY="mailto 
+	[1] => bagunn@uoguelph.ca":mailto:ovcweb@uoguelph.ca
+	
+	*/
+	if (ICAL_EVENTS_DEBUG) {echo '<br/>Organiser <br />'; var_dump($arraybycolon);}
+	$org = array();
+	$p0 = explode(';',$arraybycolon[0]);
+	$m = explode(':',$arraybycolon[1]);
+	foreach ($m as $i => $m2) {
+		if ($m2 == 'mailto') $mailto = rtrim($m[$i+1],'"');
+	}
+	foreach ($p0 as $i => $p) {
+
+		$p1 = explode('=',$p);
+		if (isset ($p1[0]))  {
+			
+			if ( ($p1[0] == 'SENT-BY') and (!empty($p1[1]))) {
+				$sentby = rtrim($m[0],'"');
+				$org['SENT-BY'] = $sentby;
+			}
+			else if (($p1[0] == 'CN') and (!empty($p1[1]))) $org['CN'] = rtrim( $p1[1], '"');
+		}
+	}
+	
+	if (!empty($mailto)) $org['MAILTO'] = $mailto;
+
+	
+	//	if (isset($p1[0])) { /* we may have CN=a name;DIR="some directory "*/
+	//		$p2 = explode(';', $p1[0]);
+	//		if (isset($p2[0])) {
+	//			parse_str($p2[0]);
+	//			if (isset ($CN)) $org['CN'] = $CN;
+	//			}
+	//	}
+	//	if (isset($p1[1])) { /* we may have MAILTO:email*/
+
+	//		if ((($p1[1]) === 'MAILTO') and (!empty($p1[2]))) $org['MAILTO'] = $p1[2];
+	//	}
+		return ($org);
+
+    }
+/* ---------------------------------------------------------------------- */	
+    /**
+     * Parse a Time Period field.
+     */
     function amr_parsePeriod($text,$tzobj)    {
         $periodParts = explode('/', $text);
         if (!($start = amr_parseDateTime($periodParts[0], $tzobj))) return (false);	
@@ -162,7 +212,6 @@
 			tz dealt with already ?*/
 			
 		if ((substr($d, strlen($d)-1, 1) === 'Z')) {  /*datetime is specifed in UTC */
-			//echo '<br>we got a Z'.$d;
 			$tzobj = $utczobj;
 			$d = substr($d, 0, strlen($d)-1);			
 		}		
@@ -226,15 +275,94 @@
     }
 	/* ------------------------------------------------------------------ */
 	function amr_parseTZDate ($value, $tzid) {	
-		$tzobj = timezone_open($tzid);		
+
+		$tzobj = amr_parseTZID($text); 
+			
 		if (!($d = amr_parseDateTime ($value, $tzobj))) return(false);
 		else return ($d);
 	}
 	/* ------------------------------------------------------------------ */	
-   function amr_parseTZID($text)    {	/* accept long and short TZ's, returns false if not valid */
-
+    function amr_get_timezone_cities () {
+	    $timezone_identifiers = DateTimeZone::listIdentifiers();   
+/* Africa/Abidjan
+Africa/Accra
+Africa/Addis_Ababa
+Africa/Algiers
+Africa/Asmara
+*/
+	    foreach( $timezone_identifiers as $i=> $value ){
+			$c = explode("/",$value);//obtain continent,city   
+			$tzcities[$value]['continent'] = $c[0];
+	        if (isset($c[1])) $tzcities[$c[1]] = $value;
+			else $tzcities[$c[0]] = $value;
+              
+	     } 
+		//print_r($tzcities);	
+		return ($tzcities);
+	}	
+	/* ------------------------------------------------------------------ */	
+   function amr_parseTZID($text)    {	
+   global $amr_globaltz;
+   /* take a string that may have a olson tz object and try to return a tz object */  
+   /* accept long and short TZ's, returns false if not valid */
+		$icstzid = trim($text,'"' ); /* check for enclosing quotes like zimbra issues */
+		$globaltzstring = timezone_name_get($amr_globaltz);
+		if (!($globaltzstring == $icstzid	)) {/* if the timezone matches the wordpress or shortcode time zone, then we are cool ! */
+			/* else try figure the timezone out */
+//			$strip = array ('(',' ');
+//			$icstzid = str_replace($strip,'',$icstzid);
+			$gmtend = stripos($icstzid,')'); /* do we have a brackedt GMT ? */
+			if (isset ($_REQUEST['tzdebug'])) {echo '<br/>gmtend = '.$gmtend.' in '.$icstzid ; }
+			if (!empty ($gmtend) ) {
+				$icstzid = str_replace(')','/',$icstzid);
+				$icstzcities = explode ('/',$icstzid); /* could be commas, could be slashes */
+				if (isset ($_REQUEST['tzdebug'])) {echo '<br/>strip the gmt out '; print_r($icstzcities);}
+				$gmt = stripos(  $icstzid, 'GMT'); /* do we have a brackedt GMT ? */
+				if (!empty($gmt)) unset ($icstzcities[0]); /* don't want the GMT - potentially misleading */
+			}
+			else {
+				$icstzcities = array();
+				$temp = explode (',',$icstzid); /* could be commas, could be slashes */
+				foreach ($temp as $temp2) {
+					$temp3 = explode ('/',$temp2); 
+					$icstzcities = array_merge($icstzcities, $temp3);
+					}
+				}
+			foreach ($icstzcities as $i=>$icscity) $icstzcities[$i] = trim($icscity,' ');
+			if (isset ($_REQUEST['tzdebug'])) print_r($icstzcities);
+			$globalcontcity = explode ('/',$globaltzstring);
+			if (isset ($globalcontcity[1]) ) $globalcity = $globalcontcity[1];
+			else $globalcity = $globalcontcity[0];
+			if (isset ($_REQUEST['tzdebug'])) {
+				echo '<hr> text = '.$text.'<br/>icstzid = '.$icstzid.'<br /> wordpress tz = '.$globalcity.' <br >'; print_r($icstzcities);
+			}
+			if (in_array($globalcity, $icstzcities)) { /* if one of the cities in the tzid matches ours, again we can use the matched one */
+				$tzname = $globaltzstring;
+			}
+			else {
+				$alltzcities = amr_get_timezone_cities ();
+				if (isset($alltzcities[$icstzid])) { /* then it is a normal php timezone we know about, so we can proceed */
+					$tzname = $icstzid;
+				}	
+				else {
+					foreach ($icstzcities as $i=>$c) {
+						if (isset ($alltzcities[$c] )) { /* try each of the cities if we have mutiple */
+							$tzname = $alltzcities[$c];
+							break;
+						}
+					}
+				}					
+			}
+			/* */
+		}
+		else $tzname = $icstzid;
+		if (!isset ($tzname)) {
+			echo '<br />Unable to deal with timezone like this: '.$text.'<br />';
+			return (false);
+		}
+		if (isset ($_REQUEST['tzdebug'])) echo '<br /><b>Timezone must be: </b> '.$tzname.'<br />';
 		try {
-				$tz =  timezone_open($text);	
+				$tz =  timezone_open($tzname);	
 			}	
 			catch(Exception $e) {
 				echo '<br />Unable to create Time zone object.<br />'.$e->getMessage();
@@ -247,9 +375,7 @@
    function amr_parseSingleDate($VALUE='DATE-TIME', $text, $tzobj)	{
    /* used for those properties that should only have one value - since many other dates can have multiple date specs, the parsing function returns an array 
 	Reduce the array to a single value */
-
-		$arr = amr_parseVALUE($VALUE, $text, $tzobj);
-		
+		$arr = amr_parseVALUE($VALUE, $text, $tzobj);		
 		if (is_array($arr)) {
 			if (count($arr) > 1) {
 				echo '<br>Unexpected multiple date values'.var_dump($arr);
@@ -394,6 +520,8 @@ function amr_parseRDATE ($string, $tzobj ) {
 	}			
 	else return (false);
 }
+
+
 /* ---------------------------------------------------------------------- */
 
 function amr_parse_property ($parts) {
@@ -409,7 +537,7 @@ global $amr_globaltz;
 	if (isset($p0[1])) { /* ie if we have some modifiers like TZID, or maybe just VALUE=DATE */
 		parse_str($p0[1]);/*  (will give us if exists $value = 'xxx', or $tzid= etc) */
 		if (isset($TZID)) { /* Normal TZ, not the one with the path eg:  DTSTART;TZID=US-Eastern:19980119T020000*/
-			$tzobj = timezone_open($TZID);
+			$tzobj = amr_parseTZID($TZID);
 		}  /* should create datetime object with it's own TZ, datetime maths works correctly with TZ's */
 		else {/* might be just a value=date, in which case we use the global tz?  no may still have TZid */
 			$tzobj = $amr_globaltz;
@@ -458,6 +586,9 @@ global $amr_globaltz;
 			return ( amr_parsePeriod ($parts[1])); 	
 		case 'TZID': /* ie TZID is a property, not part of a date spec */
 			return ($parts[1]);
+		case 'ORGANIZER': {
+			return(amr_parseOrganiser($parts));
+			}
 		default:	
 			if (isset ($parts[1])) return (str_replace ('\,', ',', $parts[1]));  /* replace any slashes added by ical generator */
 			else return;
@@ -494,18 +625,19 @@ function amr_parse_component($type)	{	/* so we know we have a vcalendar at lines
 	global $amr_validrepeatableproperties;
 	global $amr_globaltz;
 
-	while (($amr_n < $amr_totallines)	)	{
+	while (($amr_n < $amr_totallines)	)	{			
 			$amr_n++;
 			$parts = explode (':', $amr_lines[$amr_n],2 ); /* explode faster than the preg, just split first : */
-			if ((!$parts) or ($parts === $amr_lines[$amr_n])) 
-				echo '<!-- Error in line skipping '.$amr_n.': with value:'.$amr_lines[$amr_n].' -->';
-			else {		
-				if ($parts[0] === 'BEGIN') { /* the we are starting a new sub component - end of the properties, so drop down */					
+			if ((!$parts) or ($parts === $amr_lines[$amr_n])) {
+				if (ICAL_EVENTS_DEBUG) echo '<br /> Error in line, skipping '.$amr_n.': with value:'.$amr_lines[$amr_n];
+				}
+			else {
+				if ($parts[0] === 'BEGIN') { /* the we are starting a new sub component - end of the properties, so drop down */		
 					if (in_array ($parts[1], $amr_validrepeatablecomponents)) {
 						$subarray[$parts[1]][] = amr_parse_component($parts[1]);
 					}
 					else { $subarray[$parts[1]] = amr_parse_component($parts[1]);	
-					}
+					}				
 				}	
 				else {
 					if ($parts[0] === 'END') {	
@@ -530,7 +662,6 @@ function amr_parse_component($type)	{	/* so we know we have a vcalendar at lines
 						}
 					}
 				}	
-
 			}
 		}
 		return ($subarray);	/* return the possibly nested component */	
@@ -570,16 +701,16 @@ function amr_parse_ical ( $cal_file ) {
 		// so long as there is a single white space character next.
 		
 		/**** we may also need to cope with backslahed backslashes, commas, semicolons as per http://www.kanzaki.com/docs/ical/text.html*/
-		
+	
 	    $data = preg_replace ( "/[\r\n]+ /", "", $data );
 	    $data = preg_replace ( "/[\r\n]+/", "\n", $data );
 	    $data = str_replace ( "\;", ";", $data );
 	    $data = str_replace ( "\,", ",", $data );
-		
+
 		$amr_n = 0;
 	    $amr_lines = explode ( "\n", $data );
 		$amr_totallines = count ($amr_lines) - 1; /* because we start from 0 */
-		
+		If (ICAL_EVENTS_DEBUG) {echo '<br>data lines: '.$amr_totallines ;}				
 		$parts = explode (':', $amr_lines[$amr_n],2 ); /* explode faster than the preg, just split first : */
 		if ($parts[0] === 'BEGIN') {
 			$ical = amr_parse_component('VCALENDAR');

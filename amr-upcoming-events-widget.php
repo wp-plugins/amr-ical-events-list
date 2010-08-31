@@ -7,7 +7,7 @@ class amr_ical_widget extends WP_widget {
     /** constructor */
     function amr_ical_widget() {
 		$widget_ops = array ('description'=>__('Upcoming Events', 'amr-ical-events-list' ),'classname'=>__('events', 'amr-ical-events-list' ));
-        $this->WP_Widget(false, __('Amr Ical', 'amr-ical-events-list' ), $widget_ops);	
+        $this->WP_Widget(false, __('AmR Upcoming Events', 'amr-ical-events-list' ), $widget_ops);	
     }
 	
 /* ============================================================================================== */	
@@ -19,34 +19,26 @@ class amr_ical_widget extends WP_widget {
 	global $widget_icalno; /* used to give each ical widget a unique id on a page */
 
 	amr_getset_options ();
-
 	$amr_listtype = '4';  /* default only */
 	extract ($args, EXTR_SKIP); /* this is for the before / after widget etc*/
-	extract ($instance, EXTR_SKIP); /* this is for the before / after widget etc*/	
-
-		
-	foreach ($amr_options[$amr_listtype]['limit'] as $i=> $l) $amr_limits[$i] = $l;  /* override any other limits with the widget limits */
-	
+	extract ($instance, EXTR_SKIP); /* this is for the before / after widget etc*/		
+	foreach ($amr_options[$amr_listtype]['limit'] as $i=> $l) $amr_limits[$i] = $l;  /* override any other limits with the widget limits */	
 	if (isset ($shortcode_urls)) {
-		$atts = shortcode_parse_atts($shortcode_urls);
-		$urls =	amr_get_params ($atts);  /* this may update listtype, limits  etc */
+		$atts 		= shortcode_parse_atts($shortcode_urls);
+		$criteria 	= amr_get_params ($atts);  /* this may update listtype, limits  etc */
 	}
 	else 
 		echo('no url data for events widget');
 
 	$amrW = 'w';	 /* to maintain consistency with previous version */
-	if (isset($doeventsummarylink) and !($doeventsummarylink)) $amrW = 'w_no_url';	 	
-
+	if (isset($doeventsummarylink) and !($doeventsummarylink)) $amrW = 'w_no_url';
 	$moreurl = trim($moreurl," ");
 	$moreurl = (empty($moreurl)) ? null : $moreurl ;
-	if (!empty ($moreurl)) $title = '<a href= "'.$moreurl.'">'.$title.'</a>';
-	
-	If (ICAL_EVENTS_DEBUG) {echo '<br><br> urls '; print_r($urls);}	
-
+	if (!empty ($moreurl)) $title = '<a href= "'.$moreurl.'">'.$title.'</a>';	
 	if (!(isset($widget_icalno))) $widget_icalno = 0;
 	else $widget_icalno= $widget_icalno + 1;
-	
-	$content = amr_process_icalspec($urls, $widget_icalno);
+	$criteria['EventPostsToo'] = true;	
+	$content = amr_process_icalspec($criteria, $widget_icalno);
 	//output...
 	echo $before_widget;
 	echo $before_title . $title . $after_title ;
@@ -57,18 +49,14 @@ class amr_ical_widget extends WP_widget {
 /* ============================================================================================== */	
 	
 	function update($new_instance, $old_instance) {  /* this does the update / save */
-
 		$instance = $old_instance;
 		$instance['title'] = strip_tags($new_instance['title']);
 		$instance['shortcode_urls'] = strip_tags($new_instance['shortcode_urls']);
 		$instance['moreurl'] = 	strip_tags($new_instance['moreurl']);
-		$instance['doeventsummarylink'] = 	strip_tags($new_instance['doeventsummarylink']);
-		
+		$instance['doeventsummarylink'] = 	strip_tags($new_instance['doeventsummarylink']);		
 		if (get_option('amr-ical-widget') ) delete_option('amr-ical-widget'); /* if t exists - leave code for a while for conversion */
 		return $instance;
-
 	}
-	
 	
 /* ============================================================================================== */
 	function form($instance) { /* this does the display form */

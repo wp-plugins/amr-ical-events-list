@@ -115,6 +115,7 @@ then you will need to add css for any further calendars - simply copy the comppr
 
 .wcalprop , /* if someone wants the calendar level on the widget, then float them to the left */
 .ical li.addevent,
+.ical li.subscribeevent,
 .ical li.icsurl ,
 .ical li.map,
 .icalprop li.addtogoogle,
