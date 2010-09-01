@@ -6,13 +6,7 @@ In the configuration, you can specify your own css file for the plugin to use (A
 If you have multiple icals on a page (ie not multiple urls in a shortcode, but multiple instances of the shortcode,
 then you will need to add css for any further calendars - simply copy the compprop0 to compprop1 */
 
-.history
-{ /* make  and alt look different. if your theme has an "alt" styling, then remove this for consistency with your theme's styling. */
-	opacity: .7; /*  for all other browsers*/
-	filter: alpha(opacity=70); /* for IE 5 to 7 */
-	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=70)"; /* for IE8 */
-	zoom:1 /* so the element "hasLayout"
-    /* or, to trigger "hasLayout" set a width or height */
+.history { 
 }
 .ical td {
 	vertical-align: top;
@@ -163,7 +157,6 @@ then you will need to add css for any further calendars - simply copy the comppr
 {	
 	background:#fff; 
 	color: #111;
-	opacity: 0.9;
 	display:block; width: 90%;
 	position:relative; 
 	right:1px; top:10px;  
@@ -175,9 +168,15 @@ then you will need to add css for any further calendars - simply copy the comppr
 
 .ical tbody,
 .wical tbody   { border:none;}
-.amrical_credit {
+.amrical_credit,.amrical_credit a,.amrical_credit a:visited {
 	font-size:x-small; 
 	font-weight:lighter;
+	font-style: italic;
+}
+.amrical_credit a:hover
+ {
+	font-size: x-small; 
+	font-weight: normal;
 	font-style: italic;
 }
 

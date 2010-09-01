@@ -1,17 +1,11 @@
 <?php 
 if (!function_exists('amr_date_i18n')) {
-
-
 function amr_date_i18n( $dateformatstring, $dateobj = null) {
-
 	global $wp_locale;
-
 	// store original value for language with untypical grammars
 	// see http://core.trac.wordpress.org/ticket/9396
 	$req_format = $dateformatstring;
-
 	$datefunc = 'date';
-
 	if ( ( !empty( $wp_locale->month ) ) && ( !empty( $wp_locale->weekday ) ) ) {
 		$datemonth = $wp_locale->get_month( $dateobj->format('m') ); 
 		$datemonth_abbrev = $wp_locale->get_month_abbrev( $datemonth ); 

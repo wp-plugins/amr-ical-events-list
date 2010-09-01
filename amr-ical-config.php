@@ -752,3 +752,4 @@ global $amr_options;
 	}
 	return ($amr_options);
 	}
+?>

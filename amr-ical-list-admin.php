@@ -192,15 +192,14 @@
 	function AmRIcal_general ($i) {
 	global $amr_options;
 	
- ?><fieldset id="general<?php echo $i; ?>" class="general" >
+ ?><fieldset  id="general<?php echo $i; ?>" class="general" >
 	<h4><?php _e('General:', 'amr-ical-events-list'); ?></a></h4> 
 	<div><?php
 	if (! isset($amr_options[$i]['general'])) echo 'No general specifications set';
 	else {	
 		if (isset($amr_options[$i]['general']['ListHTMLStyle'])) $style = $amr_options[$i]['general']['ListHTMLStyle'];
 		else $style = '';
-	?>
-	<label for="name" ><?php _e('Name','amr-ical-events-list'); ?></label>
+	?><label for="name" ><?php _e('Name','amr-ical-events-list'); ?></label>
 		<input type="text" class="wide" size="20" id="name" name="general[<?php echo $i; ?>][name]" value="<?php
 		if (isset($amr_options[$i]['general']['Name'])) echo $amr_options[$i]['general']['Name']; ?>" />
 	<label for="description" ><?php _e('Internal Description','amr-ical-events-list'); ?></label><br />
@@ -240,10 +239,10 @@
 	}
 	/* ---------------------------------------------------------------------*/	
 	function AmRIcal_componentsoption($i) {
-	global $amr_options;	?>
-	<fieldset id="components<?php echo $i; ?>" class="components" >		
-	<h4 class="trigger"><a href="#" ><?php _e('Select components to show:', 'amr-ical-events-list'); ?>
-	</a></h4> 
+	global $amr_options;	
+	?><fieldset id="components<?php echo $i; ?>" class="components" >		
+	<h4 class="trigger"><a href="#" ><?php _e('Select components to show:', 'amr-ical-events-list'); 
+	?></a></h4> 
 	<div class="toggle_container"><?php
 		if (! isset($amr_options[$i]['component'])) echo 'No default components set';
 		else
@@ -350,12 +349,11 @@
 	}
 /* ---------------------------------------------------------------------*/
 
-function amr_request_acknowledgement () {?>
-	<div class="postbox" style="padding:1em 2em; width: 600px;">
+function amr_request_acknowledgement () {
+?><div class="postbox" style="padding:1em 2em; width: 600px;">
 	<p style="border-width: 1px;"><?php _e('Significant effort goes into these plugins to ensure that they <strong>work straightaway</strong> with minimal effort, are easy to use but <strong>very configurable</strong>, that they are <strong>well tested</strong> and that they produce <strong>valid html and css</strong> both at the front and admin area.','amr-ical-events-list'); 
 _e('If you have a feature request, please do let me know. ','amr-ical-events-list'); 	
-	?>
-	</p><span>
+	?></p><span>
 	<a href="http://icalevents.anmari.com" title="Sign up or monitor the feed for regular updates"><?php _e('Plugin support');?></a>
 	&nbsp;&nbsp;
 	<a href='http://wordpress.org/tags/amr-ical-events-list' title="If you like it rate it..."><?php _e('Rate it at WP');?></a>
@@ -365,7 +363,7 @@ _e('If you have a feature request, please do let me know. ','amr-ical-events-lis
 	<a href="http://icalevents.anmari.com/feed/"><?php _e('Plugin feed');?></a><img src="http://icalevents.anmari.com/images/amrical-rss.png" alt="Rss icon" style="vertical-align:middle;" />
 	&nbsp;&nbsp;
 	<a href="http://icalevents.anmari.com/comments/feed/"><?php _e('Comments feed');?></a><img src="http://icalevents.anmari.com/images/amrical-rss.png" alt="Rss icon" style="vertical-align:middle;" />
-	</p>	<?php
+	</p><?php
 if (!function_exists('amr_events_settings_menu')) { /* then the paid plugin is already on the system */
 	echo '<div class="updated"><p>';
 	printf(__('Now you can <b>create events</b> and <b>ics feeds</b> directly in wordpress - See screenshots and demo at %s','amr-ical-events-list'),
@@ -452,12 +450,12 @@ else 	echo '<div class="updated fade"><p>';
 		?><div> 
 		<fieldset id="amrglobal"><h3><?php _e('General Options', 'amr-ical-events-list'); ?></h3>
 		<div class="postbox" style="padding:1em 2em; width: 600px;">
-					<label for="no_types"><?php _e('Number of Ical Lists:', 'amr-ical-events-list'); ?>
-			<input type="text" size="2" id="no_types" name="no_types" value="<?php echo $amr_options['no_types'];  ?>" />
+					<label for="no_types"><?php _e('Number of Ical Lists:', 'amr-ical-events-list'); 
+					?><input type="text" size="2" id="no_types" name="no_types" value="<?php echo $amr_options['no_types'];  ?>" />
 			</label>		
 			<label for="noeventsmessage">		
-			<?php _e('Message if no events found: ', 'amr-ical-events-list');?>
-			</label>
+			<?php _e('Message if no events found: ', 'amr-ical-events-list');
+			?></label>
 			<input class="wide" type="text" id="noeventsmessage" name="noeventsmessage" 
 			<?php if (isset($amr_options['noeventsmessage']) and ($amr_options['noeventsmessage']))  
 				{echo 'value="'.$amr_options['noeventsmessage'].'"';}?>/> 
@@ -466,12 +464,12 @@ else 	echo '<div class="updated fade"><p>';
 			<input type="checkbox" id="ngiyabonga" name="ngiyabonga" value="ngiyabonga" 
 			<?php if (isset($amr_options['ngiyabonga']) and ($amr_options['ngiyabonga']))  {echo 'checked="checked"';}
 			?>/>
-<?php 				_e('Donation made', 'amr-ical-events-list'); ?></label>
+<?php 				_e('Do not give credit to the author', 'amr-ical-events-list'); ?></label>
 			<label for="own_css">
 			<input type="checkbox" id="own_css" name="own_css" value="own_css" 
 			<?php if (isset($amr_options['own_css']) and ($amr_options['own_css']))  {echo 'checked="checked"';}
-			?>/><?php _e(' Do not generate css', 'amr-ical-events-list'); ?>
-			</label>
+			?>/><?php _e(' Do not generate css', 'amr-ical-events-list'); 
+			?></label>
 			<label for="cssfile"><?php _e('Css file to use from plugin directory', 'amr-ical-events-list'); ?></label>
 			<select id="cssfile" name="cssfile" ><?php
 				$dir = WP_PLUGIN_DIR.'/amr-ical-events-list';
@@ -482,8 +480,7 @@ else 	echo '<div class="updated fade"><p>';
 					if (isset($amr_options['cssfile']) and ($amr_options['cssfile'] == $file)) echo ' selected="selected" ';
 					echo '>'.$file.'</option>';
 				}					
-				?>
-			</select>
+			?></select>
 			<a href="<?php echo get_bloginfo('wpurl');
 			?>/wp-admin/plugin-editor.php?file=amr-ical-events-list/<?php echo $amr_options['cssfile']; 
 			?>&amp;plugin=amr-ical-events-list/amr-ical-events-list.php" title="<?php
@@ -493,27 +490,24 @@ else 	echo '<div class="updated fade"><p>';
 			<label for="no_images">
 			<input type="checkbox" id="no_images" name="no_images" value="true" 
 			<?php if (isset($amr_options['no_images']) and ($amr_options['no_images']))  {echo 'checked="checked"';}
-			?>/><?php _e(' No images (tick for text only)', 'amr-ical-events-list'); ?>
-			</label></div>
-<h3><?php _e('Advanced:','amr-ical-events-list'); ?>
-</h3><div class="postbox" style="padding:1em 2em; width: 600px;">
+			?>/><?php _e(' No images (tick for text only)', 'amr-ical-events-list'); 
+			?></label></div>
+<h3><?php _e('Advanced:','amr-ical-events-list'); 
+?></h3><div class="postbox" style="padding:1em 2em; width: 600px;">
 <?php printf(__('Your php version is: %s','amr-ical-events-list'),  phpversion());	?><br /><?php
 		if (function_exists('timezone_version_get')) 
 			printf(__('Your timezone db version is: %s','amr-ical-events-list'),  timezone_version_get());	
 		else echo '<a href="http://en.wikipedia.org/wiki/Tz_database">'
 		.__('Cannot determine timezonedb version in php &lt; 5.3.' ,'amr-ical-events-list')
-		.'</a>';?>
-		<br /><br />		<?php			
+		.'</a>';?><br /><br /><?php			
 		if (isset($amr_globaltz)) {
 			$now = date_create('now', $amr_globaltz);
 			amr_check_timezonesettings();
 		}
-		else echo '<b>'.__('No global timezone - is there a problem here? ','amr-ical-events-list').'</b>'; ?>
-		<br /><br />	
-		<?php
+		else echo '<b>'.__('No global timezone - is there a problem here? ','amr-ical-events-list').'</b>'; 
+		?><br /><br /><?php
 		_e('Choose date localisation method:', 'amr-ical-events-list'); 
-		?><a href="http://icalevents.anmari.com/2044-date-and-time-localisation-in-wordpress/"><b>?</b></a><br />	
-			
+		?><a href="http://icalevents.anmari.com/2044-date-and-time-localisation-in-wordpress/"><b>?</b></a><br />				
 			<label for="no_localise"><input type="radio" id="no_localise" name="date_localise" value="none" <?php if ($amr_options['date_localise'] === "none") echo ' checked="checked" '; ?> />
 			<?php _e('none', 'amr-ical-events-list'); echo ' - '.amr_format_date('r', $now); ?></label>
 			<label for="am_localise"><input type="radio" id="am_localise" name="date_localise" value="amr" <?php if ($amr_options['date_localise'] === "amr") echo ' checked="checked" '; ?> />
@@ -567,9 +561,9 @@ else 	echo '<div class="updated fade"><p>';
 					if ($i > 1) echo '&nbsp;|&nbsp;';
 					echo '&nbsp;<a href="'.$url.'&amp;list='.$i.'">'.$i.' '.$amr_options[$i]['general']['Name'].'</a>&nbsp;&nbsp;';
 				}?>
-				</div>
+				</div><div style="clear: both;" />&nbsp;</div>
 
-				<fieldset id="submit" style="clear:both; float: right;">
+				<fieldset id="submit" style="clear:both; float: right; margin: 0 2em;">
 			<input type="hidden" name="action" value="save" />
 			<input type="submit" class="button-primary" title="<?php
 				_e('Save the settings','amr-ical-events-list') ; 
@@ -629,8 +623,7 @@ else 	echo '<div class="updated fade"><p>';
 				echo '</li>'; 
 			} 
 			echo '</ul>';
-		} ?>
-		</div>
+		} ?></div>
 		</fieldset><?php 
 	return ;	
 	}
@@ -658,8 +651,8 @@ global $amr_options;
 			AmRIcal_compropsoption($i); 
 
 		}	
-		echo "\n\t".'</fieldset>  <!-- end of list type -->';	?>
-	<script type="text/javascript">
+		echo "\n\t".'</fieldset>  <!-- end of list type -->';	
+		?><script type="text/javascript">
 jQuery(document).ready(function(){//Hide (Collapse) the toggle containers on load
 	jQuery("div.toggle_container").hide();
 
@@ -693,5 +686,4 @@ jQuery(document).ready(function(){//Hide (Collapse) the toggle containers on loa
 </script><?php
 					
 	}
-	
-	?>
+?>

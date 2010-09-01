@@ -1,8 +1,4 @@
 <?php
-
-define('AMR_ICAL_LIST_VERSION', '3.0');
-define('AMR_PHPVERSION_REQUIRED', '5.2.0');
-
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
 global $amrW;  /* set to W if running as widget, so that css id's will be different */
@@ -303,7 +299,6 @@ global $ical_timezone;
 	return ($rule);
 	}
 /*--------------------------------------------------------------------------------*/
-
 
 function amr_parseRepeats (&$event) {
 global $amr_globaltz;
@@ -808,12 +803,12 @@ function amr_derive_summary (&$e) {
 	if (empty($e_url))  {
 		if (!($amrW == 'w_no_url'))  {
 			if (!empty($amrwidget_options['moreurl'])) {
-				$e_url = ' href="'.$amrwidget_options['moreurl'].'#'.$e['Bookmark'].'" ';
+				$e_url = ' href="'.clean_url($amrwidget_options['moreurl']).'#'.$e['Bookmark'].'" ';
 			}
 			else { 
 				if (!empty($amr_options[$amr_listtype]['general']['Default Event URL'])) {
 					$e_url = ' class="url" href="'
-						.$amr_options[$amr_listtype]['general']['Default Event URL'].'" ';
+						.clean_url($amr_options[$amr_listtype]['general']['Default Event URL']).'" ';
 					}
 				else $e_url = ''; /*empty anchor as defined by w3.org */			
 				/* not a widget */
@@ -822,7 +817,7 @@ function amr_derive_summary (&$e) {
 		else {return ($e['SUMMARY']);	}
 	}
 	else { 
-		$e_url = ' class="url" href="'.$e_url.'" ' ;
+		$e_url = ' class="url" href="'.clean_url($e_url).'" ' ;
 	}
 	$e_desc = '';
 	if (isset ($e['DESCRIPTION'])) {	
@@ -1217,12 +1212,14 @@ function amr_list_events($events,  $tid, $class, $g=null /* what st th eg about 
 			}
 			$html = $head.$row.'>'.$html.$rowc.$headc;
 		}
-
+/* ***** with thechange in list types, we have to rethink how we do the footers .... for tables we say the fotters up front, but for others not. */
+		$fhtml = '';
 		if (!empty($amr_limits)) {
 			if (function_exists('amr_semi_paginate')) $fhtml = amr_semi_paginate();
-			$fhtml .= amr_ngiyabonga();
+			
 		}
-		if (!empty($fhtml))		$html .= $foot.$row.'>'.$fhtml.'colspan="'.$no_cols.'"  >'.$rowc.$footc;;
+		$fhtml .= amr_ngiyabonga();
+//		if (!empty($fhtml))		$html = $html.$foot.$row.'>'.$fhtml.$rowc.$footc;
 
 //		if (!($amrW)) {$html .= amr_show_refresh_option ();}
 
@@ -1299,6 +1296,7 @@ function amr_list_events($events,  $tid, $class, $g=null /* what st th eg about 
 	
 	$html = AMR_NL.$box.' id="'.$tid.'" class="'.$class.'">'.$html.	
 			AMR_NL.$boxc.AMR_NL;
+	if (!empty($fhtml))		$html = $html.$fhtml;		
 	
 return ($html);
 }
@@ -1756,7 +1754,7 @@ global $amr_limits;
 			if (function_exists('amr_do_events_offset')) {
 				$constrained = amr_do_events_offset ($constrained);
 			}
-			else suggest_other_icalplugin(__('Events Offset','amr-ical-events-list'));
+//			else suggest_other_icalplugin(__('Events Offset','amr-ical-events-list'));
 		
 		}
 		return $constrained;
@@ -1834,8 +1832,8 @@ function amr_string($s) {
 }
 /* -------------------------------------------------------------------------*/
 function suggest_other_icalplugin($featuretext) {?>
-	<br/><?php echo $featuretext.' - '.__('This requested feature requires the plugin amr-events','amr-ical-events-list'); ?>
-	<a href="http://icalevents.anmari.com"><?php _e('Get it here','amr-ical-events-list' ); ?></a>
+	<br/><?php echo $featuretext.' - '.__('This feature requires the plugin amr-events','amr-ical-events-list'); 
+	?>&nbsp;<a href="http://icalevents.anmari.com"><?php _e('Get it here','amr-ical-events-list' ); ?></a>
 	<br/><?php
 }
 /* -------------------------------------------------------------------------*/
@@ -1866,8 +1864,11 @@ function amr_process_icalspec($criteria, $icalno=0) {
 				if (ICAL_EVENTS_DEBUG) { echo '<br>Got calendars from posts :'.count($icals).'<br>'; }	
 			}
 		}
-		else suggest_other_icalplugin (__('Events from Posts','amr-ical-events-list' ));
+		else if (empty($criteria['urls'])) { 
+			suggest_other_icalplugin (__('No url entered - did you want events from posts ?','amr-ical-events-list' ));
+		}
 	}
+
 /* ------------------------------  check for urls and do those too, or only */
 	if (!empty($criteria['urls'])) {
 		foreach ($criteria['urls'] as $i => $url) {
@@ -2191,15 +2192,6 @@ function amr_ical_exception_handler($exception) {
 	add_action('widgets_init', 'amr_ical_widget_init');	
 	add_action('plugins_loaded', 'amr_ical_load_text' );	
 //	add_action( 'admin_init', 'amr_ical_load_text' );	
-
 	add_shortcode('iCal', 'amr_do_ical_shortcode');
-	add_shortcode('ical', 'amr_do_ical_shortcode');
-
-	
-//	amem_logging_enable();
-//	global $memlog;
-//	$memlog = new amr_log();
-//	$start = $memlog->log_peakmem (' at parse time maybe? ');
-	
-	
+	add_shortcode('ical', 'amr_do_ical_shortcode');	
 ?>

@@ -3,9 +3,9 @@ Contributors: Anmari
 Donate link: http://webdesign.anmari.com/web-tools/donate/
 Tags: calendar, events, event calendar, events calendar, ical, ics, ics calendar, upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar
 Requires at least: 2.8
-Tested up to: 3.0 
-Version: 2.9.4
-Stable tag: 2.9.4
+Tested up to: 3.0.1
+Version: 3.0.1
+Stable tag: trunk
 
 == Description ==
 
@@ -78,10 +78,17 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 *   Allow html in descriptions, and convert any url's to links if not already converted.   
 
 == Changelog ==
+= Version 3.0.1 =
+*   Fixed the version numbers - need to be same in 3 places
+*	Admin page html/css went a bit wonky - actually the wordpress admin navigation css - the subsubsub usually requires careful handling for the next piece of html.
+*   The widget was overenthusiatically thinking it needed to get events from posts too.  fixed.
+*   Applied clean url function to the widget event urls -  it will now validate
+*   Removed opacity css for now (invalid css).  Better css control will be coming later
+
 = Version 3.0 =
 *   Fixed a minor bug with dates that did have an end date,but duration was 0.  Some php datetime installations did not take kindly to being told to add 0 anything.
 *   Almost Totally rewrote the recurrence engine - it will now cater for ALL valid recurrence rules 
-*   Woo hoo - hopefully a big improvement in listing options - the start of many more!
+*   Woo hoo - hopefully a big improvement in listing options - the start of many more!  Please note - they will change again - they need to be 'cleaner' in their html - will be along the same lines though, so have aplay if you wish.
 *   Caters for all kinds of weird and wonderful timezone ids (in response to [lespaul](http://wordpress.org/support/topic/plugin-amr-ical-events-list-date-time-problem?replies=7).  See also [this note] (http://icalevents.anmari.com/2613-what-every-developer-ought-to-know-about-timezones-wrt-calendar-files/)
 
 = Version 2.9.5 =

@@ -20,8 +20,7 @@
 	
 	function amr_ical_check_uninstall()
 	{	
-		?>
-		<div class="wrap" id="AmRIcal"> 
+		?><div class="wrap" id="AmRIcal"> 
 		<h2><?php _e('Uninstall AmR iCal Events List Options', 'amr-ical-events-list'); ?></h2>
 		<p><?php _e('Note this function removes the options from the database.  To completely uninstall, one should continue on to use the standard wordpress functions to deactivate the plugin and delete the files.  It is not necessary to run this separately as the uninstall will also run as part of the wordpress delete plug-in files.', 'amr-ical-events-list');?></p>
 		<p><?php _e('The function is provided here as an aid to someone who has perhaps got their wordpress install in a knot and wishes to temporarily remove the options from the database as part of their debugging or cleanup.  Consider also the use of the RESET.');?></p>
@@ -39,19 +38,16 @@
 		
 		if (isset ($_POST['uninstall'])) {
 			$nonce = wp_create_nonce('amr_ical'); /* used for security to verify that any action request comes from this plugin's forms */
-			?>
-			<form method="post" action="<?php  ?>">
-			<?php  wp_nonce_field('amr_ical'); /* outputs hidden field */?>
-
-				<fieldset id="submit">
+			?><form method="post" action="<?php  ?>">
+			<?php  wp_nonce_field('amr_ical'); /* outputs hidden field */
+			?><fieldset id="submit">
 					<input type="hidden" name="action" value="uninstalloptions" />
 					<input type="submit" name="cancel" value="<?php _e('Cancel', 'amr-ical-events-list') ?>" />
 					<input type="submit" name="reallyuninstall" value="<?php _e('Really Uninstall Options?', 'amr-ical-events-list') ?>" />		
 				</fieldset>
 			</form>
-			</div>	
-			<?php 
+			</div><?php 
 		}
 	}
 	register_uninstall_hook(__FILE__,'amr_ical_uninstall');
-	?>
+?>

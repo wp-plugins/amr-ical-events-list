@@ -82,22 +82,22 @@ class amr_ical_widget extends WP_widget {
 			if (isset ($opt['limit']) and (!($opt['limit']==='5'))) $shortcode_urls = 'events='.$opt['limit'].' '.$shortcode_urls;
 		}
 
-?>
-	<input type="hidden" id="submit" name="submit" value="1" />
-	<p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title', 'amr-ical-events-list'); ?> 
-	<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" 
+  ?><input type="hidden" id="submit" name="submit" value="1" />
+	<p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title', 'amr-ical-events-list'); 
+	?><input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" 
 	value="<?php echo attribute_escape($title); ?>" />		</label></p>
-
-	<p><label for="<?php echo $this->get_field_id('moreurl'); ?>"><?php _e('Calendar page url in this website, for event title links', 'amr-ical-events-list'); ?> 
+	<p><label for="<?php echo $this->get_field_id('moreurl'); ?>"><?php _e('Calendar page url in this website, for event title links', 'amr-ical-events-list'); 
+	?><a href="http://icalevents.anmari.com/1901-widgets-calendar-pages-and-event-urls/" title="<?php _e('See plugin website for more details','amr-ical-events-list'); ?>">?</a>
 	<input id="<?php echo $this->get_field_id('moreurl'); ?>" name="<?php echo $this->get_field_name('moreurl'); ?>" type="text" style="width: 200px;" 
 	value="<?php echo attribute_escape($moreurl); ?>" /></label></p>
 	<p><label for="<?php echo $this->get_field_id('doeventsummarylink'); ?>"><?php 
-	_e('Do an event summary hyperlink with event description as title text?', 'amr-ical-events-list'); ?> 
+	_e('Do an event summary hyperlink with event description as title text ', 'amr-ical-events-list'); 
+	?><a href="http://icalevents.anmari.com/1908-hovers-lightboxes-or-clever-css/" title="<?php _e('See plugin website for more details','amr-ical-events-list'); ?>">?</a>
 	<input id="<?php echo $this->get_field_id('doeventsummarylink'); ?>" name="<?php 
 	echo $this->get_field_name('doeventsummarylink'); ?>" type="checkbox" 
 	value="true" <?php if ($doeventsummarylink) echo 'checked="checked"';?> /></label></p>
-	<p><label for="<?php echo $this->get_field_id('shortcode_urls');?>"><?php _e('Urls (plus optional shortcode parameters)', 'amr-ical-events-list'); ?> </label>
-	<a href="http://icalevents.anmari.com" title="<?php _e('See plugin website','amr-ical-events-list'); ?>">?</a>
+	<p><label for="<?php echo $this->get_field_id('shortcode_urls');?>"><?php _e('Urls (plus optional shortcode parameters separated by spaces eg: events=10)', 'amr-ical-events-list'); ?> </label>
+	<a href="http://icalevents.anmari.com" title="<?php _e('See plugin website for more details','amr-ical-events-list'); ?>">?</a>
 	<textarea cols="25" rows="10" id="<?php echo $this->get_field_id('shortcode_urls');?>" name="<?php echo $this->get_field_name('shortcode_urls'); ?>" ><?php
 		echo attribute_escape($shortcode_urls); ?></textarea></p>
 	
