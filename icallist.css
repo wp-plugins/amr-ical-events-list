@@ -11,58 +11,59 @@ then you will need to add css for any further calendars - simply copy the comppr
 .ical td {
 	vertical-align: top;
 }
-.wical td.today {  
-	font-weight: bolder !important;
+.wical .group {  
+	font-weight: bolder; 
+}
+.wical .today {  
+/*	font-weight: bolder !important; */
 }	
 /* -------------------------------------------------------------------------------------*/
 /* Table related definitions - delete these if your theme does tables nicely already  */
-	.ical thead tr { /* Make the table heading row a bit bigger */
-		font-size: larger;
-		}
-
-	.ical tfoot a,   /* make footer look subtle */
-	.wical tfoot a {
-		color: #777;
-		}
-
-	.icalprop th,
-	.icalprop td,
-	.ical th,
-	.ical td { /* space the table elements out a bit */
-		padding: 0.5em;
-		text-align: left;
-		}	
+.ical thead  { /* Make the table heading row a bit bigger */
+	font-size: larger;
+	}
+.ical tfoot a,   /* make footer look subtle */
+.wical tfoot a {
+	color: #777;
+	}
+.icalprop th,
+.icalprop td,
+.ical th,
+.ical td { /* space the table elements out a bit */
+	padding: 0.5em;
+	text-align: left;
+	}	
+.icalprop td.col2 {
+	text-align: right;
+}
+/* -----------------------------------------for the list style ------------------------- */
+.icalprop span.col1 {
+	float: left;
+}	
+.icalprop span.col2 {
+	text-align: right;
+	float: right;
+}
 /* -------------------------------------------------------------------------------------*/	
-	
-.ical li.summary h3{ /* make the summaries take on whatever the theme's h3 is, but not extra space above */
+.ical .summary h3{ /* make the summaries take on whatever the theme's h3 is, but not extra space above */
 	padding-top: 0;
 	margin-top: 0;
 }
-
 .ical,
 .icalprop {	
 	width: 100%;   /* force the calendar  to take as much space as it can so floated items don't force a wrap */
 	margin: auto;
-	/* table-layout:fixed; /* prevent the tabel from being too big */
+	/* table-layout:fixed; /* prevent the table from being too big */
 	word-wrap:break-word; /* to make content wrap rather than overflowing */
 	overflow:hidden; /* some browser don't support word -wrap */
-
 	}
-	
-.icalprop li,
-.ical li,	
-.icalprop ul,
-.ical ul {
-	padding: 0; margin: 0;
-}	
 
-/* ---------------------------------------------------------------------------------*/
-/* Do our very best to re move the list bullets where we do not want them.
+/* --------------------DELETE THIS IF NOT REQUIRED -------------------------------------------------------------*/
+/* Do our very best to re move the list bullets from some weird themes where we do not want them.
    Themes  specify list bullet styling in many (okay maybe only 3 ) different ways and it is hard to force precdence sometimes! */
-.wical ul li,
+.wical ul li.group,
 .wicalprop ul  li,
-.icalprop ul  li,
-.ical ul li {  /* remove list bullets */	
+.icalprop ul  li {  /* remove list bullets for calendar properties and groups */	
 	list-style: none !important;
 	text-indent: 0;
 	padding: 0;
@@ -82,65 +83,38 @@ then you will need to add css for any further calendars - simply copy the comppr
 /* Default Theme and similar only ---------------------------------------------------------------*/
 /* add back list bullets for a field only  - see what your theme is using and put it in here */
 #sidebar .wical  li {  
-
 }
-
 #sidebar .wical  li.eventdate:before {
 /*  	content: "\00BB \0020" !important;  */
-
 }
-
 /* End list bullets---------------------------------------------------------------*/
-
 #menu .wical  ul { /* to override classic theme where all appears greyed out */
 	color: #000;
 }
-
+/* -------------------------------images can look strange in some themes -------------------------------*/
+.wical img,
+.wicalprop img,
 .ical img ,
 .icalprop img {
 	border: none !important;
 	vertical-align: text-bottom;
 	}
-
-.icalprop ul li {  /* float calendar information onto one line */
-	float: left;
-	padding: 0 1em 0 0; 
-}
-
-.wcalprop , /* if someone wants the calendar level on the widget, then float them to the left */
-.ical li.addevent,
-.ical li.subscribeevent,
-.ical li.icsurl ,
-.ical li.map,
-.icalprop li.addtogoogle,
-.icalprop li.icsurl ,
-.icalprop li.icalrefresh ,
-.icalprop li.x-wr-timezone { /* float our little icons to the right */
+.wcalprop , /* if someone wants the calendar level on the widget, then float the bits to the left */
+.ical .addevent,
+.ical .subscribeevent,
+.ical .icsurl ,
+.ical .map,
+.icalprop .addtogoogle,
+.icalprop .icsurl ,
+.icalprop .icalrefresh ,
+.icalprop .x-wr-timezone { /* float our little icons to the right */
 	float: right;
 	padding: 0 0 0 0.5em;
 	margin-bottom: 0;   /* required where sometimes they don't line up nicely if limited text */
 	font-size: small;
 }
 
-
-.ical li.icalnav,
-.ical ul li.starttime,
-.ical ul li.endtime,
-.wical th,  /* for the widget only, float the headings to the left, especially for the groupings  */ 
-.wical ul li.eventdate,
-.wical ul li.starttime,
-.wical ul li.enddate,
-.wical ul li.endtime { /* Optional float these items up next to each other  - depends on type of data and space */
-	float: left; 
-	padding: 0 0.5em 0 0; 
-	}
-
-.wical li.summary { /* to get the summary on a new line after the floated times */
-	clear: left;
-}
-
-.icalprop li,
-.ical li	{
+.ical li.icalnav {
 	padding: 0 1em 0 0 ;
 	}
 
@@ -150,11 +124,12 @@ then you will need to add css for any further calendars - simply copy the comppr
 }
 
 /* css based description hide/display */
-
+.wical li .description, 
 .wical tr .description  {display:none; z-index:-1;} 
+.wical li,
 .wical tr   { position:relative;}
-.wical tr:hover .description
-{	
+.wical li:hover .description,
+.wical tr:hover .description {	
 	background:#fff; 
 	color: #111;
 	display:block; width: 90%;
@@ -163,11 +138,9 @@ then you will need to add css for any further calendars - simply copy the comppr
 	z-index:100;
 	margin:0 0 10px 0;  
 	padding:2%; 
-	overflow: none;
+	overflow: hidden;
 }
 
-.ical tbody,
-.wical tbody   { border:none;}
 .amrical_credit,.amrical_credit a,.amrical_credit a:visited {
 	font-size:x-small; 
 	font-weight:lighter;
@@ -184,7 +157,7 @@ then you will need to add css for any further calendars - simply copy the comppr
 #icalnavs {width: 100%; 
 	text-align: center; 
 	margin: 0 auto;
-	font-size:x-small; 
+	font-size:small; 
 	font-weight:lighter;}
 .icalnav { vertical-align:middle;}
 .icalnav a { text-decoration: none; padding-left: 1em; padding-right: 1em;}
