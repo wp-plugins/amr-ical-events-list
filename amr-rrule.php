@@ -289,7 +289,7 @@ function amr_special_expand_by_day_of_week_and_yearly (&$datearray, $pbys, $tz) 
 						if (!($num == 0)) date_modify($dateobj,(($num)*7).' days');	
 						if (($dateobj->format('Y') == $datea['year']))  {/* If still in the same year */
 							$newdatearray[] = amr_get_date_parts ($dateobj);
-							if (isset($_GET['rdebug'])) echo '<br />Saved '.$dateobj->format('Ymd l');
+							//if (isset($_GET['rdebug'])) echo '<br />Saved '.$dateobj->format('Ymd l');
 						}						
 					} 
 					else if ($num > 0) {
@@ -298,7 +298,7 @@ function amr_special_expand_by_day_of_week_and_yearly (&$datearray, $pbys, $tz) 
 						if (!($num == 0)) date_modify($dateobj,'+'.(($num)*7).' days');	
 						if (($dateobj->format('Y') == $datea['year'])) { /* If still in the same year */
 							$newdatearray[] = amr_get_date_parts ($dateobj);
-							if (isset($_GET['rdebug'])) echo '<br />Saved '.$dateobj->format('Ymd l');
+							//if (isset($_GET['rdebug'])) echo '<br />Saved '.$dateobj->format('Ymd l');
 						}
 					}
 					
@@ -308,7 +308,7 @@ function amr_special_expand_by_day_of_week_and_yearly (&$datearray, $pbys, $tz) 
 				$dateobj = clone ($firstbyday);
 				while ($dateobj <= $lastbyday) {
 					$newdatearray[] = amr_get_date_parts ($dateobj);
-					if (isset($_GET['rdebug'])) echo '<br />saved '.$dateobj->format('Ymd l');
+					//if (isset($_GET['rdebug'])) echo '<br />saved '.$dateobj->format('Ymd l');
 					date_modify($dateobj,'+7 days');				
 				}	
 			}	
@@ -507,7 +507,7 @@ function amr_create_date_from_parts ($d, $tz) { /* createa date object from the 
 	try { $possdate =  new DateTime($datestring, $tz);
 		} 
 	catch (Exception $e) {   
-				echo '<b>'.__('Unexpected error creating date with string: '.$datestring,'amr-ical-events-list').'</b>';
+				echo '<b>'.__('Unexpected error creating date with string: '.$datestring,'amr_ical_list_lang').'</b>';
 				echo $e->getMessage();   
 				return (false);
 				}
@@ -563,9 +563,11 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 	if (isset($_GET['rdebug'])) {echo '<br />closer start was '.$closerstart->format('c');echo '<br />using start of__'.$start->format('c');}
 	unset($closerstart);
 	/* process one interval (one iteration of freq at a time */
-//	if (isset ($p['NBYDAY'])) { /* if we separated these in the parsing process, merge them here,    NOOO - will cause problems with the +1's and bool */
-//		$p['BYDAY'] = array_merge ($p['NBYDAY'], $p['BYDAY']);
-//	}
+	if (isset ($p['NBYDAY'])) { /* if we separated these in the parsing process, merge them here,    NOOO - will cause problems with the +1's and bool */
+		if (isset ($p['BYDAY'])) $p['BYDAY'] = array_merge ($p['NBYDAY'], $p['BYDAY']);
+		else $p['BYDAY'] = $p['NBYDAY'];
+		unset ($p['NBYDAY']);
+	}
 	while ($start <= $until) {	 /* don't check a start here - may miss some */
 		$datearray[] = amr_get_date_parts($start);
 		switch ($freq) { /* the 'bys' are now in an array $p .  NOTE THE sequence here is important */
@@ -641,11 +643,11 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 												$datearray = amr_limit_by_day_of_week ($datearray, $p['BYDAY'],$tz);
 					else 						$datearray = amr_expand_by_day_of_week_for_year ($datearray, $p,$tz);
 				}
-				if (isset($p['NBYDAY'])) {
-					if (isset($p['day']) or isset($p['BYYEARDAY'])) /*Note 2:  BYDAY limits if BYMONTH DAY or BYYEARDAY  is present */
-												$datearray = amr_limit_by_day_of_week ($datearray, $p['NBYDAY'],$tz);
-					else 						$datearray = amr_expand_by_day_of_week_for_year ($datearray, $p,$tz);
-				}
+//				if (isset($p['NBYDAY'])) {
+//					if (isset($p['day']) or isset($p['BYYEARDAY'])) /*Note 2:  BYDAY limits if BYMONTH DAY or BYYEARDAY  is present */
+//												$datearray = amr_limit_by_day_of_week ($datearray, $p['NBYDAY'],$tz);
+//					else 						$datearray = amr_expand_by_day_of_week_for_year ($datearray, $p,$tz);
+//				}
 				if (isset($p['hour'])) 			$datearray = amr_expand ($datearray, $p['hour'],'hour',$tz);
 				if (isset($p['minute'])) 		$datearray = amr_expand ($datearray, $p['minute'],'minute',$tz);
 				if (isset($p['second'])) 		$datearray = amr_expand ($datearray, $p['second'],'second',$tz);

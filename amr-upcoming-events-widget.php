@@ -6,8 +6,8 @@ Description: Display a sweet, concise list of events from iCal sources, using a 
 class amr_ical_widget extends WP_widget {
     /** constructor */
     function amr_ical_widget() {
-		$widget_ops = array ('description'=>__('Upcoming Events', 'amr-ical-events-list' ),'classname'=>__('events', 'amr-ical-events-list' ));
-        $this->WP_Widget(false, __('AmR Upcoming Events', 'amr-ical-events-list' ), $widget_ops);	
+		$widget_ops = array ('description'=>__('Upcoming Events', 'amr_ical_list_lang' ),'classname'=>__('events', 'amr_ical_list_lang' ));
+        $this->WP_Widget(false, __('AmR Upcoming Events', 'amr_ical_list_lang' ), $widget_ops);	
     }
 	
 /* ============================================================================================== */	
@@ -27,8 +27,7 @@ class amr_ical_widget extends WP_widget {
 		$atts 		= shortcode_parse_atts($shortcode_urls);
 		$criteria 	= amr_get_params ($atts);  /* this may update listtype, limits  etc */
 	}
-	else 
-		echo('no url data for events widget');
+	else echo('no url data for events widget');
 
 	$amrW = 'w';	 /* to maintain consistency with previous version */
 	if (isset($doeventsummarylink) and !($doeventsummarylink)) $amrW = 'w_no_url';
@@ -37,7 +36,7 @@ class amr_ical_widget extends WP_widget {
 	if (!empty ($moreurl)) $title = '<a href= "'.$moreurl.'">'.$title.'</a>';	
 	if (!(isset($widget_icalno))) $widget_icalno = 0;
 	else $widget_icalno= $widget_icalno + 1;
-	$criteria['EventPostsToo'] = true;	
+	
 	$content = amr_process_icalspec($criteria, $widget_icalno);
 	//output...
 	echo $before_widget;
@@ -63,7 +62,7 @@ class amr_ical_widget extends WP_widget {
 	global $amrW;
 	
         $instance = wp_parse_args( (array) $instance, array( 
-			'title' => __('Upcoming Events','amr-ical-events-list') ,
+			'title' => __('Upcoming Events','amr_ical_list_lang') ,
 			'shortcode_urls' => 'http://www.google.com/calendar/ical/0bajvp6gevochc6mtodvqcg9o0%40group.calendar.google.com/public/basic.ics',
 			'moreurl' => '',
 			'doeventsummarylink' => true
@@ -81,23 +80,23 @@ class amr_ical_widget extends WP_widget {
 			if (isset ($opt['listtype'])  and (!($opt['listtype']===4))) $shortcode_urls = 'listtype='.$opt['listtype'].' '.$shortcode_urls;
 			if (isset ($opt['limit']) and (!($opt['limit']==='5'))) $shortcode_urls = 'events='.$opt['limit'].' '.$shortcode_urls;
 		}
-
+	$seemore = __('See plugin website for more details','amr_ical_list_lang');
   ?><input type="hidden" id="submit" name="submit" value="1" />
-	<p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title', 'amr-ical-events-list'); 
+	<p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title', 'amr_ical_list_lang'); 
 	?><input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" 
 	value="<?php echo attribute_escape($title); ?>" />		</label></p>
-	<p><label for="<?php echo $this->get_field_id('moreurl'); ?>"><?php _e('Calendar page url in this website, for event title links', 'amr-ical-events-list'); 
-	?><a href="http://icalevents.anmari.com/1901-widgets-calendar-pages-and-event-urls/" title="<?php _e('See plugin website for more details','amr-ical-events-list'); ?>">?</a>
+	<p><label for="<?php echo $this->get_field_id('moreurl'); ?>"><?php _e('Calendar page url in this website, for event title links', 'amr_ical_list_lang'); 
+	?><a href="http://icalevents.anmari.com/1901-widgets-calendar-pages-and-event-urls/" title="<?php echo $seemore; ?>">?</a>
 	<input id="<?php echo $this->get_field_id('moreurl'); ?>" name="<?php echo $this->get_field_name('moreurl'); ?>" type="text" style="width: 200px;" 
 	value="<?php echo attribute_escape($moreurl); ?>" /></label></p>
 	<p><label for="<?php echo $this->get_field_id('doeventsummarylink'); ?>"><?php 
-	_e('Do an event summary hyperlink with event description as title text ', 'amr-ical-events-list'); 
-	?><a href="http://icalevents.anmari.com/1908-hovers-lightboxes-or-clever-css/" title="<?php _e('See plugin website for more details','amr-ical-events-list'); ?>">?</a>
+	_e('Do an event summary hyperlink with event description as title text ', 'amr_ical_list_lang'); 
+	?><a href="http://icalevents.anmari.com/1908-hovers-lightboxes-or-clever-css/" title="<?php echo $seemore; ?>">?</a>
 	<input id="<?php echo $this->get_field_id('doeventsummarylink'); ?>" name="<?php 
 	echo $this->get_field_name('doeventsummarylink'); ?>" type="checkbox" 
 	value="true" <?php if ($doeventsummarylink) echo 'checked="checked"';?> /></label></p>
-	<p><label for="<?php echo $this->get_field_id('shortcode_urls');?>"><?php _e('Urls (plus optional shortcode parameters separated by spaces eg: events=10)', 'amr-ical-events-list'); ?> </label>
-	<a href="http://icalevents.anmari.com" title="<?php _e('See plugin website for more details','amr-ical-events-list'); ?>">?</a>
+	<p><label for="<?php echo $this->get_field_id('shortcode_urls');?>"><?php _e('Urls (plus optional shortcode parameters separated by spaces eg: events=10)', 'amr_ical_list_lang'); ?> </label>
+	<a href="http://icalevents.anmari.com" title="<?php  ?>">?</a>
 	<textarea cols="25" rows="10" id="<?php echo $this->get_field_id('shortcode_urls');?>" name="<?php echo $this->get_field_name('shortcode_urls'); ?>" ><?php
 		echo attribute_escape($shortcode_urls); ?></textarea></p>
 	

@@ -1,0 +1,528 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: amr-ical-events-list-be\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/amr-ical-events-list\n"
+"POT-Creation-Date: 2009-12-23 11:25+0000\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Ashish <ashish@outshinesolutions.com>\n"
+"Language-Team: Outshine Solutions <ashish@outshinesolutions.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-Language: hindi\n"
+"X-Poedit-Country: india\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: amr-ical-config.php:171
+msgid "Year"
+msgstr "साल"
+
+#: amr-ical-config.php:172
+msgid "Quarter"
+msgstr "क्वार्टर"
+
+#: amr-ical-config.php:173
+msgid "Astronomical Season"
+msgstr "खगोलीय सीजन"
+
+#: amr-ical-config.php:174
+msgid "Traditional Season"
+msgstr "पारंपरिक सीजन"
+
+#: amr-ical-config.php:175
+msgid "Western Zodiac"
+msgstr "पश्चिमी राशि"
+
+#: amr-ical-config.php:176
+msgid "Month"
+msgstr "महीने"
+
+#: amr-ical-config.php:177
+msgid "Week"
+msgstr "सप्ताह"
+
+#: amr-ical-config.php:178
+msgid "Day"
+msgstr "दिन"
+
+#: amr-ical-config.php:192
+msgid "When"
+msgstr "कब"
+
+#: amr-ical-config.php:193
+msgid "What"
+msgstr "क्या"
+
+#: amr-ical-config.php:194
+msgid "Where"
+msgstr "जहाँ"
+
+#: amr-ical-config.php:290
+msgid "Show location in Google Maps"
+msgstr "गूगल मैप्स में दिखाएँ स्थान"
+
+#: amr-ical-config.php:292
+msgid "Show in Google map"
+msgstr "गूगल में दिखाएँ नक्शा"
+
+#: amr-ical-config.php:311
+msgid "Venue"
+msgstr "स्थान"
+
+#: amr-ical-config.php:312
+#: amr-ical-config.php:350
+msgid "Description"
+msgstr "विवरण"
+
+#: amr-ical-config.php:324
+msgid "Date"
+msgstr "तिथि"
+
+#: amr-ical-config.php:325
+msgid "Class"
+msgstr "कक्षा"
+
+#: amr-ical-config.php:326
+msgid "Room"
+msgstr "कमरा"
+
+#: amr-ical-config.php:351
+msgid "Timing"
+msgstr "समय"
+
+#: amr-ical-config.php:595
+msgid "Upcoming Events"
+msgstr "भावी घटनाक्रम"
+
+#: amr-ical-config.php:626
+msgid "Events plugin by anmari"
+msgstr "Anmari द्वारा घटनाक्रम प्लगइन"
+
+#: amr-ical-config.php:644
+msgid "No events found within start and end date"
+msgstr "कोई घटनाक्रम तिथि के शुरू और अन्त में नहीं भीतर मिला"
+
+#: amr-ical-config.php:654
+msgid "Resetting options..."
+msgstr "विकल्प Resetting"
+
+#: amr-ical-config.php:655
+msgid "Options Deleted..."
+msgstr "विकल्प नष्ट कर दिया गया ..."
+
+#: amr-ical-config.php:656
+msgid "Error deleting option..."
+msgstr "त्रुटि को हटाने का विकल्प ..."
+
+#: amr-ical-config.php:657
+msgid "Options updated with defaults..."
+msgstr "चूक से अद्यतन विकल्प ..."
+
+#: amr-ical-config.php:666
+msgid " Converting option key to lowercase"
+msgstr "लोअरकेस की कुंजी विकल्प बदलने"
+
+#: amr-ical-events-list.php:44
+msgid "Minimum Php version "
+msgstr "न्यूनतम php संस्करण"
+
+#: amr-ical-events-list.php:49
+msgid "The <a href=\"http://au.php.net/manual/en/class.datetime.php\"> DateTime Class </a> must be enabled on your system for this plugin to work. They may need to be enabled at compile time.  The class should exist by default in PHP version 5.2."
+msgstr " <a href=\"http://au.php.net/manual/en/class.datetime.php\">दिनांक समय कक्षा </a> इस प्लगइन का काम करने के लिए अपने सिस्टम पर सक्रिय होना चाहिए. वे समय संकलन में सक्षम हो सकता है. वर्ग PHP 5.2 संस्करण में डिफ़ॉल्ट रूप से मौजूद होना चाहिए."
+
+#: amr-ical-events-list.php:94
+msgid "Add this calendar to your google calendar"
+msgstr "अपने Google कैलेंडर को इस कैलेंडर में जोड़ें"
+
+#: amr-ical-events-list.php:97
+msgid "Add to your Google Calendar"
+msgstr "अपने Google कैलेंडर में जोड़ें"
+
+#: amr-ical-events-list.php:112
+msgid "Add event to your Google Calendar"
+msgstr "अपने Google कैलेंडर के लिए घटना जोड़ें"
+
+#: amr-ical-events-list.php:114
+msgid "Add event to google"
+msgstr "गूगल से घटना. जोड़े  "
+
+#: amr-ical-events-list.php:191
+msgid "Last Refresh time unexpectedly not available"
+msgstr "पिछले ताज़ा अप्रत्याशित रूप उपलब्ध नहीं. "
+
+#: amr-ical-events-list.php:195
+#, php-format
+msgid "Refresh calendars - last refresh was at %s"
+msgstr "ताज़ा कैलेंडर --अंतिम बार ताज़ा था %s"
+
+#: amr-ical-events-list.php:209
+msgid "Total events: "
+msgstr "कुल घटनाओं:"
+
+#: amr-ical-events-list.php:214
+#: amr-ical-events-list.php:224
+#, php-format
+msgid "Subscribe to %s Calendar"
+msgstr "सदस्यता के लिए कैलेंडर %s"
+
+#: amr-ical-events-list.php:234
+msgid "calendar"
+msgstr "कैलेंडर"
+
+#: amr-ical-events-list.php:420
+#, php-format
+msgid "%u year"
+msgid_plural "%u years"
+msgstr[0] "%u साल"
+msgstr[1] "%u साल"
+
+#: amr-ical-events-list.php:425
+#, php-format
+msgid "%u month "
+msgid_plural "%u months "
+msgstr[0] "%u महीने"
+msgstr[1] "%u महीने"
+
+#: amr-ical-events-list.php:430
+#, php-format
+msgid "%u week "
+msgid_plural "%u weeks"
+msgstr[0] "% u सप्ताह"
+msgstr[1] "% u सप्ताह"
+
+#: amr-ical-events-list.php:436
+#, php-format
+msgid "%u day"
+msgid_plural "%u days"
+msgstr[0] "% u दिन"
+msgstr[1] "% u दिन"
+
+#: amr-ical-events-list.php:442
+#, php-format
+msgid "%u hour"
+msgid_plural "%u hours"
+msgstr[0] "% u घंटे"
+msgstr[1] "% u घंटे"
+
+#: amr-ical-events-list.php:447
+#, php-format
+msgid "%u minute"
+msgid_plural "%u minutes"
+msgstr[0] "% u मिनट"
+msgstr[1] "% u मिनट"
+
+#: amr-ical-events-list.php:452
+#, php-format
+msgid "%u second"
+msgid_plural "%u seconds"
+msgstr[0] "%u सेकेंड "
+msgstr[1] "%u सेकेंड "
+
+#: amr-ical-events-list.php:467
+#, php-format
+msgid "Timezone: %s, Click for %s"
+msgstr "समयक्षेत्र:  %s, क्लिक के लिए %s"
+
+#: amr-ical-events-list.php:516
+msgid "No event description available"
+msgstr "कोई घटना का विवरण उपलब्ध है"
+
+#: amr-ical-events-list.php:586
+msgid "Event Link"
+msgstr "घटना लिंक"
+
+#: amr-ical-events-list.php:931
+#, php-format
+msgid "Week  %u"
+msgstr "सप्ताह %u"
+
+#: amr-ical-events-list.php:1288
+#, php-format
+msgid "Unable to load or cache ical calendar %s"
+msgstr "लोड या कैश करने में असमर्थ राजनैतिक कैलेंडर  %s"
+
+#: amr-ical-events-list.php:1303
+msgid "Days to show: "
+msgstr "दिन को दिखाने के लिए:"
+
+#: amr-ical-events-list.php:1304
+msgid "Events to show: "
+msgstr "घटनाओं को दिखाने के लिए:"
+
+#: amr-ical-events-list.php:1305
+msgid "Start date: "
+msgstr "प्रारंभ तिथि:"
+
+#: amr-ical-events-list.php:1306
+msgid "End date: "
+msgstr "अंतिम तिथि:"
+
+#: amr-ical-events-list.php:1431
+msgid "Invalid Start date"
+msgstr "अवैध प्रारंभ तिथि"
+
+#: amr-ical-events-list.php:1461
+#, php-format
+msgid "Invalid Ical URL passed in query string %s"
+msgstr "अवैध iCal यूआरएल क्वेरी स्ट्रिंग में पारित %s"
+
+#: amr-ical-events-list.php:1516
+msgid "Settings"
+msgstr "सेटिंग्स"
+
+#: amr-ical-list-admin.php:37
+msgid "Invalid URL: "
+msgstr "अमान्य URL:"
+
+#: amr-ical-list-admin.php:51
+msgid "Invalid List Type entered:"
+msgstr "अवैध सूची प्रकार में प्रवेश:"
+
+#: amr-ical-list-admin.php:66
+msgid "Title"
+msgstr "शीर्षक"
+
+#: amr-ical-list-admin.php:68
+msgid "List Type from plugin settings"
+msgstr "प्लगइन सेटिंग्स से सूची प्रकार"
+
+#: amr-ical-list-admin.php:71
+msgid "Number of Events"
+msgstr "घटनाएँ की संख्या "
+
+#: amr-ical-list-admin.php:73
+msgid "Check \"days\" in list type settings too"
+msgstr "जांच \"दिन\" सूची प्रकार की स्थितियों में भी"
+
+#: amr-ical-list-admin.php:75
+msgid "Calendar page url in this website, for event title links"
+msgstr "कैलेंडर इस वेबसाइट में पृष्ठ यूआरएल, घटना शीर्षक के लिए लिंक"
+
+#: amr-ical-list-admin.php:78
+msgid "Urls"
+msgstr "यूआरएल"
+
+#: amr-ical-list-admin.php:237
+msgid "Error in form - calprop array not found"
+msgstr "फार्म में त्रुटि -- calprop सरणी नहीं मिला"
+
+#: amr-ical-list-admin.php:284
+msgid "Options  <strong>Updated</strong>. "
+msgstr "विकल्प <strong>नवीनीकृत</strong>. "
+
+#: amr-ical-list-admin.php:299
+msgid " Define date and time formats:"
+msgstr " तारीख और समय प्रारूपों को परिभाषित करें:"
+
+#: amr-ical-list-admin.php:301
+msgid " These are also used for the grouping headings."
+msgstr "ये भी शीर्षकों के समूह के लिए उपयोग किया जाता है.  "
+
+#: amr-ical-list-admin.php:302
+msgid "Use the standard PHP format strings: "
+msgstr "मानक प्रारूप PHP तार का प्रयोग करें:"
+
+#: amr-ical-list-admin.php:303
+msgid "Php manual - date datetime formats"
+msgstr "Php मैनुअल - तिथि DateTime प्रारूप"
+
+#: amr-ical-list-admin.php:306
+msgid "date"
+msgstr "तिथि"
+
+#: amr-ical-list-admin.php:307
+msgid " (will localise) "
+msgstr "(स्थानीय बनाना होगा)"
+
+#: amr-ical-list-admin.php:357
+msgid "Define maximums:"
+msgstr "Maximums परिभाषित करें:"
+
+#: amr-ical-list-admin.php:375
+msgid "Select components to show:"
+msgstr "चुनें घटक दिखाने के लिए:"
+
+#: amr-ical-list-admin.php:395
+msgid "Define grouping:"
+msgstr "समूह परिभाषित करें:"
+
+#: amr-ical-list-admin.php:411
+msgid "Calendar properties"
+msgstr "कैलेंडर गुण"
+
+#: amr-ical-list-admin.php:432
+msgid "Specify component contents:"
+msgstr "घटक सामग्री निर्दिष्ट करें:"
+
+#: amr-ical-list-admin.php:460
+msgid "Column Headings"
+msgstr "कॉलम शीर्षकों"
+
+#: amr-ical-list-admin.php:524
+msgid "Significant effort goes into these plugins to ensure that they <strong>work straightaway</strong> with minimal effort, are easy to use but <strong>very configurable</strong>, that they are <strong>well tested</strong>,that they produce <strong>valid html and css</strong> both at the front and admin area. If you wish to remove the credit link or using the plugin commercially, then please donate."
+msgstr "महत्वपूर्ण प्रयास इन plugins में चला जाता है सुनिश्चित करने के लिए कि <strong> काम सीधे </strong> न्यूनतम प्रयास के साथ, आसानी से उपयोग कर रहे हैं लेकिन <strong> बहुत विन्यास योग्य</strong>,कि वे कर रहे हैं<strong> अच्छी तरह से जांच की </strong>, कि वे उत्पादन <strong>valid html and css</strong>सामने और व्यवस्थापक क्षेत्र में दोनों.."
+
+#: amr-ical-list-admin.php:526
+msgid "Donate"
+msgstr "दान"
+
+#: amr-ical-list-admin.php:527
+msgid "Support at Wordpress"
+msgstr "WordPress में सहायता"
+
+#: amr-ical-list-admin.php:529
+msgid "Plugin website"
+msgstr "प्लगइन वेबसाइट"
+
+#: amr-ical-list-admin.php:531
+msgid "Plugin feed"
+msgstr "प्लगइन फ़ीड"
+
+#: amr-ical-list-admin.php:533
+msgid "Plugin comments feed"
+msgstr "प्लगइन टिप्पणी फ़ीड"
+
+#: amr-ical-list-admin.php:555
+msgid "Unable to create Custom css file for you to edit if you wish - not essential."
+msgstr "के लिए कस्टम सीएसएस बनाने में असमर्थ तुम्हारे लिए फ़ाइल के लिए अगर तुम चाहो संपादित करें"
+
+#: amr-ical-list-admin.php:559
+#, php-format
+msgid "Copied %s1 to %s2 to allow custom css"
+msgstr "नकल %s1 to %s2 पर कस्टम सीएसएस की अनुमति"
+
+#: amr-ical-list-admin.php:589
+msgid "AmR iCal Events List "
+msgstr "Amr iCal घटनाक्रम की सूची"
+
+#: amr-ical-list-admin.php:596
+msgid "Timezone for date and time calculations is "
+msgstr "की तारीख और समय के लिए समयक्षेत्र गणना है"
+
+#: amr-ical-list-admin.php:607
+msgid "AmR ICal Global Options"
+msgstr "Amr iCal ग्लोबल विकल्प"
+
+#: amr-ical-list-admin.php:608
+msgid "Number of Ical Lists:"
+msgstr "राजनैतिक सूचियों की संख्या:"
+
+#: amr-ical-list-admin.php:615
+msgid "Donation made"
+msgstr "दान किया"
+
+#: amr-ical-list-admin.php:619
+msgid " Do not generate css"
+msgstr "CSS उत्पन्न मत"
+
+#: amr-ical-list-admin.php:621
+msgid "Css file to generate from plugin directory"
+msgstr "सीएसएस के लिए प्लगइन निर्देशिका से उत्पन्न संचिका"
+
+#: amr-ical-list-admin.php:636
+msgid "Go to Plugin Editor, select this plugin and scroll to the file"
+msgstr "जाओ प्लगइन संपादक,इस प्लगइन का चयन करें और फ़ाइल को पुस्तक"
+
+#: amr-ical-list-admin.php:638
+msgid "Edit"
+msgstr "संपादित करें"
+
+#: amr-ical-list-admin.php:643
+msgid "Message if no events found: "
+msgstr "अगर कोई घटनाओं पाया संदेश"
+
+#: amr-ical-list-admin.php:651
+msgid "Update"
+msgstr "नवीनतम "
+
+#: amr-ical-list-admin.php:652
+msgid "Reset"
+msgstr "रीसेट करें"
+
+#: amr-ical-list-admin.php:653
+msgid "Uninstall"
+msgstr "स्थापना रद्द करें"
+
+#: amr-ical-list-admin.php:664
+msgid "List Type "
+msgstr "सूची प्रकार"
+
+#. #-#-#-#-#  plugin.pot (PACKAGE VERSION)  #-#-#-#-#
+#. Plugin Name of an extension
+#: amr-ical-list-admin.php:708
+msgid "AmR iCal Events List"
+msgstr "Amr iCal घटनाक्रम की सूची"
+
+#: amr-ical-list-admin.php:709
+msgid "AmR iCal Event List Configuration"
+msgstr "Amr iCal घटना की सूची विन्यास"
+
+#: amr-ical-uninstall.php:6
+msgid "AmR iCal Options deleted from Database"
+msgstr "Amr iCal विकल्प डाटाबेस से हटा दिया"
+
+#: amr-ical-uninstall.php:9
+msgid "AmR iCal Widget Options deleted from Database"
+msgstr "Amr iCal विजेट विकल्प डाटाबेस से हटा दिया"
+
+#: amr-ical-uninstall.php:25
+msgid "Uninstall AmR iCal Events List Options"
+msgstr "स्थापना रद्द amr iCal घटनाक्रम सूची विकल्प"
+
+#: amr-ical-uninstall.php:26
+msgid "Note this function removes the options from the database.  To completely uninstall, one should continue on to use the standard wordpress functions to deactivate the plugin and delete the files.  It is not necessary to run this separately as the uninstall will also run as part of the wordpress delete plug-in files."
+msgstr "इस समारोह नोट डेटाबेस से विकल्प हटा.  मानक WordPress कार्यों का उपयोग प्लगइन निष्क्रिय और फ़ाइलें हटाएँ पर जारी रखना चाहिए.यह आवश्यक के रूप में स्थापना रद्द भी WordPress के भाग के रूप में चला जाएगा प्लग नष्ट-फ़ाइलें में नहीं है, यह अलग से चलाते "
+
+#: amr-ical-uninstall.php:27
+msgid "The function is provided here as an aid to someone who has perhaps got their wordpress install in a knot and wishes to temporarily remove the options from the database as part of their debugging or cleanup.  Consider also the use of the RESET."
+msgstr "समारोह में यहाँ किसी के लिए एक सहायता  प्रदान की जाती है जो शायद अपने WordPress एक kno में स्थापित करता हो और कुछ समय के डाटाबेस से अपने debugging या सफाई के भाग के रूप में विकल्प को दूर करना चाहती है. रीसेट का भी उपयोग पर विचार करें."
+
+#: amr-ical-uninstall.php:35
+msgid "Note: Navigating to \"Manage AmR ICal Settings\" will RELOAD default options - negating the uninstall."
+msgstr "नोट:Navigating को \"Manage AmR ICal Settings\"  पुनः लोड डिफ़ॉल्ट विकल्प होगा  negating स्थापना रद्द ."
+
+#: amr-ical-uninstall.php:37
+msgid "Continue to Plugin list to delete files as well"
+msgstr "प्लगइन की सूची पर जारी रखें फ़ाइलें नष्ट करने के लिए के रूप में अच्छी तरह से"
+
+#: amr-ical-uninstall.php:48
+msgid "Cancel"
+msgstr "रद्द करें"
+
+#: amr-ical-uninstall.php:49
+msgid "Really Uninstall Options?"
+msgstr "सच विकल्प स्थापना रद्द करें?"
+
+#: amr-import-ical.php:42
+#, php-format
+msgid "Your cache directory %s has been created"
+msgstr "अपने कैश निर्देशिका% s है बनाया गया है"
+
+#: amr-import-ical.php:45
+#, php-format
+msgid "Error creating cache directory %s. Please check permissions"
+msgstr " त्रुटि बनाने में कैश निर्देशिका %s. कृपया अनुमति की जांच"
+
+#: amr-import-ical.php:100
+#, php-format
+msgid "Calendar file not found: %s"
+msgstr "कैलेंडर फ़ाइल पाया नहीं है: % s "
+
+#: amr-import-ical.php:467
+#, php-format
+msgid "Error reading cached file: %s"
+msgstr " त्रुटि कैश्ड फ़ाइल:%s"
+
+#. Plugin URI of an extension
+msgid "http://icalevents.anmari.com"
+msgstr "http://icalevents.anmari.com"
+
+#. Description of an extension
+msgid "Display highly customisable and styleable list of events from iCal sources.   <a href=\"http://webdesign.anmari.com/web-tools/donate/\">Donate</a>,  <a href=\"http://wordpress.org/extend/plugins/amr-ical-events-list/\"> rate it</a>, or link to it. <a href=\"page-new.php\">Write Calendar Page</a>  and put [iCal http://yoururl.ics ] where you want the list of events.  To tweak: <a href=\"options-general.php?page=manage_amr_ical\">Manage Settings Page</a>,  <a href=\"widgets.php\">Manage Widget</a>."
+msgstr "प्रदर्शन बेहद प्रचलित और iCal स्रोतों से घटनाओं की styleable सूची. <a href=\"http://webdesign.anmari.com/web-tools/donate/\">Donate</a>, <a href=\"http://wordpress.org/extend/plugins/amr-ical-events-list/\"> rate it</a>, or link to it. <a href=\"page-new.php\">लिखने के कैलेंडर पेज</a> और डाल [iCal http://yoururl.ics ] तुम घटनाओं की सूची जहाँ चाहता हूँ. <a href=\"options-general.php?page=manage_amr_ical\">प्रबंधित सेटिंग्स पेज</a>,  <a href=\"widgets.php\">Manage Widget</a>."
+
+#. Author URI of an extension
+msgid "http://anmari.com/"
+msgstr "http://anmari.com/"
+

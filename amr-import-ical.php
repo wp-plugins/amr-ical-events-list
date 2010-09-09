@@ -14,7 +14,6 @@
 					repeat 2
 			event2
 		vtodos etc
-
  *
  * The iCal specification is available online at:
  *	http://www.ietf.org/rfc/rfc2445.txt
@@ -37,12 +36,11 @@
 		$cache_path = (ICAL_EVENTS_CACHE_LOCATION. '/ical-events-cache');
 		if (!file_exists($cache_path)) { /* if there is no folder */
 			if (wp_mkdir_p($cache_path, 0777)) {
-				printf('<br />'.__('Your cache directory %s has been created','amr-ical-events-list'),'<code>'.$cache_path.'</code>');
+				printf('<br />'.__('Your cache directory %s has been created','amr_ical_list_lang'),'<code>'.$cache_path.'</code>');
 			}
 			else {
-				die( '<br />'.sprintf(__('Error creating cache directory %s. Please check permissions','amr-ical-events-list'),$cache_path)); 
+				die( '<br />'.sprintf(__('Error creating cache directory %s. Please check permissions','amr_ical_list_lang'),$cache_path)); 
 			}
-
 		}
 		return $cache_path;
 	}
@@ -66,7 +64,6 @@
 	function amr_cache_url($url, $cache=ICAL_EVENTS_CACHE_TTL) {
 	global $amr_lastcache;
 	global $amr_globaltz;	
-
 		If (ICAL_EVENTS_DEBUG) echo '<br />url: '.$url; 	
 		$file = get_cache_file($url);
 		if ( file_exists($file) ) {
@@ -78,7 +75,6 @@
 			$c = false;
 			$amr_lastcache = date_create(strftime('%c',0));	
 			}
-
 		if ( isset($_REQUEST['nocache']) or isset($_REQUEST['refresh']) 
 			or (!(file_exists($file))) or ((time() - ($c)) >= ($cache*60*60))) 
 		{
@@ -88,7 +84,7 @@
 				}	
 			
 			$u = filter_var ($url, FILTER_VALIDATE_URL);
-			if (!($u) ) { _e('Invalid URL','amr-ical-events-list'); return(false);}
+			if (!($u) ) { _e('Invalid URL','amr_ical_list_lang'); return(false);}
 //			$check = get_headers ( $url  , 1  );
 			$check = wp_remote_get ($u);
 			
@@ -97,15 +93,14 @@
 			
 				if (is_wp_error($check)) $text = $check->get_error_message();
 				else $text = '';
-//				$text .= '&nbsp;'.sprintf(__('Error getting calendar file: %s','amr-ical-events-list'), $url);		
+//				$text .= '&nbsp;'.sprintf(__('Error getting calendar file: %s','amr_ical_list_lang'), $url);		
 				if ( file_exists($file) ) { 
-					$text .= '&nbsp;'.sprintf(__('Using File last cached at %s','amr-ical-events-list'), $amr_lastcache->format('D c'));	
-					echo '<br /><span style="text-align:center; font-size:small;"><em>'.__('Warning: Events may be out of date. ','amr-ical-events-list').$text.'</em></span>';	
-
+					$text .= '&nbsp;'.sprintf(__('Using File last cached at %s','amr_ical_list_lang'), $amr_lastcache->format('D c'));	
+					echo '<br /><span style="text-align:center; font-size:small;"><em>'.__('Warning: Events may be out of date. ','amr_ical_list_lang').$text.'</em></span>';	
 					return($file);
 					}
 				else {
-					_e('No cached ical file for events','amr-ical-events-list');	
+					_e('No cached ical file for events','amr_ical_list_lang');	
 					echo $text;
 					return (false);	
 				}
@@ -128,10 +123,8 @@
 				echo '<br><br><strong>Please check you are using shortcode syntax in your page [iCal url], not [iCal:url].  Plugin moved to shortcode usage only several versions back, after maintaining compatibility for a period.  This may cause a remote url problem.</strong><br>';
 				return ($file);
 				}
-
 			if (!isset($amr_lastcache))	$amr_lastcache = date_create (date('Y-m-d H:i:s'), $amr_globaltz);
 		}
-
 		return ($file);
 	}
 /* ---------------------------------------------------------------------- */	
@@ -155,7 +148,6 @@
 		if ($m2 == 'mailto') $mailto = rtrim($m[$i+1],'"');
 	}
 	foreach ($p0 as $i => $p) {
-
 		$p1 = explode('=',$p);
 		if (isset ($p1[0]))  {
 			
@@ -168,7 +160,6 @@
 	}
 	
 	if (!empty($mailto)) $org['MAILTO'] = $mailto;
-
 	
 	//	if (isset($p1[0])) { /* we may have CN=a name;DIR="some directory "*/
 	//		$p2 = explode(';', $p1[0]);
@@ -178,11 +169,9 @@
 	//			}
 	//	}
 	//	if (isset($p1[1])) { /* we may have MAILTO:email*/
-
 	//		if ((($p1[1]) === 'MAILTO') and (!empty($p1[2]))) $org['MAILTO'] = $p1[2];
 	//	}
 		return ($org);
-
     }
 /* ---------------------------------------------------------------------- */	
     /**
@@ -206,7 +195,6 @@
     function amr_parseDateTime($d, $tzobj)    {
 		global $amr_globaltz;
 		global $utczobj;
-
 		/*  	19970714T133000            ;Local time
 			19970714T173000Z           ;UTC time 
 			tz dealt with already ?*/
@@ -236,7 +224,6 @@
     }
 	/* ---------------------------------------------------------------------- */
     /* Parses a Date field. */
-
     function amr_parseRange($range, $daterange, $tzobj)    {  /* 
   For RECURRENCE-ID;
   Strings like:
@@ -252,14 +239,12 @@
     }
 	/* ---------------------------------------------------------------------- */
     /* Parses a Date field. */
-
     function amr_parseDate($text, $tzobj)    {  /* 
 		 VALUE=DATE:
 		 19970101,19970120,19970217,19970421
 		   19970526,19970704,19970901,19971014,19971128,19971129,19971225
 		   VALUE=DATE;TZID=/mozilla.org/20070129_1/Europe/Berlin:20061223
 	*/	
-
 		$p = explode (',',$text); 	/* if only a single will still return one array value */
 		foreach ($p as $i => $v) {
 			try {
@@ -275,7 +260,6 @@
     }
 	/* ------------------------------------------------------------------ */
 	function amr_parseTZDate ($value, $tzid) {	
-
 		$tzobj = amr_parseTZID($text); 
 			
 		if (!($d = amr_parseDateTime ($value, $tzobj))) return(false);
@@ -371,14 +355,13 @@ Africa/Asmara
 		return ( $tz);
     }		
 /* ------------------------------------------------------------------ */
-
    function amr_parseSingleDate($VALUE='DATE-TIME', $text, $tzobj)	{
    /* used for those properties that should only have one value - since many other dates can have multiple date specs, the parsing function returns an array 
 	Reduce the array to a single value */
 		$arr = amr_parseVALUE($VALUE, $text, $tzobj);		
 		if (is_array($arr)) {
 			if (count($arr) > 1) {
-				echo '<br>Unexpected multiple date values'.var_dump($arr);
+				error_log ( '<br>Unexpected multiple date values'.$text);
 			}
 			else return ($arr[0]);
 		}
@@ -403,13 +386,11 @@ Africa/Asmara
 		return ($tzobj); 
 	}
 	/* ---------------------------------------------------------------------- */	
-
    function amr_parseVALUE($VALUE, $text, $tzobj)	{
 	/* amr parsing a value like 
 	VALUE=PERIOD:19960403T020000Z/19960403T040000Z,	19960404T010000Z/PT3H
 	VALUE=DATE:19970101,19970120,19970217,19970421,..	19970526,19970704,19970901,19971014,19971128,19971129,19971225
 	VALUE=DATE;TZID=/mozilla.org/20070129_1/Europe/Berlin:20061223	*/
-
 		switch ($VALUE) {
 			case 'DATE-TIME': { 
 				if (!($d = amr_parseDateTime($text, $tzobj))) return (false);
@@ -440,7 +421,6 @@ Africa/Asmara
 			return (false);
 		}
 	}
-
 /* ---------------------------------------------------------------------- */		
 /**
      * Parse a Duration Value field.
@@ -482,9 +462,7 @@ Africa/Asmara
             return false;
         }
     }
-
 /* ---------------------------------------------------------------------- */
-
 function amr_track_last_mod($date) {
 global $amr_last_modified;
 if (empty ($amr_last_modified)) $amr_last_modified = date_create('0000-00-00 00:00:01');
@@ -495,7 +473,6 @@ if ($date->format('c') > $amr_last_modified->format('c')) {
 /* ---------------------------------------------------------------------- */
 function amr_parseRDATE ($string, $tzobj ) {
 /* could be multiple dates after value */
-
 	$rdate = explode(':',$string);   /* $VALUE=DATE: and a series of dates (no time) */
 	if (isset($rdate[0])) {
 		if (($rdate[0] = 'VALUE=DATE') and (isset($rdate[1])) ) {
@@ -520,10 +497,7 @@ function amr_parseRDATE ($string, $tzobj ) {
 	}			
 	else return (false);
 }
-
-
 /* ---------------------------------------------------------------------- */
-
 function amr_parse_property ($parts) {
 /* would receive something like array ('DTSTART; VALUE=DATE', '20060315')) */
 /*  NOTE: parts[0]    has the long tag eg: RDATE;TZID=US-EASTERN
@@ -532,7 +506,6 @@ function amr_parse_property ($parts) {
 		If no Z
 */
 global $amr_globaltz;
-
 	$p0 = explode (';', $parts[0], 2);  /* Looking for ; VALUE = something...;   or TZID=... or both???*/
 	if (isset($p0[1])) { /* ie if we have some modifiers like TZID, or maybe just VALUE=DATE */
 		parse_str($p0[1]);/*  (will give us if exists $value = 'xxx', or $tzid= etc) */
@@ -544,7 +517,6 @@ global $amr_globaltz;
 		;}
 	}
 	else $tzobj = $amr_globaltz;  /* Because if there is no timezone specified in any way for the date time then it must a floating value, and so should be created in the global timezone.*/
-
 	switch ($p0[0]) {
 		case 'CREATED':
 		case 'COMPLETED': 
@@ -594,9 +566,7 @@ global $amr_globaltz;
 			else return;
 	}
 }
-
 /* ---------------------------------------------------------------------- */	
-
 // Replace RFC 2445 escape characters
 function amr_format_ical_text($value) {
   $output = str_replace(
@@ -604,19 +574,15 @@ function amr_format_ical_text($value) {
     array('\\',   ';',  ',',  "\n", "\n"),
     $value
   );
-
   return $output;
 }
-
 /* ---------------------------------------------------------------------- */	
 function amr_is_untimed($text) {
 /*  checks for VALUE=DATE */
 if (stristr ($text, 'VALUE=DATE')) return (true);
 else return (false);
 }
-
 /* ---------------------------------------------------------------------- */	
-
 function amr_parse_component($type)	{	/* so we know we have a vcalendar at lines[$n] - check for properties or components */	
 	global $amr_lines;
 	global $amr_totallines;
@@ -624,7 +590,6 @@ function amr_parse_component($type)	{	/* so we know we have a vcalendar at lines
 	global $amr_validrepeatablecomponents;
 	global $amr_validrepeatableproperties;
 	global $amr_globaltz;
-
 	while (($amr_n < $amr_totallines)	)	{			
 			$amr_n++;
 			$parts = explode (':', $amr_lines[$amr_n],2 ); /* explode faster than the preg, just split first : */
@@ -666,13 +631,10 @@ function amr_parse_component($type)	{	/* so we know we have a vcalendar at lines
 		}
 		return ($subarray);	/* return the possibly nested component */	
 	}
-
-
 /* ---------------------------------------------------------------------- */
 // Parse the ical file and return an array ('Properties' => array ( name & params, value), 'Items' => array(( name & params, value), )
 function amr_parse_ical ( $cal_file ) {
 /* we will try to continue as much as possible, ignore lines that are problems */
-
 	global $amr_lines;
 	global $amr_totallines;
 	global $amr_n;
@@ -683,11 +645,10 @@ function amr_parse_ical ( $cal_file ) {
     $event = '';
 	
 	if (!$fd=@fopen($cal_file,"r")) {
-	    echo '<br>'.sprintf(__('Error reading cached file: %s', 'amr-ical-events-list'), $cal_file);
+	    echo '<br>'.sprintf(__('Error reading cached file: %s', 'amr_ical_list_lang'), $cal_file);
 	    return ($cal_file);
 	} 
 	else {
-
 	// Read in contents of entire file first
 		$data = '';
 		while (!feof($fd) ) {
@@ -706,7 +667,6 @@ function amr_parse_ical ( $cal_file ) {
 	    $data = preg_replace ( "/[\r\n]+/", "\n", $data );
 	    $data = str_replace ( "\;", ";", $data );
 	    $data = str_replace ( "\,", ",", $data );
-
 		$amr_n = 0;
 	    $amr_lines = explode ( "\n", $data );
 		$amr_totallines = count ($amr_lines) - 1; /* because we start from 0 */

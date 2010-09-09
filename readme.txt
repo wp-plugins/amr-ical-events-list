@@ -4,7 +4,7 @@ Donate link: http://webdesign.anmari.com/web-tools/donate/
 Tags: calendar, events, event calendar, events calendar, ical, ics, ics calendar, upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar
 Requires at least: 2.8
 Tested up to: 3.0.1
-Version: 3.0.1
+Version: 3.0.2
 Stable tag: trunk
 
 == Description ==
@@ -78,6 +78,12 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 *  Allow html in descriptions, and convert any url's to links if not already converted.   
 
 == Changelog ==
+= Version 3.0.2 =
+*  Tweaked the list style options a bit to improve the look when there is no css
+*  Tweaked the css
+*  Fixed a bug that had crept in - it is now possible to add some html tags before and after fields
+*  The link text for very long urls is now trimmed if it begins with http:// .  This should help if you find your theme css cannot cope with long urls.
+
 = Version 3.0.1 =
 *  Fixed the version numbers - need to be same in 3 places
 *	Admin page html/css went a bit wonky - actually the wordpress admin navigation css - the subsubsub usually requires careful handling for the next piece of html.
