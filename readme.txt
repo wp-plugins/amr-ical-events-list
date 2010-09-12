@@ -4,7 +4,7 @@ Donate link: http://webdesign.anmari.com/web-tools/donate/
 Tags: calendar, events, event calendar, events calendar, ical, ics, ics calendar, upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar
 Requires at least: 2.8
 Tested up to: 3.0.1
-Version: 3.0.2
+Version: 3.0.3
 Stable tag: trunk
 
 == Description ==
@@ -21,8 +21,6 @@ List upcoming recurring or single events, notes, journal, freebusy information f
 
 Group events by month/week/day or many other for presentation and styling. Offers your viewers the option to subscribe or add the events or the whole calendar to their calendars (google or other).  
 
-NB: Plugin requires php 5 >= 5.2, and the php DATETIME Class enabled (this is standard in php 5.2).  You may get a parse error,something like 
-"syntax error, unexpected T_VARIABLE in...." if you are not on a version of PHP that has the "clone" function.  
 
 Test with your calendar's ics file at the demo site: 
 
@@ -78,6 +76,9 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 *  Allow html in descriptions, and convert any url's to links if not already converted.   
 
 == Changelog ==
+= Version 3.0.3 =
+*  Fixed bug in the trim_url function 
+
 = Version 3.0.2 =
 *  Tweaked the list style options a bit to improve the look when there is no css
 *  Tweaked the css
@@ -409,7 +410,7 @@ The php DATETIME Class must be enabled (this is standard in php 5.2).  You may g
 "syntax error, unexpected T_VARIABLE in...." if you are not on a version of PHP that has the "clone" function.  
 
 1. Download and activate as per usual in wordpress
-2. Create a page (or post) and add one or more [ iCal http://yoururl.ics ] to a page or post.  NB (NOT As a hyperlink, must be plain text)
+2. Create a page (or post) and add one or more [ iCal yoururl.ics ] to a page or post.  NB (NOT As a hyperlink, must be plain text)
 
 That's it!
 
@@ -419,12 +420,14 @@ For the widget
 2.  Enter http://yoururl.ics in the large text area, Save
 
 
-= Customisation: =
-Optionally customise the layout etc through the plugins settings.
-*  Change/salt the css as desired.
-*  Check Date and Time formats. Note: language specific date formats depend on the specifications in the Date and Time Formats in the settings area.  Wordpress does not set locale, but does do some localisation of the "date" format strings, so use those rather than the strftime strings.
-*  Check wordpress timezone, and ics events timezones- Check your wordpress timezone settings are set to what you wnat them to be.  The plugin will handle timezone differences and assumes that you want the wordpress timezone as your main timezone, not the ics file timezone
-*  play with date and event limits - balance performance against the volume of events you are likely to have. (eg: don't do days=1000 and events=5 if you know that almost always you have about 3 events a month!
+= Customisation Options: =
+The Plugin works 'out of the box' with no config.  However it is also very flexible should you have special requirements.
+*   Choose html output (table or lists)
+*   Sequence fields and add before/after text or html
+*   Check Date and Time formats. Note: language specific date formats depend on the specifications in the Date and Time Formats in the settings area.  Wordpress does not set locale, but does do some localisation of the "date" format strings, so use those rather than the strftime strings.
+*   Check wordpress timezone, and ics events timezones- Check your wordpress timezone settings are set to what you wnat them to be.  The plugin will handle timezone differences and assumes that you want the wordpress timezone as your main timezone, not the ics file timezone
+*   play with date and event limits - balance performance against the volume of events you are likely to have. (eg: don't do days=1000 and events=5 if you know that almost always you have about 3 events a month!
+*   Change/salt the css as desired.
 
 = Note =   
 The ics file feed must be PUBLIC - if you cannot access it in a browser without being logged in, then the plugin will not be able to access it either.

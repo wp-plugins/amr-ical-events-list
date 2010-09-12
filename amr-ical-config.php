@@ -40,17 +40,15 @@ define('CALENDARIMAGE','calendar.png');
 define('CALENDARADDTOIMAGE','calendar_add.png');
 define('ADDTOGOOGLEIMAGE','addtogoogle.png');
 define('REFRESHIMAGE','refresh.png');
-
-	$x = str_replace(basename( __FILE__),"",plugin_basename(__FILE__)); 
-	if ($x == 'amr-events') {
-		$url = WP_PLUGIN_URL.'/amr-events/listfiles'; 
-		$dir = WP_PLUGIN_DIR.'/amr-events/listfiles'; 
-	}			
-	else {
-		$url = WP_PLUGIN_URL.'/'.$x; 
-		$dir = WP_PLUGIN_DIR.'/'.$x; 
-	}
-
+$x = str_replace(basename( __FILE__),"",plugin_basename(__FILE__)); 
+if ($x == 'amr-events') {
+	$url = WP_PLUGIN_URL.'/amr-events/listfiles'; 
+	$dir = WP_PLUGIN_DIR.'/amr-events/listfiles'; 
+}			
+else {
+	$url = WP_PLUGIN_URL.'/'.$x; 
+	$dir = WP_PLUGIN_DIR.'/'.$x; 
+}
 define('ICALLISTPLUGINURL', $url);
 define('ICALLISTPLUGINDIR', $dir);
 define('ICALSTYLEURL', $url.'css/icallist.css');
@@ -64,8 +62,6 @@ $uploads = wp_upload_dir();
 define('ICAL_EVENTS_CACHE_LOCATION',$uploads['basedir']);
 define('ICAL_EVENTS_CSS',ICAL_EVENTS_CACHE_LOCATION); /* where to store custom css so does not get overwritten */
 define('ICAL_EVENTS_CACHE_DEFAULT_EXTENSION','ics');
-
-
 $amr_validrepeatablecomponents = array ('VEVENT', 'VTODO', 'VJOURNAL', 'VFREEBUSY', 'VTIMEZONE');
 $amr_validrepeatableproperties = array (
 		'ATTACH', 'ATTENDEE',
@@ -78,7 +74,6 @@ $amr_validrepeatableproperties = array (
 		'TZOFFSETTO','TZOFFSETFROM',
 		'URL', 
 		'XPARAM', 'X-PROP');
-	
 /* used for admin field sizes */	
 $amr_csize = array('Column' => '2', 'Order' => '2', 'Before' => '10', 'After' => '10', 'ColHeading' => '10');	
 /* the default setup shows what the default display option is */
@@ -140,23 +135,18 @@ function amr_getTimeZone($offset) {
 		if (isset($timezones[strval($offset)])) return ($timezones[strval($offset)]);
 		else return false; 	
 	}
-	
-	/* ---------------------------------------------------------------------------*/
-
+/* ---------------------------------------------------------------------------*/
 If (ICAL_EVENTS_DEBUG) {
 		echo '<br />Plugin Version is: '.AMR_ICAL_LIST_VERSION;
 		echo '<br />Php Version is: '.PHP_VERSION;
-}		
-		
+}			
 if (function_exists ('get_option')) {
 //	if ($d = get_option ('date_format')) $amr_formats['Day'] = $d;		
 //	if ($d = get_option ('time_format')) $amr_formats['Time'] = $d;	
 	if (($a_tz = get_option ('timezone_string') ) and (!empty($a_tz))) {
 			$amr_globaltz = timezone_open($a_tz);
 			date_default_timezone_set($a_tz);
-			If (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) {
-				echo '<br />Found tz string:'.$a_tz;
-				}
+			If (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) {	echo '<br />Found tz string:'.$a_tz;}
 		}
 	else {	
 		If (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) {	echo '<h2>No timezone string found.</h2>';		}
@@ -164,32 +154,26 @@ if (function_exists ('get_option')) {
 			$a_tz = amr_getTimeZone($gmt_offset);
 			$amr_globaltz = timezone_open($a_tz);
 			date_default_timezone_set($a_tz);
-			If (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) {
-				echo '<h2>Found gmt offset in wordpress options:'.$gmt_offset.'</h2>';
-			}
+			If (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) {	echo '<h2>Found gmt offset in wordpress options:'.$gmt_offset.'</h2>';}
 		}
 		else {
 			$amr_globaltz = timezone_open(date_default_timezone_get());			
 		}
-	}
-	
+	}	
 }
 else $amr_globaltz = timezone_open(date_default_timezone_get());
 $ical_timezone = $amr_globaltz;
 If (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) echo '<br />The default php timezone is set to:'.date_default_timezone_get().'<br />';
-
 $amr_general = array (
 		"Name" 				=> 'Default',
 		'Description'		=> 'A default calendar list. This one set to tables with lists in the cells.  Usually needs the css file enabled. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ',
 		"Default Event URL" => '',
 		'ListHTMLStyle'		=> 'table'
-		);   
-		
+		);   		
 $amr_limits = array (
 		"events" 	=> 30,
 		"days" 		=> 90,
-		"cache" 	=> 24);  /* hours */
-		
+		"cache" 	=> 24);  /* hours */		
 $amr_components = array (
 		"VEVENT" 	=> true,
 		"VTODO" 	=> true,
@@ -249,8 +233,8 @@ $amr_calprop = array (
 $amr_compprop = array 
 	(
 	'Descriptive' => 	array (
-		'SUMMARY'=> 		array('Column' => 2, 'Order' => 10, 'Before' => '<strong>', 'After' => '</strong>'),
-		'DESCRIPTION'=> 	array('Column' => 2, 'Order' => 20, 'Before' => '', 'After' => ''),
+		'SUMMARY'=> 		array('Column' => 2, 'Order' => 10, 'Before' => '<b>', 'After' => '</b>'),
+		'DESCRIPTION'=> 	array('Column' => 2, 'Order' => 20, 'Before' => '<br />', 'After' => ''),
 		'LOCATION'=> 		array('Column' => 2, 'Order' => 41, 'Before' => '', 'After' => ''),
 		'map'=> 			array('Column' => 2, 'Order' => 40, 'Before' => '', 'After' => ''),
 		'addevent' => 		array('Column' => 2, 'Order' => 145, 'Before' => '', 'After' => ''),
@@ -266,8 +250,8 @@ $amr_compprop = array
 		'STATUS'=> 			$dfalse
 		),
 	'Date and Time' => array (
-		'EventDate' => 		array ('Column' => 1, 'Order' => 1, 'Before' => '', 'After' => ''), /* the instnace of a repeating date */
-		'StartTime' => 		array('Column' => 1, 'Order' => 2, 'Before' => '', 'After' => ''),
+		'EventDate' => 		array ('Column' => 1, 'Order' => 1, 'Before' => '', 'After' => '<br />'), /* the instnace of a repeating date */
+		'StartTime' => 		array('Column' => 1, 'Order' => 2, 'Before' => '', 'After' => ' '),
 		'EndDate' => 		array('Column' => 1, 'Order' => 3, 'Before' => 'until ', 'After' => ''),
 		'EndTime' => 		array('Column' => 1, 'Order' => 4, 'Before' => '', 'After' => ''),
 		'DTSTART'=> 		$dfalse,
@@ -298,8 +282,7 @@ $amr_compprop = array
 		'EXRULE'=> 	$dfalse,
 		'RDATE'=> 	$dfalse,
 		'RRULE'=> 	$dfalse
-)
-,
+	),
 	'Alarm' => array (
 		'ACTION'=> $dfalse,
 		'REPEAT'=> $dfalse,
@@ -378,6 +361,7 @@ $amr_compprop = array
 			$amr_options[$i]['compprop']['Date and Time']['EndDate']['Column'] = 1;
 			$amr_options[$i]['compprop']['Date and Time']['EndTime']['Column'] = 1;
 			$amr_options[$i]['compprop']['Descriptive']['SUMMARY'] = array('Column' => 1, 'Order' => 10, 'Before' => '<br />', 'After' => '');
+			$amr_options[$i]['compprop']['Descriptive']['DESCRIPTION'] = array('Column' => 1, 'Order' => 20, 'Before' => '<br />', 'After' => '');
 			$amr_options[$i]['heading']['1'] = $amr_options[$i]['heading']['2'] = $amr_options[$i]['heading']['3'] = '';
 			break;
 		case 5: 

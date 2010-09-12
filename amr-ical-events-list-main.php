@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '3.0.2');
+define('AMR_ICAL_LIST_VERSION', '3.0.3');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -391,16 +391,19 @@ function amr_click_and_trim($text) { /* Copy code from make_clickable so we can 
 function amr_trim_url(&$ret) { /* trim urls longer than 30 chars, but not if the link text doe snot have http */       
 	$links = explode('<a', $ret);
     $countlinks = count($links);
-	for ($i = 0; $i < $countlinks; $i++) {		
+	for ($i = 0; $i < $countlinks; $i++) {				
 		$link    = $links[$i];				
 		$link    = (preg_match('#(.*)(href=")#is', $link)) ? '<a' . $link : $link;
-		$begin   = strpos($link, '>') + 1;
-		$end     = strpos($link, '<', $begin);
-		$length  = $end - $begin;
-		$urlname = substr($link, $begin, $length);	
-		$trimmed = (strlen($urlname) > 50 && preg_match('#^(http://|ftp://|www\.)#is', $urlname)) ? substr_replace($urlname, '.....', 30, -5) : $urlname;
-		$trimmed = str_replace('http://','',$trimmed);
-		$ret     = str_replace('>' . $urlname . '<', '>' . $trimmed . '<', $ret); 
+		$begin   = strpos($link, '>'); 
+		if ($begin) {
+			$begin   = $begin + 1;
+			$end     = strpos($link, '<', $begin);
+			$length  = $end - $begin;
+			$urlname = substr($link, $begin, $length);	
+			$trimmed = (strlen($urlname) > 50 && preg_match('#^(http://|ftp://|www\.)#is', $urlname)) ? substr_replace($urlname, '.....', 30, -5) : $urlname;
+			$trimmed = str_replace('http://','',$trimmed);
+			$ret     = str_replace('>' . $urlname . '<', '>' . $trimmed . '<', $ret); 
+		}
 	}
    	return ($ret);
 }
@@ -1154,7 +1157,7 @@ function amr_list_events($events,  $tid, $class, $g=null /* what st th eg about 
 		break;
 	case 'table': 
 		$ul 	= '<span '; 	$li = '<span ';
-		$ulc	= '</span><br />'; 	$lic = '</span>&nbsp;';
+		$ulc	= '</span><br />'; 	$lic = '</span>';
 		$row 	= '<tr '; 				$hcell	='<th '; 	$cell 	='<td '; /* allow for a class specifictaion */
 		$rowc 	= '</tr> '; 			$hcellc ='</th>'; 	$cellc 	='</td>';
 		$ghcell  = '<th colspan="'.$no_cols.'"';
@@ -1792,8 +1795,7 @@ function amr_process_icalspec($criteria, $icalno=0) {
 	$amr_doing_icallist = true;
 	if (!empty($amrW)) $w = 'w'; /* so we know if we are in the widget or not */
 	else $w = '';
-	
-	if ((!empty ($criteria['eventpoststoo'])) and ($criteria['eventpoststoo']) and (!($criteria['eventpoststoo'] == 'false')) ) {
+	if ((!empty ($criteria['eventpoststoo'])) and ($criteria['eventpoststoo'])) {
 		if (function_exists('amr_ical_from_posts')) {
 			if (ICAL_EVENTS_DEBUG) echo '<h3>Get events from posts </h3>';
 			$events = amr_ical_from_posts($criteria);

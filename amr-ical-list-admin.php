@@ -28,7 +28,8 @@
 		'em' => array (), 'i' => array (),
 		'q' => array(
 			'cite' => array ()),
-		'strike' => array()
+		'strike' => array(),
+		'div' => array()
 
 		)); 
 	}	
