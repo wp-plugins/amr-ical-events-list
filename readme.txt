@@ -4,14 +4,12 @@ Donate link: http://webdesign.anmari.com/web-tools/donate/
 Tags: calendar, events, event calendar, events calendar, ical, ics, ics calendar, upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar
 Requires at least: 2.8
 Tested up to: 3.0.1
-Version: 3.0.3
+Version: 3.0.4
 Stable tag: trunk
 
 == Description ==
 
-Encourage viewers to bookmark your events on their calendars.  This plugin offers a thorough Ical calendar parser - copes with all the ical recurrence possibilities, and a large part of the rest of the spec. 
-
-This free version accepts one or many ical urls for ics files.  It produces a very stylable list of events, notes, todo's or freebusy info. If you want a complete "inhouse" solution where you can create events in wordpress with multiple event classification options, and produce your own ics feeds from those, please see [amr-events](http://icalevents.anmari.com). amr-events is an extension of this plugin and will use any configuration from it. 
+Encourage viewers to bookmark your events on their calendars.  This plugin offers a thorough Ical calendar parser - copes with all the ical recurrence possibilities, and a large part of the rest of the spec. The free version accepts one or many ical urls for ics files.  It produces a very stylable list of events, notes, todo's or freebusy info. 
 
 Displays events from multiple calendars in out the box or with customised grouping, formatting and styling. Multiple pages or post or widget or both.
 
@@ -21,6 +19,7 @@ List upcoming recurring or single events, notes, journal, freebusy information f
 
 Group events by month/week/day or many other for presentation and styling. Offers your viewers the option to subscribe or add the events or the whole calendar to their calendars (google or other).  
 
+If you also want a complete "inhouse" solution where you can create events in wordpress with multiple event classification options, and produce your own ics feeds from those, please see [amr-events](http://icalevents.anmari.com). amr-events is an extension of this plugin and will use any configuration from it. 
 
 Test with your calendar's ics file at the demo site: 
 
@@ -76,6 +75,12 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 *  Allow html in descriptions, and convert any url's to links if not already converted.   
 
 == Changelog ==
+= Version 3.0.4 =
+*  Fixed css file handling.  It will now copy the standard css file to a special css folder in the uploads folder, and then offer you the choice of which css file to use (or of course just use your theme's css).  The custom ccs file can be customised without risk of being overwritten by a plugin upgrade.  This also means that you can switch back to the default css to see if that works better for your site.
+*  Some tweaks to the html code generated and to the css
+*  Some tweaks to the default list type settings - you would have to 'reset' to see these.  SAVE your current settings first (ie print the page or screen dump first).
+*  Allowed for php version with url validation bug.  If you have that version or earlier it will NOT validate your urls for you when you enter them.
+
 = Version 3.0.3 =
 *  Fixed bug in the trim_url function 
 

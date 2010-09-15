@@ -653,11 +653,11 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 				if (isset($p['second'])) 		$datearray = amr_expand ($datearray, $p['second'],'second',$tz);
 				break;								
 		}
-		$datearray = amr_sort_date_array(&$datearray);
+		$datearray = amr_sort_date_array($datearray);
 		if (!empty($p['BYSETPOS'])) 	{ 
 			$datearray = amr_limit_by_setpos ($datearray, $p['BYSETPOS']);
 			if (isset ($_GET['rdebug'])) {echo '<br />Selected after bysetpos:'; print_r($p['BYSETPOS']); echo '</br>'; print_date_array($datearray);	}			
-			$datearray = amr_sort_date_array(&$datearray); /* sort again as the set position may have trashed it */
+			$datearray = amr_sort_date_array($datearray); /* sort again as the set position may have trashed it */
 		}	
 		$num_events = count($datearray);
 		if (isset ($_GET['rdebug'])) {echo '<br />We have '. $num_events.' events.  We want max:'.$count;	}

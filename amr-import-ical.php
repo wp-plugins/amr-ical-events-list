@@ -19,6 +19,7 @@
  *	http://www.ietf.org/rfc/rfc2445.txt
  *
  */
+
 /* ---------------------------------------------------------------------- */
 	/*
 	 * Return the full path to the cache file for the specified URL.
@@ -82,8 +83,8 @@
 				echo '<br>Get ical file remotely, it is time to refresh or it is not cached: <br />'; 
 				print_r ($url);
 				}	
-			
-			$u = filter_var ($url, FILTER_VALIDATE_URL);
+			if (version_compare( PHP_VERSION,'5.2.13', '>')) $u = filter_var ($url, FILTER_VALIDATE_URL);
+			else $u = $url;
 			if (!($u) ) { _e('Invalid URL','amr_ical_list_lang'); return(false);}
 //			$check = get_headers ( $url  , 1  );
 			$check = wp_remote_get ($u);
@@ -128,9 +129,6 @@
 		return ($file);
 	}
 /* ---------------------------------------------------------------------- */	
-    /**
-     * Parse a Time Period field.
-     */
     function amr_parseOrganiser($arraybycolon)    { /* receive full string parsed to array 
 	[0]=>ORGANIZER;SENT-BY="mailto
 	[1]=>dwood@uoguelph.ca":mailto:ovcweb@uoguelph.ca
@@ -144,9 +142,11 @@
 	$org = array();
 	$p0 = explode(';',$arraybycolon[0]);
 	$m = explode(':',$arraybycolon[1]);
+//	if (ICAL_EVENTS_DEBUG) {echo '<br/>m : <br />'; var_dump($m); echo '<br/>p0 : <br />'; var_dump($p0);}
 	foreach ($m as $i => $m2) {
-		if ($m2 == 'mailto') $mailto = rtrim($m[$i+1],'"');
+		if ($m2 == 'MAILTO') $mailto = rtrim($m[$i+1],'"');
 	}
+
 	foreach ($p0 as $i => $p) {
 		$p1 = explode('=',$p);
 		if (isset ($p1[0]))  {

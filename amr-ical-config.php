@@ -60,7 +60,8 @@ define('IMAGES_LOCATION', AMRICAL_ABSPATH.'images/');
 $uploads = wp_upload_dir();
 //define('ICAL_EVENTS_CACHE_LOCATION',path_join( ABSPATH, get_option('upload_path')));  /* do what wordpress does otherwise weird behaviour here - some folks already seem to have the abs path there. */
 define('ICAL_EVENTS_CACHE_LOCATION',$uploads['basedir']);
-define('ICAL_EVENTS_CSS',ICAL_EVENTS_CACHE_LOCATION); /* where to store custom css so does not get overwritten */
+define('ICAL_EVENTS_CSS_DIR',ICAL_EVENTS_CACHE_LOCATION.'/css/'); /* where to store custom css so does not get overwritten */
+define('ICAL_EVENTS_CSS_URL',$uploads['baseurl'].'/css/'); /* where to store custom css so does not get overwritten */
 define('ICAL_EVENTS_CACHE_DEFAULT_EXTENSION','ics');
 $amr_validrepeatablecomponents = array ('VEVENT', 'VTODO', 'VJOURNAL', 'VFREEBUSY', 'VTIMEZONE');
 $amr_validrepeatableproperties = array (
@@ -252,8 +253,8 @@ $amr_compprop = array
 	'Date and Time' => array (
 		'EventDate' => 		array ('Column' => 1, 'Order' => 1, 'Before' => '', 'After' => '<br />'), /* the instnace of a repeating date */
 		'StartTime' => 		array('Column' => 1, 'Order' => 2, 'Before' => '', 'After' => ' '),
-		'EndDate' => 		array('Column' => 1, 'Order' => 3, 'Before' => 'until ', 'After' => ''),
-		'EndTime' => 		array('Column' => 1, 'Order' => 4, 'Before' => '', 'After' => ''),
+		'EndDate' => 		array('Column' => 1, 'Order' => 3, 'Before' => ' until ', 'After' => ''),
+		'EndTime' => 		array('Column' => 1, 'Order' => 4, 'Before' => ' ', 'After' => ''),
 		'DTSTART'=> 		$dfalse,
 //		'age'=> $dfalse,
 		'DTEND'=> 		$dfalse,
@@ -408,16 +409,9 @@ $amr_compprop = array
 			$amr_options[$i]['calprop']['X-WR-CALDESC']['Column'] = 2;
 			foreach ($amr_options[$i]['component'] as $g=>$v) {
 				$amr_options[$i]['component'][$g] = true;}
-//			$amr_options[$i]['compprop']['Descriptive']['addevent']= array('Column' => 1, 'Order' => 200, 'Before' => '', 'After' => '');	
-//			$amr_options[$i]['compprop']['Descriptive']['subscribeevent']= array('Column' => 1, 'Order' => 200, 'Before' => '', 'After' => '');	
-//			$amr_options[$i]['compprop']['Descriptive']['LOCATION']= array('Column' => 1, 'Order' => 300, 'Before' => '', 'After' => '');	
-//			$amr_options[$i]['compprop']['Descriptive']['map']= array('Column' => 1, 'Order' => 200, 'Before' => '', 'After' => '');	
 			
 			$amr_options[$i]['heading']['3'] = '';	
 			$amr_options[$i]['format']['Day'] = 'D, F j, Y';  	
-
-//			$amr_options[$i]['general']["Css URL"] =
-//			'http://localhost/wptest/wp-content/plugins/amr-ical-events-list/icallist6.css';   /* If empty, then assume the blog stylesheet will cope, else could contain special one */
 		
 			break;	
 		case 7: 
@@ -438,16 +432,18 @@ $amr_compprop = array
 			foreach ($amr_options[$i]['compprop'] as $g => $v) 
 				foreach ($v as $g2 => $v2) {$amr_options[$i]['compprop'][$g][$g2]['Column'] = 0;}
 			$amr_options[$i]['compprop']['Date and Time']['EventDate']['Column'] = 1;
-			$amr_options[$i]['compprop']['Date and Time']['StartTime']['Column'] = 1;
+			$amr_options[$i]['compprop']['Date and Time']['StartTime']['Column'] = 0;
 			$amr_options[$i]['compprop']['Date and Time']['EventDate']['Order'] = 10;
-			$amr_options[$i]['compprop']['Date and Time']['StartTime']['Order'] = 5;
+			$amr_options[$i]['compprop']['Date and Time']['StartTime']['Order'] = 0;
 			$amr_options[$i]['compprop']['Date and Time']['EndDate']['Column'] = 0;
 			$amr_options[$i]['compprop']['Date and Time']['EndTime']['Column'] = 0;
 			$amr_options[$i]['compprop']['Descriptive']['LOCATION']['Order'] = 0;
 			$amr_options[$i]['compprop']['Descriptive']['map']['Order'] = 0;
 			$amr_options[$i]['compprop']['Descriptive']['SUMMARY']['Column'] = 0;
+			$amr_options[$i]['compprop']['Descriptive']['addevent']['Column'] = 1;
+			$amr_options[$i]['compprop']['Descriptive']['addevent']['Order'] = 1;
 			$amr_options[$i]['heading']['1'] = $amr_options[$i]['heading']['2'] = $amr_options[$i]['heading']['3'] = '';
-			break;			
+			break;					
 		}
 		return ( $amr_options[$i]);
 	}
@@ -700,7 +696,7 @@ global $amr_options;
 			'ngiyabonga' => false,
 			'own_css' => false,
 			'feed_css' => true,
-			'cssfile' => 'icallist.css',
+			'cssfile' => ICALSTYLEURL,//'icallist.css',
 			'date_localise' => 'amr',
 			'noeventsmessage' => __('No events found within start and end date','amr_ical_list_lang')
 			);

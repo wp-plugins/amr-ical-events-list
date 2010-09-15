@@ -406,7 +406,7 @@ else  {	echo '<div class="updated fade"><p>';
 	?></div><?php
 
 	}
-/* ---------------------------------------------------------------------*/
+/* ---------------------------------------------------------------------*/	
 	function amr_get_files ($dir, $string) {
 	$dh  = opendir($dir);
 	while ($filename = readdir($dh)) {
@@ -482,8 +482,8 @@ else  {	echo '<div class="updated fade"><p>';
 		echo '<li>'.__('Current time (unlocalised): ','amr_ical_list_lang')
 		.$now->format('r').'</li></ul></p>';
 	}		
-	
-	/* ---------------------------------------------------------------------*/
+
+/* ---------------------------------------------------------------------*/
 	function amr_ical_general_form() {
 	global $amr_csize,
 		$amr_calprop,
@@ -506,40 +506,32 @@ else  {	echo '<div class="updated fade"><p>';
 			?></label>
 			<input class="wide" type="text" id="noeventsmessage" name="noeventsmessage" 
 			<?php if (isset($amr_options['noeventsmessage']) and ($amr_options['noeventsmessage']))  
-				{echo 'value="'.$amr_options['noeventsmessage'].'"';}?>/> 
-	
+				{echo 'value="'.$amr_options['noeventsmessage'].'"';}?>/> 	
 			<label for="ngiyabonga">
 			<input type="checkbox" id="ngiyabonga" name="ngiyabonga" value="ngiyabonga" 
 			<?php if (isset($amr_options['ngiyabonga']) and ($amr_options['ngiyabonga']))  {echo 'checked="checked"';}
-			?>/>
-<?php 				_e('Do not give credit to the author', 'amr_ical_list_lang'); ?></label>
+			?>/> <?php _e('Do not give credit to the author', 'amr_ical_list_lang'); ?></label>
 			<label for="own_css">
 			<input type="checkbox" id="own_css" name="own_css" value="own_css" 
 			<?php if (isset($amr_options['own_css']) and ($amr_options['own_css']))  {echo 'checked="checked"';}
-			?>/><?php _e(' Do not generate css', 'amr_ical_list_lang'); 
+			?>/> <?php _e('Use my theme css, not plugin css', 'amr_ical_list_lang'); 
+			$files = amr_get_css_url_choices();
 			?></label>
-			<label for="cssfile"><?php _e('Css file to use from plugin directory', 'amr_ical_list_lang'); ?></label>
+			<label for="no_images">
+			<input type="checkbox" id="no_images" name="no_images" value="true" 
+			<?php if (isset($amr_options['no_images']) and ($amr_options['no_images']))  {echo 'checked="checked"';}
+			?>/><?php _e(' No images (tick for text only)', 'amr_ical_list_lang'); 
+			?></label>
+			<label for="cssfile"><?php _e('Choose plugin default css or choose a custom css and edit it.', 'amr_ical_list_lang'); ?></label>
 			<select id="cssfile" name="cssfile" ><?php
-				$dir = WP_PLUGIN_DIR.'/amr-ical-events-list/css'; /**** need to change this to uploads folder and allow copy from **/
-				$files = amr_get_files($dir, 'css');
-				if (empty ($files)) echo AMR_NL.' <option value=""> No css files found in plugin directory '.$dir.' '.$files.'</option>';
+				if (empty ($files)) echo AMR_NL.' <option value=""> No css files found in css directory '.$dir.' '.$files.'</option>';
 				else foreach ($files as $ifile => $file) {
 					echo AMR_NL.' <option value="'.$file.'"';
 					if (isset($amr_options['cssfile']) and ($amr_options['cssfile'] == $file)) echo ' selected="selected" ';
 					echo '>'.$file.'</option>';
 				}					
 			?></select>
-			<a href="<?php echo get_bloginfo('wpurl');
-			?>/wp-admin/plugin-editor.php?file=amr-ical-events-list/<?php echo $amr_options['cssfile']; 
-			?>&amp;plugin=amr-ical-events-list/amr-ical-events-list.php" title="<?php
-			_e('Go to Plugin Editor, select this plugin and scroll to the file','amr_ical_list_lang');
-			echo '" >';
-			_e("Edit",'amr_ical_list_lang');?></a>
-			<label for="no_images">
-			<input type="checkbox" id="no_images" name="no_images" value="true" 
-			<?php if (isset($amr_options['no_images']) and ($amr_options['no_images']))  {echo 'checked="checked"';}
-			?>/><?php _e(' No images (tick for text only)', 'amr_ical_list_lang'); 
-			?></label></div>
+</div>
 <h3><?php _e('Advanced:','amr_ical_list_lang'); 
 ?></h3><div class="postbox" style="padding:1em 2em; width: 600px;">
 <?php printf(__('Your php version is: %s','amr_ical_list_lang'),  phpversion());	?><br /><?php
@@ -589,7 +581,7 @@ else  {	echo '<div class="updated fade"><p>';
 
 		<div class="wrap" id="AmRIcal"> 
 		<div id="icon-options-general" class="icon32"><br /></div>
-		<h2><?php _e('AmR iCal Events List ', 'amr_ical_list_lang'); echo AMR_ICAL_LIST_VERSION; ?></h2>		
+		<h2><?php _e('iCal Events List ', 'amr_ical_list_lang'); echo AMR_ICAL_LIST_VERSION; ?></h2>		
 		<form method="post" action="<?php htmlentities($_SERVER['PHP_SELF']); ?>">
 				<?php  wp_nonce_field('amr_ical_list_lang'); /* outputs hidden field */		
 				if (!isset($_GET['list'])) amr_request_acknowledgement();	
