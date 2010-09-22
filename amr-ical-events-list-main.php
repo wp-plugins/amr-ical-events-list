@@ -681,6 +681,7 @@ global $amr_globaltz, $amr_options;
 }
 /* --------------------------------------------------------- */
 function amr_format_organiser ($org) {/* receive array of hopefully CN and MAILTO*/
+	If (ICAL_EVENTS_DEBUG) {echo '<br />Organiser array:    '; var_dump($org);}
 	$text = '';
 	if (!(is_array($org))) return($org);
 	if (!empty ($org['CN'])) {
@@ -1202,7 +1203,7 @@ function amr_list_events($events,  $tid, $class, $g=null /* what st th eg about 
 		break;
 	case 'table': 
 		$ul 	= '<span '; 	$li = '<span ';
-		$ulc	= '</span><br />'; 	$lic = '</span>';
+		$ulc	= '</span>'; 	$lic = '</span>';
 		$row 	= '<tr '; 				$hcell	='<th '; 	$cell 	='<td '; /* allow for a class specifictaion */
 		$rowc 	= '</tr> '; 			$hcellc ='</th>'; 	$cellc 	='</td>';
 		$ghcell  = '<th colspan="'.$no_cols.'"';
@@ -2109,7 +2110,7 @@ function AmRIcal_add_options_panel() {
 			$events_menu_added;
 	/* add the options page at admin level of access */
 	/* add the options page at admin level of access */
-		$page_title = __('AmR iCal Events List', 'amr_ical_list_lang');
+		$page_title = __('iCal Events List', 'amr_ical_list_lang');
 		$menu_title = __('iCal Events List', 'amr_ical_list_lang');
 		$parent_slug =  'amr-events';
 		$function = 'AmRIcal_option_page';

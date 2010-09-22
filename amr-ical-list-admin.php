@@ -74,23 +74,27 @@
 				else { _e('Invalid Number of Lists'); return(false);
 				}
 			}
-			update_option(  'amr-ical-events-list', $amr_options);
+			update_option( 'amr-ical-events-list', $amr_options);
 			return(true);	
 	}
 /* ---------------------------------------------------------------------- */	
 	function amr_ical_validate_list_options($i)	{
 	global $amr_options;
 
-	if (isset($_POST['general']))  
-			{	if (is_array($_POST['general'][$i])) 
+	if (isset($_POST['general']))  {
+		
+				if (is_array($_POST['general'][$i])) 
 				{	foreach ($_POST['general'][$i] as $c => $v)
-					{ 
-						$amr_options[$i]['general'][$c] = 
-							(isset($_POST['general'][$i][$c])) ? $_POST['general'][$i][$c] : '';
+					{   
+						if (isset($_POST['general'][$i][$c])) {  
+								$amr_options[$i]['general'][$c] = $_POST['general'][$i][$c] ;
+								}
+						else	$amr_options[$i]['general'][$c] = '';
 					}
 				}
 				else echo 'Error in form - general array not found';
 			}
+			
 	if (isset($_POST['limit']))  
 			{	if (is_array($_POST['limit'][$i])) 
 				{	foreach ($_POST['limit'][$i] as $c => $v)
@@ -211,15 +215,12 @@
 		}
 		else echo 'Error in form - compprop array not found';				
 	}	
-
-	update_option(  'amr-ical-events-list', $amr_options);
-	return(true);
+	$result = update_option( 'amr-ical-events-list', $amr_options);		
+	return($result);
 }
-
 	/* ---------------------------------------------------------------------*/
 	function AmRIcal_general ($i) {
 	global $amr_options;
-	
  ?><fieldset  id="general<?php echo $i; ?>" class="general" >
 	<h4><?php _e('General:', 'amr_ical_list_lang'); ?></a></h4> 
 	<div><?php
@@ -229,9 +230,9 @@
 		else $style = '';
 	?><label for="name" ><?php _e('Name','amr_ical_list_lang'); ?></label>
 		<input type="text" class="wide" size="20" id="name" name="general[<?php echo $i; ?>][name]" value="<?php
-		if (isset($amr_options[$i]['general']['Name'])) echo $amr_options[$i]['general']['Name']; ?>" />
+		if (isset($amr_options[$i]['general']['name'])) echo $amr_options[$i]['general']['name']; ?>" />
 	<label for="description" ><?php _e('Internal Description','amr_ical_list_lang'); ?></label><br />
-		<textarea cols="60" rows="6" id="name" name="general[<?php echo $i; ?>][description]"><?php
+		<textarea cols="60" rows="6" id="name" name="general[<?php echo $i; ?>][Description]"><?php
 		if (isset($amr_options[$i]['general']['Description'])) echo $amr_options[$i]['general']['Description']; ?></textarea><br />
 	<label for="ListHTMLStyle" ><?php _e('List HTML Style','amr_ical_list_lang'); ?></label>
 		<select id="ListHTMLStyle" name="general[<?php echo $i; ?>][ListHTMLStyle]">
@@ -337,7 +338,7 @@
 			foreach ( $section as $p => $pv )  /* for each specification, eg: p= SUMMARY  */
 			{
 				echo "\n\t\t".'<fieldset class="layout"><legend>'.$p.'</legend>';
-				foreach ( $pv as $s => $sv )  /* for each specification eg  $s = column*/    
+				foreach ( $pv as $s => $sv )  /* for each specification eg  $s = column*/ 
 				{	echo '<label class="'.$s.'" for="'.$p.$s.$i.'"  >'.$s.'</label>'
 						.'<input type="text" size="'.$amr_csize[$s].'"  class="'.$s.'"  id="'.$p.$s.$i
 						.'"  name="'.'ComP['.$i.']['.$si.']['.$p.']['.$s.']"  value= "'.htmlspecialchars($sv).'"  />'; 
@@ -568,11 +569,16 @@ else  {	echo '<div class="updated fade"><p>';
 	if (!(isset ($_POST['reset'])) and (isset ($_POST['action']) and ($_POST['action'] == "save"))) {/* Validate the input and save */	
 		_e('Saving....','amr_ical_list_lang');
 		if (!isset($_REQUEST['list'])) {
-				if (! amr_ical_validate_general_options() ) {echo '<h2>Error validating general options</h2>';}	
+				if (! amr_ical_validate_general_options() ) 
+					{echo '<h2>Error validating general options</h2>';}	
+				else _e('List saved','amr_ical_list_lang');	
+				
 			}	
 			else {
 				if (isset($_REQUEST["list"]) and is_numeric($_REQUEST["list"])) {/* then configure just that list */
-					amr_ical_validate_list_options($_REQUEST['list']); /* messages are in the function */
+					$result = amr_ical_validate_list_options($_REQUEST['list']); /* messages are in the function */
+					if ($result) _e('List saved','amr_ical_list_lang');
+					else _e('Error in saving','amr_ical_list_lang');
 				}
 				else {echo '<h2>'.__('Invalid List Type','amr_ical_list_lang').'</h2>';}
 			}
@@ -591,7 +597,7 @@ else  {	echo '<div class="updated fade"><p>';
 				_e('Go to list type:','amr_ical_list_lang' );
 				for ($i = 1; $i <= $amr_options['no_types']; $i++) {
 					if ($i > 1) echo '&nbsp;|&nbsp;';
-					echo '&nbsp;<a href="'.$url.'&amp;list='.$i.'">'.$i.' '.$amr_options[$i]['general']['Name'].'</a>&nbsp;&nbsp;';
+					echo '&nbsp;<a href="'.$url.'&amp;list='.$i.'">'.$i.' '.$amr_options[$i]['general']['name'].'</a>&nbsp;&nbsp;';
 				}?></div>
 				<div style="clear: both;">&nbsp;</div>
 

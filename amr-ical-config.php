@@ -94,46 +94,48 @@ $amr_formats = array (
 		);
 		
 function amr_getTimeZone($offset) {
-    $timezones = array(
-        '-12'=>'Pacific/Kwajalein',
-        '-11'=>'Pacific/Samoa',
-        '-10'=>'Pacific/Honolulu',
+ $timezones = array(
+  '-12'=>'Pacific/Kwajalein',
+  '-11'=>'Pacific/Samoa',
+  '-10'=>'Pacific/Honolulu',
 		'-9.5'=>'Pacific/Marquesas', 	
-        '-9'=>'America/Juneau',
-        '-8'=>'America/Los_Angeles',
-        '-7'=>'America/Denver',
-        '-6'=>'America/Mexico_City',
-        '-5'=>'America/New_York',
+  '-9'=>'America/Juneau',
+  '-8'=>'America/Los_Angeles',
+  '-7'=>'America/Denver',
+  '-6'=>'America/Mexico_City',
+  '-5'=>'America/New_York',
 		'-4.5'=>'America/Caracas',
-        '-4'=>'America/Manaus',
-        '-3.5'=>'America/St_Johns',
-        '-3'=>'America/Argentina/Buenos_Aires',
-        '-2'=>'Brazil/DeNoronha',
-        '-1'=>'Atlantic/Azores',
-        '0'=>'Europe/London',
-        '1'=>'Europe/Paris',
-        '2'=>'Europe/Helsinki',
-        '3'=>'Europe/Moscow',
-        '3.5'=>'Asia/Tehran',
-        '4'=>'Asia/Baku',
-        '4.5'=>'Asia/Kabul',
-        '5'=>'Asia/Karachi',
-        '5.5'=>'Asia/Calcutta',
+  '-4'=>'America/Manaus',
+  '-3.5'=>'America/St_Johns',
+  '-3'=>'America/Argentina/Buenos_Aires',
+  '-2'=>'Brazil/DeNoronha',
+  '-1'=>'Atlantic/Azores',
+  '0'=>'Europe/London',
+  '1'=>'Europe/Paris',
+  '2'=>'Europe/Helsinki',
+  '3'=>'Europe/Moscow',
+  '3.5'=>'Asia/Tehran',
+  '4'=>'Asia/Baku',
+  '4.5'=>'Asia/Kabul',
+  '5'=>'Asia/Karachi',
+  '5.5'=>'Asia/Calcutta',
 		'5.75'=>'Asia/Katmandu',
-        '6'=>'Asia/Colombo',
+  '6'=>'Asia/Colombo',
 		'6.5'=>'Asia/Rangoon',
-        '7'=>'Asia/Bangkok',
-        '8'=>'Asia/Singapore',
-        '9'=>'Asia/Tokyo',
-        '9.5'=>'Australia/Darwin',
-        '10'=>'Pacific/Guam',
-        '11'=>'Australia/Sydney',
+  '7'=>'Asia/Bangkok',
+  '8'=>'Asia/Singapore',
+  '9'=>'Asia/Tokyo',
+  '9.5'=>'Australia/Darwin',
+  '10'=>'Pacific/Guam',
+  '11'=>'Australia/Sydney',
 		'11.5'=>'Pacific/Norfolk',
-        '12'=>'Asia/Kamchatka',
+  '12'=>'Asia/Kamchatka',
 		'13'=>'Pacific/Enderbury',
 		'14'=>'Pacific/Kiritimati'
-    );
-		if (isset($timezones[strval($offset)])) return ($timezones[strval($offset)]);
+ );
+	$intoffset = intval($offset); /*  to cope with +01.00 */
+	$stroffset = strval($intoffset);
+	if (isset($timezones[$stroffset])) return ($timezones[$stroffset]);
 		else return false; 	
 	}
 /* ---------------------------------------------------------------------------*/
@@ -166,7 +168,7 @@ else $amr_globaltz = timezone_open(date_default_timezone_get());
 $ical_timezone = $amr_globaltz;
 If (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) echo '<br />The default php timezone is set to:'.date_default_timezone_get().'<br />';
 $amr_general = array (
-		"Name" 				=> 'Default',
+		'name' 				=> 'Default',
 		'Description'		=> 'A default calendar list. This one set to tables with lists in the cells.  Usually needs the css file enabled. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ',
 		"Default Event URL" => '',
 		'ListHTMLStyle'		=> 'table'
@@ -180,7 +182,7 @@ $amr_components = array (
 		"VTODO" 	=> true,
 		"VJOURNAL" 	=> false,
 		"VFREEBUSY" => true
-//		"VTIMEZONE" => false    /* special handling required if we want to process this - for now we are going to use the php definitions rather */
+//		"VTIMEZONE" => false /* special handling required if we want to process this - for now we are going to use the php definitions rather */
 		);
 		
 $fakeforautolangtranslation = array (
@@ -316,7 +318,7 @@ $amr_compprop = array
 
 	switch ($i)	{	
 		case 2: 
-			$amr_options[$i]['general']['Name']='On Tour';
+			$amr_options[$i]['general']['name']='On Tour';
 			$amr_options[$i]['general']['Description']='Default setting uses the original table with lists in the cells. It is grouped by month. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ';
 			$amr_options[$i]['general']['ListHTMLStyle']='table';
 			$amr_options[$i]['compprop']['Descriptive']['LOCATION']['Column'] = 2;
@@ -327,7 +329,7 @@ $amr_compprop = array
 			$amr_options[$i]['heading']['3'] = __('Description','amr_ical_list_lang');
 			break;
 		case 3: 
-			$amr_options[$i]['general']['Name']='Timetable';
+			$amr_options[$i]['general']['name']='Timetable';
 			$amr_options[$i]['general']['Description']='Default setting uses the original table with lists in the cells. It is grouped by day. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ';
 			
 			$amr_options[$i]['general']['ListHTMLStyle']='table';
@@ -345,7 +347,7 @@ $amr_compprop = array
 			$amr_options[$i]['format']['Day']='l, jS M';
 			break;
 		case 4: 
-			$amr_options[$i]['general']['Name']='Widget'; /* No groupings, minimal */
+			$amr_options[$i]['general']['name']='Widget'; /* No groupings, minimal */
 			$amr_options[$i]['general']['Description']='The new default setting for widgets uses lists for the table rows. Good for themes that cannot cope with tables in the sidebar. No grouping. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ';
 			
 			$amr_options[$i]['general']['ListHTMLStyle']='list';
@@ -366,7 +368,7 @@ $amr_compprop = array
 			$amr_options[$i]['heading']['1'] = $amr_options[$i]['heading']['2'] = $amr_options[$i]['heading']['3'] = '';
 			break;
 		case 5: 
-			$amr_options[$i]['general']['Name']='Alternative';
+			$amr_options[$i]['general']['name']='Alternative';
 			$amr_options[$i]['general']['Description']='Default setting uses the new table style, with cells separated by breaks and fields by spaces. It is a wacky grouping. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ';			
 			$amr_options[$i]['general']['ListHTMLStyle']='table';
 			$amr_options[$i]['format']['Day']='j M';
@@ -387,7 +389,7 @@ $amr_compprop = array
 			$amr_options[$i]['compprop']['Descriptive']['SUMMARY'] = array('Column' => 1, 'Order' => 10, 'Before' => '', 'After' => '');
 			break;	
 		case 6: 
-			$amr_options[$i]['general']['Name']='Testing';
+			$amr_options[$i]['general']['name']='Testing';
 			$amr_options[$i]['general']['Description']='A test option with lots of fields switched on. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ';
 			
 			$amr_options[$i]['general']['ListHTMLStyle']='breaks';
@@ -416,7 +418,7 @@ $amr_compprop = array
 			break;	
 		case 7: 
 
-			$amr_options[$i]['general']['Name']='EventInfo'; /* No groupings, minimal */
+			$amr_options[$i]['general']['name']='EventInfo'; /* No groupings, minimal */
 			$amr_options[$i]['general']['Description']='For displaying additional event info on posts created as events. The summary and description are switched off as these are the post title and the post content. Calendar properties and groupings are also not relevant. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ';
 			
 			$amr_options[$i]['general']['ListHTMLStyle']='list';
@@ -479,12 +481,12 @@ function array_merge_recursive_distinct ( array &$array1, array &$array2 ) { /* 
   $merged = $array1;
 
   foreach ( $array2 as $key => &$value )  {
-    if ( is_array ( $value ) && isset ( $merged [$key] ) && is_array ( $merged [$key] ) )    {
-      $merged [$key] = array_merge_recursive_distinct ( $merged [$key], $value );
-    }
-    else {
-      $merged [$key] = $value;
-    }
+ if ( is_array ( $value ) && isset ( $merged [$key] ) && is_array ( $merged [$key] ) ) {
+   $merged [$key] = array_merge_recursive_distinct ( $merged [$key], $value );
+ }
+ else {
+   $merged [$key] = $value;
+ }
   }
   return $merged;
 }
@@ -515,8 +517,8 @@ function array_merge_recursive_distinct ( array &$array1, array &$array2 ) { /* 
 	if (!(isset($amr_options[$i]['general']['Default Event URL']))) {  /* added, so may not exist */
 			$amr_options[$i]['general']['Default Event URL'] = '' ;
 			}	
-	if (!(isset($amr_options[$i]['general']['Name']))) {  /* added, so may not exist */
-			$amr_options[$i]['general']['Name'] = 'Default' ;
+	if (!(isset($amr_options[$i]['general']['name']))) {  /* added, so may not exist */
+			$amr_options[$i]['general']['name'] = 'Default' ;
 			}	
 	if (!(isset($amr_options[$i]['general']['ListHTMLStyle']))) {  /* added, so may not exist */
 			$amr_options[$i]['general']['ListHTMLStyle'] = 'tableoriginal' ;
@@ -570,7 +572,7 @@ function date_season ($type='Meteorological',$D)
 
 	if (!(isset($D))) $D =  date_create();
 	$Y = amr_format_date('Y',$D);
-    $limits ['Quarter']=array(
+ $limits ['Quarter']=array(
 	
 	/* for different quarters ( fiscal, tax, etc,) change the date ranges and the output here  */
 		'/12/31'=> $Y.' Q1',	
@@ -626,11 +628,11 @@ function date_season ($type='Meteorological',$D)
    foreach ($limits[$type] AS $key => $value) 
    {			  
 	/* add the current year to the limit */
-       $limit = $key; 
+    $limit = $key; 
 	   $input = amr_format_date ('/m/d', $D);
 		/* if date is later than limit, then return the current value, else continue to check the next limit */	
 
-       if ($input > $limit) {  	 
+    if ($input > $limit) {  	 
 			return $value;   
 	   }
    }

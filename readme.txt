@@ -1,10 +1,12 @@
 === AmR iCal Events List ===
 Contributors: Anmari
 Donate link: http://webdesign.anmari.com/web-tools/donate/
-Tags: calendar, events, event calendar, events calendar, ical, ics, ics calendar, upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar
+Tags: ical-feed, ics feed, wordpress-ics-importer, calendar, events, event calendar, events calendar, ical, ics, ics calendar, upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, 
+
+
 Requires at least: 2.8
 Tested up to: 3.0.1
-Version: 3.0.4
+Version: 3.0.5
 Stable tag: trunk
 
 == Description ==
@@ -75,6 +77,11 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 *  Allow html in descriptions, and convert any url's to links if not already converted.   
 
 == Changelog ==
+= Version 3.0.5 =
+*  List type name and internal memo description will now update. Not necessary for front end anyway - purely for admin info.  But it was an inexcusable error - the old upercase/lowercase problem!
+*  Copes with Zimbra Timezones that Zimbra does not say it issues! Will also not fail now it it cannot make sense of the timezone - it will use the sites timezone with comment.
+*  Also allowed for lowercase mailto (found in Zimbra file) when uppercase was expected 
+
 = Version 3.0.4 =
 *  Fixed css file handling.  It will now copy the standard css file to a special css folder in the uploads folder, and then offer you the choice of which css file to use (or of course just use your theme's css).  The custom ccs file can be customised without risk of being overwritten by a plugin upgrade.  This also means that you can switch back to the default css to see if that works better for your site.
 *  Some tweaks to the html code generated and to the css

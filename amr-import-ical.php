@@ -128,6 +128,15 @@
 		}
 		return ($file);
 	}
+	
+	
+/* ---------------------------------------------------------------------- */	
+    function amr_parseAttendee	($arraybycolon)    { /* receive full string parsed to array  */
+	if (ICAL_EVENTS_DEBUG) {echo '<br/>Attendees to parse <br />'; var_dump($arraybycolon);}
+	$attendees = amr_parseOrganiser($arraybycolon);
+	if (ICAL_EVENTS_DEBUG) {echo '<br/>Using parse organiser gace us  <br />'; var_dump($attendees);}
+	return ($attendees);
+}	
 /* ---------------------------------------------------------------------- */	
     function amr_parseOrganiser($arraybycolon)    { /* receive full string parsed to array 
 	[0]=>ORGANIZER;SENT-BY="mailto
@@ -138,19 +147,19 @@
 	[1] => bagunn@uoguelph.ca":mailto:ovcweb@uoguelph.ca
 	
 	*/
-	if (ICAL_EVENTS_DEBUG) {echo '<br/>Organiser <br />'; var_dump($arraybycolon);}
+	if (ICAL_EVENTS_DEBUG) {echo '<br/>Organiser to parse <br />'; var_dump($arraybycolon);}
 	$org = array();
 	$p0 = explode(';',$arraybycolon[0]);
 	$m = explode(':',$arraybycolon[1]);
 //	if (ICAL_EVENTS_DEBUG) {echo '<br/>m : <br />'; var_dump($m); echo '<br/>p0 : <br />'; var_dump($p0);}
 	foreach ($m as $i => $m2) {
-		if ($m2 == 'MAILTO') $mailto = rtrim($m[$i+1],'"');
+		if (strtoupper($m2) == 'MAILTO') $mailto = rtrim($m[$i+1],'"');
 	}
 
 	foreach ($p0 as $i => $p) {
 		$p1 = explode('=',$p);
-		if (isset ($p1[0]))  {
-			
+		if (isset ($p1[0]))  {	
+			$org['type'] = $p1[0]; /* if (!empty($p1[1])) $org['typevalue'] = $p1[1];   *** Parse this properly if we wantto handle complex attendees */
 			if ( ($p1[0] == 'SENT-BY') and (!empty($p1[1]))) {
 				$sentby = rtrim($m[0],'"');
 				$org['SENT-BY'] = $sentby;
@@ -160,18 +169,7 @@
 	}
 	
 	if (!empty($mailto)) $org['MAILTO'] = $mailto;
-	
-	//	if (isset($p1[0])) { /* we may have CN=a name;DIR="some directory "*/
-	//		$p2 = explode(';', $p1[0]);
-	//		if (isset($p2[0])) {
-	//			parse_str($p2[0]);
-	//			if (isset ($CN)) $org['CN'] = $CN;
-	//			}
-	//	}
-	//	if (isset($p1[1])) { /* we may have MAILTO:email*/
-	//		if ((($p1[1]) === 'MAILTO') and (!empty($p1[2]))) $org['MAILTO'] = $p1[2];
-	//	}
-		return ($org);
+	return ($org);
     }
 /* ---------------------------------------------------------------------- */	
     /**
@@ -219,7 +217,6 @@
 			echo '<br />Unable to create DateTime object.<br />'.$e->getMessage();
 			return (false);
 		}
-	
 	return ($dt);
     }
 	/* ---------------------------------------------------------------------- */
@@ -288,15 +285,16 @@ Africa/Asmara
    function amr_parseTZID($text)    {	
    global $amr_globaltz;
    /* take a string that may have a olson tz object and try to return a tz object */  
-   /* accept long and short TZ's, returns false if not valid */
-		$icstzid = trim($text,'"' ); /* check for enclosing quotes like zimbra issues */
+   /* accept long and short TZ's, --- assume website tz if ot valid eg Zimbra's: GMT+01.00/+02.00 */
+		$icstzid = trim($text,'"=' ); /* check for enclosing quotes like zimbra issues */
+		
 		$globaltzstring = timezone_name_get($amr_globaltz);
 		if (!($globaltzstring == $icstzid	)) {/* if the timezone matches the wordpress or shortcode time zone, then we are cool ! */
 			/* else try figure the timezone out */
 //			$strip = array ('(',' ');
 //			$icstzid = str_replace($strip,'',$icstzid);
 			$gmtend = stripos($icstzid,')'); /* do we have a brackedt GMT ? */
-			if (isset ($_REQUEST['tzdebug'])) {echo '<br/>gmtend = '.$gmtend.' in '.$icstzid ; }
+			if (isset ($_REQUEST['tzdebug'])) {echo '<br/>gmtend = '.$gmtend.' in string '.$icstzid ; }
 			if (!empty ($gmtend) ) {
 				$icstzid = str_replace(')','/',$icstzid);
 				$icstzcities = explode ('/',$icstzid); /* could be commas, could be slashes */
@@ -304,7 +302,7 @@ Africa/Asmara
 				$gmt = stripos(  $icstzid, 'GMT'); /* do we have a brackedt GMT ? */
 				if (!empty($gmt)) unset ($icstzcities[0]); /* don't want the GMT - potentially misleading */
 			}
-			else {
+			else { /* Maybe we have a list of cities and maybe we do not */
 				$icstzcities = array();
 				$temp = explode (',',$icstzid); /* could be commas, could be slashes */
 				foreach ($temp as $temp2) {
@@ -313,7 +311,7 @@ Africa/Asmara
 					}
 				}
 			foreach ($icstzcities as $i=>$icscity) $icstzcities[$i] = trim($icscity,' ');
-			if (isset ($_REQUEST['tzdebug'])) print_r($icstzcities);
+			if (isset ($_REQUEST['tzdebug'])) { echo '<br />Cities? <br />';print_r($icstzcities);}
 			$globalcontcity = explode ('/',$globaltzstring);
 			if (isset ($globalcontcity[1]) ) $globalcity = $globalcontcity[1];
 			else $globalcity = $globalcontcity[0];
@@ -340,17 +338,28 @@ Africa/Asmara
 			/* */
 		}
 		else $tzname = $icstzid;
-		if (!isset ($tzname)) {
-			echo '<br />Unable to deal with timezone like this: '.$text.'<br />';
-			return (false);
+		if (!isset ($tzname)) { /* see if we do it with GMT after all ? */
+			if (isset($icstzcities[0])) {
+				$tryoffset = str_replace('GMT','',$icstzcities[0]);  
+				$tzname = amr_getTimeZone($tryoffset);
+			}
+			else {
+				$tzname = $globaltzstring;
+				$emessage = 'Unable to deal with timezone like this: '.$text;
+				echo '<!-- '.$emessage.' -->';
+				if (isset ($_REQUEST['tzdebug']) or ICAL_EVENTS_DEBUG) {
+					echo  '<b>'.$emessage.'</b>';
+					echo '- Making an assumption! Using '.$tzname.'<br />';
+				}				
+			}
 		}
 		if (isset ($_REQUEST['tzdebug'])) echo '<br /><b>Timezone must be: </b> '.$tzname.'<br />';
 		try {
 				$tz =  timezone_open($tzname);	
 			}	
 			catch(Exception $e) {
-				echo '<br />Unable to create Time zone object.<br />'.$e->getMessage();
-				return (false);
+				echo '<br />Unable to create Time zone object., Using wp default.<br />'.$e->getMessage();
+				return ($amr_globaltz);
 			}
 		return ( $tz);
     }		
@@ -507,9 +516,11 @@ function amr_parse_property ($parts) {
 */
 global $amr_globaltz;
 	$p0 = explode (';', $parts[0], 2);  /* Looking for ; VALUE = something...;   or TZID=... or both???*/
-	if (isset($p0[1])) { /* ie if we have some modifiers like TZID, or maybe just VALUE=DATE */
-		parse_str($p0[1]);/*  (will give us if exists $value = 'xxx', or $tzid= etc) */
-		if (isset($TZID)) { /* Normal TZ, not the one with the path eg:  DTSTART;TZID=US-Eastern:19980119T020000*/
+	if (isset($p0[1])) { /* ie if we have some modifiers like TZID, or maybe just VALUE=DATE , note parse_str s dangerous */
+		if (ICAL_EVENTS_DEBUG) {echo '<br/>*** p0[1]'.$p0[1];}
+		if (stristr($p0[1], 'TZID')) {
+		    /* Normal TZ, not the one with the path eg:  DTSTART;TZID=US-Eastern:19980119T020000 or  zimbras TZID="GMT+01.00/+02.00 */
+			$TZID = substr($p0[1], 4 );
 			$tzobj = amr_parseTZID($TZID);
 		}  /* should create datetime object with it's own TZ, datetime maths works correctly with TZ's */
 		else {/* might be just a value=date, in which case we use the global tz?  no may still have TZid */
@@ -561,6 +572,9 @@ global $amr_globaltz;
 		case 'ORGANIZER': {
 			return(amr_parseOrganiser($parts));
 			}
+		case 'ATTENDEE': {
+			return(amr_parseAttendee($parts));
+			}	
 		default:	
 			if (isset ($parts[1])) return (str_replace ('\,', ',', $parts[1]));  /* replace any slashes added by ical generator */
 			else return;
@@ -590,11 +604,16 @@ function amr_parse_component($type)	{	/* so we know we have a vcalendar at lines
 	global $amr_validrepeatablecomponents;
 	global $amr_validrepeatableproperties;
 	global $amr_globaltz;
-	while (($amr_n < $amr_totallines)	)	{			
+	
+	
+	while (($amr_n < $amr_totallines)	)	{	
+		if (ICAL_EVENTS_DEBUG) {
+			echo '<br/>*** '.$type.' '.$amr_lines[$amr_n];
+			}
 			$amr_n++;
 			$parts = explode (':', $amr_lines[$amr_n],2 ); /* explode faster than the preg, just split first : */
 			if ((!$parts) or ($parts === $amr_lines[$amr_n])) {
-				if (ICAL_EVENTS_DEBUG) echo '<br /> Error in line, skipping '.$amr_n.': with value:'.$amr_lines[$amr_n];
+				if (ICAL_EVENTS_DEBUG) echo ( '<br /> Error in line, skipping '.$amr_n.': with value:'.$amr_lines[$amr_n]);
 				}
 			else {
 				if ($parts[0] === 'BEGIN') { /* the we are starting a new sub component - end of the properties, so drop down */		
@@ -616,6 +635,7 @@ function amr_parse_component($type)	{	/* so we know we have a vcalendar at lines
 								$subarray[$basepart[0]][] = amr_parse_property ($parts);
 						}
 						else {	
+							if (ICAL_EVENTS_DEBUG) {echo '<br/>*** Parts ';var_dump($parts);			}
 							$subarray [$basepart[0]] = amr_parse_property($parts);							
 							if (($basepart[0] === 'DTSTART') and (isset($basepart[1]))) {
 								if (amr_is_untimed($basepart[1])) { /* ie has VALUE=DATE */		
