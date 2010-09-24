@@ -50,6 +50,16 @@ You can always refer back to the default css in the plugin folder for the latest
 	padding-top: 0;
 	margin-top: 0;
 }
+#content .icalprop ,
+#content .icalprop tr,
+#content .icalprop tr td,
+#content .icalprop tr th,
+.icalprop,
+.icalprop tr,
+.icalprop tr td,
+.icalprop tr th {	
+	border: 0px;}
+}
 .ical,
 .icalprop {	
 	width: 100%;   /* force the calendar  to take as much space as it can so floated items don't force a wrap */

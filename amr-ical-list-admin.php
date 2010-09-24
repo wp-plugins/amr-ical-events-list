@@ -80,7 +80,6 @@
 /* ---------------------------------------------------------------------- */	
 	function amr_ical_validate_list_options($i)	{
 	global $amr_options;
-
 	if (isset($_POST['general']))  {
 		
 				if (is_array($_POST['general'][$i])) 
