@@ -6,7 +6,7 @@ Tags: ical-feed, ics feed, wordpress-ics-importer, calendar, events, event calen
 
 Requires at least: 2.8
 Tested up to: 3.0.1
-Version: 3.0.5
+Version: 3.0.6
 Stable tag: trunk
 
 == Description ==
@@ -77,6 +77,11 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 *  Allow html in descriptions, and convert any url's to links if not already converted.   
 
 == Changelog ==
+= Version 3.0.6 =
+*  Change to the widget forthe amr-events plugin that calls this code.  Does not affect free version.
+*  Fixed some html validation errors in the admin side
+*  Added some more explanatory text to admin screens to make things clearer I hope
+
 = Version 3.0.5 =
 *  List type name and internal memo description will now update. Not necessary for front end anyway - purely for admin info.  But it was an inexcusable error - the old upercase/lowercase problem!
 *  Copes with Zimbra Timezones that Zimbra does not say it issues! Will also not fail now it it cannot make sense of the timezone - it will use the sites timezone with comment.

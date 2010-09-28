@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '3.0.5');
+define('AMR_ICAL_LIST_VERSION', '3.0.6');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -2088,7 +2088,7 @@ function amr_get_params ($attributes=array()) {
 }
 /* -------------------------------------------------------------------------*/
 function amr_do_ical_shortcode ($atts, $content = null) {
-// This is the main function.  It replaces [iCal:URL]'s with events. Each as a separate list 
+// This is the main function.  It replaces [iCal URL]'s with events. Each as a separate list 
 /* Allow multiple urls and only one listtype */
 /*  merge atts with this array, so we will have a default list */
 	global $amr_icalno;/* used to give each ical  table a unique id on a page or post */

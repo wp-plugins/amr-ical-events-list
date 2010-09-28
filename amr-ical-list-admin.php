@@ -221,7 +221,7 @@
 	function AmRIcal_general ($i) {
 	global $amr_options;
  ?><fieldset  id="general<?php echo $i; ?>" class="general" >
-	<h4><?php _e('General:', 'amr_ical_list_lang'); ?></a></h4> 
+	<h4><?php _e('General:', 'amr_ical_list_lang'); ?></h4> 
 	<div><?php
 	if (! isset($amr_options[$i]['general'])) echo 'No general specifications set';
 	else {	
@@ -231,7 +231,7 @@
 		<input type="text" class="wide" size="20" id="name" name="general[<?php echo $i; ?>][name]" value="<?php
 		if (isset($amr_options[$i]['general']['name'])) echo $amr_options[$i]['general']['name']; ?>" />
 	<label for="description" ><?php _e('Internal Description','amr_ical_list_lang'); ?></label><br />
-		<textarea cols="60" rows="6" id="name" name="general[<?php echo $i; ?>][Description]"><?php
+		<textarea cols="60" rows="6" id="description" name="general[<?php echo $i; ?>][Description]"><?php
 		if (isset($amr_options[$i]['general']['Description'])) echo $amr_options[$i]['general']['Description']; ?></textarea><br />
 	<label for="ListHTMLStyle" ><?php _e('List HTML Style','amr_ical_list_lang'); ?></label>
 		<select id="ListHTMLStyle" name="general[<?php echo $i; ?>][ListHTMLStyle]">
@@ -439,10 +439,11 @@ else  {	echo '<div class="updated fade"><p>';
 	global $amr_globaltz;
 	?><ul><?php
 	if (function_exists('timezone_version_get')) 
-		printf(__('Your timezone db version is: %s','amr_ical_list_lang').'</li>',  timezone_version_get());	
+		printf('<li>'.__('Your timezone db version is: %s','amr_ical_list_lang').'</li>',  timezone_version_get());	
 	else echo '<li>'.'<a href="http://en.wikipedia.org/wiki/Tz_database">'
 		.__('Plugin cannot determine timezonedb version in php &lt; 5.3.' ,'amr_ical_list_lang')
-		.'</a>';?></li><li>
+		.'</a>';?></li>
+		<li>
 		<?php _e('The timezone database defines the daylight saving changes amongst other things.  If correct daylight saving switchover is important to you, please check for the latest updates. ');  _e('You may need to talk to your webhost.' ); 
 		?></li><li><a href="http://pecl.php.net/package/timezonedb"><?php _e('Php timezonedb versions');?></a></li>
 		<li><a href="http://pecl.php.net/package/timezonedb"><?php _e('Info on what changes are in which timezonedb version');?></a></li>
@@ -463,7 +464,8 @@ else  {	echo '<div class="updated fade"><p>';
 		$now = date_create('now', $amr_globaltz);	
 		echo '<li>'.__('The plugin thinks your timezone is: ','amr_ical_list_lang')
 		. timezone_name_get($amr_globaltz)
-		.'</li><li>'.__('The current UTC offset for that timezone is: ','amr_ical_list_lang').$now->getoffset()/(60*60).'</li>';
+		.'</li>'
+		.'<li>'.__('The current UTC offset for that timezone is: ','amr_ical_list_lang').$now->getoffset()/(60*60).'</li>';
 
 		if (function_exists('timezone_transitions_get') ) foreach (timezone_transitions_get($amr_globaltz) as $tr) 
 			if ($tr['ts'] > time())
@@ -473,14 +475,15 @@ else  {	echo '<div class="updated fade"><p>';
 			try {$d = new DateTime( "@{$tr['ts']}",$utctz );}
 			catch(Exception $e) { break;}
 			date_timezone_set ($d,$amr_globaltz );
-			printf('<li>'.__('Switches to %s on %s. GMT offset: %d'),
+			printf('<li>'.__('Switches to %s on %s. GMT offset: %d').'</li>',
 				 $tr['isdst'] ? "DST" : "standard time",
-				$d->format('d M Y @ H:i'), $tr['offset']/(60*60).'</li>'
+				$d->format('d M Y @ H:i'), $tr['offset']/(60*60)
 			);
 		}
-		
-		echo '<li>'.__('Current time (unlocalised): ','amr_ical_list_lang')
-		.$now->format('r').'</li></ul></p>';
+		?>
+		<li><?php _e('Current time (unlocalised): ','amr_ical_list_lang');
+		echo $now->format('r');?>
+		</li></ul><?php
 	}		
 
 /* ---------------------------------------------------------------------*/
@@ -585,7 +588,8 @@ else  {	echo '<div class="updated fade"><p>';
 		}?>	
 
 		<div class="wrap" id="AmRIcal"> 
-		<div id="icon-options-general" class="icon32"><br /></div>
+		<div id="icon-options-general" class="icon32"><br />
+		</div>
 		<h2><?php _e('iCal Events List ', 'amr_ical_list_lang'); echo AMR_ICAL_LIST_VERSION; ?></h2>		
 		<form method="post" action="<?php htmlentities($_SERVER['PHP_SELF']); ?>">
 				<?php  wp_nonce_field('amr_ical_list_lang'); /* outputs hidden field */		
@@ -597,27 +601,26 @@ else  {	echo '<div class="updated fade"><p>';
 				for ($i = 1; $i <= $amr_options['no_types']; $i++) {
 					if ($i > 1) echo '&nbsp;|&nbsp;';
 					echo '&nbsp;<a href="'.$url.'&amp;list='.$i.'">'.$i.' '.$amr_options[$i]['general']['name'].'</a>&nbsp;&nbsp;';
-				}?></div>
-				<div style="clear: both;">&nbsp;</div>
-
+				}?>
+				</div>
+				<div style="clear: both;">&nbsp;
+				</div>
 				<fieldset id="submit" style="clear:both; float: right; margin: 0 2em;">
-			<input type="hidden" name="action" value="save" />
-			<input type="submit" class="button-primary" title="<?php
-				_e('Save the settings','amr_ical_list_lang') ; 
-				?>" value="<?php _e('Update', 'amr_ical_list_lang') ?>" />
-			<input type="submit" class="button" name="uninstall" title="<?php
-				_e('Uninstall the plugin and delete the options from the database.','amr_ical_list_lang') ; 
-				?>" value="<?php _e('Uninstall', 'amr_ical_list_lang') ?>" />	
-			<input type="submit" class="button" name="reset" title="<?php
-				_e('Warning: This will reset ALL the options immediately.','amr_ical_list_lang') ; 
-				?>" value="<?php _e('Reset', 'amr_ical_list_lang') ?>" />	
-		</fieldset>
-
+				<input type="hidden" name="action" value="save" />
+				<input type="submit" class="button-primary" title="<?php
+					_e('Save the settings','amr_ical_list_lang') ; 
+					?>" value="<?php _e('Update', 'amr_ical_list_lang') ?>" />
+				<input type="submit" class="button" name="uninstall" title="<?php
+					_e('Uninstall the plugin and delete the options from the database.','amr_ical_list_lang') ; 
+					?>" value="<?php _e('Uninstall', 'amr_ical_list_lang') ?>" />	
+				<input type="submit" class="button" name="reset" title="<?php
+					_e('Warning: This will reset ALL the options immediately.','amr_ical_list_lang') ; 
+					?>" value="<?php _e('Reset', 'amr_ical_list_lang') ?>" />	
+				</fieldset>
 			<?php		
 			if (!isset($_REQUEST['list'])) 	amr_ical_general_form();
 			else amr_configure_list($_REQUEST['list']);		
-		?></div>
-		</div>
+		?>
 		</form>
 		</div><?php		
 	}	//end AmRIcal_option_page
@@ -634,7 +637,7 @@ else  {	echo '<div class="updated fade"><p>';
 	<?php _e(' Define date and time formats:', 'amr_ical_list_lang'); ?></a></h4>
 	<div class="toggle_container"><p><?php
 		_e(' These are also used for the grouping headings.', 'amr_ical_list_lang'); 
-		echo '</p><p>'.__('Use the standard PHP format strings: ','amr_ical_list_lang')
+		echo __('Use the standard PHP format strings: ','amr_ical_list_lang')
 			. '<a href="#" title="'.__('Php manual - date datetime formats', 'amr_ical_list_lang').'" ' 
 			.'onclick="window.open(\'http://www.php.net/manual/en/function.date.php\', \'dates\', \'width=600, height=400,scrollbars=yes\')"'
 			.'> '
@@ -649,8 +652,7 @@ else  {	echo '<div class="updated fade"><p>';
 		else
 		{	$date = new DateTime();
 			echo '<ul>';
-			foreach ( $amr_options[$i]['format'] as $c => $v )					
-			{		
+			foreach ( $amr_options[$i]['format'] as $c => $v ) {		
 				$l = str_replace(' ','', $c).$i;
 				echo '<li><label for="'.$l.' ">'.__($c,'amr_ical_list_lang').'</label>';
 				echo '<input type="text" size="12" id="'.$l.'" name="format['.$i.']['.$c.']"';

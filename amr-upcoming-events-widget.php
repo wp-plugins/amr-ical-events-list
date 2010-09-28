@@ -23,11 +23,13 @@ class amr_ical_widget extends WP_widget {
 	extract ($args, EXTR_SKIP); /* this is for the before / after widget etc*/
 	extract ($instance, EXTR_SKIP); /* this is for the before / after widget etc*/		
 	foreach ($amr_options[$amr_listtype]['limit'] as $i=> $l) $amr_limits[$i] = $l;  /* override any other limits with the widget limits */	
-	if (isset ($shortcode_urls)) {
-		$atts 		= shortcode_parse_atts($shortcode_urls);
-		$criteria 	= amr_get_params ($atts);  /* this may update listtype, limits  etc */
-	}
-	else echo('no url data for events widget');
+	if (!empty ($shortcode_urls)) $atts 		= shortcode_parse_atts($shortcode_urls);
+//
+	if (!empty ($externalicalonly) and $externalicalonly) $atts['eventpoststoo'] = false;
+	else $atts['eventpoststoo'] = true;
+	$criteria 	= amr_get_params ($atts);  /* this may update listtype, limits  etc */
+	
+	
 
 	$amrW = 'w';	 /* to maintain consistency with previous version */
 	if (isset($doeventsummarylink) and !($doeventsummarylink)) $amrW = 'w_no_url';
@@ -52,7 +54,8 @@ class amr_ical_widget extends WP_widget {
 		$instance['title'] = strip_tags($new_instance['title']);
 		$instance['shortcode_urls'] = strip_tags($new_instance['shortcode_urls']);
 		$instance['moreurl'] = 	strip_tags($new_instance['moreurl']);
-		$instance['doeventsummarylink'] = 	strip_tags($new_instance['doeventsummarylink']);		
+		$instance['doeventsummarylink'] = 	strip_tags($new_instance['doeventsummarylink']);
+		$instance['externalicalonly'] = 	strip_tags($new_instance['externalicalonly']);			
 		if (get_option('amr-ical-widget') ) delete_option('amr-ical-widget'); /* if t exists - leave code for a while for conversion */
 		return $instance;
 	}
@@ -65,13 +68,15 @@ class amr_ical_widget extends WP_widget {
 			'title' => __('Upcoming Events','amr_ical_list_lang') ,
 			'shortcode_urls' => 'http://www.google.com/calendar/ical/0bajvp6gevochc6mtodvqcg9o0%40group.calendar.google.com/public/basic.ics',
 			'moreurl' => '',
-			'doeventsummarylink' => true
+			'doeventsummarylink' => true,
+			'externalicalonly'  => false,
 			) );
 			
-		$title = $instance['title'];	
-		$moreurl = $instance['moreurl'];
-		$shortcode_urls = $instance['shortcode_urls'];
-		$doeventsummarylink = $instance['doeventsummarylink'];
+		$title             = $instance['title']; 
+		$moreurl           = $instance['moreurl'];
+		$shortcode_urls    = $instance['shortcode_urls'];
+		$doeventsummarylink= $instance['doeventsummarylink'];
+		$externalicalonly  = $instance['externalicalonly'];
 			
 		if ($opt = get_option('amr-ical-widget')) {  /* delete the old option in the save */	
 			if (isset ($opt['urls']) ) $shortcode_urls = str_replace(',', ' ',$opt['urls']);  /* in case anyone had multiple urls separate by commas - change to spaces*/
@@ -81,22 +86,41 @@ class amr_ical_widget extends WP_widget {
 			if (isset ($opt['limit']) and (!($opt['limit']==='5'))) $shortcode_urls = 'events='.$opt['limit'].' '.$shortcode_urls;
 		}
 	$seemore = __('See plugin website for more details','amr_ical_list_lang');
-  ?><input type="hidden" id="submit" name="submit" value="1" />
-	<p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title', 'amr_ical_list_lang'); 
+ // <input type="hidden" name="submit" value="1" />?>
+	<p>
+	<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title', 'amr_ical_list_lang'); 
 	?><input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" 
 	value="<?php echo attribute_escape($title); ?>" />		</label></p>
-	<p><label for="<?php echo $this->get_field_id('moreurl'); ?>"><?php _e('Calendar page url in this website, for event title links', 'amr_ical_list_lang'); 
-	?><a href="http://icalevents.anmari.com/1901-widgets-calendar-pages-and-event-urls/" title="<?php echo $seemore; ?>">?</a>
+	<p>
+	<label for="<?php echo $this->get_field_id('moreurl'); ?>"><b><?php
+	_e('Calendar page url', 'amr_ical_list_lang'); ?></b><br /><em>
+	<?php _e('Calendar page url in this website, for event title links', 'amr_ical_list_lang'); 
+	?></em> <a href="http://icalevents.anmari.com/1901-widgets-calendar-pages-and-event-urls/" title="<?php echo $seemore; ?>"><b>?</b></a>
 	<input id="<?php echo $this->get_field_id('moreurl'); ?>" name="<?php echo $this->get_field_name('moreurl'); ?>" type="text" style="width: 200px;" 
 	value="<?php echo attribute_escape($moreurl); ?>" /></label></p>
-	<p><label for="<?php echo $this->get_field_id('doeventsummarylink'); ?>"><?php 
+	<p>
+	<label for="<?php echo $this->get_field_id('doeventsummarylink'); ?>"><b><?php
+	_e('Hover description on Title', 'amr_ical_list_lang'); ?></b><br /><em><?php 
 	_e('Do an event summary hyperlink with event description as title text ', 'amr_ical_list_lang'); 
-	?><a href="http://icalevents.anmari.com/1908-hovers-lightboxes-or-clever-css/" title="<?php echo $seemore; ?>">?</a>
+	?></em> <a href="http://icalevents.anmari.com/1908-hovers-lightboxes-or-clever-css/" title="<?php echo $seemore; ?>"><b>?</b></a>
 	<input id="<?php echo $this->get_field_id('doeventsummarylink'); ?>" name="<?php 
 	echo $this->get_field_name('doeventsummarylink'); ?>" type="checkbox" 
 	value="true" <?php if ($doeventsummarylink) echo 'checked="checked"';?> /></label></p>
-	<p><label for="<?php echo $this->get_field_id('shortcode_urls');?>"><?php _e('Urls (plus optional shortcode parameters separated by spaces eg: events=10)', 'amr_ical_list_lang'); ?> </label>
-	<a href="http://icalevents.anmari.com" title="<?php  ?>">?</a>
+	<p>
+	<label for="<?php echo $this->get_field_id('externalicalonly'); ?>"><b><?php
+	_e('External events only', 'amr_ical_list_lang'); ?></b><br /><em><?php 
+	_e('Show events from external ics only, do NOT pickup any internal events.', 'amr_ical_list_lang'); 
+	?></em><a href="http://icalevents.anmari.com" title="<?php _e('Else include events created internally too','amr_ical_list_lang'); ?>"><b>?</b></a>
+	<input id="<?php echo $this->get_field_id('externalicalonly'); ?>" name="<?php 
+	echo $this->get_field_name('externalicalonly'); ?>" type="checkbox" 
+	value="true" <?php if ($externalicalonly) echo 'checked="checked"';?> /></label></p>
+	<p>
+	<label for="<?php echo $this->get_field_id('shortcode_urls');?>"><b><?php
+	_e('External ics urls and advanced options', 'amr_ical_list_lang'); ?></b><br /><em><?php 
+	_e('External ics urls and/or optional shortcode parameters separated by spaces.)', 'amr_ical_list_lang'); echo '<br />';
+	_e(' Examples: events=10 days=60 start=yymmdd startoffset=-2... )', 'amr_ical_list_lang');
+	?></em> </label>
+	<a href="http://icalevents.anmari.com/amr-ical-events-list/#shortcode" title="<?php __('See more parameters','amr_ical_list_lang'); ?>"><b>?</b></a>
 	<textarea cols="25" rows="10" id="<?php echo $this->get_field_id('shortcode_urls');?>" name="<?php echo $this->get_field_name('shortcode_urls'); ?>" ><?php
 		echo attribute_escape($shortcode_urls); ?></textarea></p>
 	
