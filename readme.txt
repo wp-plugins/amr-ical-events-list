@@ -1,5 +1,5 @@
 === AmR iCal Events List ===
-Contributors: Anmari
+Contributors: anmari
 Donate link: http://webdesign.anmari.com/web-tools/donate/
 Tags: ical-feed, ics feed, wordpress-ics-importer, calendar, events, event calendar, events calendar, ical, ics, ics calendar, upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, 
 
