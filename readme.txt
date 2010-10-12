@@ -13,6 +13,8 @@ Stable tag: trunk
 
 Encourage viewers to bookmark your events on their calendars.  This plugin offers a thorough Ical calendar parser - copes with all the ical recurrence possibilities, and a large part of the rest of the spec. The free version accepts one or many ical urls for ics files.  It produces a very stylable list of events, notes, todo's or freebusy info. 
 
+For more information, please see [plugin home page](http://icalevents.anmari.com)
+
 Displays events from multiple calendars in out the box or with customised grouping, formatting and styling. Multiple pages or post or widget or both.
 
 Lots of css hooks to style it the way you want. - Generate multiple css tags including for hcalendar miccroformat support.
@@ -77,6 +79,9 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 *  Allow html in descriptions, and convert any url's to links if not already converted.   
 
 == Changelog ==
+= Version 3.0.7 =
+*  New default list type 8 for calendar - box style 
+
 = Version 3.0.6 =
 *  Change to the widget forthe amr-events plugin that calls this code.  Does not affect free version.
 *  Fixed some html validation errors in the admin side
