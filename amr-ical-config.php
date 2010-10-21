@@ -32,6 +32,7 @@ $amr_wkst = ical_get_weekstart();
 if (!defined('AMR_NL')) define('AMR_NL',"\n" );
 if (!defined('AMR_TB')) define('AMR_TB',"\t" );
 
+define('AMR_EVENTS_CACHE_TTL', 60 * 20);  //  20 mins
 define('ICAL_EVENTS_CACHE_TTL', 24 * 60 * 60);  // 1 day
 define('AMR_MAX_REPEATS', 1000); /* if someone wants to repeat something very frequently from some time way in the past, then may need to increase this */
 define('TIMEZONEIMAGE','timezone.png');
@@ -176,7 +177,8 @@ $amr_general = array (
 $amr_limits = array (
 		"events" 	=> 30,
 		"days" 		=> 90,
-		"cache" 	=> 24);  /* hours */		
+		"cache" 	=> 24, /* hours */		
+		"eventscache" => 0.5);  
 $amr_components = array (
 		"VEVENT" 	=> true,
 		"VTODO" 	=> true,
@@ -253,8 +255,8 @@ $amr_compprop = array
 		'STATUS'=> 			$dfalse
 		),
 	'Date and Time' => array (
-		'EventDate' => 		array ('Column' => 1, 'Order' => 1, 'Before' => '', 'After' => '<br />'), /* the instnace of a repeating date */
-		'StartTime' => 		array('Column' => 1, 'Order' => 2, 'Before' => '', 'After' => ' '),
+		'EventDate' => 		array ('Column' => 1, 'Order' => 1, 'Before' => '', 'After' => ''), /* the instnace of a repeating date */
+		'StartTime' => 		array('Column' => 1, 'Order' => 2, 'Before' => '<br />', 'After' => ' '),
 		'EndDate' => 		array('Column' => 1, 'Order' => 3, 'Before' => ' until ', 'After' => ''),
 		'EndTime' => 		array('Column' => 1, 'Order' => 4, 'Before' => ' ', 'After' => ''),
 		'DTSTART'=> 		$dfalse,
@@ -364,7 +366,7 @@ $amr_compprop = array
 			$amr_options[$i]['compprop']['Date and Time']['EndDate']['Column'] = 1;
 			$amr_options[$i]['compprop']['Date and Time']['EndTime']['Column'] = 1;
 			$amr_options[$i]['compprop']['Descriptive']['SUMMARY'] = array('Column' => 1, 'Order' => 10, 'Before' => '<br />', 'After' => '');
-			$amr_options[$i]['compprop']['Descriptive']['DESCRIPTION'] = array('Column' => 1, 'Order' => 20, 'Before' => '<br />', 'After' => '');
+			$amr_options[$i]['compprop']['Descriptive']['DESCRIPTION'] = array('Column' => 0, 'Order' => 20, 'Before' => '<br />', 'After' => '');
 			$amr_options[$i]['heading']['1'] = $amr_options[$i]['heading']['2'] = $amr_options[$i]['heading']['3'] = '';
 			break;
 		case 5: 
@@ -420,11 +422,10 @@ $amr_compprop = array
 
 			$amr_options[$i]['general']['name']='EventInfo'; /* No groupings, minimal */
 			$amr_options[$i]['general']['Description']='For displaying additional event info on posts created as events. The summary and description are switched off as these are the post title and the post content. Calendar properties and groupings are also not relevant. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ';
-			
+			$amr_options[$i]['limit'] = array (	"events" => 10,	"days" 	=> 366,"cache" 	=> 24);  /* hours */
 			$amr_options[$i]['general']['ListHTMLStyle']='list';
 			$amr_options[$i]['format']['Day']='l, j F Y';
-			$amr_options[$i]['limit'] = array (	"events" => 30,	"days" 	=> 366,"cache" 	=> 24);  /* hours */
-			
+		
 			$amr_options[$i]['component']['VTODO'] = false;
 			$amr_options[$i]['component']['VFREEBUSY'] = false;
 			foreach ($amr_options[$i]['grouping'] as $g => $v) {$amr_options[$i]['grouping'][$g] = false;}
@@ -445,8 +446,56 @@ $amr_compprop = array
 			$amr_options[$i]['compprop']['Descriptive']['addevent']['Column'] = 1;
 			$amr_options[$i]['compprop']['Descriptive']['addevent']['Order'] = 1;
 			$amr_options[$i]['heading']['1'] = $amr_options[$i]['heading']['2'] = $amr_options[$i]['heading']['3'] = '';
-			break;					
-		}
+			break;
+	case 8: 
+			$amr_options[$i]['general']['name']='Small-Calendar'; /* No groupings, minimal */
+			$amr_options[$i]['general']['Description']='The new default setting for calendar widgets. No grouping, No headings. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ';		
+			$amr_options[$i]['general']['ListHTMLStyle']='smallcalendar';
+			$amr_options[$i]['format']['Day']='j';
+			$amr_options[$i]['format']['Week']='D'; // 3 letter day of week
+			$amr_options[$i]['format']['Month']='M Y';
+			$amr_options[$i]['limit'] = array (	"events" => 200,	"days" 	=> 31,"cache" 	=> 24 );  /* hours */
+
+			foreach ($amr_options[$i]['grouping'] as $g => $v) {$amr_options[$i]['grouping'][$g] = false;}
+			/* No calendar properties for widget - keep it minimal */
+			foreach ($amr_options[$i]['calprop'] as $g => $v) 
+				{$amr_options[$i]['calprop'][$g]['Column'] = 0;}
+			foreach ($amr_options[$i]['compprop'] as $g => $v) 
+				foreach ($v as $g2 => $v2) {$amr_options[$i]['compprop'][$g][$g2]['Column'] = 0;}
+			$amr_options[$i]['compprop']['Date and Time']['EventDate']['Column'] = 0;
+			$amr_options[$i]['compprop']['Date and Time']['StartTime']['Column'] = 1;
+			$amr_options[$i]['compprop']['Date and Time']['EndDate']['Column'] = 0;
+			$amr_options[$i]['compprop']['Date and Time']['EndTime']['Column'] = 1;
+			$amr_options[$i]['compprop']['Descriptive']['SUMMARY'] = array('Column' => 1, 'Order' => 10, 'Before' => '', 'After' => '');
+			$amr_options[$i]['compprop']['Descriptive']['DESCRIPTION']['Column'] = 0;
+			$amr_options[$i]['heading']['1'] = $amr_options[$i]['heading']['2'] = $amr_options[$i]['heading']['3'] = '';
+			break;			
+		case 9: 
+			$amr_options[$i]['general']['name']='Large-Calendar'; /* No groupings, minimal */
+			$amr_options[$i]['general']['Description']= __('The new default setting for a large monthly calendar. No grouping, No headings. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is.');		
+			$amr_options[$i]['general']['ListHTMLStyle']='largecalendar';
+			$amr_options[$i]['format']['Day']='M j';
+			$amr_options[$i]['format']['Time']='G:i';
+			$amr_options[$i]['format']['Month']='F Y';
+			$amr_options[$i]['format']['Week']='l'; // lowercase l = full text date
+			$amr_options[$i]['limit'] = array (	"events" => 200,	"days" 	=> 31,"cache" 	=> 24 );  /* hours */
+
+			foreach ($amr_options[$i]['grouping'] as $g => $v) {$amr_options[$i]['grouping'][$g] = false;}
+			/* No calendar properties for widget - keep it minimal */
+//			foreach ($amr_options[$i]['calprop'] as $g => $v) 
+//				{$amr_options[$i]['calprop'][$g]['Column'] = 0;}
+			foreach ($amr_options[$i]['compprop'] as $g => $v) 
+				foreach ($v as $g2 => $v2) {$amr_options[$i]['compprop'][$g][$g2]['Column'] = 0;}
+			$amr_options[$i]['compprop']['Date and Time']['EventDate']['Column'] = 0;
+			$amr_options[$i]['compprop']['Date and Time']['StartTime'] = array('Column' => 1, 'Order' => 5, 'Before' => '<br />', 'After' => '');
+			$amr_options[$i]['compprop']['Date and Time']['EndDate']['Column'] = 0;
+			$amr_options[$i]['compprop']['Date and Time']['EndTime'] = array('Column' => 1, 'Order' => 6, 'Before' => '-', 'After' => '');
+			$amr_options[$i]['compprop']['Descriptive']['SUMMARY'] = array('Column' => 1, 'Order' => 1, 'Before' => '', 'After' => '');
+			$amr_options[$i]['compprop']['Descriptive']['DESCRIPTION'] 
+			= array('Column' => 2, 'Order' => 1, 'Before' => '<div class="details">', 'After' => '</div>');
+			$amr_options[$i]['heading']['1'] = $amr_options[$i]['heading']['2'] = $amr_options[$i]['heading']['3'] = '';
+			break;			
+		}	
 		return ( $amr_options[$i]);
 	}
 /* ---------------------------------------------------------------------*/	
@@ -694,7 +743,7 @@ global $amr_options;
 	global $locale, $amr_options;  /* has the initial default configuration */
 			/* set up some global config initially */
 	$amr_options = array (
-			'no_types' => 7,
+			'no_types' => 9,
 			'ngiyabonga' => false,
 			'own_css' => false,
 			'feed_css' => true,

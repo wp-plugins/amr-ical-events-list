@@ -1,9 +1,9 @@
 <?php
 /*
-Plugin Name: AmR iCal Events List
+Plugin Name: amr-ical-events-list
 Author URI: http://anmari.com/
 Plugin URI: http://icalevents.anmari.com
-Version: 3.0.6
+Version: 3.0.7
 Text Domain: amr-ical-events-list 
 Domain Path:  /lang
 Description: Display simple or highly customisable and styleable list of events.  Handles all types of recurring events, notes, journals, freebusy etc. Offers links to add events to viewers calendar or subscribe to whole calendar. Write Calendar Page</a>  and put [iCal http://yoururl.ics ] where you want the list of events.  To tweak: <a href="options-general.php?page=manage_amr_ical">Manage Settings Page</a>,  <a href="widgets.php">Manage Widget</a>.
@@ -28,6 +28,7 @@ require_once('amr-rrule.php');
 require_once('amr-ical-uninstall.php');
 require_once('amr-upcoming-events-widget.php');
 require_once('amr_date_i18n.php');
+require_once('amr-ical-calendar.php');
 define( 'AMR_BASENAME', plugin_basename( __FILE__ ) );	
 add_filter('plugin_action_links', 'amr_plugin_action', 8, 2);	
 function amr_plugin_action($links, $file) {

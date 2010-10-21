@@ -517,7 +517,7 @@ function amr_parse_property ($parts) {
 global $amr_globaltz;
 	$p0 = explode (';', $parts[0], 2);  /* Looking for ; VALUE = something...;   or TZID=... or both???*/
 	if (isset($p0[1])) { /* ie if we have some modifiers like TZID, or maybe just VALUE=DATE , note parse_str s dangerous */
-		if (ICAL_EVENTS_DEBUG) {echo '<br/>*** p0[1]'.$p0[1];}
+//		if (ICAL_EVENTS_DEBUG) {echo '<br/>*** p0[1]'.$p0[1];}
 		if (stristr($p0[1], 'TZID')) {
 		    /* Normal TZ, not the one with the path eg:  DTSTART;TZID=US-Eastern:19980119T020000 or  zimbras TZID="GMT+01.00/+02.00 */
 			$TZID = substr($p0[1], 4 );
@@ -607,9 +607,7 @@ function amr_parse_component($type)	{	/* so we know we have a vcalendar at lines
 	
 	
 	while (($amr_n < $amr_totallines)	)	{	
-		if (ICAL_EVENTS_DEBUG) {
-			echo '<br/>*** '.$type.' '.$amr_lines[$amr_n];
-			}
+		//if (ICAL_EVENTS_DEBUG) {echo '<br/>*** '.$type.' '.$amr_lines[$amr_n];}
 			$amr_n++;
 			$parts = explode (':', $amr_lines[$amr_n],2 ); /* explode faster than the preg, just split first : */
 			if ((!$parts) or ($parts === $amr_lines[$amr_n])) {
@@ -635,7 +633,7 @@ function amr_parse_component($type)	{	/* so we know we have a vcalendar at lines
 								$subarray[$basepart[0]][] = amr_parse_property ($parts);
 						}
 						else {	
-							if (ICAL_EVENTS_DEBUG) {echo '<br/>*** Parts ';var_dump($parts);			}
+//							if (ICAL_EVENTS_DEBUG) {echo '<br/>*** Parts ';var_dump($parts);			}
 							$subarray [$basepart[0]] = amr_parse_property($parts);							
 							if (($basepart[0] === 'DTSTART') and (isset($basepart[1]))) {
 								if (amr_is_untimed($basepart[1])) { /* ie has VALUE=DATE */		

@@ -1,13 +1,13 @@
-=== AmR iCal Events List ===
+=== amr-ical-events-list ===
 Contributors: anmari
 Donate link: http://webdesign.anmari.com/web-tools/donate/
 Tags: ical-feed, ics feed, wordpress-ics-importer, calendar, events, event calendar, events calendar, ical, ics, ics calendar, upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, 
-
-
 Requires at least: 2.8
 Tested up to: 3.0.1
-Version: 3.0.6
+Version: 3.0.7
 Stable tag: trunk
+Category: events
+Language: english
 
 == Description ==
 
@@ -79,11 +79,14 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 *  Allow html in descriptions, and convert any url's to links if not already converted.   
 
 == Changelog ==
+
 = Version 3.0.7 =
-*  New default list type 8 for calendar - box style 
+*  large and small box calendar formats available, and a calendar widget, as well as tab views to integrate with the list view. Default css provided.
+*  minor bug fix where some query parameters (eg: taxonomies) were not being passed through so taxonomy widget use failed
+*  update of the Danish translation
 
 = Version 3.0.6 =
-*  Change to the widget forthe amr-events plugin that calls this code.  Does not affect free version.
+*  Change to the widget for the amr-events plugin that calls this code.  Does not affect free version.
 *  Fixed some html validation errors in the admin side
 *  Added some more explanatory text to admin screens to make things clearer I hope
 
@@ -432,13 +435,13 @@ The php DATETIME Class must be enabled (this is standard in php 5.2).  You may g
 "syntax error, unexpected T_VARIABLE in...." if you are not on a version of PHP that has the "clone" function.  
 
 1. Download and activate as per usual in wordpress
-2. Create a page (or post) and add one or more [ iCal yoururl.ics ] to a page or post.  NB (NOT As a hyperlink, must be plain text)
+2. Create a page (or post) and add one or more shortcodes [ largecalendar yoururl.ics ] [ iCal yoururl.ics ] to your page.  NB (Ics url NOT As a hyperlink, must be plain text)
 
 That's it!
 
-For the widget
+For the widgets (calendar and list)
 
-1.  Drag it to the chosen sidebar
+1.  Drag to the chosen sidebar
 2.  Enter http://yoururl.ics in the large text area, Save
 
 

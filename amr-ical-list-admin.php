@@ -1,5 +1,22 @@
 <?php
 /* This is the amr ical wordpress admin section file */
+	/**
+	 * Create a Dropdown input field
+	 */
+if (!function_exists('amr_simpledropdown')) { 
+	function amr_simpledropdown($name, $options, $selected) {
+//			
+		$html = '<select name=\''.$name.'\'>';
+		foreach ($options as $i => $option) {
+//				
+			$sel = selected($i, $selected, false); //wordpress function returns with single quotes, not double 
+			$html .= '<OPTION '.$sel.' label=\''.$option.'\' value=\''.$i.'\'>'.$option.'</OPTION>';
+		}
+		$html .= '</select>';
+		return ($html);
+	}
+}	
+//		
 	function amr_allowed_html () {
 //	return ('<p><br /><hr /><h2><h3><<h4><h5><h6><strong><em>');
 	return (array(
@@ -238,6 +255,8 @@
 			<option value="table" <?php if ($style==='table') echo 'selected="selected" '; ?>><?php _e('Table'); ?></option>
 			<option value="list" <?php if ($style==='list') echo 'selected="selected" '; ?>><?php _e('Lists for rows'); ?></option>
 			<option value="breaks" <?php if ($style==='breaks') echo 'selected="selected" '; ?>><?php _e('Breaks for rows!'); ?></option>
+			<option value="smallcalendar" <?php if ($style==='smallcalendar') echo 'selected="selected" '; ?>><?php _e('Small box calendar'); ?></option>
+			<option value="largecalendar" <?php if ($style==='largecalendar') echo 'selected="selected" '; ?>><?php _e('Large box calendar'); ?></option>
 			<option value="tableoriginal" <?php if ($style==='tableoriginal') echo 'selected="selected" '; ?>><?php _e('Table with lists in cells (original)'); ?></option>
 		</select><br />	<br />
 	<label for="defaulturl" ><?php _e('Default Event URL','amr_ical_list_lang'); ?></label>
@@ -249,15 +268,15 @@
 	}
 	/* ---------------------------------------------------------------------*/	
 	function AmRIcal_limits($i) {
-	global $amr_options;	
-		
-		?><fieldset class="limits" ><h4 class="trigger"><a href="#" ><?php _e('Define maximums:', 'amr_ical_list_lang'); ?></a></h4> 
-		<div class="toggle_container"><?php
+	global $amr_options;			
+		?><fieldset class="limits" ><h4 class="trigger"><a href="#" ><?php _e('Define maximums:', 'amr_ical_list_lang'); ?></a></h4> 		
+		<div class="toggle_container">
+		<p><em><?php _e('Note cache times are in hours','amr_ical_list_lang'); ?></em></p><?php
 		if (! isset($amr_options[$i]['limit'])) echo 'No default limits set';
 		else {
 			foreach ( $amr_options[$i]['limit'] as $c => $v )					
 			{					
-				echo '<label for="L'.$i.$c.'" >'.$c.'</label>';
+				echo '<label for="L'.$i.$c.'" >'.__($c,'amr_ical_list_lang').'</label>';
 				echo '<input type="text" size="2" id="L'.$i.$c.'"  name="limit['.$i.']['.$c.']"';
 				echo ' value="'.$v.'" />'; 
 			} 
@@ -270,7 +289,8 @@
 	global $amr_options;	
 	?><fieldset id="components<?php echo $i; ?>" class="components" >		
 	<h4 class="trigger"><a href="#" ><?php _e('Select components to show:', 'amr_ical_list_lang'); 
-	?></a></h4> 
+	?></a>&nbsp;<a title="<?php _e('Wikipedia entry describing components'); ?>" 
+	href="http://en.wikipedia.org/wiki/ICalendar#Events_.28VEVENT.29">?</a></h4> 
 	<div class="toggle_container"><?php
 		if (! isset($amr_options[$i]['component'])) echo 'No default components set';
 		else
@@ -328,9 +348,10 @@
 	global $amr_options;	
 	global $amr_csize;
 		?><fieldset id="comprop" class="props" >
-		<h4 class="trigger"><a href="#"><?php _e('Specify component contents:' , 'amr_ical_list_lang'); ?></a></h4>
-		<div class="toggle_container"><?php
-
+		<h4 class="trigger"><a href="#"><?php _e('Specify fields to show:' , 'amr_ical_list_lang'); ?></a></h4>
+		
+		<div class="toggle_container">
+<em><?php _e('Note: 0 in column = do not show that field'); ?></em><?php
 		foreach ( $amr_options[$i]['compprop'] as $si => $section )	{ /* s= descriptive */
 		?><fieldset class="section"><h4 class="trigger">&nbsp;&nbsp;<a href="#"><?php _e($si,'amr_ical_list_lang'); ?></a></h4>
 		<div class="toggle_container"><?php
@@ -386,8 +407,6 @@ _e('If you have a feature request, please do let me know. ','amr_ical_list_lang'
 	&nbsp;&nbsp;
 	<a href='http://wordpress.org/tags/amr-ical-events-list' title="If you like it rate it..."><?php _e('Rate it at WP');?></a>
 	&nbsp;&nbsp;
-	<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=anmari%40anmari%2ecom&amp;item_name=IcalEventsListPlugin&amp;currency_code=AUD&amp;lc=AU&amp;bn=PP%2dDonationsBF&amp;charset=UTF%2d8"><?php
-	_e('Donate','amr_ical_list_lang');?></a>&nbsp;&nbsp;
 	<a href="http://icalevents.anmari.com/feed/"><?php _e('Plugin feed');?></a><img src="http://icalevents.anmari.com/images/amrical-rss.png" alt="Rss icon" style="vertical-align:middle;" />
 	&nbsp;&nbsp;
 	<a href="http://icalevents.anmari.com/comments/feed/"><?php _e('Comments feed');?></a><img src="http://icalevents.anmari.com/images/amrical-rss.png" alt="Rss icon" style="vertical-align:middle;" />
@@ -398,11 +417,6 @@ if (!function_exists('amr_events_settings_menu')) { /* then the paid plugin is a
 	'<a class="approved" href="http://icalevents.anmari.com/amr-events/">amr-events</a>');  
 	echo '</p></div>';
 }
-else  {	echo '<div class="updated fade"><p>';
-	printf(__('Thank you for using %s!','amr_ical_list_lang'),
-	'<a class="approved" href="http://icalevents.anmari.com/amr-events/">amr-events</a>');  
-	echo '</p></div>';
-	}
 	?></div><?php
 
 	}
@@ -538,6 +552,9 @@ else  {	echo '<div class="updated fade"><p>';
 <h3><?php _e('Advanced:','amr_ical_list_lang'); 
 ?></h3><div class="postbox" style="padding:1em 2em; width: 600px;">
 <?php printf(__('Your php version is: %s','amr_ical_list_lang'),  phpversion());	?><br /><?php
+if (version_compare('5.3', PHP_VERSION, '>')) {
+	echo( '<b>'.__('Minimum Php version 5.3 required for events cacheing. ','amr_ical_list_lang').	'</b><br /><br />');
+	}
 		amr_check_timezonesettings();
 		$now = date_create('now', $amr_globaltz);
 		?><br /><br /><?php
@@ -565,7 +582,9 @@ else  {	echo '<div class="updated fade"><p>';
 		amr_ical_check_uninstall(); 	
 		return;
 	}
-	if (isset ($_POST['reset'])) 	$amr_options = amr_getset_options (true); 
+	if (isset ($_POST['reset'])) {	
+		$amr_options = amr_getset_options (true); 
+		}
 	else $amr_options = amr_getset_options(false);	/* options will be set to defaults here if not already existing */
 	
 	if (!(isset ($_POST['reset'])) and (isset ($_POST['action']) and ($_POST['action'] == "save"))) {/* Validate the input and save */	
@@ -591,7 +610,7 @@ else  {	echo '<div class="updated fade"><p>';
 		<div id="icon-options-general" class="icon32"><br />
 		</div>
 		<h2><?php _e('iCal Events List ', 'amr_ical_list_lang'); echo AMR_ICAL_LIST_VERSION; ?></h2>		
-		<form method="post" action="<?php htmlentities($_SERVER['PHP_SELF']); ?>">
+		<form method="post" action="<?php esc_url($_SERVER['PHP_SELF']); ?>">
 				<?php  wp_nonce_field('amr_ical_list_lang'); /* outputs hidden field */		
 				if (!isset($_GET['list'])) amr_request_acknowledgement();	
 			?><div id="listnav" class="subsubsub" style="clear:both; "><?php
@@ -682,11 +701,17 @@ global $amr_options;
 			AmRIcal_general($i);	
 			AmRIcal_limits($i);	
 			AmRIcal_formats ($i);
-			AmRIcal_componentsoption($i);			
-			AmRIcal_groupingsoption($i); 
-			AmRIcal_calpropsoption($i);
-			AmRIcal_col_headings($i);
+			if (!(in_array($amr_options[$i]['general']['ListHTMLStyle'],array('smallcalendar','largecalendar')))) 
+				AmRIcal_col_headings($i);
+			//	
 			AmRIcal_compropsoption($i); 
+			AmRIcal_componentsoption($i);
+			if (!(in_array($amr_options[$i]['general']['ListHTMLStyle'],array('smallcalendar','largecalendar')))) {
+				AmRIcal_groupingsoption($i); 
+				AmRIcal_calpropsoption($i);
+			}
+
+
 
 		}	
 		echo "\n\t".'</fieldset>  <!-- end of list type -->';	

@@ -1,5 +1,6 @@
 /* AmRiCal Style for printed pages  */
 #icalnavs,
+.add-new-event,
 .amrical_credit,
 .amr-bling { /* not display the clickable icons  */
 	display:none;
