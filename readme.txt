@@ -6,8 +6,8 @@ Requires at least: 2.8
 Tested up to: 3.0.1
 Version: 3.0.7
 Stable tag: trunk
-Category: events
-Language: english
+
+Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.
 
 == Description ==
 
@@ -549,3 +549,6 @@ If you wish the same behaviour for other liststypes, you can enter either a good
 9. With locale set to German, showing german days of week, in Sandbox theme.
 10. Just for fun - Multiple Groupings (unstyled here, but with styling tags, so imagine what you could do )
 
+== Meta ==
+Category: events
+Language: en-EN
