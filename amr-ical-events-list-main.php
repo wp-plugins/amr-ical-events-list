@@ -2250,7 +2250,6 @@ global $amr_icalno;/* used to give each ical  table a unique id on a page or pos
 	if (!isset($atts['listtype'])) $atts['listtype'] = '1';
 	
 	$criteria =	amr_get_params ($atts);  /* strip out and set any other attstributes  - they will set the limits table */
-	if (isset($_GET['debug'])) echo '<hr>ical shortcode:'.$amr_listtype.' '.amr_echo_parameters();
 	/* separate out the other possible variables like list type, then just have the urls */
 	if (!(isset($amr_icalno))) $amr_icalno = 0;
 	else $amr_icalno= $amr_icalno + 1;
@@ -2270,10 +2269,10 @@ global $change_view_allowed;  // treat as widget anyway to avoid view changes et
 	$change_view_allowed = false;
 //	if (isset($_REQUEST['days'])) return ('');  // don't show if only doing days 
 	if (!isset($atts['listtype'])) $atts['listtype'] = $amr_listtype = '8';
-	if (!isset($atts['months'])) $atts['months'] = 1;
+//	if (!isset($atts['months'])) 
+	$atts['months'] = 1;
 	$criteria =	amr_get_params ($atts);  /* strip out and set any other attstributes  - they will set the limits table */
 	$criteria ['eventpoststoo'] = true;
-	if (isset($_GET['debug'])) echo '<hr>small cal with listtype:'.$amr_listtype.' '.amr_echo_parameters();
 	/* separate out the other possible variables like list type, then just have the urls */
 	if (!(isset($amr_icalno))) $amr_icalno = 0;
 	else $amr_icalno= $amr_icalno + 1;
@@ -2295,10 +2294,10 @@ global $amr_icalno;/* used to give each ical  table a unique id on a page or pos
 	$change_view_allowed = true;
 //	if (isset($_REQUEST['days'])) return ('');  // don't show if only doing days 
 	if (!isset($atts['listtype'])) $atts['listtype'] = $amr_listtype = '9';
-	if (!isset($atts['months'])) $atts['months'] = 1;
+//	if (!isset($atts['months'])) 
+	$atts['months'] = 1;
 	$criteria =	amr_get_params ($atts);  /* strip out and set any other attstributes  - they will set the limits table */
 	$criteria ['eventpoststoo'] = true;
-	if (isset($_GET['debug'])) echo '<hr>large cal with listtype:'.$amr_listtype.' '.amr_echo_parameters();
 	/* separate out the other possible variables like list type, then just have the urls */
 	if (!(isset($amr_icalno))) $amr_icalno = 0;
 	else $amr_icalno= $amr_icalno + 1;

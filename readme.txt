@@ -4,7 +4,7 @@ Donate link: http://webdesign.anmari.com/web-tools/donate/
 Tags: ical-feed, ics feed, wordpress-ics-importer, calendar, events, event calendar, events calendar, ical, ics, ics calendar, upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, 
 Requires at least: 2.8
 Tested up to: 3.0.1
-Version: 3.0.7
+Version: 3.0.8
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.
@@ -79,6 +79,10 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 *  Allow html in descriptions, and convert any url's to links if not already converted.   
 
 == Changelog ==
+= Version 3.0.8 =
+*  tweaked default css and month navigation html a bit to accommodate websites with smaller content width for table.
+*  forced initial large calendar load to months=1, despite shortcode entry.  This then allows you to have an 'agenda' view with multiple months but have cirrect functioning in the calendar box
+*  fixed generation of ics url. It was not removing page and other parameters from the query string of the url page.  We do not need to allow for parameters so we can handle ANY taxonomy, category, tag, author view etc and generate corresponding ics feed.
 
 = Version 3.0.7 =
 *  large and small box calendar formats available, and a calendar widget, as well as tab views to integrate with the list view. Default css provided.

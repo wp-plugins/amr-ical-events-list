@@ -109,6 +109,10 @@
 			}
 			
 //			$data = wp_remote_fopen($url);
+			echo '<br/>Response code'.$check['response']['code'];
+			echo '<br/>Content type'.$check['headers']['content-type'];
+//			echo '<br/>Content length'.$check['headers']['content-length'];
+
 			$data = $check['body'];
 			
 			if (($data) ) { /* now save it as a cached file */
@@ -688,8 +692,18 @@ function amr_parse_ical ( $cal_file ) {
 		$amr_n = 0;
 	    $amr_lines = explode ( "\n", $data );
 		$amr_totallines = count ($amr_lines) - 1; /* because we start from 0 */
-		If (ICAL_EVENTS_DEBUG) {echo '<br>data lines: '.$amr_totallines ;}				
+		If (ICAL_EVENTS_DEBUG) {
+			echo '<br>data lines: '.$amr_totallines ;
+			echo '<br />first line: ';	var_dump($amr_lines[0]);
+			
+			echo '<br />';
+			}	
+
+	
+		
 		$parts = explode (':', $amr_lines[$amr_n],2 ); /* explode faster than the preg, just split first : */
+	
+		
 		if ($parts[0] === 'BEGIN') {
 			$ical = amr_parse_component('VCALENDAR');
 			if (!empty ($amr_last_modified)) $ical['LastModificationTime'] = $amr_last_modified;

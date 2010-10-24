@@ -62,6 +62,7 @@ function amrical_calendar_views ($link) {
 	$link = remove_query_arg(array(
 		'calendar',
 		'agenda',
+		'listtype',
 		'eventmap'));
 	
 	if (isset ($amr_limits['agenda'])) $agenda = $amr_limits['agenda'];
@@ -106,8 +107,9 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 	global $wpdb, $wp_locale;
 	
 // ---  Note that if months set, then events will have started from beg of month */
-	if (isset ($amr_limits['months'])) $months = $amr_limits['months'];
-	else $months = 1;
+//	if (isset ($amr_limits['months'])) $months = $amr_limits['months'];  //may need later on if we are going to show multiple boxes on one page 
+//	else 
+		$months = 1;
 
 //	var_dump($amr_options[$amr_listtype]);
 	if (!empty($amr_options[$amr_listtype]['format']['Month']))  
@@ -137,7 +139,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 	// Get the next and previous month and year  - dummyies for testing 
 	$previous = new Datetime();
 	$previous = clone $start;
-	date_modify($previous, '-'.$months.' month');
+	date_modify($previous, '-'.$months.' month');   //may need later on if we are going to show multiple boxes on one page 
 	$prevmonth = $previous->format('m');
 	$prevyear = $previous->format('Y');
 	$next     = new Datetime();
@@ -145,8 +147,6 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 	date_modify($next, '+'.$months.' month');
 	$nextmonth  = $next->format('m');
 	$nextyear 	= $next->format('Y');
-
-
 	
 	if (isset($amrW) and ($amrW == 'w')) {/* we are in widget   *** later we may want to change this as will cause html validtaion failure if have post calendar too */
 		$id = "wp-calendar";
@@ -162,7 +162,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 	if ( $previous ) { $prevlink = 
 		'<a href="' 
 		. htmlentities(amrical_get_month_link($previous->format('Ymd'), $months, $link)) . '" title="' 
-		. sprintf(__('Go to %1$s %2$s'), $wp_locale->get_month($prevmonth), $prevyear) . '">&laquo; ' 
+		. sprintf(__('Go to %1$s %2$s'), $wp_locale->get_month($prevmonth), $prevyear) . '">&laquo;' 
 		. $wp_locale->get_month_abbrev($wp_locale->get_month($prevmonth)) . '</a>';
 	}
 	else $prevlink = '';
@@ -170,7 +170,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 		$nextlink = '<a href="' 
 		. htmlentities(amrical_get_month_link($next->format('Ymd'), $months, $link)) 
 		. '" title="' . esc_attr( sprintf(__('Go to %1$s %2$s'), $wp_locale->get_month($nextmonth), $nextyear)) 
-		. '">' . $wp_locale->get_month_abbrev($wp_locale->get_month($nextmonth)) . ' &raquo;</a>';
+		. '">' . $wp_locale->get_month_abbrev($wp_locale->get_month($nextmonth)) . '&raquo;</a>';
 	}
 	else $nextlink = '';
 
@@ -189,7 +189,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 	}
 	else {
 		$navigation = '<tr class="calendar_navigation">';
-		$navigation .= "\n\t\t".'<td colspan="3" class="navigation">'
+		$navigation .= "\n\t\t".'<td colspan="4" class="navigation">'
 		.$prevlink.'&nbsp;'
 		.'<form method="post" action="'.remove_query_arg('start').'">'
 		.amr_monthyeardrop_down($start->format('Ymd'))
@@ -197,7 +197,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 		.'</form>'
 		.'&nbsp;'
 		.$nextlink.'</td>';
-		$navigation .= "\n\t\t".'<td class="pad">&nbsp;</td>';
+//		$navigation .= "\n\t\t".'<td class="pad">&nbsp;</td>';
 		$navigation .= "\n\t\t".'<td colspan="3" class="views">'.
 		$views.'</td>';
 		$navigation .= '</tr>';
@@ -234,16 +234,20 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 			// Get days with events
 			$titles = array();
 
-			if (!empty ($events)) { foreach ($events as $event) {
+			if (!empty ($events)) { 
+				foreach ($events as $event) {
 //			var_dump($event);
 					if (isset ($event['EventDate']) ) {
-						$day = $event['EventDate']->format('j');
-						$dayswithevents[] = $day;
-						$title = '';
-						if (isset ($event['SUMMARY']) ) $title = $event['SUMMARY'];
-						if (is_array($title)) $title = implode($title);
-						$titles[$day][] = $title;	
-						$eventsfortheday[$day][] = $event;
+						$month = $event['EventDate']->format('m');
+						if ($month == $thismonth) {  // this allows to have agenda with more months and events cached, and possibly later adjust code to show multiple boxes
+							$day = $event['EventDate']->format('j');
+							$dayswithevents[] = $day;
+							$title = '';
+							if (isset ($event['SUMMARY']) ) $title = $event['SUMMARY'];
+							if (is_array($title)) $title = implode($title);
+							$titles[$day][] = $title;	
+							$eventsfortheday[$day][] = $event;
+							}
 					}
 				}
 			}
