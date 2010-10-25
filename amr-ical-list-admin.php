@@ -402,7 +402,8 @@ function amr_request_acknowledgement () {
 ?><div class="postbox" style="padding:1em 2em; width: 600px;">
 	<p style="border-width: 1px;"><?php _e('I try to make these plugins work <strong>"out of the box"</strong> with minimal effort; that they be easy to use but <strong>very configurable</strong>; <strong>well tested</strong>; with <strong>valid html and css</strong> both at the front and admin area.','amr_ical_list_lang'); 
 _e('If you have a feature request, please do let me know. ','amr_ical_list_lang'); 	
-	?></p><p>
+?></p><p><b><?php _e('To edit events in wordpress:','amr_ical_list_lang'); ?> <a href="http://icalevents.anmari.com" >icalevents.anmari.com</a><?php
+	?></b></p><p>
 	<a href="http://icalevents.anmari.com" title="Sign up or monitor the feed for regular updates"><?php _e('Plugin support');?></a>
 	&nbsp;&nbsp;
 	<a href='http://wordpress.org/tags/amr-ical-events-list' title="If you like it rate it..."><?php _e('Rate it at WP');?></a>
@@ -613,9 +614,9 @@ if (version_compare('5.3', PHP_VERSION, '>')) {
 		<form method="post" action="<?php esc_url($_SERVER['PHP_SELF']); ?>">
 				<?php  wp_nonce_field('amr_ical_list_lang'); /* outputs hidden field */		
 				if (!isset($_GET['list'])) amr_request_acknowledgement();	
-			?><div id="listnav" class="subsubsub" style="clear:both; "><?php
+			?><div id="listnav"  style="clear:both;"><?php
 				$url = remove_query_arg('list');
-				echo '<a class="button" href="'.$url.'">'.__('General Options','amr_ical_list_lang').'</a><br />';
+				echo '<a class="button-primary" href="'.$url.'">'.__('General Options','amr_ical_list_lang').'</a> ';
 				_e('Go to list type:','amr_ical_list_lang' );
 				for ($i = 1; $i <= $amr_options['no_types']; $i++) {
 					if ($i > 1) echo '&nbsp;|&nbsp;';

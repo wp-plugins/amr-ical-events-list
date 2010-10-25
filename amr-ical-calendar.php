@@ -76,15 +76,17 @@ function amrical_calendar_views ($link) {
 	}
 				
 	if ($agenda) {
+		$agendaviewlink = remove_query_arg('months',$link );
+		$agendaviewlink = add_query_arg(array('agenda'=>$agenda),$agendaviewlink );		
 		$agendaviewlink = '<a class="agendalink button" href="' 
-		. htmlentities(add_query_arg('agenda',$agenda,$link )) 
+		. htmlentities($agendaviewlink) 
 		. '" title="' . __('Go to agenda or list view', 'amr_ical_list_lang'). '">'.__('Agenda', 'amr_ical_list_lang').'</a>';
 	}
 	else $agendaviewlink = '';
 	//
 	if ($calendar) {
 		$calendarviewlink = '<a class="calendarlink" href="' 
-		. htmlentities(add_query_arg('calendar',$calendar,$link )) 
+		. htmlentities(add_query_arg(array('calendar'=>$calendar,'months'=>'1'),$link )) 
 		. '" title="' . __('Go to calendar view', 'amr_ical_list_lang'). '">'.__('Calendar', 'amr_ical_list_lang').'</a>';
 	}
 	else $calendarviewlink  = '';

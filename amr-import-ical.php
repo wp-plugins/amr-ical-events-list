@@ -109,8 +109,8 @@
 			}
 			
 //			$data = wp_remote_fopen($url);
-			echo '<br/>Response code'.$check['response']['code'];
-			echo '<br/>Content type'.$check['headers']['content-type'];
+//			echo '<br/>Response code'.$check['response']['code'];
+//			echo '<br/>Content type'.$check['headers']['content-type'];
 //			echo '<br/>Content length'.$check['headers']['content-length'];
 
 			$data = $check['body'];
