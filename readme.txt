@@ -1,10 +1,10 @@
-=== amr-ical-events-list ===
+=== Events with ical files, by list or calendar (aka amr-ical-events-list) ===
 Contributors: anmari
 Donate link: http://webdesign.anmari.com/web-tools/donate/
-Tags: ical-feed, ics feed, wordpress-ics-importer, calendar, events, event calendar, events calendar, ical, ics, ics calendar, upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, 
+Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, ical-feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, 
 Requires at least: 2.8
 Tested up to: 3.0.1
-Version: 3.0.8
+Version: 3.1
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.
@@ -79,6 +79,9 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 *  Allow html in descriptions, and convert any url's to links if not already converted.   
 
 == Changelog ==
+= Version 3.1 =
+*  Feature to switch off title text on event link in upcoming events widget was briefly lost when the small calendar widget was introduced. This fixes that.
+
 = Version 3.0.9 =
 *  very minor update for people who want greater than one month in agenda view, but still have calendar view (one month).  The agenda view in initial mode, still show future dates only (unless modified with offset parameter), calendar view will however show all dates for the current month.  IE: calendar view will now perform the same whether you use a [largecalendar] shortcode, or the [events] shortcode
 

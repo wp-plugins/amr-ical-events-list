@@ -410,10 +410,12 @@ $amr_compprop = array
 			foreach ($amr_options[$i]['calprop'] as $g => $v) 
 				{$amr_options[$i]['calprop'][$g] = array('Column' => 3, 'Order' => 1, 'Before' => '', 'After' => '');}
 			$amr_options[$i]['calprop']['X-WR-CALNAME']['Column'] = 1;
-			$amr_options[$i]['calprop']['X-WR-CALDESC']['Column'] = 2;
+			$amr_options[$i]['calprop']['X-WR-CALDESC']['Column'] = 1;
+			$amr_options[$i]['calprop']['X-WR-CALDESC']['Before'] = ' ';
 			foreach ($amr_options[$i]['component'] as $g=>$v) {
 				$amr_options[$i]['component'][$g] = true;}
-			
+			$amr_options[$i]['heading']['1'] = '';	
+			$amr_options[$i]['heading']['2'] = '';
 			$amr_options[$i]['heading']['3'] = '';	
 			$amr_options[$i]['format']['Day'] = 'D, F j, Y';  	
 		
@@ -720,8 +722,8 @@ $gnu_freq_conv = array (
 			
 function amr_ngiyabonga() {
 		/* The credit text styling is designed to be as subtle as possible (small font size with leight weight text, and right aligned, and at the bottom) and fit in within your theme as much as possible by not styling colours etc */
-		/* Do not remove credits or change the link text if you have not paid for the software.  You may however style it more gently, and/or subtly to fit in within your theme */
-		/* If you wish to remove the credits, then payments are accepted at http://webdesign.anmari.com/web-tools/donate/ - do not be trivial please, rather leave the credit in */
+		/* You may however style it more gently, and/or subtly to fit in within your theme.  It is good manners to donate if you remove it */
+
 global $amr_options;	
 	if (!$amr_options['ngiyabonga'])		
 	return (
@@ -751,6 +753,9 @@ global $amr_options;
 			'date_localise' => 'amr',
 			'noeventsmessage' => __('No events found within start and end date','amr_ical_list_lang')
 			);
+			
+			
+	if (defined('AMR_ICAL_VERSION'))	$amr_options['ngiyabonga']	= true; //do not show credit link
 	$alreadyhave = false;			
 	if ($locale === 'en_US' ) $method = 'none';
 	else $method = 'amr';

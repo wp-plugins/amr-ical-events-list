@@ -138,11 +138,11 @@
     function amr_parseAttendee	($arraybycolon)    { /* receive full string parsed to array  */
 	if (ICAL_EVENTS_DEBUG) {echo '<br/>Attendees to parse <br />'; var_dump($arraybycolon);}
 	$attendees = amr_parseOrganiser($arraybycolon);
-	if (ICAL_EVENTS_DEBUG) {echo '<br/>Using parse organiser gace us  <br />'; var_dump($attendees);}
+	if (ICAL_EVENTS_DEBUG) {echo '<br/>Using parse organiser gave us  <br />'; var_dump($attendees);}
 	return ($attendees);
 }	
 /* ---------------------------------------------------------------------- */	
-    function amr_parseOrganiser($arraybycolon)    { /* receive full string parsed to array 
+    function amr_parseOrganiser($arraybysemicolon)    { /* receive full string parsed to array split by the semicolon
 	[0]=>ORGANIZER;SENT-BY="mailto
 	[1]=>dwood@uoguelph.ca":mailto:ovcweb@uoguelph.ca
 	
@@ -151,28 +151,36 @@
 	[1] => bagunn@uoguelph.ca":mailto:ovcweb@uoguelph.ca
 	
 	*/
-	if (ICAL_EVENTS_DEBUG) {echo '<br/>Organiser to parse <br />'; var_dump($arraybycolon);}
+	if (ICAL_EVENTS_DEBUG) {echo '<br/>Organiser to parse <br />'; var_dump($arraybysemicolon);}
 	$org = array();
-	$p0 = explode(';',$arraybycolon[0]);
-	$m = explode(':',$arraybycolon[1]);
-//	if (ICAL_EVENTS_DEBUG) {echo '<br/>m : <br />'; var_dump($m); echo '<br/>p0 : <br />'; var_dump($p0);}
-	foreach ($m as $i => $m2) {
-		if (strtoupper($m2) == 'MAILTO') $mailto = rtrim($m[$i+1],'"');
+	$p0 = explode(';',$arraybysemicolon[0]);
+	$m = explode(':',$arraybysemicolon[1]);
+	if (ICAL_EVENTS_DEBUG) {echo '<br/>m : <br />'; var_dump($m); echo '<br/>p0 : <br />'; var_dump($p0);}
+	foreach ($m as $i => $m2) {   
+		if (strtoupper($m2) == 'MAILTO') {
+			$mailto = rtrim($m[$i+1],'"');
+		}
 	}
 
 	foreach ($p0 as $i => $p) {
 		$p1 = explode('=',$p);
 		if (isset ($p1[0]))  {	
 			$org['type'] = $p1[0]; /* if (!empty($p1[1])) $org['typevalue'] = $p1[1];   *** Parse this properly if we wantto handle complex attendees */
+
 			if ( ($p1[0] == 'SENT-BY') and (!empty($p1[1]))) {
 				$sentby = rtrim($m[0],'"');
 				$org['SENT-BY'] = $sentby;
 			}
-			else if (($p1[0] == 'CN') and (!empty($p1[1]))) $org['CN'] = rtrim( $p1[1], '"');
+			else {
+				if (($p1[0] == 'CN') and (!empty($p1[1]))) {
+					$org['CN'] = rtrim( $p1[1], '"');
+					}
+				}
 		}
 	}
 	
 	if (!empty($mailto)) $org['MAILTO'] = $mailto;
+	if (empty($org)) return ($arraybysemicolon);
 	return ($org);
     }
 /* ---------------------------------------------------------------------- */	

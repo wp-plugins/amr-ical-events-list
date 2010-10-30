@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '3.0.9');
+define('AMR_ICAL_LIST_VERSION', '3.1');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -324,6 +324,7 @@ global $amr_options;
 /*--------------------------------------------------------------------------------*/
 function add_event_to_google($e) {
 global $amr_options;
+
 	if (!isset($e['EventDate'])) return('');
 	if (isset($e['LOCATION'])) $l = str_replace(' ','%20',htmlentities($e['LOCATION'] ));
 	else $l = '';
@@ -334,10 +335,11 @@ global $amr_options;
 	else $t2 = '<img src="'.IMAGES_LOCATION.ADDTOGOOGLEIMAGE.'" alt="'.$t.'" title="'.$t.'" class="amr-bling"/>';
 /* adds a button to add the current calemdar link to the users google calendar */
 	$html = '<a href="http://www.google.com/calendar/event?action=TEMPLATE'
-	.'&amp;text='.str_replace(' ','%20',(htmlentities(amr_just_flatten_array ($e['SUMMARY']))))
+	.'&amp;text='.str_replace(' ','%20',(htmlentities(strip_tags(amr_just_flatten_array ($e['SUMMARY'])))))
 	/* dates and times need to be in UTC */
 	.'&amp;dates='.amr_get_googleeventdate($e)
-	.'&amp;details='.str_replace('\n','&amp;ltbr%20/&amp;gt',htmlentities(amr_just_flatten_array (str_replace(' ','%20',$e['DESCRIPTION']))))  /* Note google only allows simple html*/
+	.'&amp;details='.str_replace('\n','&amp;ltbr%20/&amp;gt',
+	htmlentities(strip_tags(amr_just_flatten_array (str_replace(' ','%20',$e['DESCRIPTION'])))))  /* Note google only allows simple html*/
 	.'&amp;location='.$l
 	.'&amp;trp=false'
 	.'" target="_blank" title="'.$t.'">'.$t2.'</a>';
@@ -494,7 +496,7 @@ $s2 = str_replace(array( '\r', '\n'), '<br />', $string);
 return($s2);
 } 
 /* --------------------------------------------------  */
-function amr_amp ($content) {
+function amr_amp ($content) { //trying to avoid double ?
 	return (str_replace('&','&amp;',str_replace('&amp;','&',$content) ));
 }
 /* --------------------------------------------------  */
@@ -680,16 +682,19 @@ global $amr_globaltz, $amr_options;
 		.$text2.'" >'.$t3.' </a></span>');
 }
 /* --------------------------------------------------------- */
-function amr_format_organiser ($org) {/* receive array of hopefully CN and MAILTO*/
+function amr_format_organiser ($org) {/* receive array of hopefully CN and MAILTO, and possibly SENTBY */
 	If (ICAL_EVENTS_DEBUG) {echo '<br />Organiser array:    '; var_dump($org);}
 	$text = '';
-	if (!(is_array($org))) return($org);
+//	if (!(is_array($org))) $org = amr_parseOrganiser('ORGANIZER;'.$org);  // may not have been parsed yet (eg in wp events)
+//	var_dump($org);
 	if (!empty ($org['CN'])) {
 		if (!empty  ($org['MAILTO']))
 		$text = '<a href="mailto:'.$org['MAILTO'].'" >'.$org['CN'].'</a>';
 		else $text = $org['CN'];
 	}		
-	else if (!empty  ($org['MAILTO'])) $text = '<a href="mailto:'.$org['MAILTO'].'" >'.$org['MAILTO'].'</a>';
+	else {
+		if (!empty  ($org['MAILTO'])) $text = '<a href="mailto:'.$org['MAILTO'].'" >'.$org['MAILTO'].'</a>';
+	}
 	if (!empty ($text)) $text .= '&nbsp;';
 	if (!empty ($org['SENT-BY'])) {
 		$text .= __('Sent by ','amr_ical_list_lang').'<a href="mailto:'.$org['SENT-BY'].'" >'.$org['SENT-BY'].'</a>';
@@ -715,8 +720,11 @@ function amr_derive_summary (&$e ) {
 	global $amrwidget_options;
 /* If there is a event url, use that as href, else use icsurl, use description as title */
 	if (in_array($amr_options[$amr_listtype]['general']['ListHTMLStyle'], array('smallcalendar', 'largecalendar'))) $hoverdesc = false;
-	else $hoverdesc = 'maybe';
-	
+	else {
+		if ($amrW == 'w_no_url') $hoverdesc = false;
+		else $hoverdesc ='maybe';
+	}
+
 	if (isset($e['SUMMARY'])) $e['SUMMARY'] = htmlspecialchars(amr_just_flatten_array ($e['SUMMARY'] ));
 	else return ('');
 	if (isset($e['URL'])) $e_url = amr_just_flatten_array($e['URL']);
@@ -809,7 +817,7 @@ what about all day?
 			$dates = amr_prettyprint_r_ex_date ($content);
 			return( $dates); 
 			}			
-		else {  /* don't think wee need to list the items separately eg: multiple comments or descriptions - just line  */
+		else {  /* don't think we need to list the items separately eg: multiple comments or descriptions - just line  */
 			$c = '';
 			foreach ($content as $i => $v) {			
 				if (!(empty($v))) {$c .= 	amr_format_value ($v, $k, $event) .'<br />';}
@@ -838,7 +846,7 @@ what about all day?
 				return(amr_format_tz ($content));
 			case 'refresh': return($content);
 			default: 
-				return (amr_amp($content));
+				return (($content));
 //		$content = format_date ( $amr_formats['Day'], $content);break;			 
 		}
 	}
@@ -949,8 +957,9 @@ global $amr_globaltz;
 }
 /* ------------------------------------------------------------------------------------*/
 function amr_derive_component_further (&$e) {	
+$e = amr_derive_for_list_or_eventinfo ($e); // order nb - otherwise summary have link when we do not want it to
 $e = amr_derive_info_for_list_only ($e);
-$e = amr_derive_for_list_or_eventinfo ($e);
+
 return ($e);
 	
 }
@@ -1035,6 +1044,7 @@ function amr_derive_calprop_further (&$p) {
 	if (isset ($p['X-WR-CALDESC'])) {
 		$p['X-WR-CALDESC'] = nl2br2 ($p['X-WR-CALDESC']);
 		$desc = $p['X-WR-CALDESC'];
+		
 	}
 	else $desc = 'No description available';
 	if (isset ($p['icsurl']))  {/* must be!! */
@@ -1915,8 +1925,9 @@ function amr_set_cached_events_from_db($criteria, $events) {
 	if (isset($_REQUEST['debug']))  echo ('<h3>cache set  '.$key.'</h3>');
 	return true;		 
 }
+
 /* -------------------------------------------------------------------------*/
-function amr_process_icalspec($criteria,$start, $end, $no_events, $icalno=0) {
+function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 /*  parameters - an array of urls, an array of limits (actually in amr_limits)  */
 	global $amr_options,
 		$amr_limits,
@@ -1947,9 +1958,12 @@ function amr_process_icalspec($criteria,$start, $end, $no_events, $icalno=0) {
 					if (ICAL_EVENTS_DEBUG) echo '<h3>Get events from posts </h3>';
 					$events = amr_ical_from_posts($criteria);
 					//amr_set_cached_events_from_db($criteria, $events);  /*** cannot use till php 5.3 */
-				}
+//				}
 				if (!empty($events)) {
-					foreach ($events as $i=>$event) $event = amr_parseRepeats($event);
+					foreach ($events as $i=>$event) {
+						$events[$i] = amr_parse_unparsed($event);  
+						$event = amr_parseRepeats($event);
+					}
 					$icals = amr_make_ical_from_posts($events, $criteria);
 					if (ICAL_EVENTS_DEBUG) { echo '<br>Got calendars from posts :'.count($icals).'<br>'; }	
 				}
@@ -1958,6 +1972,7 @@ function amr_process_icalspec($criteria,$start, $end, $no_events, $icalno=0) {
 				suggest_other_icalplugin (__('No url entered - did you want events from posts ?','amr_ical_list_lang' ));
 			}
 		}
+	}	
 	/* ------------------------------  check for urls and do those too, or only */
 		$icals2 = array();
 		if (!empty($criteria['urls'])) {

@@ -13,7 +13,7 @@
 // ----------------------------------------------------------------------------------------
 function amr_get_day_link($thisyear, $thismonth, $thisday, $link) { /* the start date object  and the months to show */
 	$link = add_query_arg( 'days', '1' ,$link);
-	$link = add_query_arg( 'start', $thisyear.$thismonth.$thisday, $link );	
+	$link = add_query_arg( 'start', $thisyear.str_pad($thismonth,2,'0',STR_PAD_LEFT).str_pad($thisday,2,'0',STR_PAD_LEFT), $link );	
 return ($link);
 }
 // ----------------------------------------------------------------------------------------
