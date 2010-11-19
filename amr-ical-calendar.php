@@ -101,44 +101,18 @@ function amrical_calendar_views ($link) {
 	return ($html);
 }
 // ---------------------------------------------------------------------------------------- 
-function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar', $initial = true) { /* startingpoint was wp calendar */
-	global $amr_options, $amr_listtype, $amr_limits, $amrW;
+function amr_month_year_navigation ($start) {
+return ('<form method="post" action="'.htmlentities(remove_query_arg('start')).'">'
+		.amr_monthyeardrop_down($start->format('Ymd'))
+		.'<input title="'.__('Go to date', 'amr_ical_list_lang').'" type="submit" value="&raquo;&raquo;" >'
+		.'</form>');
+}
+// ---------------------------------------------------------------------------------------- 
+function amr_month_year_links ($start,$months) { // returns array ($nextlink, $prevlink, $dropdown
 	global $amr_calendar_url;
-	global $amr_globaltz;
-	global $change_view_allowed;
 	global $wpdb, $wp_locale;
-	
-// ---  Note that if months set, then events will have started from beg of month */
-//	if (isset ($amr_limits['months'])) $months = $amr_limits['months'];  //may need later on if we are going to show multiple boxes on one page 
-//	else 
-		$months = 1;
 
-//	var_dump($amr_options[$amr_listtype]);
-	if (!empty($amr_options[$amr_listtype]['format']['Month']))  
-			$month_format = $amr_options[$amr_listtype]['format']['Month'];
-	else 	$month_format =	'F,Y';
-
-	// Let's figure out when we are
-	$start    = new Datetime();
-	$monthnum = $start->format('m');  // now
-	$year 	  = $start->format('Y');
-	$start    = clone $amr_limits['start']; // the requested start 
-	$thismonth= $start->format('m');
-	$thisyear = $start->format('Y');
-	$m = $thisyear.$thismonth;
-	$start->setDate($thisyear, $thismonth, 1);
-
-//	if ( isset($_GET['w']) ) $w = ''.intval($_GET['w']); /* what sthis for ?*/
-	// week_begins = 0 stands for Sunday
-	$week_begins= intval(get_option('start_of_week'));
-	// Let's figure out when we are
-	$start    = new Datetime('now',$amr_globaltz);
-	$start    = clone $amr_limits['start'];
-	$thismonth= $start->format('m');
-	$thisyear = $start->format('Y');
-	$start->setDate($thisyear, $thismonth, 1);
-
-	// Get the next and previous month and year  - dummyies for testing 
+	// Get the next and previous month and year  
 	$previous = new Datetime();
 	$previous = clone $start;
 	date_modify($previous, '-'.$months.' month');   //may need later on if we are going to show multiple boxes on one page 
@@ -149,13 +123,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 	date_modify($next, '+'.$months.' month');
 	$nextmonth  = $next->format('m');
 	$nextyear 	= $next->format('Y');
-	
-	if (isset($amrW) and ($amrW == 'w')) {/* we are in widget   *** later we may want to change this as will cause html validtaion failure if have post calendar too */
-		$id = "wp-calendar";
-		}
-	else $id = str_replace('compprop','boxical', $id);  // don't wantto change listing styles for compatibility, but lets make it nicer now 	
-	if (empty($class)) $class=$liststyle;
-	else $class = 'box'.$class.' '.$liststyle;
+
 	//---------------------------  get navigation links ---------------------------------------
 	
 	if (!empty($amr_calendar_url))  $link = $amr_calendar_url;
@@ -164,17 +132,59 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 	if ( $previous ) { $prevlink = 
 		'<a href="' 
 		. htmlentities(amrical_get_month_link($previous->format('Ymd'), $months, $link)) . '" title="' 
-		. sprintf(__('Go to %1$s %2$s'), $wp_locale->get_month($prevmonth), $prevyear) . '">&laquo;' 
+		. sprintf(__('Go to %1$s %2$s', 'amr_ical_list_lang'), $wp_locale->get_month($prevmonth), $prevyear) . '">&laquo;' 
 		. $wp_locale->get_month_abbrev($wp_locale->get_month($prevmonth)) . '</a>';
 	}
 	else $prevlink = '';
 	if ( $next ) {
 		$nextlink = '<a href="' 
 		. htmlentities(amrical_get_month_link($next->format('Ymd'), $months, $link)) 
-		. '" title="' . esc_attr( sprintf(__('Go to %1$s %2$s'), $wp_locale->get_month($nextmonth), $nextyear)) 
+		. '" title="' . esc_attr( sprintf(__('Go to %1$s %2$s', 'amr_ical_list_lang'), $wp_locale->get_month($nextmonth), $nextyear)) 
 		. '">' . $wp_locale->get_month_abbrev($wp_locale->get_month($nextmonth)) . '&raquo;</a>';
 	}
 	else $nextlink = '';
+	return (array('prevlink'=>$prevlink,'nextlink'=>$nextlink));
+}
+// ---------------------------------------------------------------------------------------- 
+function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar', $initial = true) { /* startingpoint was wp calendar */
+	global $amr_options, $amr_listtype, $amr_limits, $amrW;
+	global $amr_globaltz;
+	global $change_view_allowed;
+	global $wpdb, $wp_locale;
+	
+// ---  Note that if months set, then events will have started from beg of month */
+//	if (isset ($amr_limits['months'])) $months = $amr_limits['months'];  //may need later on if we are going to show multiple boxes on one page 
+//	else 
+	$months = 1;
+
+//	var_dump($amr_options[$amr_listtype]);
+	if (!empty($amr_options[$amr_listtype]['format']['Month']))  
+			$month_format = $amr_options[$amr_listtype]['format']['Month'];
+	else 	$month_format =	'F,Y';
+
+
+//	if ( isset($_GET['w']) ) $w = ''.intval($_GET['w']); /* what sthis for ?*/
+	// week_begins = 0 stands for Sunday
+	$week_begins= intval(get_option('start_of_week'));
+		
+	if (isset($amrW) and ($amrW == 'w')) {/* we are in widget   *** later we may want to change this as will cause html validtaion failure if have post calendar too */
+		$id = "wp-calendar";
+		}
+	else $id = str_replace('compprop','boxical', $id);  // don't wantto change listing styles for compatibility, but lets make it nicer now 	
+	if (empty($class)) $class=$liststyle;
+	else $class = 'box'.$class.' '.$liststyle;
+	
+	// Let's figure out when we are
+	$start    = new Datetime('now',$amr_globaltz);
+	$start    = clone $amr_limits['start'];
+	$thismonth= $start->format('m');
+	$thisyear = $start->format('Y');
+	$m = $thisyear.$thismonth;
+	$start->setDate($thisyear, $thismonth, 1);
+
+	$month_nav_html = amr_month_year_links ($start, $months); // returns array ($nextlink, $prevlink, $dropdown
+	$prevlink = $month_nav_html['prevlink'];
+	$nextlink = $month_nav_html['nextlink'];
 
 	//
 	$calendar_caption = amr_date_i18n ($month_format, $start);
@@ -182,6 +192,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 			$views = amrical_calendar_views($link);
 		}
 	else $views = '&nbsp;';	
+	//
 	if ($liststyle=="smallcalendar") {		
 		$navigation = '<tr class="calendar_navigation">';
 		$navigation .= "\n\t\t".'<td colspan="3" class="prev">'.$prevlink.'</td>';
@@ -193,10 +204,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 		$navigation = '<tr class="calendar_navigation">';
 		$navigation .= "\n\t\t".'<td colspan="4" class="navigation">'
 		.$prevlink.'&nbsp;'
-		.'<form method="post" action="'.remove_query_arg('start').'">'
-		.amr_monthyeardrop_down($start->format('Ymd'))
-		.'<input title="'.__('Go to date', 'amr_ical_list_lang').'" type="submit" value="&raquo;&raquo;" >'
-		.'</form>'
+		.amr_month_year_navigation ($start)
 		.'&nbsp;'
 		.$nextlink.'</td>';
 //		$navigation .= "\n\t\t".'<td class="pad">&nbsp;</td>';

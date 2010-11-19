@@ -41,14 +41,22 @@ define('CALENDARIMAGE','calendar.png');
 define('CALENDARADDTOIMAGE','calendar_add.png');
 define('ADDTOGOOGLEIMAGE','addtogoogle.png');
 define('REFRESHIMAGE','refresh.png');
+
+ if ( ! defined( 'WP_PLUGIN_URL' ) )
+       define( 'WP_PLUGIN_URL', WP_CONTENT_URL. '/plugins/' );
+
+if ( ! defined( 'WP_PLUGIN_DIR' ) )
+       define( 'WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins/' );
+
 $x = str_replace(basename( __FILE__),"",plugin_basename(__FILE__)); 
-if ($x == 'amr-events') {
-	$url = WP_PLUGIN_URL.'/amr-events/listfiles'; 
-	$dir = WP_PLUGIN_DIR.'/amr-events/listfiles'; 
+
+if (stripos($x,'amr-events') === false) {
+	$url = WP_PLUGIN_URL.'/amr-ical-events-list/'; 
+	$dir = WP_PLUGIN_DIR.'/amr-ical-events-list/';
 }			
 else {
-	$url = WP_PLUGIN_URL.'/'.$x; 
-	$dir = WP_PLUGIN_DIR.'/'.$x; 
+	$url = WP_PLUGIN_URL.'/amr-events/listfiles/'; 
+	$dir = WP_PLUGIN_DIR.'/amr-events/listfiles/'; 
 }
 define('ICALLISTPLUGINURL', $url);
 define('ICALLISTPLUGINDIR', $dir);
@@ -474,7 +482,7 @@ $amr_compprop = array
 			break;			
 		case 9: 
 			$amr_options[$i]['general']['name']='Large-Calendar'; /* No groupings, minimal */
-			$amr_options[$i]['general']['Description']= __('The new default setting for a large monthly calendar. No grouping, No headings. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is.');		
+			$amr_options[$i]['general']['Description']= __('The new default setting for a large monthly calendar. No grouping, No headings. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is.','amr_ical', 'amr_ical_list_lang');		
 			$amr_options[$i]['general']['ListHTMLStyle']='largecalendar';
 			$amr_options[$i]['format']['Day']='M j';
 			$amr_options[$i]['format']['Time']='G:i';

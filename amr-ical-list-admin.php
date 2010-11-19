@@ -88,7 +88,7 @@ if (!function_exists('amr_simpledropdown')) {
 					}
 					$amr_options['no_types'] =  $int_ok;							
 				}
-				else { _e('Invalid Number of Lists'); return(false);
+				else { _e('Invalid Number of Lists', 'amr_ical_list_lang'); return(false);
 				}
 			}
 			update_option( 'amr-ical-events-list', $amr_options);
@@ -188,7 +188,7 @@ if (!function_exists('amr_simpledropdown')) {
 				}
 			}
 		}
-		else _e('Error in form - calprop array not found');
+		else _e('Error in form - calprop array not found', 'amr_ical_list_lang');
 			
 	}
 
@@ -252,12 +252,12 @@ if (!function_exists('amr_simpledropdown')) {
 		if (isset($amr_options[$i]['general']['Description'])) echo $amr_options[$i]['general']['Description']; ?></textarea><br />
 	<label for="ListHTMLStyle" ><?php _e('List HTML Style','amr_ical_list_lang'); ?></label>
 		<select id="ListHTMLStyle" name="general[<?php echo $i; ?>][ListHTMLStyle]">
-			<option value="table" <?php if ($style==='table') echo 'selected="selected" '; ?>><?php _e('Table'); ?></option>
-			<option value="list" <?php if ($style==='list') echo 'selected="selected" '; ?>><?php _e('Lists for rows'); ?></option>
-			<option value="breaks" <?php if ($style==='breaks') echo 'selected="selected" '; ?>><?php _e('Breaks for rows!'); ?></option>
-			<option value="smallcalendar" <?php if ($style==='smallcalendar') echo 'selected="selected" '; ?>><?php _e('Small box calendar'); ?></option>
-			<option value="largecalendar" <?php if ($style==='largecalendar') echo 'selected="selected" '; ?>><?php _e('Large box calendar'); ?></option>
-			<option value="tableoriginal" <?php if ($style==='tableoriginal') echo 'selected="selected" '; ?>><?php _e('Table with lists in cells (original)'); ?></option>
+			<option value="table" <?php if ($style==='table') echo 'selected="selected" '; ?>><?php _e('Table', 'amr_ical_list_lang'); ?></option>
+			<option value="list" <?php if ($style==='list') echo 'selected="selected" '; ?>><?php _e('Lists for rows', 'amr_ical_list_lang'); ?></option>
+			<option value="breaks" <?php if ($style==='breaks') echo 'selected="selected" '; ?>><?php _e('Breaks for rows!', 'amr_ical_list_lang'); ?></option>
+			<option value="smallcalendar" <?php if ($style==='smallcalendar') echo 'selected="selected" '; ?>><?php _e('Small box calendar', 'amr_ical_list_lang'); ?></option>
+			<option value="largecalendar" <?php if ($style==='largecalendar') echo 'selected="selected" '; ?>><?php _e('Large box calendar', 'amr_ical_list_lang'); ?></option>
+			<option value="tableoriginal" <?php if ($style==='tableoriginal') echo 'selected="selected" '; ?>><?php _e('Table with lists in cells (original)', 'amr_ical_list_lang'); ?></option>
 		</select><br />	<br />
 	<label for="defaulturl" ><?php _e('Default Event URL','amr_ical_list_lang'); ?></label>
 		<input type="text" class="wide" size="20" id="defaulturl" name="general[<?php echo $i; ?>][Default Event URL]" value="<?php
@@ -289,7 +289,7 @@ if (!function_exists('amr_simpledropdown')) {
 	global $amr_options;	
 	?><fieldset id="components<?php echo $i; ?>" class="components" >		
 	<h4 class="trigger"><a href="#" ><?php _e('Select components to show:', 'amr_ical_list_lang'); 
-	?></a>&nbsp;<a title="<?php _e('Wikipedia entry describing components'); ?>" 
+	?></a>&nbsp;<a title="<?php _e('Wikipedia entry describing components', 'amr_ical_list_lang'); ?>" 
 	href="http://en.wikipedia.org/wiki/ICalendar#Events_.28VEVENT.29">?</a></h4> 
 	<div class="toggle_container"><?php
 		if (! isset($amr_options[$i]['component'])) echo 'No default components set';
@@ -316,7 +316,7 @@ if (!function_exists('amr_simpledropdown')) {
 			{	$l = 'G'.$i.str_replace(' ','', $c);
 				echo '<label for="'.$l.'"  >';
 				echo '<input type="checkbox" id="'.$l.'" name="grouping['.$i.']['.$c.']"'. ($v ? ' checked="checked"' : '').' />';
-				echo $c.' </label>';
+				echo $c.' </label><br />';
 			}
 		echo "\n\t".'</div></fieldset> <!-- end of grouping -->';
 	return;	
@@ -351,7 +351,11 @@ if (!function_exists('amr_simpledropdown')) {
 		<h4 class="trigger"><a href="#"><?php _e('Specify fields to show:' , 'amr_ical_list_lang'); ?></a></h4>
 		
 		<div class="toggle_container">
-<em><?php _e('Note: 0 in column = do not show that field'); ?></em><?php
+<p><em><?php _e('Note: a 0 (zero) in column = do not show that field.', 'amr_ical_list_lang'); ?></em> <a title="<?php _e('Link to more information', 'amr_ical', 'amr_ical_list_lang'); ?>" href="http://icalevents.anmari.com/list-types/"><?php _e('More information', 'amr_ical', 'amr_ical_list_lang'); ?></a></p><?php
+		?><p><em><?php _e('Uppercase fields are those defined in the iCal specification.', 'amr_ical_list_lang');?></em></p><p><em><?php
+		_e('Lowercase fields are additional fields added by this plugin and derived from the iCal fields for your convenience.' , 'amr_ical_list_lang'); 
+		_e('Fields show if "column" > 0 and if there is data available in your event or ics file.', 'amr_ical_list_lang');
+		?></em></p><?php
 		foreach ( $amr_options[$i]['compprop'] as $si => $section )	{ /* s= descriptive */
 		?><fieldset class="section"><h4 class="trigger">&nbsp;&nbsp;<a href="#"><?php _e($si,'amr_ical_list_lang'); ?></a></h4>
 		<div class="toggle_container"><?php
@@ -404,13 +408,13 @@ function amr_request_acknowledgement () {
 _e('If you have a feature request, please do let me know. ','amr_ical_list_lang'); 	
 ?></p><p><b><?php _e('To edit events in wordpress:','amr_ical_list_lang'); ?> <a href="http://icalevents.anmari.com" >icalevents.anmari.com</a><?php
 	?></b></p><p>
-	<a href="http://icalevents.anmari.com" title="Sign up or monitor the feed for regular updates"><?php _e('Plugin support');?></a>
+	<a href="http://icalevents.anmari.com" title="Sign up or monitor the feed for regular updates"><?php _e('Plugin support', 'amr_ical_list_lang');?></a>
 	&nbsp;&nbsp;
-	<a href='http://wordpress.org/tags/amr-ical-events-list' title="If you like it rate it..."><?php _e('Rate it at WP');?></a>
+	<a href='http://wordpress.org/tags/amr-ical-events-list' title="If you like it rate it..."><?php _e('Rate it at WP', 'amr_ical_list_lang');?></a>
 	&nbsp;&nbsp;
-	<a href="http://icalevents.anmari.com/feed/"><?php _e('Plugin feed');?></a><img src="http://icalevents.anmari.com/images/amrical-rss.png" alt="Rss icon" style="vertical-align:middle;" />
+	<a href="http://icalevents.anmari.com/feed/"><?php _e('Plugin feed', 'amr_ical_list_lang');?></a><img src="http://icalevents.anmari.com/images/amrical-rss.png" alt="Rss icon" style="vertical-align:middle;" />
 	&nbsp;&nbsp;
-	<a href="http://icalevents.anmari.com/comments/feed/"><?php _e('Comments feed');?></a><img src="http://icalevents.anmari.com/images/amrical-rss.png" alt="Rss icon" style="vertical-align:middle;" />
+	<a href="http://icalevents.anmari.com/comments/feed/"><?php _e('Comments feed', 'amr_ical_list_lang');?></a><img src="http://icalevents.anmari.com/images/amrical-rss.png" alt="Rss icon" style="vertical-align:middle;" />
 	</p><?php
 if (!function_exists('amr_events_settings_menu')) { /* then the paid plugin is already on the system */
 	echo '<div class="updated"><p>';
@@ -428,7 +432,8 @@ if (!function_exists('amr_events_settings_menu')) { /* then the paid plugin is a
 		if (stristr ($filename, $string)) 
 		$files[] = $filename;
 		}
-	return ($files);
+	if (isset ($files)) return ($files);
+	else return (false);
 	}
 	/* -------------------------------------------------------------------------------------------------------------*/
 	function amr_check_edit_file() {
@@ -438,11 +443,11 @@ if (!function_exists('amr_events_settings_menu')) { /* then the paid plugin is a
 	  if (file_exists(ICAL_EDITSTYLEFILE)) return (true);
 	  else {
 		if (!(copy (ICALSTYLEFILE, ICAL_EDITSTYLEFILE))) {
-			echo '</ br><h3>'.__('Unable to create Custom css file for you to edit if you wish - not essential.').'</h3></ br>';
+			echo '</ br><h3>'.__('Unable to create Custom css file for you to edit if you wish - not essential.', 'amr_ical_list_lang').'</h3></ br>';
 			return (false);
 			}
 		else {		
-			echo '</ br>'.sprintf(__('Copied %s1 to %s2 to allow custom css'),ICALSTYLEFILE,ICAL_EDITSTYLEFILE).'</ br>';
+			echo '</ br>'.sprintf(__('Copied %s1 to %s2 to allow custom css', 'amr_ical_list_lang'),ICALSTYLEFILE,ICAL_EDITSTYLEFILE).'</ br>';
 			return ($c);
 			}
 		}
@@ -459,9 +464,9 @@ if (!function_exists('amr_events_settings_menu')) { /* then the paid plugin is a
 		.__('Plugin cannot determine timezonedb version in php &lt; 5.3.' ,'amr_ical_list_lang')
 		.'</a>';?></li>
 		<li>
-		<?php _e('The timezone database defines the daylight saving changes amongst other things.  If correct daylight saving switchover is important to you, please check for the latest updates. ');  _e('You may need to talk to your webhost.' ); 
-		?></li><li><a href="http://pecl.php.net/package/timezonedb"><?php _e('Php timezonedb versions');?></a></li>
-		<li><a href="http://pecl.php.net/package/timezonedb"><?php _e('Info on what changes are in which timezonedb version');?></a></li>
+		<?php _e('The timezone database defines the daylight saving changes amongst other things.  If correct daylight saving switchover is important to you, please check for the latest updates. ', 'amr_ical_list_lang');  _e('You may need to talk to your webhost.' , 'amr_ical_list_lang'); 
+		?></li><li><a href="http://pecl.php.net/package/timezonedb"><?php _e('Php timezonedb versions', 'amr_ical_list_lang');?></a></li>
+		<li><a href="http://pecl.php.net/package/timezonedb"><?php _e('Info on what changes are in which timezonedb version', 'amr_ical_list_lang');?></a></li>
 		<?php
 		
 		if (!(isset($amr_globaltz))) {
@@ -490,7 +495,7 @@ if (!function_exists('amr_events_settings_menu')) { /* then the paid plugin is a
 			try {$d = new DateTime( "@{$tr['ts']}",$utctz );}
 			catch(Exception $e) { break;}
 			date_timezone_set ($d,$amr_globaltz );
-			printf('<li>'.__('Switches to %s on %s. GMT offset: %d').'</li>',
+			printf('<li>'.__('Switches to %s on %s. GMT offset: %d', 'amr_ical_list_lang').'</li>',
 				 $tr['isdst'] ? "DST" : "standard time",
 				$d->format('d M Y @ H:i'), $tr['offset']/(60*60)
 			);
@@ -518,37 +523,51 @@ if (!function_exists('amr_events_settings_menu')) { /* then the paid plugin is a
 		<div class="postbox" style="padding:1em 2em; width: 600px;">
 					<label for="no_types"><?php _e('Number of Ical Lists:', 'amr_ical_list_lang'); 
 					?><input type="text" size="2" id="no_types" name="no_types" value="<?php echo $amr_options['no_types'];  ?>" />
-			</label>		
+			</label><br />		
 			<label for="noeventsmessage">		
 			<?php _e('Message if no events found: ', 'amr_ical_list_lang');
-			?></label>
+			?></label><br />
 			<input class="wide" type="text" id="noeventsmessage" name="noeventsmessage" 
 			<?php if (isset($amr_options['noeventsmessage']) and ($amr_options['noeventsmessage']))  
 				{echo 'value="'.$amr_options['noeventsmessage'].'"';}?>/> 	
+			<br />
 			<label for="ngiyabonga">
 			<input type="checkbox" id="ngiyabonga" name="ngiyabonga" value="ngiyabonga" 
 			<?php if (isset($amr_options['ngiyabonga']) and ($amr_options['ngiyabonga']))  {echo 'checked="checked"';}
 			?>/> <?php _e('Do not give credit to the author', 'amr_ical_list_lang'); ?></label>
+			<br />
 			<label for="own_css">
 			<input type="checkbox" id="own_css" name="own_css" value="own_css" 
 			<?php if (isset($amr_options['own_css']) and ($amr_options['own_css']))  {echo 'checked="checked"';}
 			?>/> <?php _e('Use my theme css, not plugin css', 'amr_ical_list_lang'); 
 			$files = amr_get_css_url_choices();
 			?></label>
+			<br />
 			<label for="no_images">
 			<input type="checkbox" id="no_images" name="no_images" value="true" 
 			<?php if (isset($amr_options['no_images']) and ($amr_options['no_images']))  {echo 'checked="checked"';}
 			?>/><?php _e(' No images (tick for text only)', 'amr_ical_list_lang'); 
 			?></label>
+			<br />
+			<p><em><?php
+			_e('The css provided works with the default twenty-ten theme and similar themes.  Your theme may be different.', 'amr_ical_list_lang');
+			echo ' ';
+			_e('To edit the file, download the custom one added to your uploads folder: uploads/css.', 'amr_ical_list_lang'); echo ' ';
+			_e('Edit it and then re-upload to that same folder. Then select it in the box below.', 'amr_ical_list_lang');
+			echo ' ';
+			_e('This file will not be overwritten when the plugin is upgraded or when your theme is upgraded. ', 'amr_ical_list_lang'); ?></em>
+			<a href="http://icalevents.anmari.com/?s=css"><?php _e('More info'); ?></a><p>
+			<a href="<?php echo ICALLISTPLUGINURL.'css/icallist.css'; ?>"><?php _e('Download the latest provided css file for editing', 'amr_ical_list_lang'); ?></a><?php echo ' '; _e('(optional)','amr_ical_list_lang'); ?><br />
 			<label for="cssfile"><?php _e('Choose plugin default css or choose a custom css and edit it.', 'amr_ical_list_lang'); ?></label>
 			<select id="cssfile" name="cssfile" ><?php
-				if (empty ($files)) echo AMR_NL.' <option value=""> No css files found in css directory '.$dir.' '.$files.'</option>';
+				if (empty ($files)) echo AMR_NL.' <option value="">'.__('No css files found in css directory ', 'amr_ical_list_lang').$dir.' '.$files.'</option>';
 				else foreach ($files as $ifile => $file) {
 					echo AMR_NL.' <option value="'.$file.'"';
 					if (isset($amr_options['cssfile']) and ($amr_options['cssfile'] == $file)) echo ' selected="selected" ';
 					echo '>'.$file.'</option>';
 				}					
 			?></select>
+			
 </div>
 <h3><?php _e('Advanced:','amr_ical_list_lang'); 
 ?></h3><div class="postbox" style="padding:1em 2em; width: 600px;">
@@ -561,13 +580,13 @@ if (version_compare('5.3', PHP_VERSION, '>')) {
 		?><br /><br /><?php
 		_e('Choose date localisation method:', 'amr_ical_list_lang'); 
 		?><a href="http://icalevents.anmari.com/2044-date-and-time-localisation-in-wordpress/"><b>?</b></a><br />				
-			<label for="no_localise"><input type="radio" id="no_localise" name="date_localise" value="none" <?php if ($amr_options['date_localise'] === "none") echo ' checked="checked" '; ?> />
+			<br /><label for="no_localise"><input type="radio" id="no_localise" name="date_localise" value="none" <?php if ($amr_options['date_localise'] === "none") echo ' checked="checked" '; ?> />
 			<?php _e('none', 'amr_ical_list_lang'); echo ' - '.amr_format_date('r', $now); ?></label>
-			<label for="am_localise"><input type="radio" id="am_localise" name="date_localise" value="amr" <?php if ($amr_options['date_localise'] === "amr") echo ' checked="checked" '; ?> />
+			<br /><label for="am_localise"><input type="radio" id="am_localise" name="date_localise" value="amr" <?php if ($amr_options['date_localise'] === "amr") echo ' checked="checked" '; ?> />
 			<?php _e('amr', 'amr_ical_list_lang'); echo ' - '.amr_date_i18n('r', $now); ?></label>
-			<label for="wp_localise"><input type="radio" id="wp_localise" name="date_localise" value="wp" <?php if ($amr_options['date_localise'] === "wp") echo ' checked="checked" '; ?> /> 
+			<br /><label for="wp_localise"><input type="radio" id="wp_localise" name="date_localise" value="wp" <?php if ($amr_options['date_localise'] === "wp") echo ' checked="checked" '; ?> /> 
 			<?php _e('wp', 'amr_ical_list_lang'); echo ' - '.amr_wp_format_date('r', $now, false);?></label>
-			<label for="wpg_localise"><input type="radio" id="wpg_localise" name="date_localise" value="wpgmt" <?php if ($amr_options['date_localise'] === "wpgmt") echo ' checked="checked" '; ?> /> 
+			<br /><label for="wpg_localise"><input type="radio" id="wpg_localise" name="date_localise" value="wpgmt" <?php if ($amr_options['date_localise'] === "wpgmt") echo ' checked="checked" '; ?> /> 
 			<?php _e('wpgmt', 'amr_ical_list_lang'); echo ' - '.amr_wp_format_date('r', $now, true);?></label>
 		</div>
 		</fieldset>
@@ -611,6 +630,7 @@ if (version_compare('5.3', PHP_VERSION, '>')) {
 		<div id="icon-options-general" class="icon32"><br />
 		</div>
 		<h2><?php _e('iCal Events List ', 'amr_ical_list_lang'); echo AMR_ICAL_LIST_VERSION; ?></h2>		
+		
 		<form method="post" action="<?php esc_url($_SERVER['PHP_SELF']); ?>">
 				<?php  wp_nonce_field('amr_ical_list_lang'); /* outputs hidden field */		
 				if (!isset($_GET['list'])) amr_request_acknowledgement();	
@@ -655,19 +675,20 @@ if (version_compare('5.3', PHP_VERSION, '>')) {
 	?><fieldset id="formats<?php echo $i; ?>" class="formats" >
 	<h4 class="trigger"><a href="#" >
 	<?php _e(' Define date and time formats:', 'amr_ical_list_lang'); ?></a></h4>
-	<div class="toggle_container"><p><?php
-		_e(' These are also used for the grouping headings.', 'amr_ical_list_lang'); 
-		echo __('Use the standard PHP format strings: ','amr_ical_list_lang')
+	<div class="toggle_container"><p><em><?php
+		_e('Define the formats for the day (eg: Event date, End Date) and time (eg: Start time, End Time) fields. You can actually use any of these to display a full Date time string too. Use the Event date for event instances - the DTSTART field is the first startdate of a recurring event sequence.', 'amr_ical_list_lang'); ?></em></p><p><em><?php
+		_e('These are also used for the date related grouping headings (ie: will show the date in that format as a heading for that group of dates if relevant.)', 'amr_ical_list_lang'); 
+		?> <?php echo __('Use the standard PHP format strings: ','amr_ical_list_lang')
 			. '<a href="#" title="'.__('Php manual - date datetime formats', 'amr_ical_list_lang').'" ' 
 			.'onclick="window.open(\'http://www.php.net/manual/en/function.date.php\', \'dates\', \'width=600, height=400,scrollbars=yes\')"'
 			.'> '
-			.__('date' , 'amr_ical_list_lang').'</a>'
+			.__('See php date function format strings' , 'amr_ical_list_lang').'</a>'
 			.__(' (will localise) ' , 'amr_ical_list_lang')
 //			. '<a href="#" title="'.__('Php manual - Strftime datetime formats', 'amr_ical_list_lang').'" '
 //			.'onclick="window.open(\'http://php.net/manual/en/function.strftime.php\', \'dates\', \'width=600, height=400,scrollbars=yes\')"'
 //			.'> '			
 //			.__('strftime' , 'amr_ical_list_lang').'</a>'
-			.'</p>';
+	;?></em></p><?php
 		if (! isset($amr_options[$i]['format'])) echo 'No formats set';
 		else
 		{	$date = new DateTime();

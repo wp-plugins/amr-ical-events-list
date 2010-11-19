@@ -7,89 +7,137 @@ You can always refer back to the default css in the plugin folder for the latest
 
 
 This file now includes the box calendar css - it may need modification for your theme, if your theme does not have the #content selector
+The #boxical0 id has been added to aim for the css to work even if your theme uses  different selectors.  Note that this will only work for the first "box", after that you have to code your own additional css.
 */
 /* Note #content works for 2010 theme to override default table settings.  You need to find out what works for your theme */
 #wp-calendar td.next,
 div.event-calendar td.next {text-align:right;}
 div.event-calendar td.prev {text-align:left;}
 
+#calnav,
+#content #calnav,
+#boxical0,
 #content table.boxical {
 	border-collapse: collapse;
 	border-spacing: 0;
 	table-layout: fixed;
 	font-size: 12px;
 	line-height: 16px;
-	border: 0;
+	border: none;
 	margin-left:auto; margin-right:auto;	
 }
+#boxical0  td.today,
 #content table.boxical td.today {
 	background: #ddd;	
 }
+#boxical0  td.day6,
+#boxical0  td.day7,
 #content table.boxical td.day6,
 #content table.boxical td.day7 { /* to style the weekend  */
 /*	background: #eee;	*/
 }
+#boxical0  tbody td.pad,
 #content table.boxical tbody td.pad {  /* to style the non month boxes */
 /*	background: #eee;	 */
 }
+.icalendar .smallcalendar,
 #content table.smallcalendar,  
 table.smallcalendar {
 	width: 200px;
 }
+
+#boxical0  caption,
 #content table.largecalendar caption { 
 		font-weight: bold;
 		font-size: 1.2em;
 		padding: 5px;
 }	
+
+.icalendar  .smallcalendar tbody td,
 #content table.smallcalendar tbody td {
 	background: #f5f5f5;
 	border: 1px solid #fff;
 	padding: 3px 0 2px;
 	text-align: center;	
 }
+#boxical0 tbody td,
 #content table.largecalendar tbody td {
 	height:100px; /* it will expand if necessary */
 }
-
+#boxical0   td.views,
 #content table.largecalendar  td.views{
 	text-align: right;
 }
+#calnav,
+#content #calnav {
+	margin: 0;
+	padding: 0;
+	border: hidden;
+}
+#calnav .calendar_navigation td,
+#content #calnav .calendar_navigation td{
+	padding: 0;
+}
+#calnav .views,
+#content #calnav .views {
+	text-align: right;
+}
+#calnav .month_nav,
+#content #calnav .month_nav {
+	text-align: left;
+}
+#calnav .navigation form,
+#boxical0  .navigation form,
 #content table.largecalendar .navigation form{ 
 	display: inline;
 	padding: 0 8px;
 }
+#calnav .navigation input,
+#calnav .navigation select,
+#boxical0  .navigation input,
+#boxical0  .navigation select,
 #content table.largecalendar .navigation input,
 #content table.largecalendar .navigation select{ 
 	margin: 0;
 	line-height: 14px;
 	font-size: 12px;
 }
+#calnav  .navigation a,
+#boxical0  .navigation a,
 #content table.largecalendar  .navigation a { 
 	font-weight: bold;
 }
+#boxical0  tr th,
 #content table.boxical tr th,
 #content table.boxical tr td {
 	padding: 3px;
 }
+#boxical0 thead tr th,
 #content table.boxical thead tr th {
 	text-align: center;
 }
+#boxical0 td a ,
 #content table.boxical td a {
 	text-decoration: none;
 }
+#boxical0 tfoot tr td,		 
+#boxical0 tfoot tr,
 #content table.boxical tfoot tr td,		 
 #content table.boxical tfoot tr {
 	border: none;
 }	
-#content table.boxical  div.event a: hover {
+
+#boxical0  div.event a:hover { /* optional */
 	
 }
 
 /* unfortunately we need to use divs to hide the details if we want to allow html in details and keep html valid */
 /* ------------------------------  hide the details until we want them -----------*/
+#boxical0 td div.event div.details2,
 #content table.boxical td div.event div.details2{ /* hide column 2 */
 	display: none;
 }
+#boxical0 div.event:hover  div.details2,
 #content table.boxical div.event:hover  div.details2 {
         color:#333333; 
         background:#ffffff; 
@@ -102,20 +150,27 @@ table.smallcalendar {
         z-index:100;
 		border: 1px solid #000000;
         }
+#boxical0 div.event:hover  div.details2,
 #content table.boxical div.event:hover  div.details2 {
 	display: block;
          }
+		 
+#boxical0 div.event:hover  div.details2 img,		 
 #content table.boxical div.event:hover  div.details2 img {
 	width: 200px;  /* make any images smaller */
-         }		
+         }	
+		 
+#boxical0 td.endweek div.event:hover  div.details2,		 
 #content table.boxical td.endweek div.event:hover  div.details2 {  /* shift the last column right side over a bit so it fits on the page*/
 		margin-left: -110px;
         }		 
-/* -----------------------------------------------------------------*/		 
+/* -----------------------------------------------------------------*/
+#boxical0 td div.event,		 
 #content table.boxical td div.event { /* use this if you want to force each event to take one line only */
  /*       overflow: hidden;
 	  height: 16px;    */
        }	
+
 #content table.largecalendar tbody td div.day	    { /* use this if you want to force each box to be a fixed size - day div required becuase cannot force a td height  */
  /*     height: 66px; 
 	  overflow: hidden;	   */
@@ -170,10 +225,10 @@ table.smallcalendar {
 	text-align: right;
 }
 /* -----------------------------------------for the list style ------------------------- */
-.icalprop span.col1 {
+.icalprop .col1 {
 	float: left;
 }	
-.icalprop span.col2 {
+.icalprop .col2 {
 	text-align: right;
 	float: right;
 }
@@ -190,7 +245,7 @@ table.smallcalendar {
 .icalprop tr,
 .icalprop tr td,
 .icalprop tr th {	
-	border: 0px;
+	border: none;
 	padding: 0;
 	margin: 0;
 	vertical-align:bottom;

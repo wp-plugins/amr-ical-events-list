@@ -4,7 +4,7 @@ Donate link: http://webdesign.anmari.com/web-tools/donate/
 Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, ical-feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, 
 Requires at least: 2.8
 Tested up to: 3.0.1
-Version: 3.1
+Version: 3.2
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.
@@ -32,6 +32,7 @@ Test with your calendar's ics file at the demo site:
 
 Many thanks to the following people for the translations.  Note that I am unable to verify these and they may be out of date with the current version.:
 
+*   French by fxbenard aka 3emeOeil (no link available)
 *   Danish by [Georg] (http://wordpress.blogos.dk/s%C3%B8g-efter-downloads/?did=264)
 *   German by Simon Betschmann
 *   Belorussian  by iam from [www.fatcow.com](http://www.fatcow.com)
@@ -79,6 +80,18 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 *  Allow html in descriptions, and convert any url's to links if not already converted.   
 
 == Changelog ==
+= Version 3.2 =
+*  Added French translation files
+*  Minor bug fix for css file copying error (from plugin css to a uploads location for custom css so that it did not get overwritten) - only occurrs on some systems
+*  Added option to include the 'box calendar' month year navigation in the agenda view.  Add show_month_nav=1 (or true) in the shortcode parameters.  To avoid unrequested changes for existing users, in agenda view, the month navigation will not show unless you add the parameter.  It will show in the calendar view.
+*  More inline help in the configuration area
+*  Download link for standard css file to make it quicker for you to edit it.
+*  Added to css file to attempt to make default css apply to more themes. Since some themes are quiet different this may not always succeed.  The css is quite verbose as a result to cater for those who are not so css competent. If you are pedantic about this, please create a custom css and thin it down.
+
+= Version 3.1.1 =
+*  Some changes to the "add to google" link required for amr-events plugin where there may be html content.
+*  Also added some additional inline help in the configuration area
+
 = Version 3.1 =
 *  Feature to switch off title text on event link in upcoming events widget was briefly lost when the small calendar widget was introduced. This fixes that.
 
