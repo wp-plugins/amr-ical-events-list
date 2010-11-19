@@ -33,7 +33,7 @@ Test with your calendar's ics file at the demo site:
 Many thanks to the following people for the translations.  Note that I am unable to verify these and they may be out of date with the current version.:
 
 *   French by fxbenard aka 3emeOeil (no link available)
-*   Danish by [Georg] (http://wordpress.blogos.dk/s%C3%B8g-efter-downloads/?did=264)
+*   Danish by [Georg](http://wordpress.blogos.dk/s%C3%B8g-efter-downloads/?did=264)
 *   German by Simon Betschmann
 *   Belorussian  by iam from [www.fatcow.com](http://www.fatcow.com)
 *   Russian (partial) by ghost from http://antsar.info/
