@@ -63,7 +63,7 @@ function amrical_calendar_views ($link) {
 		'calendar',
 		'agenda',
 		'listtype',
-		'eventmap'));
+		'eventmap'), $link);
 	
 	if (isset ($amr_limits['agenda'])) $agenda = $amr_limits['agenda'];
 	else $agenda = 1;
@@ -151,6 +151,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 	global $amr_globaltz;
 	global $change_view_allowed;
 	global $wpdb, $wp_locale;
+	global $amr_calendar_url;
 	
 // ---  Note that if months set, then events will have started from beg of month */
 //	if (isset ($amr_limits['months'])) $months = $amr_limits['months'];  //may need later on if we are going to show multiple boxes on one page 
@@ -186,6 +187,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 	$prevlink = $month_nav_html['prevlink'];
 	$nextlink = $month_nav_html['nextlink'];
 
+	$link = amr_clean_link();
 	//
 	$calendar_caption = amr_date_i18n ($month_format, $start);
 	if ((isset($amr_limits['show_views'])) and ($amr_limits['show_views']) and $change_view_allowed) {

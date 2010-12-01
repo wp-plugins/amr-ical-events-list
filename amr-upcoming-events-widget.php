@@ -166,9 +166,9 @@ class amr_icalendar_widget extends WP_widget {
 	if (!isset($atts['listtype'])) $atts['listtype'] = $amr_listtype = '8';
 	if (!isset($atts['months'])) $atts['months'] = 1;
 	$criteria 				= amr_get_params ($atts);  /* this may update listtype, limits  etc */
-	if (isset($_GET['debug'])) echo '<hr>calen widget before overrwite :'.$amr_listtype.' '.amr_echo_parameters();
+	if (isset($_GET['debug'])) echo '<hr>calen widget listtype :'.$amr_listtype.' '.amr_echo_parameters();
 //      overrwite since we always want a month 
-	if (isset($_GET['debug'])) echo '<br/> Overwriting! ';	
+	if (isset($_GET['debug'])) echo '<br/> Overwriting with limits! ';	
 	$amr_limits['end'] = clone $amr_limits['start'];
 	date_modify ($amr_limits['end'], '+1 month');	
 	if (!isset($amr_limits['months'])) $amr_limits['months'] = 1;

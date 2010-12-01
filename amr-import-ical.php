@@ -20,6 +20,27 @@
  *
  */
 
+class curl {
+  var $timeout;
+  var $url;
+  var $file_contents;
+  function getFile($url,$timeout=0) {
+    # use CURL library to fetch remote file
+    $ch = curl_init();
+    $this->url = $url;
+    $this->timeout = $timeout;
+    curl_setopt ($ch, CURLOPT_URL, $this->url);
+    curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $this->timeout);
+    $this->file_contents = curl_exec($ch);
+    if ( curl_getinfo($ch,CURLINFO_HTTP_CODE) !== 200 ) {
+      return(false);
+    } else {
+      return $this->file_contents;
+    }
+  }
+}
+  
 /* ---------------------------------------------------------------------- */
 	/*
 	 * Return the full path to the cache file for the specified URL.
@@ -46,9 +67,7 @@
 		return $cache_path;
 	}
 /* ---------------------------------------------------------------------- */
-	/*
-	 * Return the cache filename for the specified URL.
-	 */
+	/* Return the cache filename for the specified URL.	 */
 	function amr_get_cache_filename($url) {
 		$extension = ICAL_EVENTS_CACHE_DEFAULT_EXTENSION;
 		$matches = array();
@@ -58,16 +77,17 @@
 		return md5($url) . ".$extension";
 	}
 /* ---------------------------------------------------------------------- */
-	/*
-	 * Cache the specified URL and return the name of the
-	 * destination file.
-	 */
+	/* Cache the specified URL and return the name of the destination file.	 */
+	if( !class_exists( 'WP_Http' ) )
+          include_once( ABSPATH . WPINC. '/class-http.php' );
+/* ---------------------------------------------------------------------- */	 
 	function amr_cache_url($url, $cache=ICAL_EVENTS_CACHE_TTL) {
 	global $amr_lastcache;
 	global $amr_globaltz;	
-		If (ICAL_EVENTS_DEBUG) echo '<br />url: '.$url; 	
+
+		If (ICAL_EVENTS_DEBUG) echo '<br />url: '.$url.'<br />'; 	
 		$file = get_cache_file($url);
-		if ( file_exists($file) ) {
+		if ( file_exists($file) ) {			
 			$c = filemtime($file);		
 			if ($c) $amr_lastcache = date_create(strftime('%c',$c));
 			else $amr_lastcache = '';
@@ -76,71 +96,83 @@
 			$c = false;
 			$amr_lastcache = date_create(strftime('%c',0));	
 			}
+		// must we refresh ?	
 		if ( isset($_REQUEST['nocache']) or isset($_REQUEST['refresh']) 
-			or (!(file_exists($file))) or ((time() - ($c)) >= ($cache*60*60))) 
-		{
+			or (!(file_exists($file))) or ((time() - ($c)) >= ($cache*60*60))) 	{
 			If (ICAL_EVENTS_DEBUG) {
 				echo '<br>Get ical file remotely, it is time to refresh or it is not cached: <br />'; 
 				print_r ($url);
 				}	
 			if (version_compare( PHP_VERSION,'5.2.13', '>')) $u = filter_var ($url, FILTER_VALIDATE_URL);
 			else $u = $url;
-			if (!($u) ) { _e('Invalid URL','amr_ical_list_lang'); return(false);}
-//			$check = get_headers ( $url  , 1  );
-			$check = wp_remote_get ($u);
-			
+			if (!($u) ) { _e('Invalid URL','amr_ical_list_lang'); return(false);}			
+// first try with http 			
+			$request = new WP_Http;
+			$check = $request->request( $u );		
 			if (( is_wp_error($check) ) or  (isset ($check['response']['code']) and ($check['response']['code'] == 404))
-			or (isset ($check[0]) and preg_match ('#404#', $check[0]))) {  /* is the last bit still meaningful or needed ? */
-			
+			or (isset ($check[0]) and preg_match ('#404#', $check[0])) /* is this bit still meaningful or needed ? */
+			or (!stristr($check['headers']['content-type'],'text/calendar'))) {  
+				If (ICAL_EVENTS_DEBUG) { echo '<br /> http request failed <br /> ';}	
 				if (is_wp_error($check)) $text = $check->get_error_message();
 				else $text = '';
-//				$text .= '&nbsp;'.sprintf(__('Error getting calendar file: %s','amr_ical_list_lang'), $url);		
-				if ( file_exists($file) ) { 
-					$text .= '&nbsp;'.sprintf(__('Using File last cached at %s','amr_ical_list_lang'), $amr_lastcache->format('D c'));	
-					echo '<br /><span style="text-align:center; font-size:small;"><em>'.__('Warning: Events may be out of date. ','amr_ical_list_lang').$text.'</em></span>';	
-					return($file);
+// else try curl								
+				$filetoget = new curl;
+				$data = $filetoget->getFile('http://senlawoffice.com/?post_type=event&feed=ics',30);
+				If (ICAL_EVENTS_DEBUG) { echo '<br /> Try curl ';var_dump($check);echo '<br /> ';}
+				if (!$data) {				
+					$text .= '&nbsp;'.sprintf(__('Error getting calendar file with htpp or curl: %s','amr_ical_list_lang'), $url);		
+					if ( file_exists($file) ) { // Try use cached file if it exists
+						$text .= '&nbsp;'.sprintf(__('Using File last cached at %s','amr_ical_list_lang'), $amr_lastcache->format('D c'));	
+						echo '<br /><span style="text-align:center; font-size:small;"><em>'.__('Warning: Events may be out of date. ','amr_ical_list_lang').$text.'</em></span>';	
+						$data = file_get_contents($file);
+						return($data);
+						}
+					else {
+						_e('No cached ical file for events','amr_ical_list_lang');	
+						echo $text;
+						return (false);	
 					}
-				else {
-					_e('No cached ical file for events','amr_ical_list_lang');	
-					echo $text;
-					return (false);	
 				}
-				
+				// else have data
 			}
-			
-//			$data = wp_remote_fopen($url);
-//			echo '<br/>Response code'.$check['response']['code'];
-//			echo '<br/>Content type'.$check['headers']['content-type'];
-//			echo '<br/>Content length'.$check['headers']['content-length'];
-
-			$data = $check['body'];
-			
-			if (($data) ) { /* now save it as a cached file */
+			else $data = $check['body'];  // from the http request
+		
+			if ($data) { /* now save it as a cached file */
 				if ($dest = fopen($file, 'w')) {
 					if (!(fwrite($dest, $data))) die ('Error writing cache file'.$dest);
 					fclose($dest);
 					$amr_lastcache = date_create (date('Y-m-d H:i:s'));
 				}
-				else  die('Error opening or creating the cached file'.$file);
+				else  {
+					echo '<br />Error opening or creating the cached file <br />'.$file;
+					return (false);
+				}
 			}
 			else {
 				echo '<br>Error opening remote file for refresh '.$url;
-				echo '<br><br><strong>Please check you are using shortcode syntax in your page [iCal url], not [iCal:url].  Plugin moved to shortcode usage only several versions back, after maintaining compatibility for a period.  This may cause a remote url problem.</strong><br>';
-				return ($file);
+				return false;
 				}
 			if (!isset($amr_lastcache))	$amr_lastcache = date_create (date('Y-m-d H:i:s'), $amr_globaltz);
 		}
+		else {}// no need to refresh, use the cached file
+
 		return ($file);
-	}
-	
+
+}	
 	
 /* ---------------------------------------------------------------------- */	
-    function amr_parseAttendee	($arraybycolon)    { /* receive full string parsed to array  */
-	if (ICAL_EVENTS_DEBUG) {echo '<br/>Attendees to parse <br />'; var_dump($arraybycolon);}
-	$attendees = amr_parseOrganiser($arraybycolon);
-	if (ICAL_EVENTS_DEBUG) {echo '<br/>Using parse organiser gave us  <br />'; var_dump($attendees);}
-	return ($attendees);
-}	
+    function amr_parseAttendees	($arraybycolon)    { /* receive full string parsed to array  */
+/*	
+ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=Anna-m
+ arie Redpath;X-NUM-GUESTS=0:mailto:annamarieredpath@gmail.com
+ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;CN=an
+ drew@pahlman.com;X-NUM-GUESTS=0:mailto:andrew@pahlman.com
+
+NOT USING FOR NOW - INTERNAL ATTENDEES ONLY  
+ */
+	return($arraybycolon);
+}
+
 /* ---------------------------------------------------------------------- */	
     function amr_parseOrganiser($arraybysemicolon)    { /* receive full string parsed to array split by the semicolon
 	[0]=>ORGANIZER;SENT-BY="mailto
@@ -673,8 +705,11 @@ function amr_parse_ical ( $cal_file ) {
 	
     $line = 0;
     $event = '';
-	
-	if (!$fd=@fopen($cal_file,"r")) {
+	If (ICAL_EVENTS_DEBUG) { echo '<br />Calfile = '; var_dump($cal_file);echo '<br />';}
+	$data = file_get_contents($cal_file);
+	If (ICAL_EVENTS_DEBUG) { echo '<br />data in file = '; var_dump($data);echo '<br />';}
+/*	
+	if (!$fd=fopen($cal_file,"r")) {
 	    echo '<br>'.sprintf(__('Error reading cached file: %s', 'amr_ical_list_lang'), $cal_file);
 	    return ($cal_file);
 	} 
@@ -686,6 +721,8 @@ function amr_parse_ical ( $cal_file ) {
 		  $data .= fgets($fd, 4096);
 		}
 		fclose($fd);
+*/		
+		
 		// Now fix folding.  According to RFC, lines can fold by having
 		// a CRLF and then a single white space character.
 		// We will allow it to be CRLF, CR or LF or any repeated sequence
@@ -702,9 +739,10 @@ function amr_parse_ical ( $cal_file ) {
 		$amr_totallines = count ($amr_lines) - 1; /* because we start from 0 */
 		If (ICAL_EVENTS_DEBUG) {
 			echo '<br>data lines: '.$amr_totallines ;
-			echo '<br />first line: ';	var_dump($amr_lines[0]);
+			echo '<br />first line: ';	var_dump($amr_lines);
 			
 			echo '<br />';
+			
 			}	
 
 	
@@ -724,5 +762,5 @@ function amr_parse_ical ( $cal_file ) {
 				}
 			return false;
 			}
-	}
+	
 }

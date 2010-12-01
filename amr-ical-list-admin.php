@@ -408,7 +408,9 @@ function amr_request_acknowledgement () {
 _e('If you have a feature request, please do let me know. ','amr_ical_list_lang'); 	
 ?></p><p><b><?php _e('To edit events in wordpress:','amr_ical_list_lang'); ?> <a href="http://icalevents.anmari.com" >icalevents.anmari.com</a><?php
 	?></b></p><p>
-	<a href="http://icalevents.anmari.com" title="Sign up or monitor the feed for regular updates"><?php _e('Plugin support', 'amr_ical_list_lang');?></a>
+	<a href="http://icalevents.anmari.com" title="Sign up or monitor the feed for regular updates"><?php _e('Documentation', 'amr_ical_list_lang');?></a>
+	&nbsp;&nbsp;
+	<a href="http://forum.anmari.com" title="Support Forum"><?php _e('Support', 'amr_ical_list_lang');?></a>
 	&nbsp;&nbsp;
 	<a href='http://wordpress.org/tags/amr-ical-events-list' title="If you like it rate it..."><?php _e('Rate it at WP', 'amr_ical_list_lang');?></a>
 	&nbsp;&nbsp;

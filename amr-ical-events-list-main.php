@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '3.2');
+define('AMR_ICAL_LIST_VERSION', '3.3');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -686,6 +686,37 @@ global $amr_globaltz, $amr_options;
 		.htmlentities(add_querystring_var($url,'tz',$tz2)).'" title="'
 		.$text2.'" >'.$t3.' </a></span>');
 }
+
+
+
+
+/* --------------------------------------------------------- */
+function amr_format_attendees ($attendees) {/* receive array of hopefully attendess[] CN and MAILTO, and possibly other */
+
+	If (ICAL_EVENTS_DEBUG) {echo '<br />Attendee array:    '; var_dump($attendees);}
+	$text = '';
+
+	if (is_array($attendees)) 
+		foreach ($attendees as $i => $attendee) {
+			$list[] = amr_format_attendee ($attendee);
+		}
+	$text = implode (', ',$list);
+	return($text);
+}
+/* --------------------------------------------------------- */
+function amr_format_attendee ($attendee) {  // do not show emails for privacy reasons 
+
+	if (!empty ($attendee['CN'])) {
+		if (!empty  ($attendee['LINK']))
+		$text = '<a href="'.$attendee['LINK'].'" >'.$attendee['CN'].'</a>';
+		else $text = $attendee['CN'];
+	}		
+	else {
+		$text = $attendee;
+	}
+
+	return ($text);
+}	
 /* --------------------------------------------------------- */
 function amr_format_organiser ($org) {/* receive array of hopefully CN and MAILTO, and possibly SENTBY */
 	If (ICAL_EVENTS_DEBUG) {echo '<br />Organiser array:    '; var_dump($org);}
@@ -780,6 +811,7 @@ what about all day?
 	global $amr_listtype;
 		
 	if ($k == 'ORGANIZER') { return( amr_format_organiser ($content)); }
+	if ($k == 'ATTENDEE') { return( amr_format_attendees ($content)); }
 	if (is_object($content)) {
 		switch ($k){
 			case 'EventDate': return ('<abbr class="dtstart" title="'
@@ -977,6 +1009,9 @@ function amr_derive_for_list_or_eventinfo (&$e) {
 	if ($g = add_event_to_google($e))  $e['addevent'] = $g; 
 	if (function_exists ('subscribe_to_event')) {
 		$g = subscribe_to_event($e); if (!empty($g) ) $e['subscribeevent'] = $g;	
+	}
+	if (function_exists ('indicate_attendance')) {
+		$e['subscribeevent'] = amr_indicate_attendance($e['id']);	
 	}
 	return ($e);
 	
@@ -1288,7 +1323,8 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 	if (!empty ($views)) $views = $cell.' class="views">'. $views 	.$cellc;
 	if (!empty ($month_nav)) $month_nav = $cell.' class="month_nav">'. $month_nav 	.$cellc;
 	if ((!empty ($month_nav)) or (!empty ($views))) 
-		$navigation_html = $box.' id = '.$w.'calnav'.$icalno.'>'.$body.$row.' class="calendar_navigation">'.$month_nav.$views.$rowc.$bodyc.$boxc;		
+		$navigation_html = $box.' id = "'.$amrW.'calnav" >'.$body.$row.' class="calendar_navigation">'.$month_nav.$views.$rowc.$bodyc.$boxc;	
+	else $navigation_html = '';
 /* -- heading and footers code ------------------------------------------*/
 
 		if (isset($amr_limits['headings'])) $doheadings = $amr_limits['headings'];
@@ -1868,7 +1904,7 @@ global $amr_limits;
 			echo '<br>'.sprintf(__('Unable to load or cache ical calendar %s','amr_ical_list_lang'),$url);	
 			return;	
 		}
-	$ical = amr_parse_ical($file);   
+	$ical = amr_parse_ical($file);  
 	if (! (is_array($ical) )) {
 			echo sprintf('Error finding or parsing ical calendar %s',$url);
 			return($ical);
@@ -2358,7 +2394,9 @@ global $amr_icalno;/* used to give each ical  table a unique id on a page or pos
 
 	$change_view_allowed = true;
 //	if (isset($_REQUEST['days'])) return ('');  // don't show if only doing days 
+
 	if (!isset($atts['listtype'])) $atts['listtype'] = $amr_listtype = '9';
+
 //	if (!isset($atts['months'])) 
 	$atts['months'] = 1;
 	$criteria =	amr_get_params ($atts);  /* strip out and set any other attstributes  - they will set the limits table */
