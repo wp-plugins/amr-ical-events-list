@@ -617,7 +617,7 @@ global $amr_globaltz;
 			return(amr_parseOrganiser($parts));
 			}
 		case 'ATTENDEE': {
-			return(amr_parseAttendee($parts));
+			return(amr_parseAttendees($parts));
 			}	
 		default:	
 			if (isset ($parts[1])) return (str_replace ('\,', ',', $parts[1]));  /* replace any slashes added by ical generator */
