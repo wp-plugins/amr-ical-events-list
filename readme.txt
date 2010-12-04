@@ -4,7 +4,7 @@ Donate link: http://webdesign.anmari.com/web-tools/donate/
 Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, ical-feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, 
 Requires at least: 2.8
 Tested up to: 3.0.2
-Version: 3.3
+Version: 3.4
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.
@@ -80,11 +80,15 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 *  Allow html in descriptions, and convert any url's to links if not already converted.   
 
 == Changelog ==
+= Version 3.4 =
+*  Fixed link bug if you clicked back and forth between agenda and calendar enough, it lost the page_id
+*  Fixed bug that happened if your server had to have a CURL call (http request did not work).  Bug was introduced in 3.3 - Apologies.
+*  Fixed version numbers around the place
+
 = Version 3.3 =
 *  Fixed link bug in small calendar widget - missing global variable
 *  Added links to new support forum
 *  Reworked some of the remote file fetching logic.  It was not working well with some hosts.  One could browse to the ics file, but not fetch it remotely.  It seemed to work for more hosts now (including facebook), but please let me know asap if you ahve any funnies.
-
 
 = Version 3.2 =
 *  Added French translation files

@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '3.3');
+define('AMR_ICAL_LIST_VERSION', '3.4');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -1297,7 +1297,7 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 
 	if ((isset($amr_limits['show_views'])) 
 	and ($amr_limits['show_views']) and $change_view_allowed) {
-		$views = amrical_calendar_views(null);
+		$views = amrical_calendar_views();
 	}
 	else $views = '';
 	/* -- show month year nav options or not  ----------------NOT IN USE - need to lift code out for reuse --------------------------*/		

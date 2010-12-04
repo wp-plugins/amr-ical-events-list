@@ -86,9 +86,9 @@ class curl {
 	global $amr_globaltz;	
 
 		If (ICAL_EVENTS_DEBUG) echo '<br />url: '.$url.'<br />'; 	
-		$file = get_cache_file($url);
-		if ( file_exists($file) ) {			
-			$c = filemtime($file);		
+		$cachedfile = get_cache_file($url);
+		if ( file_exists($cachedfile) ) {			
+			$c = filemtime($cachedfile);		
 			if ($c) $amr_lastcache = date_create(strftime('%c',$c));
 			else $amr_lastcache = '';
 		}
@@ -98,7 +98,7 @@ class curl {
 			}
 		// must we refresh ?	
 		if ( isset($_REQUEST['nocache']) or isset($_REQUEST['refresh']) 
-			or (!(file_exists($file))) or ((time() - ($c)) >= ($cache*60*60))) 	{
+			or (!(file_exists($cachedfile))) or ((time() - ($c)) >= ($cache*60*60))) 	{
 			If (ICAL_EVENTS_DEBUG) {
 				echo '<br>Get ical file remotely, it is time to refresh or it is not cached: <br />'; 
 				print_r ($url);
@@ -109,7 +109,7 @@ class curl {
 // first try with http 			
 			$request = new WP_Http;
 			$check = $request->request( $u );		
-			if (( is_wp_error($check) ) or  (isset ($check['response']['code']) and ($check['response']['code'] == 404))
+			if (( is_wp_error($check) ) or  (isset ($check['response']['code']) and !($check['response']['code'] == 200))
 			or (isset ($check[0]) and preg_match ('#404#', $check[0])) /* is this bit still meaningful or needed ? */
 			or (!stristr($check['headers']['content-type'],'text/calendar'))) {  
 				If (ICAL_EVENTS_DEBUG) { echo '<br /> http request failed <br /> ';}	
@@ -117,15 +117,15 @@ class curl {
 				else $text = '';
 // else try curl								
 				$filetoget = new curl;
-				$data = $filetoget->getFile('http://senlawoffice.com/?post_type=event&feed=ics',30);
-				If (ICAL_EVENTS_DEBUG) { echo '<br /> Try curl ';var_dump($check);echo '<br /> ';}
+				$data = $filetoget->getFile($u,30);
+				If (ICAL_EVENTS_DEBUG) { echo '<br /> Trying to get with curl <br /> ';}
 				if (!$data) {				
 					$text .= '&nbsp;'.sprintf(__('Error getting calendar file with htpp or curl: %s','amr_ical_list_lang'), $url);		
-					if ( file_exists($file) ) { // Try use cached file if it exists
+					if ( file_exists($cachedfile) ) { // Try use cached file if it exists
 						$text .= '&nbsp;'.sprintf(__('Using File last cached at %s','amr_ical_list_lang'), $amr_lastcache->format('D c'));	
 						echo '<br /><span style="text-align:center; font-size:small;"><em>'.__('Warning: Events may be out of date. ','amr_ical_list_lang').$text.'</em></span>';	
-						$data = file_get_contents($file);
-						return($data);
+//						$data = file_get_contents($cachedfile);
+						return($cachedfile);  //return file not data
 						}
 					else {
 						_e('No cached ical file for events','amr_ical_list_lang');	
@@ -138,13 +138,13 @@ class curl {
 			else $data = $check['body'];  // from the http request
 		
 			if ($data) { /* now save it as a cached file */
-				if ($dest = fopen($file, 'w')) {
+				if ($dest = fopen($cachedfile, 'w')) {
 					if (!(fwrite($dest, $data))) die ('Error writing cache file'.$dest);
 					fclose($dest);
 					$amr_lastcache = date_create (date('Y-m-d H:i:s'));
 				}
 				else  {
-					echo '<br />Error opening or creating the cached file <br />'.$file;
+					echo '<br />Error opening or creating the cached file <br />'.$cachedfile;
 					return (false);
 				}
 			}
@@ -156,7 +156,7 @@ class curl {
 		}
 		else {}// no need to refresh, use the cached file
 
-		return ($file);
+		return ($cachedfile);
 
 }	
 	

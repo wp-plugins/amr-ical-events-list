@@ -39,7 +39,9 @@ global $wp_locale, $amr_globaltz;
 }
 
 // ----------------------------------------------------------------------------------------
-function amr_clean_link() { /* the start date object  and the months to show */
+function amr_clean_link() { /* get cleaned up version of current url  remove other parameters */
+
+
 	$link = remove_query_arg(array(
 	'months',
 	'hours',
@@ -48,6 +50,7 @@ function amr_clean_link() { /* the start date object  and the months to show */
 	'hoursoffset',
 	'eventoffset',
 	'monthsoffset'));
+	
 	return ($link);
 }	
 // ----------------------------------------------------------------------------------------
@@ -57,13 +60,15 @@ function amrical_get_month_link($start, $months, $link) { /* the start date obje
 return ($link);
 }
 // ----------------------------------------------------------------------------------------
-function amrical_calendar_views ($link) {
+function amrical_calendar_views () {
 	global $amr_listtype, $amr_limits;
+	
+	$link = amr_clean_link();
 	$link = remove_query_arg(array(
 		'calendar',
 		'agenda',
 		'listtype',
-		'eventmap'), $link);
+		'eventmap'));
 	
 	if (isset ($amr_limits['agenda'])) $agenda = $amr_limits['agenda'];
 	else $agenda = 1;
@@ -187,11 +192,10 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 	$prevlink = $month_nav_html['prevlink'];
 	$nextlink = $month_nav_html['nextlink'];
 
-	$link = amr_clean_link();
 	//
 	$calendar_caption = amr_date_i18n ($month_format, $start);
 	if ((isset($amr_limits['show_views'])) and ($amr_limits['show_views']) and $change_view_allowed) {
-			$views = amrical_calendar_views($link);
+			$views = amrical_calendar_views();
 		}
 	else $views = '&nbsp;';	
 	//
