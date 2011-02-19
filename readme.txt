@@ -4,8 +4,8 @@ Donate link: http://webdesign.anmari.com/web-tools/donate/
 Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, ical-feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar,
 
 Requires at least: 2.8
-Tested up to: 3.0.4
-Version: 3.7
+Tested up to: 3.0.5
+Version: 3.8
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.
@@ -81,6 +81,14 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 *  Allow html in descriptions, and convert any url's to links if not already converted.
 
 == Changelog ==
+= Version 3.8 =
+* Added shortcode parameter "pagination".  By default the pagination at the bottom of the calendar list is on.  If you add "pagination=0", the pseudo pagination at the bottom of the calendar/list will be switched off.
+* Removed unnecessary "pretty print" of the recurring rule.  It will not say "Daily every day", it will say Daily.  Also it will not say "Daily every 2nd day", it will say "Every second day" - translateable.
+* The COUNT limit was being applied too early, most of the time okay, but could give incorrect result in certain circumstances. 
+* DTSTART (hardly ever displayed - the original start of a recurring series) was being updated by most recent event date.  It should always stay as the original DTSTART, distinct from the event date.
+* The ical spec oddity where DTEND is one day more than the human thinks it should, cropped up again - fixed.
+* Slight change to pagination so that if one has clicked through from a single day in a box calendar, it is easier to "show more days".  Please note that using basic html it is entirely possible for you to add  your own pagination before or after the calendar or agenda shortcode.
+
 = Version 3.7 =
 * Added CURL option to "follow redirection" to not "break" the calendar if your ics host decides to redirect the file.  Note: Your ics fetch may be slow if it is following a redirection.
 * Timed certain day repeating dates (RDATES) will now show the correct time

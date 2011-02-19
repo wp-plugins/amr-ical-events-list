@@ -40,6 +40,8 @@ class amr_ical_widget extends WP_widget {
 
 	$amrW = 'w';	 /* to maintain consistency with previous version and prevent certain actions */
 	$criteria 	= amr_get_params ($args);  /* this may update listtype, limits  etc */
+		
+	if (isset ($criteria['event'])) unset ( $criteria['event']);  //later may need to check for other custo posttypes 
 	if (ICAL_EVENTS_DEBUG) echo '<hr>ical list widget:'.$amr_listtype.' <br />'.amr_echo_parameters();
 
 	if (isset($doeventsummarylink) and !($doeventsummarylink)) $amrW = 'w_no_url';
@@ -186,7 +188,10 @@ class amr_icalendar_widget extends WP_widget {
 //
 	if (!isset($atts['listtype'])) $atts['listtype'] = $amr_listtype = '8';
 	if (!isset($atts['months'])) $atts['months'] = 1;
+	//
 	$criteria 				= amr_get_params ($atts);  /* this may update listtype, limits  etc */
+	if (isset ($criteria['event'])) unset ( $criteria['event']);  //later may need to check for other custo posttypes 
+	//
 	if (isset($_GET['debug'])) echo '<hr>calen widget listtype :'.$amr_listtype.' '.amr_echo_parameters();
 //      overrwite since we always want a month
 	if (isset($_GET['debug'])) echo '<br/> Overwriting with limits! ';

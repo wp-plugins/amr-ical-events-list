@@ -289,7 +289,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 				foreach ($events as $event) {
 				// convert eventdate to display timezone now for day of month assignment, other dates will be
 				// converted to display timezone at display time.
-				date_timezone_set($event['EventDate'], $amr_globaltz);
+				date_timezone_set($event['EventDate'], $amr_globaltz);  // may do this earlier (after recurrence though), no harm in twice
 
 //			var_dump($event);
 
@@ -347,8 +347,8 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 			$order = prepare_order_and_sequence ($order);
 			if (!($order)) return;
 			//-----------------------------------------------------------------------------------
-			if (ICAL_EVENTS_DEBUG) echo ' we have '.count($eventsfortheday);
-			if (!empty($eventsfortheday)) {
+			
+			if (!empty($eventsfortheday)) { if (ICAL_EVENTS_DEBUG) echo ' we have '.count($eventsfortheday);
 					foreach ( $eventsfortheday as $day => $devents ) {
 
 						if (ICAL_EVENTS_DEBUG) echo '<br />Day ='.$day. ' with '.count($devents).' events ';

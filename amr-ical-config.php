@@ -310,6 +310,7 @@ $amr_compprop = array
 		'DTEND'=> 		$dfalse,
 		'DUE'=> 		$dfalse,
 		'DURATION'=> 	$dfalse,
+		'ALLDAY' => 	$dfalse,
 		'COMPLETED'=> 	$dfalse,
 		'FREEBUSY'=> 	$dfalse,
 		'TRANSP'=> 		$dfalse),
@@ -322,6 +323,7 @@ $amr_compprop = array
 //		'TZURL'=> $dfalse),
 	'Relationship' => array (
 		'ATTENDEE'=> 		$dfalse,
+//		'attending_event' => $dfalse,
 		'CONTACT'=> 		$dtrue,
 		'ORGANIZER'=> 		array('Column' => 0, 'Order' => 30, 'Before' => '', 'After' => ''),
 		'RECURRENCE-ID'=> 	$dfalse,

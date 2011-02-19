@@ -492,7 +492,7 @@ function amr_limit_by_yearday (&$datearray, $pbyyearday, $tz) {
 	if (isset($_GET['rdebug'])) { echo '<br>Limit by year day';}
 	foreach ($datearray as $i=> $d) {
 		$dateobj = amr_create_date_from_parts ($d, $tz);
-		if (is_object ($possdate) ) {
+		if (is_object ($dateobj) ) {
 			$dateyearday = $dateobj->format('z')+1;
 			if (!in_array($dateyearday,$pbyyearday) ) unset ($datearray[$i]);
 		}
@@ -506,7 +506,7 @@ function amr_limit_by_day_of_week (&$datearray, $pby, $tz) {
 	if (isset($_GET['rdebug'])) { echo '<br>Limit by day of week '; print_r($pby);}
 	foreach ($datearray as $i=> $d) {
 		$dateobj = amr_create_date_from_parts ($d, $tz);
-		if (is_object ($possdate) ) {
+		if (is_object ($dateobj) ) {
 			$w = $dateobj->format('w');
 			if ($w == '-1') {$w = get_oldweekdays($dateobj);} /* php seems to break around 1760 and google passed a zero year date in an ics file  */
 			$w = $amr_day_of_week_from_no[$w];
@@ -515,8 +515,12 @@ function amr_limit_by_day_of_week (&$datearray, $pby, $tz) {
 				unset ($datearray[$i]);
 			}
 		}
-		else unset ($datearray[$i]);
+		else {
+			if (isset($_GET['rdebug'])) { echo '<br>Not an object '; var_dump($dateobj);}
+			unset ($datearray[$i]);
+		}
 	}
+	if (isset($_GET['rdebug'])) { echo '<br />Returning limited '; print_r($datearray);}
 	return ($datearray);
 }
 /* --------------------------------------------------------------------------------------------------- */
@@ -543,6 +547,44 @@ function amr_create_date_from_parts ($d, $tz) { /* create a date object from the
 	return ($possdate );
 }
 /* --------------------------------------------------------------------------------------------------- */
+function amr_get_a_closer_start ($start, $astart, $int) { // Note can only do this if no COUNT or BYSETPOS, else we break the rule
+	$closerstart = new datetime();
+	$closerstart = clone $start;
+	if (isset($_GET['rdebug'])) {echo '<br />Start was set at '.$start->format('c');}
+	while ($closerstart < $astart ) {
+//		if (isset($_GET['rdebug'])) { echo '<br />Main start= '. $astart->format('c'). ' '. $closerstart->format('c');}
+		$closerstart = amr_increment_datetime ($closerstart, $int) ;
+		if ($closerstart < $astart) $start = $closerstart;
+	}
+	if (isset($_GET['rdebug'])) {
+		echo '<br />Closer start is '.$start->format('c').' after adding iterations <br />';
+	}
+	unset($closerstart);
+	return ($start);
+}
+/* --------------------------------------------------------------------------------------------------- */
+function amr_limit_occurences ($repeats, $count) { 
+	/* we should check contrainst like count etc here rather */
+	
+	$num_events = count($repeats);
+	if (isset ($_GET['cdebug'])) {
+		echo '<br />We have '. $num_events.' events.  We want max:'.$count;
+		foreach ($repeats as $i=>$r) {
+			echo '<br />'.$i.' '.$r->format('c');
+		}
+	}
+	if ($num_events > $count)  {
+		$repeats = array_slice($repeats,0, $count);
+		}
+	if (isset ($_GET['cdebug'])) {
+		echo '<br />Limit date array, now have :'.count($repeats);
+		foreach ($repeats as $i=>$r) {
+			echo '<br />'.$i.' '.$r->format('c');
+		}
+	}
+	return($repeats);
+}
+/* --------------------------------------------------------------------------------------------------- */
 function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 	 /* RRULE a parsed array.  If the specified event repeats between the given start and
 	 * end times, return one or more nonrepeating date strings in array
@@ -552,20 +594,27 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 	/* now we should have if they are there: $p[freq], $p[interval, $until, $wkst, $ count, $byweekno etc */
 	/* check  / set limits  NB don't forget the distinction between the two kinds of limits  */
 	$tz = date_timezone_get($start);
-	if (isset($_GET['rdebug'])) {echo '<br />&nbsp;start='.$start->format('c').' <br />astart='.$astart->format('c') .'<br />';
+	if (isset($_GET['rdebug'])) {
+		echo '<br />&nbsp;start='.$start->format('c').' <br />astart='.$astart->format('c') .'<br /> parameter passed: ';
 		if (is_array($p))
 		foreach ($p as $k => $i) { echo $k. ' '; print_r($i); echo  '<br />';}
 		else {echo  '<br />rule passed'; var_dump($p);}
 	}
-	if (!isset($p['COUNT']))   $count = AMR_MAX_REPEATS;  /* to avoid any chance of infinite loop! */
-	else $count = $p['COUNT'];
-	if (ICAL_EVENTS_DEBUG) echo '<br />Limiting the repeats to '.$count;
-	if (!isset($p['UNTIL']))  $until = $aend;
+	if (!isset($p['COUNT']))   
+		$count = AMR_MAX_REPEATS;  /* to avoid any chance of infinite loop! */
+	else 
+		$count = $p['COUNT'];
+		
+	if (isset($_GET['cdebug'])) echo '<br />Limiting the repeats to '.$count;
+	
+	if (!isset($p['UNTIL']))  
+		$until = $aend;
 	else {
 		$until = $p['UNTIL'];
 		if ($until > $aend)	$until = $aend;
 	}
 	if (amr_is_before ($until, $astart )) { return(false); }/* if it ends before our overall start, then skip */
+	
 	/* now prepare out "intervales array for date incrementing eg: p[monthly] = 2 etc... Actualy there should only be 1 */
 	if (isset($p['FREQ'])) { /* so know yearly, daily or weekly etc  - setup increments eg 2 yearsly or what */
 		if (!isset ($p['INTERVAL'])) $p['INTERVAL'] = 1;
@@ -578,32 +627,38 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 		}
 		$freq = $p['FREQ'];
 	}
-	unset ($p['UNTIL']);  /* unset so we can use other params more cleanly */
-	unset ($p['COUNT']); unset ($p['FREQ']); unset ($p['INTERVAL']);
-	if (!empty($p['WKST'])) {	$wkst = $p['WKST']; unset($p['WKST']);}
-	else $wkst = $amr_wkst;
-	if (count($p) === 0) {$p=null; }  /* If that was all we had, get rid of it anyway */
+	
 	/*  use the freq increment to get close to our listing start time.  If we are within one freq of our listing start, we should be safe in calculating the odd rrules. */
-	$closerstart = new datetime();
-	$closerstart = clone $start;
-	while ($closerstart < $astart ) {
-//		if (isset($_GET['rdebug'])) { echo '<br />Main start= '. $astart->format('c'). ' '. $closerstart->format('c');}
-		$closerstart = amr_increment_datetime ($closerstart, $int) ;
-		if ($closerstart < $astart) $start = $closerstart;
-	}
-	if (isset($_GET['rdebug'])) {echo '<br />closer start was '.$closerstart->format('c');echo '<br />using start of__'.$start->format('c');}
-	unset($closerstart);
-	/* process one interval (one iteration of freq at a time */
+	/* NOTE we can only do this if we do not have the count or a bysetpos !!!!   */
+//	if (empty($int)) var_dump($p);
+	if (empty($p['COUNT']) and empty($p['BYSETPOS'])) {
+		$start = amr_get_a_closer_start($start, $astart, $int);		
+	}	
+	
+	
+	unset ($p['UNTIL']);  /* unset so we can use other params more cleanly, we have count saved etc */
+	unset ($p['COUNT']); unset ($p['FREQ']); unset ($p['INTERVAL']);
+	if (!empty($p['WKST'])) {	
+		$wkst = $p['WKST']; unset($p['WKST']);
+		}
+	else 
+		$wkst = $amr_wkst;
+	if (count($p) === 0) {$p=null; }  /* If that was all we had, get rid of it anyway */
+
+
 	if (isset ($p['NBYDAY'])) {
 	/* if we separated these in the parsing process, merge them here,    NOOO - will cause problems with the +1's and bool */
 		if (isset ($p['BYDAY'])) $p['BYDAY'] = array_merge ($p['NBYDAY'], $p['BYDAY']);
 		else $p['BYDAY'] = $p['NBYDAY'];
 		unset ($p['NBYDAY']);
 	}
-	while ($start <= $until) {	 /* don't check a start here - may miss some */
+	while ($start <= $until) {	 /* don't check astart here - may miss some */
+		if (isset($_GET['rdebug'])) { 
+			echo '<hr>Checked start against until '.$start->format('c').' '.$until->format('c');
+		}
 		$datearray[] = amr_get_date_parts($start);
 		switch ($freq) { /* the 'bys' are now in an array $p .  NOTE THE sequence here is important */
-			case 'SECONDLY':
+			case 'SECONDLY': {
 				if (isset($p['month'])) 		$datearray = amr_limit ($datearray, $p['month'], 'month');
 				/* BYWEEK NO not applicable here */
 				if (isset($p['BYYEARDAY'])) 	$datearray = amr_limit_by_yearday ($datearray, $p['BYYEARDAY'],$tz);
@@ -614,7 +669,8 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 				if (isset($p['minute'])) 		$datearray = amr_limit  ($datearray, $p['minute'],'minute');
 				if (isset($p['second'])) 		$datearray = amr_limit	($datearray, $p['second'],'second');
 				break;
-			case 'MINUTELY':
+				}
+			case 'MINUTELY': {
 				if (isset($p['month'])) 		$datearray = amr_limit ($datearray, $p['month'], 'month');
 				/* BYWEEK NO not applicable here */
 				if (isset($p['BYYEARDAY'])) 	$datearray = amr_limit_by_yearday ($datearray, $p['BYYEARDAY'],$tz);
@@ -624,7 +680,8 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 				if (isset($p['minute'])) 		$datearray = amr_limit  ($datearray, $p['minute'],'minute');
 				if (isset($p['second'])) 		$datearray = amr_expand ($datearray, $p['second'],'second',$tz);
 				break;
-			case 'HOURLY':
+				}
+			case 'HOURLY': {
 				if (isset($p['month'])) 		$datearray = amr_limit ($datearray, $p['month'], 'month');
 				/* BYWEEK NO not applicable here */
 				if (isset($p['BYYEARDAY'])) 	$datearray = amr_limit_by_yearday ($datearray, $p['BYYEARDAY'],$tz);
@@ -634,7 +691,8 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 				if (isset($p['minute'])) 		$datearray = amr_expand ($datearray, $p['minute'],'minute',$tz);
 				if (isset($p['second'])) 		$datearray = amr_expand ($datearray, $p['second'],'second',$tz);
 				break;
-			case 'DAILY':
+				}
+			case 'DAILY': {
 				if (isset($p['month'])) 		$datearray = amr_limit  ($datearray, $p['month'], 'month');
 				/* BYWEEK NO and BYYEARDAY not applicable here */
 				if (isset($p['day'])) 			$datearray = amr_limit   ($datearray, $p['day'], 'day');
@@ -643,7 +701,8 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 				if (isset($p['minute'])) 		$datearray = amr_expand ($datearray, $p['minute'],'minute',$tz);
 				if (isset($p['second'])) 		$datearray = amr_expand ($datearray, $p['second'],'second',$tz);
 			break;
-			case 'WEEKLY':
+			}
+			case 'WEEKLY': {
 				if (isset($p['month'])) 		$datearray = amr_limit ($datearray, $p['month'], 'month');
 				/* BYWEEK NO and BYYEARDAY and BYMONTH DAY not applicable here */
 				if (isset($p['BYDAY'])) 		$datearray = amr_expand_by_day_of_week_for_weekly ($datearray, $p,$tz,$wkst);
@@ -651,7 +710,8 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 				if (isset($p['minute'])) 		$datearray = amr_expand ($datearray, $p['minute'],'minute',$tz);
 				if (isset($p['second'])) 		$datearray = amr_expand ($datearray, $p['second'],'second',$tz);
 			break;
-			case 'MONTHLY':
+			}
+			case 'MONTHLY': {
 				if (isset($p['month'])) 		$datearray = amr_limit ($datearray, $p['month'], 'month');
 				/* BYWEEK NO and BYYEARDAY not applicable here */
 				if (isset($p['day'])) 			$datearray = amr_expand ($datearray, $p['day'], 'day',$tz);
@@ -665,7 +725,8 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 				if (isset($p['minute'])) 		$datearray = amr_expand ($datearray, $p['minute'],'minute',$tz);
 				if (isset($p['second'])) 		$datearray = amr_expand ($datearray, $p['second'],'second',$tz);
 				break;
-			case 'YEARLY':
+				}
+			case 'YEARLY': {
 
 				if (isset($p['month'])) 		$datearray = amr_expand ($datearray, $p['month'], 'month',$tz);
 				if (isset($p['BYWEEKNO'])) 		$datearray = amr_expand_by_weekno ($datearray, $p['BYWEEKNO'],$tz);
@@ -685,37 +746,63 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 				if (isset($p['minute'])) 		$datearray = amr_expand ($datearray, $p['minute'],'minute',$tz);
 				if (isset($p['second'])) 		$datearray = amr_expand ($datearray, $p['second'],'second',$tz);
 				break;
+			}	
 		}
 		$datearray = amr_sort_date_array($datearray);
+		//if (isset ($_GET['cdebug'])) {echo '<br /> We have in date array: '; print_r($datearray); }
+			// There will only be > 1 if there was an expanding BY: 
+			
 		if (!empty($p['BYSETPOS'])) 	{
 			$datearray = amr_limit_by_setpos ($datearray, $p['BYSETPOS']);
-			if (isset ($_GET['rdebug'])) {echo '<br />Selected after bysetpos:'; print_r($p['BYSETPOS']); echo '</br>'; print_date_array($datearray);	}
+			if (isset ($_GET['rdebug'])) {
+				echo '<br />Selected after bysetpos:'; print_r($p['BYSETPOS']); 
+				echo '</br>'; print_date_array($datearray);	}
 			$datearray = amr_sort_date_array($datearray); /* sort again as the set position may have trashed it */
 		}
-		$num_events = count($datearray);
-		if (isset ($_GET['rdebug'])) {echo '<br />We have '. $num_events.' events.  We want max:'.$count;	}
-		if ($num_events > $count)  $datearray = array_slice($datearray,0, $count);
-		if (isset ($_GET['rdebug'])) {echo '<br />Limit date array, now have :'.count($datearray);
-			echo '<br>From  '.$astart->format('Y m d h:i').' until '.$until->format('Y m d h:i');
-		}
+		
+//		$num_events = count($datearray);
+//		if (isset ($_GET['cdebug'])) {echo '<br />We have '. $num_events.' events.  We want max:'.$count;	}
+//		if ($num_events > $count)  $datearray = array_slice($datearray,0, $count);
+//		if (isset ($_GET['cdebug'])) {echo '<br />Limit date array, now have :'.count($datearray);
+//			echo '<br>From  '.$astart->format('Y m d h:i').' until '.$until->format('Y m d h:i');
+//		}
 		if (!empty ($datearray)) {
-			foreach ($datearray as $d) { /* create the date object and check if it is within date limits  */
+			foreach ($datearray as $d) { /* create the date objects  */
 				$possdate = amr_create_date_from_parts ($d, $tz);
 				if (is_object ($possdate) ) {
 					if (isset ($_GET['rdebug'])) echo '<br>Possdate='.$possdate->format('Y m d h:i:s');
-					if 	(($possdate <= $until) and ($possdate >= $astart)) {
+//					if 	(($possdate <= $until) and ($possdate >= $astart)) {
 						$repeats[] = $possdate;
-						if (isset ($_GET['rdebug'])) echo ' - saved';
+//						if (isset ($_GET['rdebug'])) echo ' - saved';
 					}
 				}
-			}
 		}
+		
 		unset ($datearray);
 		/* now get next start */
 		$start = amr_increment_datetime ($start, $int);
 		if (isset ($_GET['rdebug'])) echo '<hr>Next start data after incrementing = '.$start->format('Y m d l h:i:s');
 	} /* end while*/
-	if (isset ($_GET['rdebug'])) if (empty ($repeats)) echo '<b>No repeats</b><hr>'; else echo '<b>'.count($repeats).' repeats</b><hr>';
+	if (isset($_GET['rdebug'])) { 
+			echo '<hr>Stop now..checked start against until <br>'.$start->format('c').'<br>'.$until->format('c');
+			if ($start > $until) echo '<br /><b>php says start > until </b>';
+		}
+
+	if (!empty ($repeats)) {
+		$repeats = amr_limit_occurences ($repeats, $count);
+		
+		foreach ($repeats as $i=> $d) { /* check if it is within date limits  */
+			if 	(!(($d <= $until) and ($d >= $astart))) {
+				unset($repeats[$i]);
+				if (isset ($_GET['rdebug'])) 
+					echo '<br>Event instance not within limits - removed '.$d->format('Y m d h:i');
+			}
+		}			
+	}
+
+	if (isset ($_GET['rdebug'])) {
+		if (empty ($repeats)) echo '<b>No repeats</b><hr>'; else echo '<b>'.count($repeats).' repeats</b><hr>';
+	}
 	if (empty ($repeats)) return(null);
 	return ($repeats);
 
@@ -815,9 +902,9 @@ function amr_get_start_of_week (&$dateobj, $wkst) { /* get the start of the week
 	/* Now increment and try next repeat
 	check we have not fallen foul of a by -or is that elsewhere ?? */
 	if ((!isset ($int)) or (!is_array($int))) {echo 'unexpected error: no interval';return (false);}
-	if (isset ($_GET['rdebug'])) {echo '<br />Incre date '.$dateobject->format('c'); }
+//	if (isset ($_GET['rdebug'])) {echo '<br />Incre date '.$dateobject->format('c'); }
 	foreach ($int as $i=>$interval) {  /* There should actually only be one */
-		if (isset ($_GET['rdebug'])) {echo '<br />Int= '.$i;}
+//		if (isset ($_GET['rdebug'])) {echo '<br />Int= '.$i;}
 		if ($i === 'month') { /* need special check to cope with php date modify add month bug */
 			$day = $dateobject->format('j'); //day of month
 			if ($day > 28) { // we may experience the php date modify bug
@@ -829,7 +916,7 @@ function amr_get_start_of_week (&$dateobj, $wkst) { /* get the start of the week
 			else date_modify($dateobject,'+'.$interval.' '.$i);
 		}
 		else date_modify($dateobject,'+'.$interval.' '.$i);
-		if (isset ($_GET['rdebug'])) {echo '<br />'.$dateobject->format('c'); }
+//		if (isset ($_GET['rdebug'])) {echo '<br />'.$dateobject->format('c'); }
 	}
 	return ($dateobject);
 }

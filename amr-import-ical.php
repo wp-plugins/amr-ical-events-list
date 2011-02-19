@@ -284,11 +284,11 @@ NOT USING FOR NOW - INTERNAL ATTENDEES ONLY
 	[1] => bagunn@uoguelph.ca":mailto:ovcweb@uoguelph.ca
 
 	*/
-	if (ICAL_EVENTS_DEBUG) {echo '<br/>Organiser to parse <br />'; var_dump($arraybysemicolon);}
+//	if (ICAL_EVENTS_DEBUG) {echo '<br/>Organiser to parse <br />'; var_dump($arraybysemicolon);}
 	$org = array();
 	$p0 = explode(';',$arraybysemicolon[0]);
 	$m = explode(':',$arraybysemicolon[1]);
-	if (ICAL_EVENTS_DEBUG) {echo '<br/>m : <br />'; var_dump($m); echo '<br/>p0 : <br />'; var_dump($p0);}
+//	if (ICAL_EVENTS_DEBUG) {echo '<br/>m : <br />'; var_dump($m); echo '<br/>p0 : <br />'; var_dump($p0);}
 	foreach ($m as $i => $m2) {
 		if (strtoupper($m2) == 'MAILTO') {
 			$mailto = rtrim($m[$i+1],'"');
@@ -363,7 +363,7 @@ NOT USING FOR NOW - INTERNAL ATTENDEES ONLY
 			return (false);
 		}
 
-		If (ICAL_EVENTS_DEBUG) { echo '<br />** Datetime '.$d.' parsed as : '; var_dump($dt);}
+		//If (ICAL_EVENTS_DEBUG) { echo '<br />** Datetime '.$d.' parsed as : '; var_dump($dt);}
 
 	return ($dt);
     }
@@ -388,7 +388,6 @@ NOT USING FOR NOW - INTERNAL ATTENDEES ONLY
     function amr_parseDate($text, $tzobj)    {  /*
 		 VALUE=DATE:
 		 19970101,19970120,19970217,19970421
-
 		   19970526,19970704,19970901,19971014,19971128,19971129,19971225
 		   VALUE=DATE;TZID=/mozilla.org/20070129_1/Europe/Berlin:20061223
 	*/
@@ -593,8 +592,7 @@ Africa/Asmara
 /**
      * Parse a Duration Value field.
  */
-    function amr_parseDuration($text)
-    {
+    function amr_parseDuration($text)     {
 	/*
 	A duration of 15 days, 5 hours and 20 seconds would be:  P15DT5H0M20S
 	A duration of 7 weeks would be:  P7W, can be days or weeks, but not both
@@ -649,7 +647,7 @@ function amr_parseRDATE ($string, $tzobj ) {
 
  could be multiple dates after : */
 
-	if (isset($_GET['rdebug'])) {echo '<hr>In parse RDATE '; var_dump($string);}
+//	if (isset($_GET['rdebug'])) {echo '<hr>In parse RDATE '; var_dump($string);}
 
 	if (is_object($string)) {/* already parsed */  return($string); }
 
@@ -664,14 +662,14 @@ function amr_parseRDATE ($string, $tzobj ) {
 
 	$rdatestring = explode(':',$string);   /* $VALUE=DATE: or VALUE=DATE-TIME: and a series of dates (no time) */
 
-	if (isset($_GET['rdebug'])) {echo '<br />Ok now really parse it '; var_dump($rdatestring); echo '<br />'; }
+//	if (isset($_GET['rdebug'])) {echo '<br />Ok now really parse it '; var_dump($rdatestring); echo '<br />'; }
 
 	if (isset($rdatestring[0])) {
 
 		if (($rdatestring[0] == 'VALUE=DATE') and (isset($rdatestring[1])) ) {
 
 			$rdate =  explode(',',$rdatestring[1]); /* that' sall we are doing for now */
-			if (isset($_GET['rdebug'])) {echo '<br />Parsing value=date...<br/> '; var_dump($rdate);}
+//			if (isset($_GET['rdebug'])) {echo '<br />Parsing value=date...<br/> '; var_dump($rdate);}
 			foreach ($rdate as $i => $r)  {
 					$dates[$i] = array_shift(amr_parseValue ('DATE', $r, $tzobj));
 					/*returns array, but there should only be 1 value */
@@ -683,7 +681,7 @@ function amr_parseRDATE ($string, $tzobj ) {
 		 echo "<br />HELP cannot yet deal with RDATE with VALUE=PERIOD<br />"; return (false);
 			}
 		else {
-			if (isset($_GET['rdebug'])) {echo '<br />*** Parsing RDATE date time ';	var_dump($rdatestring);}
+//			if (isset($_GET['rdebug'])) {echo '<br />*** Parsing RDATE date time ';	var_dump($rdatestring);}
 			if (($rdatestring[0] == 'VALUE=DATE-TIME') and (isset($rdatestring[1])))  {
 				$rdate =  explode(',',$rdatestring[1]);
 			}
@@ -692,7 +690,7 @@ function amr_parseRDATE ($string, $tzobj ) {
 			}
 			foreach ($rdate as $i => $r)  {
 					$dates[$i] = amr_parseDateTime ( $r, $tzobj);
-					if (isset($_GET['rdebug'])) {echo '<br />*** Parsed as: '; var_dump($dates[$i]);}
+					//if (isset($_GET['rdebug'])) {echo '<br />*** Parsed as: '; var_dump($dates[$i]);}
 			}
 			if (empty($dates)) return (false);
 			else return ($dates);
@@ -858,7 +856,7 @@ function amr_parse_ical ( $cal_file ) {
     $event = '';
 	If (ICAL_EVENTS_DEBUG) { echo '<br />Calfile = '; var_dump($cal_file);echo '<br />';}
 	$data = file_get_contents($cal_file);
-	If (ICAL_EVENTS_DEBUG) { echo '<br />data in file = '; var_dump($data);echo '<br />';}
+	//If (ICAL_EVENTS_DEBUG) { echo '<br />data in file = '; var_dump($data);echo '<br />';}
 /*
 	if (!$fd=fopen($cal_file,"r")) {
 	    echo '<br>'.sprintf(__('Error reading cached file: %s', 'amr_ical_list_lang'), $cal_file);
@@ -890,7 +888,7 @@ function amr_parse_ical ( $cal_file ) {
 		$amr_totallines = count ($amr_lines) - 1; /* because we start from 0 */
 		If (ICAL_EVENTS_DEBUG) {
 			echo '<br>data lines: '.$amr_totallines ;
-			echo '<br />first line: ';	var_dump($amr_lines);
+			//echo '<br />first line: ';	var_dump($amr_lines);
 			echo '<br />';
 			}
 

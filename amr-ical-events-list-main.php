@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '3.7');
+define('AMR_ICAL_LIST_VERSION', '3.8');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -24,7 +24,10 @@ if (!(class_exists('DateTime'))) {
     ');
 
   }
-
+/*----------------------------------------------------------------------------------------*/
+function please_deactivate_events_with_ical_files_aka_amr_ical_events_list_before_activating_amr_events_else_it_will_cause_this_fatal_error (  ){
+//dummy function to convey message to people who do not read instructions  - until plugins restructured - seems to be no  way to trap the fatal error 
+}
 /* --------------------------------------------------  */
 global 	$amr_freq,
 		$amr_freq_unit;
@@ -39,7 +42,6 @@ $amr_freq_unit['WEEKLY'] 	= __('week', 'amr_ical_list_lang');
 $amr_freq_unit['MONTHLY']	= __('month', 'amr_ical_list_lang');
 $amr_freq_unit['YEARLY'] 	= __('year', 'amr_ical_list_lang');
 $amr_freq_unit['HOURLY'] 	= __('hour', 'amr_ical_list_lang');
-/*----------------------------------------------------------------------------------------*/
 
 function ical_ordinalize( $num ){
 
@@ -279,12 +281,16 @@ global 	$amr_freq,
 		$nicefrequnit = $amr_freq_unit[$rule['FREQ']]; /* already translated value */
 		if (isset($rule['INTERVAL'])) /*   the freq as it is repetitive */
 			$interval  = ' '.sprintf(__('Every %s %s','amr_ical_list_lang'), ical_ordinalize($rule['INTERVAL']),$nicefrequnit).$sep;
-		else $interval = ' '.sprintf( __('every %s','amr_ical_list_lang'), $nicefrequnit).$sep;
+//		else $interval = ' '.sprintf( __('every %s','amr_ical_list_lang'), $nicefrequnit).$sep; // sounds funny to have daily every day, only have if every 2nd etc
 
-		$nicefreq = $amr_freq[$rule['FREQ']].$interval; /* already translated value */
+//		$nicefreq = $amr_freq[$rule['FREQ']].$interval; /* already translated value */
+
+		else $interval = $amr_freq[$rule['FREQ']]; /* already translated value */
+
 		if (isset($rule['BYSETPOS'])) $c .= ' '.
 			sprintf(__('On %s instance within %s', 'amr_ical_list_lang'),amr_prettyprint_byordinal($rule['BYSETPOS']),$interval);
-		else $c .= 	$nicefreq;
+//		else $c .= 	$nicefreq;
+		else $c .= 	$interval;
 		if (isset($rule['COUNT'])) $c .= ' '.sprintf(__('%s times','amr_ical_list_lang'), $rule['COUNT']).$sep;
 		if (isset($rule['UNTIL'])) {
 			if ($rule['UNTIL-TIME'] === '00:00') $rule['UNTIL-TIME'] = '';
@@ -427,10 +433,8 @@ function amr_get_googletime($time)   {
 /*--------------------------------------------------------------------------------*/
 function amr_get_googledate($time)   {
 	$t = clone ($time);
-
-      $t->setTimezone(new DateTimeZone("UTC"));
-
-      return ($t->format("Ymd"));
+    $t->setTimezone(new DateTimeZone("UTC"));
+    return ($t->format("Ymd"));
 
    }
 /*--------------------------------------------------------------------------------*/
@@ -773,7 +777,7 @@ function amr_is_all_day($d1, $d2) {
 				//$d1a = new DateTime();
 				$d1a = clone ($d1);
 				date_modify ($d1a,'next day');
-				if ($d1a = $d2) return (true);
+				if ($d1a == $d2) return (true); //ie DTEND spec
 			}
 			return (false);
 		}
@@ -896,7 +900,7 @@ function amr_format_attendee ($attendee) {  // do not show emails for privacy re
 }
 /* --------------------------------------------------------- */
 function amr_format_organiser ($org) {/* receive array of hopefully CN and MAILTO, and possibly SENTBY */
-	If (ICAL_EVENTS_DEBUG) {echo '<br />Organiser array:    '; var_dump($org);}
+//	If (ICAL_EVENTS_DEBUG) {echo '<br />Organiser array:    '; var_dump($org);}
 	$text = '';
 //	if (!(is_array($org))) $org = amr_parseOrganiser('ORGANIZER;'.$org);  // may not have been parsed yet (eg in wp events)
 //	var_dump($org);
@@ -991,6 +995,8 @@ what about all day?
 	global $amr_formats;  /* amr check that this get set to the chosen list type */
 	global $amr_options;
 	global $amr_listtype;
+	
+//	echo '<br >'.$k;
 
 	if ($k == 'ORGANIZER') { return( amr_format_organiser ($content)); }
 	if ($k == 'ATTENDEE') { return( amr_format_attendees ($content)); }
@@ -1014,7 +1020,7 @@ what about all day?
 			case 'DTEND':
 			case 'UNTIL':
 				$text = amr_format_date ($amr_formats['Day'], $content);
-				if (isset($event['ALLDAY']) and !($event['ALLDAY'] == 'allday')) $text .= ' '.amr_format_date ($amr_formats['Time'], $content);
+				if (empty($event['ALLDAY']) or !($event['ALLDAY'] == 'allday')) $text .= ' '.amr_format_date ($amr_formats['Time'], $content);
 				return ($text );
 			case 'X-WR-TIMEZONE': { /* amr  need to add code to reformat the timezone as per admin entry.  Also only show if timezone different ? */
 				return(amr_format_tz(timezone_name_get($content)));
@@ -1061,6 +1067,7 @@ what about all day?
 			case 'addtogoogle': return ($content);
 			case 'addevent': return($content);
 			case 'subscribeevent': return($content);
+			case 'attending_event': {return($content);}
 			case 'X-WR-TIMEZONE':	/* not parsed as object - since it is cal attribute, not property attribue */
 				return(amr_format_tz ($content));
 			case 'refresh': return($content);
@@ -1119,8 +1126,10 @@ function amr_derive_dates (&$e) {
 		If (ICAL_EVENTS_DEBUG) {echo '<br>DTEND set to = '.$e['DTEND']->format('c');}
 	}
 	else {
-		if ((isset ($e['DTEND'])) and (!isset ($e['DURATION']))) { /* we don't have a duration */
+		if ((isset ($e['DTEND'])) and (empty ($e['DURATION']))) { /* we don't have a duration */
+
 			$e['DURATION'] = $d = amr_calc_duration ( $e['DTSTART'], $e['DTEND']);		/* calc the duration from the original values*/
+
 		}
 	}
 	if (isset ($e['DTEND']) ) {
@@ -1129,6 +1138,10 @@ function amr_derive_dates (&$e) {
 		}
 	}
 /* else EndDate will be unset */
+
+
+
+
 	return($e);
 }
 /* ------------------------------------------------------------------------------------*/
@@ -1157,7 +1170,7 @@ global $amr_globaltz;
 				unset ($e['EndTime']);
 				}
 			else { /* it must be a multi day, all day - due to spec, we need to chop a day off for presentation purposes */
-				$e['EndDate']->modify("-1 day");
+				//$e['EndDate']->modify("-1 day");  // NO! Endate wil be created correct;y, DT END will remain as original
 				if ($e['EventDate'] == $e['EndDate']) { /* */
 				}
 				}
@@ -1165,21 +1178,29 @@ global $amr_globaltz;
 	}
 	else $e['StartTime'] = $e['EventDate']; /* will format to time, later keep date  for max flex */
 
-	if (isset ($e['EndDate']) ) {
-		if (amr_is_all_day($e['EventDate'], $e['EndDate'])) {
+	
+	if ((isset($e['ALLDAY']) and ($e['ALLDAY'] == 'allday')) OR
+	    ((isset ($e['EndDate']) ) and (amr_is_all_day($e['EventDate'], $e['EndDate'])))) {
+
 			unset ($e['StartTime']);
 			unset ($e['EndTime']);
 			$e['Classes'] .= ' allday';
+//			$e['EndDate']->modify("-1 day"); //due to spec, we need to chop a day off for presentation purposes // NO! Endate wil be created correct;y, DT END will remain as original
 		}
-		else {
-			if (amr_same_time($e['EventDate'], $e['EndDate'])) unset ($e['EndTime']);
+	else {
+		if (isset ($e['EndDate'])) {
+			if (amr_same_time($e['EventDate'], $e['EndDate'])) 
+				unset ($e['EndTime']);
 			else $e['EndTime'] = $e['EndDate'];
 		}
-		if (amr_is_same_day($e['EndDate'],  $e['EventDate'])) {
-			unset($e['EndDate']);  /* will just have end time if we need it */
-		}
-		else $e['Classes'] .= ' multiday';
 	}
+//		echo '<hr>'; var_dump($e);
+	if (isset ($e['EndDate']) and amr_is_same_day($e['EndDate'],  $e['EventDate'])) {
+			unset($e['EndDate']);  /* will just have end time if we need it */		
+		}
+	else $e['Classes'] .= ' multiday';
+	
+
 
 	return($e);
 }
@@ -1201,8 +1222,8 @@ function amr_derive_for_list_or_eventinfo (&$e) {
 	if (function_exists ('subscribe_to_event')) {
 		$g = subscribe_to_event($e); if (!empty($g) ) $e['subscribeevent'] = $g;
 	}
-	if (function_exists ('indicate_attendance')) {
-		$e['subscribeevent'] = amr_indicate_attendance($e['id']);
+	if (function_exists ('amr_indicate_attendance') and !empty($e['id'])) { 
+		$e['attending_event'] = amr_indicate_attendance($e['id']);
 	}
 	return ($e);
 
@@ -1365,7 +1386,9 @@ function amr_list_properties($icals, $tid, $class) {  /* List the calendar prope
 				$cprop .= $d.' class="col'.$col.'">';  /* start next column */
 				$prevcol = $col;
 			}
-			if (isset ($icals[$i][$k])) {/*only take the fields that are specified in options  */
+			if (!empty ($icals[$i][$k])) {/*only take the fields that are specified in options  */
+
+			
 				$selector = ($k == 'description')? 'div' : 'span'; // because descriptions may contain html
 				$cprop .= '<'.$selector.' class="'.strtolower($k).'">'.stripslashes($v['Before'])
 				.amr_format_value($icals[$i][$k], $k, $icals[$i] )
@@ -1386,6 +1409,16 @@ function amr_list_properties($icals, $tid, $class) {  /* List the calendar prope
 			.$boxc;
 		}
 	return ($html);
+}
+function amr_doing_box_calendar () {
+global $amr_options,
+	$amr_listtype;
+
+	$liststyle = (isset ($amr_options[$amr_listtype]['general']['ListHTMLStyle']))
+			? $amr_options[$amr_listtype]['general']['ListHTMLStyle']
+			: $liststyle = 'table';//; 'list'
+	if (in_array ($liststyle, array('smallcalendar','largecalendar')))  return true;
+	else return false;
 }
 /* --------------------------------------------------  */
 function amr_list_events($events,  $tid, $class, $show_views=true) {
@@ -1411,7 +1444,6 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 			$html = amr_events_as_calendar($liststyle, $events, $tid, $class);
 			return($html);
 		}
-
 
 //
 /* ----------- check for groupings and compress these to requested groupings only */
@@ -1528,8 +1560,12 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 	else $navigation_html = '';
 /* -- heading and footers code ------------------------------------------*/
 
+		if (ICAL_EVENTS_DEBUG) {echo '<br />Limit parameters '; var_dump($amr_limits);}
 		if (isset($amr_limits['headings'])) $doheadings = $amr_limits['headings'];
 		else $doheadings = true;
+		if (isset($amr_limits['pagination'])) $dopagination = $amr_limits['pagination'];
+		else $dopagination = true;
+
 		$headhtml = '';
 		if ($doheadings) {
 			$docolheading=false;
@@ -1548,13 +1584,12 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 		}
 
 
-
 /* ***** with thechange in list types, we have to rethink how we do the footers .... for tables we say the footers up front, but for others not. */
 		$fhtml = '';
 		if (!(isset($amr_options['ngiyabonga']) and ($amr_options['ngiyabonga']))) $fhtml .= amr_ngiyabonga();
 		else $fhtml .='<!-- event calendar by anmari.com.  See it at icalevents.anmari.com -->';
 		if ((!empty($amr_limits)) and ($amrtotalevents > $amrconstrainedevents) ) {
-			if (function_exists('amr_semi_paginate')) $fhtml .= amr_semi_paginate();
+			if ($dopagination and function_exists('amr_semi_paginate')) $fhtml .= amr_semi_paginate();
 			if (function_exists('amr_ical_edit')) $fhtml .= amr_add_new_event_link();
 		}
 
@@ -1577,6 +1612,9 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 				if (isset($e[$k])) $v = amr_check_flatten_array ($e[$k]);
 				else $v =null;
 				if ((isset ($v))  && (!empty($v)))	{
+				
+					if (ICAL_EVENTS_DEBUG) {if ($k == 'StartTime') echo 'OK: '.$v->format('c');}
+				
 					$col = $kv['Column'];
 					if ($col > $prevcol) { /* if new column, then new cell , */
 						if (!($prevcol === 0))  {	/*if not the first col, then end the prev col */
@@ -1604,7 +1642,9 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 						$selector = $li;
 						$selectorend = $lic;
 					}
-
+			
+				
+				
 					$eprop .= $selector.' class="'.strtolower($k).'">'.stripslashes($kv['Before'])
 						. amr_format_value($v, $k, $e).stripslashes($kv['After']).$selectorend;  /* amr any special formating here */
 				}
@@ -1832,14 +1872,15 @@ function amr_repeat_anevent(&$event, $astart, $aend, $limit) {
 	/* for a single event, handle the repeats as much as is possible */
 	$repeats = array();
 	$exclusions = array();
-	$repeatstart = $event['DTSTART'];
+	$repeatstart = new DateTime();
+	$repeatstart = clone $event['DTSTART'];
 	$event = amr_parseRepeats($event);
 
 	if (!empty($event['RRULE']))	{
 
 		if (isset($_GET['rdebug'])) {
-			echo '<hr />After Parsing Repeats:<br /> RRULE:<br />';
-			var_dump($event['RRULE']);
+			echo '<hr />After Parsing Repeats:<br />';
+			if (isset ($event['RRULE'])) { echo ' RRULE:<br />';var_dump($event['RRULE']); }
 			echo '<br /> RDATE:<br />';
 			if (isset ($event['RDATE'])) var_dump($event['RDATE']);
 			echo '<br /> EXDATE:<br />';
@@ -1852,7 +1893,7 @@ function amr_repeat_anevent(&$event, $astart, $aend, $limit) {
 		if (!isset($event['RRULE'][0])) $event['RRULE'] = array($event['RRULE']); /* depending where we got our rrule from, we may or may not have multiple */
 		if (ICAL_EVENTS_DEBUG) { echo '<br><b>We have '.count($event['RRULE']).' rrules</b>';}
 		foreach ($event['RRULE'] as $i => $rrule) {
-			if (ICAL_EVENTS_DEBUG) { echo '<br><b>For start = '.$repeatstart->format('c').'</b> Doing rrule'.$i; var_dump($rrule);}
+
 			$reps = amr_process_RRULE($rrule, $repeatstart, $astart, $aend, $limit);
 			if (is_array($reps) and count($reps) > 0) {
 				$repeats = array_merge ($repeats, $reps);
@@ -1882,7 +1923,7 @@ function amr_repeat_anevent(&$event, $astart, $aend, $limit) {
 			if (ICAL_EVENTS_DEBUG) { echo '<br><h3>Got '.count($exclusions). ' after EXRULE</h3>';}
 		}
 
-		if (isset($event['EXDATE']))	{
+	if (isset($event['EXDATE']))	{
 			if (ICAL_EVENTS_DEBUG or isset($_GET['rdebug'])) {
 				echo '<br><h4>Have EXDATE </h4>';
 				var_dump($event['EXDATE']);
@@ -1897,7 +1938,8 @@ function amr_repeat_anevent(&$event, $astart, $aend, $limit) {
 			if (ICAL_EVENTS_DEBUG) { foreach ($exclusions as $z => $y) echo '<br />'.$y->format('c');}
 			if (ICAL_EVENTS_DEBUG) { echo '<br />Got  '.count($exclusions). ' exclusions after checking EXDATE';}
 		}
-		if (ICAL_EVENTS_DEBUG) { echo '<br />Still have '.count($repeats). ' before exclusions<br />';}
+		
+	if (ICAL_EVENTS_DEBUG) { echo '<br />Still have '.count($repeats). ' before exclusions<br />';}
 			/* Now remove the exclusions from the repeat instances */
 		if (is_array($exclusions) and count ($exclusions) > 0) {
 			if (ICAL_EVENTS_DEBUG) { echo '<br />'; var_dump($exclusions); }
@@ -1914,7 +1956,7 @@ function amr_repeat_anevent(&$event, $astart, $aend, $limit) {
 			}
 		}
 		if (ICAL_EVENTS_DEBUG) { echo '<br>Now have '.count($repeats). ' after  exclusions '; }
-
+		
 		return ($repeats);
 
 	}
@@ -1935,12 +1977,19 @@ function debug_print_event ($e, $nest=0) {
 	}
 	/* ========================================================================= */
 function amr_create_enddate (&$e) {
-	/* if the necessary data exist, then create the end date for a possibly repeated event. */
+	/* if the necessary data exist, then create the end date for a possibly repeated event.  - note this is NOT the DTEND */
 	if (isset ($e['DURATION'])) {/* if not just an alarm */
 		if (isset ($e['EventDate'])) {
 			$e['EndDate'] = new DateTime();
 			$e['EndDate'] = clone ($e['EventDate']);
 			$e['EndDate'] = amr_add_duration_to_date ($e['EndDate'], $e['DURATION']);
+			//check here whether all day or not  - human expects 1 day less, DTEND expects next day - keep it so
+			if (!empty ($e['ALLDAY']) and ($e['ALLDAY'] == 'allday')) { 
+				date_modify($e['EndDate'],'-1 day');
+
+				if (ICAL_EVENTS_DEBUG) echo '<hr> All day End Date set  '.$e['EndDate']->format ('c').'<hr>';
+				
+			}
 			return (true);
 		}
 	}
@@ -2038,7 +2087,9 @@ function amr_generate_repeats(&$event, $astart, $aend, $limit) { /* takes an eve
 					$newevents[$key] = $event;  // copy the event data over - note objects will point to same object - is this an issue?   Use duration or new /clone Enddate
 					$newevents[$key]['EventDate'] = new DateTime();
 					$newevents[$key]['EventDate'] = clone ($dtstart);
-					if (isset ($newevents[$key]['DTEND'] )) $newevents[$key]['EndDate'] = $newevents[$key]['DTEND'] ;
+					if (isset ($newevents[$key]['DURATION'] )) {
+						amr_create_enddate ($newevents[$key]);  //changed because EndDate not same as DTEND if all day
+						}
 					}
 				}
 			}
@@ -2139,13 +2190,13 @@ global $amr_limits;
 function amr_echo_parameters() {
 global $amr_limits;
 	foreach ($amr_limits as $i=> $v) {
-		if (!(in_array($i, array('cache','eventscache','headings','show_views','calendar_properties','show_month_nav') ))) {
+		if (!(in_array($i, array('cache','eventscache','pagination','headings','show_views','calendar_properties','show_month_nav') ))) {
 			$label = __($i,'amr_ical_list_lang').' = ';
 			if (is_object($v)) $t[] = $label.$v->format('j M i:s');
 			else if (!empty($v)) $t[] = $label.$v;
 		}
 	}
-	$text = implode (',',$t);
+	$text = implode (', ',$t);
 	return ($text);
 }
 /* -------------------------------------------------------------------------*/
@@ -2177,6 +2228,7 @@ function amr_get_events_cache_key ($criteria) {
 	$string = '';
 	$keys = array_merge($amr_limits,$criteria);
 	if (isset($keys['headings'])) unset($keys['headings']);
+	if (isset($keys['pagination'])) unset($keys['pagination']);
 	if (isset($keys['cache'])) unset($keys['cache']);
 	if (isset($keys['eventscache'])) unset($keys['eventscache']);
 	foreach ($keys as $i => $v) {
@@ -2323,7 +2375,7 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 				}
 			}
 			If (isset($_REQUEST['debug'])) echo '<br />Got x events '.count($components);
-			$components = amr_process_icalevents($components, $start,$end, $no_events);
+			$components = amr_process_icalevents($components, $start, $end, $no_events);
 			$amrtotalevents = count($components);
 			$components = amr_constrain_components($components, $start, $end, $no_events);
 			If (ICAL_EVENTS_DEBUG) echo '<br />After constrain '.count($components);
@@ -2347,7 +2399,7 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 			}
 			else $thecal = '';
 
-			if (empty($components) and (!empty($amr_options['noeventsmessage']))) {
+			if ((!amr_doing_box_calendar()) and empty($components) and (!empty($amr_options['noeventsmessage']))) {
 						$thecal .=  '<a style="cursor:help;" href="" title="'.amr_echo_parameters().'"> '.$amr_options['noeventsmessage'].'</a>';
 			}
 			else {
@@ -2366,11 +2418,10 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 	}
 /* -------------------------------------------------------------------------*/
 function amr_get_params ($attributes=array()) {
-/*  We are passed the shortcode attributes, check them, get what we can there, then check for passed parameters (form or query string )
+/*  We are passed the widget or shortcode attributes, check them, get what we can there, then check for passed parameters (form or query string )
    Anything unset we will get from the default settings for that listtype.
    The defaults list type is 1.
     we could even have a default url!
-
   then set the amr_limits (note the calendar options may overwrite these)
 */
 	global $amr_limits; /* has days, events, start ? end ?*/
@@ -2389,7 +2440,7 @@ function amr_get_params ($attributes=array()) {
 	parse_str($_SERVER['QUERY_STRING'], $args); /* Get anything passed in the query string that will override shortcodes */
 	foreach ($args as $i=>$arg) {$args[$i] = filter_var($arg, FILTER_SANITIZE_STRING);}
 
-	If (ICAL_EVENTS_DEBUG) {echo '<hr> Parsed Query String<br />'; var_dump($args); }
+	If (isset($_GET['adebug'])) {echo '<hr> Parsed Query String<br />'; var_dump($args); }
 	unset($args['page_id']);
 	unset($args['debug']);
 //
@@ -2410,12 +2461,13 @@ function amr_get_params ($attributes=array()) {
 	'eventmap' => '0',
 	'show_views' => 1,
 	'calendar_properties' => 1,
+	'pagination' => 1,
 	'headings' => 1
 	);
 	$atts = shortcode_atts( $defaults, $attributes ) ;  /*  get the parameters we want out of the attributes */
 //	If (ICAL_EVENTS_DEBUG) {echo '<hr>Shortcode atts<br />'; var_dump($atts); }
 	$atts = array_merge ($atts, $args);
-	If (ICAL_EVENTS_DEBUG) {echo '<hr>After merge<br />'; var_dump($atts); }
+//	If (ICAL_EVENTS_DEBUG) {echo '<hr>After merge<br />'; var_dump($atts); }
 //
 	// get the list type first
 	if (isset($_REQUEST['listtype'])) 			$amr_listtype = (int) $_REQUEST['listtype'];
@@ -2476,18 +2528,17 @@ function amr_get_params ($attributes=array()) {
 
 	If (ICAL_EVENTS_DEBUG) {echo '<hr> Checking limits for listtype:'.$amr_listtype.' <br />'; var_dump($amr_limits); }
 
-
 	if (!empty( $_REQUEST['daysoffset'])) { /* keeping startoffset for old version compatibility, but allowing for daysoffset for compatibility with other offsets */
 		if (filter_var($_REQUEST['daysoffset'], FILTER_VALIDATE_INT, $neg_int_options)) $amr_limits['startoffset'] = $_REQUEST['daysoffset'];
 	}
 /* ---- check for urls that are either passed by query or form, or are in the shortcode with a number or not ie: not ics =  */
-	If (ICAL_EVENTS_DEBUG) {
+	If (isset($_GET['adebug'])) {
 		echo '<hr>attributes= '; var_dump($attributes);
 		echo '<hr>atts= '; var_dump($atts);
 		}
 	if (empty($attributes)) $others = $atts;
 	else $others = array_merge ($attributes,$atts);  /*  get the urls and any other out of the shortcodes  - atts must override as it now has query args etc*/
-	If (ICAL_EVENTS_DEBUG) {echo '<hr>After merg attributes and atts others has<br />'; var_dump($others); }
+	If (isset($_GET['adebug'])) {echo '<hr>After merg attributes and atts others has<br />'; var_dump($others); }
 //
 	foreach ($others as $i => $v) {
 			if (is_numeric ($i)) {
@@ -2507,7 +2558,8 @@ function amr_get_params ($attributes=array()) {
 					unset($others[$i]);
 					}
 				else if (in_array($i, array(
-					'headings','show_views','agenda','eventmap', 'calendar', 'calendar_properties','show_month_nav')	)) {
+					'headings','show_views','agenda','eventmap', 'calendar',
+					'pagination', 'calendar_properties','show_month_nav')	)) {
 					$amr_limits[$i] = $v;
 					unset($others[$i]);
 				}
@@ -2560,25 +2612,27 @@ function amr_get_params ($attributes=array()) {
 			unset ($amr_limits['days']);
 		}
 //
-	if (!empty($amr_limits['days'])) {/* else use the days and  then set the time to the beginning of the day */
-			date_time_set ($amr_limits['start'],0,0,0);
+	if (empty($amr_limits['hours'])) {/* else use the days and  then set the time to the beginning of the day */
+		date_time_set ($amr_limits['start'],0,0,0);
 	}
 //	now find our end date  - may get overridden if calendar
-
+	$amr_limits['end'] = new DateTime();
 	$amr_limits['end'] = clone ($amr_limits['start']);
-
-	if (!empty($amr_limits['hours'])) {
-		date_modify($amr_limits['end'],'+'.($amr_limits['hours']).' hours') ;
-	}
-
+	
 	if (!empty($amr_limits['months']))
 		date_modify($amr_limits['end'],'+'.($amr_limits['months']).' months') ;
 
 	if (!empty($amr_limits['days']))
 		date_modify($amr_limits['end'],'+'.($amr_limits['days']).' days') ;
 
+	if (!empty($amr_limits['hours'])) {
+		date_modify($amr_limits['end'],'+'.($amr_limits['hours']).' hours') ;
+	}
+	else  date_modify($amr_limits['end'],'-1 second') ; /* so that we do not include events starting in the next time period */
+	
+//	date_time_set ($amr_limits['end'],23,59,59);  // if we have this, do we need the -1 second below?
 
-	date_modify($amr_limits['end'],'-1 second') ; /* so that we do not include events starting in the next time period */
+
 
 
 	If (ICAL_EVENTS_DEBUG) {echo '<hr> Before passing others <br />'; var_dump($others); echo amr_echo_parameters();}
@@ -2602,6 +2656,7 @@ global $amr_icalno;/* used to give each ical  table a unique id on a page or pos
 	if (!isset($atts['listtype'])) $atts['listtype'] = '1';
 
 	$criteria =	amr_get_params ($atts);  /* strip out and set any other attstributes  - they will set the limits table */
+
 	/* separate out the other possible variables like list type, then just have the urls */
 	if (!(isset($amr_icalno))) $amr_icalno = 0;
 	else $amr_icalno= $amr_icalno + 1;
@@ -2626,6 +2681,9 @@ global $change_view_allowed;  // treat as widget anyway to avoid view changes et
 //	if (!isset($atts['months']))
 	$atts['months'] = 1;
 	$criteria =	amr_get_params ($atts);  /* strip out and set any other attstributes  - they will set the limits table */
+		// remove the custom post type parameter as it will cause us to lose all others and just show 1 event
+
+	
 	$criteria ['eventpoststoo'] = true;
 	/* separate out the other possible variables like list type, then just have the urls */
 	if (!(isset($amr_icalno))) $amr_icalno = 0;
