@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '3.8');
+define('AMR_ICAL_LIST_VERSION', '3.8.1');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -2432,7 +2432,10 @@ function amr_get_params ($attributes=array()) {
 	global $change_view_allowed;
 	global $amrW; // indicates if widget
 
-	if (isset ($amrW)) $listtype='4';
+	if (isset ($amrW)) 
+		$listtype='4';
+	else 
+		$listtype='1';
 	If (ICAL_EVENTS_DEBUG) {echo '<hr>Shortcode Attributes passed<br />'; var_dump($attributes); }
 //
 	$amr_options = amr_getset_options();
@@ -2445,7 +2448,7 @@ function amr_get_params ($attributes=array()) {
 	unset($args['debug']);
 //
 	$defaults = array( /* defaults array for shortcode , want them all here so we can get urls out separately  */
-	'listtype' => '1',
+	'listtype' => $listtype,
    	'startoffset' => '0',
  	'hoursoffset' => '0',
 	'monthsoffset' => '0',
@@ -2459,20 +2462,23 @@ function amr_get_params ($attributes=array()) {
 	'agenda' => '',
 	'calendar' => '',
 	'eventmap' => '0',
-	'show_views' => 1,
-	'calendar_properties' => 1,
-	'pagination' => 1,
-	'headings' => 1
+	'show_views' => '1',
+	'calendar_properties' => '1',
+	'pagination' => '1',
+	'headings' => '1',
+	'ignore_query' => '0'
 	);
 	$atts = shortcode_atts( $defaults, $attributes ) ;  /*  get the parameters we want out of the attributes */
 //	If (ICAL_EVENTS_DEBUG) {echo '<hr>Shortcode atts<br />'; var_dump($atts); }
-	$atts = array_merge ($atts, $args);
+
+	if (empty($atts['ignore_query']) or !($atts['ignore_query']) ) 
+		$atts = array_merge ($atts, $args);
 //	If (ICAL_EVENTS_DEBUG) {echo '<hr>After merge<br />'; var_dump($atts); }
 //
 	// get the list type first
 	if (isset($_REQUEST['listtype'])) 			$amr_listtype = (int) $_REQUEST['listtype'];
-	else if (isset($atts['listtype'])) 			$amr_listtype = $atts['listtype'];
-	else if (!(isset($amr_listtype))) 			$amr_listtype = 1;
+	else if (!empty($atts['listtype'])) 		$amr_listtype = $atts['listtype'];
+	else if (!(isset($amr_listtype))) 			$amr_listtype = '1';
 	unset($args['listtype']);
 	unset($atts['listtype']);
 //	unset($attributes['listtype']);
@@ -2488,7 +2494,6 @@ function amr_get_params ($attributes=array()) {
 		if (!empty($atts[$i])) $amr_limits[$i] = $atts[$i];
 		else unset($atts[$i]);  // only unset if empty - else will lose others
 	}
-
 
 /* ----check if we want to overwrite the wordpress timezone */
 	if (isset($_REQUEST['tz'])) $amr_globaltz =  timezone_open($_REQUEST['tz']);
@@ -2565,7 +2570,7 @@ function amr_get_params ($attributes=array()) {
 				}
 			}
 		}
-
+//
 		if (isset($_REQUEST['ics'])) { /* a passed url overwrite every other url */
 		$spec = (str_ireplace('webcal://', 'http://',$_REQUEST['ics']));
 		if ((function_exists('filter_var')) and (!filter_var($spec, FILTER_VALIDATE_URL))) {
@@ -2573,11 +2578,7 @@ function amr_get_params ($attributes=array()) {
 			}
 			else $others['urls'] = array($spec); /* replace the urls with the one that is passed */
 		}
-
-
-
 	$amr_formats = $amr_options[$amr_listtype]['format'];
-
 //
 	if (!empty($amr_limits['startoffset'])) {
 		$daysoffset = (int)($amr_limits['startoffset']);
@@ -2629,17 +2630,11 @@ function amr_get_params ($attributes=array()) {
 		date_modify($amr_limits['end'],'+'.($amr_limits['hours']).' hours') ;
 	}
 	else  date_modify($amr_limits['end'],'-1 second') ; /* so that we do not include events starting in the next time period */
-	
+
 //	date_time_set ($amr_limits['end'],23,59,59);  // if we have this, do we need the -1 second below?
-
-
-
-
 	If (ICAL_EVENTS_DEBUG) {echo '<hr> Before passing others <br />'; var_dump($others); echo amr_echo_parameters();}
-
 //	if (!isset ($amr_limits ['events'] )) {echo '<h2>Problem no limits</h2>'. $amr_limits ['events'] ;}
 //	if (!isset ($amr_limits ['days'] )) {echo '<h2>Problem no limits</h2>'. $amr_limits ['days'] ;}
-
 	return ($others);
 }
 /* -------------------------------------------------------------------------*/
