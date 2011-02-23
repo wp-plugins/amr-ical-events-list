@@ -1,8 +1,7 @@
-=== Events with ical files, by list or calendar (aka amr-ical-events-list) ===
+=== Events by list or calendar (aka amr-ical-events-list) ===
 Contributors: anmari
 Donate link: http://webdesign.anmari.com/web-tools/donate/
-Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, ical-feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar,
-
+Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, ical-feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, ical feed, recurring events, custom post
 Requires at least: 2.8
 Tested up to: 3.0.5
 Version: 3.8.1
@@ -12,7 +11,7 @@ Event Calendar or Agenda list, add tab views, multiple ics files, handles any re
 
 == Description ==
 
-Encourage viewers to bookmark your events on their calendars.  This plugin offers a thorough Ical calendar parser - copes with all the ical recurrence possibilities, and a large part of the rest of the spec. The free version accepts one or many ical urls for ics files.  It produces a very stylable list of events, notes, todo's or freebusy info.
+Display event lists, big box calendars, upcoming events widgets or small calendar widgets. Encourage viewers to subscribe to or bookmark your events on their calendars.  This plugin offers a thorough Ical calendar parser - copes with all the ical recurrence possibilities, and a large part of the rest of the spec. The free version accepts one or many ical urls for ics files.  It produces a very stylable list of events, notes, todo's or freebusy info.
 
 For more information, please see [plugin home page](http://icalevents.anmari.com)
 
@@ -28,8 +27,7 @@ If you also want a complete "inhouse" solution where you can create events in wo
 
 Test with your calendar's ics file at the demo site:
 
-[Demo site](http://icalevents.anmari.com) or see a language implementation at a
-[German language demo](http://anmari.com/testing/wp/?page_id=4)
+[Demo site](http://icalevents.anmari.com) 
 
 Many thanks to the following people for the translations.  Note that I am unable to verify these and they may be out of date with the current version.:
 
@@ -43,42 +41,6 @@ Many thanks to the following people for the translations.  Note that I am unable
 
 If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me the .po files for your language.
 
-= Content =
-*  If the information is available in your calendar, include additional fields and/or add some bling: .. links to google maps if location or geo exists, "add event" icons or "add calendar" (not just the icsfile) to help clients remember your events!  Add calendar is by individual event, or subscribe to the whoel calendar.
-*  Include other calendars for your viewers info.  Many are available on the web and can be "sorted" into your calendar: public holidays, world events, school terms, eccentric dates etc.
-*  Will handle any html in the text fields, including image links.
-*  Allocate fields to columns and order within the columns and use css for example to float end time up next to start time.
-*  Offers a refresh link with date and time last cached - may be useful if your calendar has many updates on one day a week, with long gaps inbetween. Prevents unnecessary downloads.
-*  Optionally choose timezone.
-*  Add your own before/after content or styling (eg: SUMMARY as h3 ) for each field.
-
-
-= Styling =
-
-*  Works out the box with a default css style as well as many other possibilities:
-*  Allows grouping of events (eg: daily, weekly, monthly, quarterly, by seasons, by years for readability and styling.
-*  Default basic css provided, plus lots of css tags for innovative styling (eg: by future/past/today, group of dates, or for recurring events, or untimed (all day) events.
-*  A default set of transparent(for different backgrounds) images is provided for the additional "icon" fields.
-*  In the before and after options for each field, use following tags only : &#60;p&#62; &#60;br /&#62; &#60;hr /&#62; &#60;h2&#62; &#60;h3&#62; &#60;h4&#62; &#60;h5&#62; &#60;h6&#62;  &#60;strong&#62; &#60; em&#62; &#60;address&#62;.
-*  These tags along with the possibility of having your own plugin css file should be more than adequate for your styling needs.
-
-= Date, Times and Timezone =
-
-*  Note: wordpress 2.8 up now allows the timezone to be specified by city which should cater for daylight saving differences.   Please check very carefully that times are correct and that you understand what the times should be.
-*  Timezones - there is your server's timezone, the timezone of the calendar files, and your wordpress timezone.  The plugin will try for the timezone string (either from wordpress 2.8 or the automatic timezone plugin.  Failing that it wiull try for gmt_offset, and attempt to convert it to a timezone string.   Failing that it will use UTC time.  If anyone needs more sophisticated functionality such as allowing a selection of timezones, please contact me.
-
-= Testing =
-*   Can pass URL's, Listtypes and nocache/debug options via the url query string for ease of testing. see plugin homepage for examples.
-
-= Some special logic =
-
-1. Generate any special display situations such as:
-*  If event is all day, remove start time, set css class
-*  If start time equals end time, set end time to empty string
-*  If end date = start date, don't display end date
-*  If url in text, convert to a hyperlink
-*  If location or geo exists and map requested, add a map link to google maps. Include the calendar location if the location text is short, to help google find it.
-*  Allow html in descriptions, and convert any url's to links if not already converted.
 
 == Changelog ==
 = Version 3.8.1 =
@@ -501,7 +463,9 @@ The php DATETIME Class must be enabled (this is standard in php 5.2).  You may g
 "syntax error, unexpected T_VARIABLE in...." if you are not on a version of PHP that has the "clone" function.
 
 1. Download and activate as per usual in wordpress
-2. Create a page (or post) and add one or more shortcodes [ largecalendar yoururl.ics ] [ iCal yoururl.ics ] to your page.  NB (Ics url NOT As a hyperlink, must be plain text)
+2. Copy your calendars ics url (google, facebook, ical.me.com etc) - The ics file feed must be PUBLIC - if you cannot access it in a browser without being logged in, then the plugin will not be able to access it either.
+2. Create a page (or post) 
+3. add one or more shortcodes [largecalendar yoururl.ics] [iCal yoururl.ics] to your page.  NB (Ics url NOT As a hyperlink, must be plain text)
 
 That's it!
 
@@ -511,96 +475,8 @@ For the widgets (calendar and list)
 2.  Enter http://yoururl.ics in the large text area, Save
 
 
-= Customisation Options: =
-The Plugin works 'out of the box' with no config.  However it is also very flexible should you have special requirements.
-*   Choose html output (table or lists)
-*   Sequence fields and add before/after text or html
-*   Check Date and Time formats. Note: language specific date formats depend on the specifications in the Date and Time Formats in the settings area.  Wordpress does not set locale, but does do some localisation of the "date" format strings, so use those rather than the strftime strings.
-*   Check wordpress timezone, and ics events timezones- Check your wordpress timezone settings are set to what you wnat them to be.  The plugin will handle timezone differences and assumes that you want the wordpress timezone as your main timezone, not the ics file timezone
-*   play with date and event limits - balance performance against the volume of events you are likely to have. (eg: don't do days=1000 and events=5 if you know that almost always you have about 3 events a month!
-*   Change/salt the css as desired.
-
-= Note =
-The ics file feed must be PUBLIC - if you cannot access it in a browser without being logged in, then the plugin will not be able to access it either.
-
-
 == Frequently Asked Questions ==
- see also the plugin website (http://icalevents.anmari.com)
-
-= How can I control the output of this plugin? =
-
-Simplest: Put [ iCal http://yoururl.ics ] in your page or post.  A Default List Type will be used.
-
-To combine calendars ala Google style, for example including a public holiday calendar, separate the URL's with commas.
-[ iCal http://yoururl.ics http://anotherurl.ics ]
-
-To specify another listtype defined in the admin section, add a "listtype=N" where N is the number of the list type that you want.
-[ iCal http://yoururl.ics listtype=2 ]
-
-To list a series of calendars -eg: a different calendar for different groups or classes in sequence:
-[ iCal http://yoururl.ics ]
-[ iCal http://anotherurl.ics ]
-Remember to add css for the extra calendars.
-
-You can of course have content text between the iCal shortcodes.
-
-The admin section (or if wanting to operate standalone - see the Ical_common file.) allows control over many aspects:
-*  the components to include (eg: todo's )
-*  the component properties, their layout and sequence.  Eg select end times, or durations (or both!)
-*  the grouping (we used to just do a monthly grouping, no we allow for many others )
-
-and many more - see the settings page in the wordpress admin section.
-
-= What css tags are there? =
-
-There is enough css to work out the box, however if you want to style it further, then each iCal field has it's own li class.  Plus there are additional derived classes such as
-*  .addtogoogle
-*  .addevent
-*  .icsurl
-This is not a complete list, please view page source for more.
-*  .alt - alternate rows
-*  .map - to style or hide the map link to google maps
-*  .group - to style any grouping level lists,
-*  .Month, .day etc - if that grouping was chosen
-*  .MonthMMMYY - to style individual groups
-*  .amrcol - to style a subset of event properties
-*  .untimed
-*  .recur - repeating events
-...
-
-= Why different css tags for widget and page calendars? =
-
-Well, if the widget and the calendar happen to occur on the same page then the page will not validate.  And Of course allowing for multiple calendars on a page was also tricky!
-
-= Can it handle html in the descriptions? =
-
-Yes it can - note that google seems to allow you to enter and save html, however if one goes back to edit it, it appears to through the html tags away.
-
-Please check your google file before assuming it is a plugin problem.
-
-= How often is the calendar checked for new events? =
-
-Specify in the admin  menu configuration a refresh period or cache value in hours. Loading calendars too frequently can get your server banned, so use your best judgment when setting this value.  The cache will refresh using the same filename. If cached file is older than the cache value on the next request, then it will get the file again.  It will also refresh the file if the refresh icon is clicked on the calendar page.
-
-= Where can I find iCalendar files? =
-
-There are many iCalendar sources, such as:
-
-* [Apple's iCal library](http://www.apple.com/ical/library/)
-* [iCalShare](http://www.icalshare.com/)
-* [Google Calendar](http://calendar.google.com/)
-
-= My server does not support `fopen` on URLs. Can I still use this plugin? =
-
-As of version 1.9, this plugin supports usage of cURL via WordPress' `wp_remote_fopen` function. Previous versions required the `url-cache` plugin for cURL support, but this is no longer the case.
-
-= Event url's? =
-
-The ical spec allows for a event URL.  Often there is not one in the ics file.  The plugin attempts to provide as much information as possible, as compactly as possible, especially when used as a widget. So for example, it provides the description as link title on a link behind the summary field. (Usually a widget would not show the description field).
-
-So for listtype 4 only, If there is no URL, and NO default url in the admin configuration(eg: full calendar page) has been specified, then the Plugin will generate a dummy bookmark, with info cursor style and event description as hover text/title.  The dummy bookmark is to stop the page reloading and to make the link non-active.  All code validates.
-
-If you wish the same behaviour for other liststypes, you can enter either a good URL in the default event iurl field in the admin settings, or a dumjmy bookmark like "#noeventurl".
+ see the plugin website (http://icalevents.anmari.com)
 
 == Screenshots ==
 
