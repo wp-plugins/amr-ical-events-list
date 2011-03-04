@@ -342,6 +342,12 @@ NOT USING FOR NOW - INTERNAL ATTENDEES ONLY
 			19970714T173000Z           ;UTC time
 			tz dealt with already ?*/
 
+		if (empty($d)) {
+			echo 'Unexpected error - empty date string to parse ';		
+			return false;
+			}
+				
+			
 		if ((substr($d, strlen($d)-1, 1) === 'Z')) {  /*datetime is specifed in UTC */
 			$tzobj = $utczobj;
 			$d = substr($d, 0, strlen($d)-1);
@@ -359,7 +365,7 @@ NOT USING FOR NOW - INTERNAL ATTENDEES ONLY
 		/* Now create our date with the timezone in which it was defined , or if local, then in the plugin glovbal timezone */
 		try {	$dt = new DateTime($date.' '.$time,	$tzobj); }
 		catch(Exception $e) {
-			echo '<br />Unable to create DateTime object.<br />'.$e->getMessage();
+			echo '<br />Unable to create DateTime object from '.$d.' <br />'.$e->getMessage();
 			return (false);
 		}
 
@@ -397,7 +403,7 @@ NOT USING FOR NOW - INTERNAL ATTENDEES ONLY
 				$dates[] =  new DateTime(substr($v,0, 4).'-'.substr($v,4, 2).'-'.substr($v,6, 2), $tzobj);
 			}
 			catch(Exception $e) {
-				echo '<br />Unable to create DateTime object.<br />'.$e->getMessage();
+				echo '<br />Unable to create DateTime object from '.$text.' <br />'.$e->getMessage();
 				return (false);
 			}
 		}
@@ -558,6 +564,11 @@ Africa/Asmara
 	VALUE=PERIOD:19960403T020000Z/19960403T040000Z,	19960404T010000Z/PT3H
 	VALUE=DATE:19970101,19970120,19970217,19970421,..	19970526,19970704,19970901,19971014,19971128,19971129,19971225
 	VALUE=DATE;TZID=/mozilla.org/20070129_1/Europe/Berlin:20061223	*/
+		if (empty($text)) {
+			if (ICAL_EVENTS_DEBUG) {echo 'For value: '.$VALUE.' text is blank';}
+			return (false);
+			}
+	
 		switch ($VALUE) {
 			case 'DATE-TIME': {
 				if (!($d = amr_parseDateTime($text, $tzobj))) return (false);
@@ -689,6 +700,7 @@ function amr_parseRDATE ($string, $tzobj ) {
 				$rdate =  explode(',',$rdatestring[0]);
 			}
 			foreach ($rdate as $i => $r)  {
+					if (empty($r)) { return false; }
 					$dates[$i] = amr_parseDateTime ( $r, $tzobj);
 					//if (isset($_GET['rdebug'])) {echo '<br />*** Parsed as: '; var_dump($dates[$i]);}
 			}

@@ -11,11 +11,19 @@
  * @param bool $echo Optional, default is true. Set to false for return.
  */
 
+ function amr_check_for_wpml_lang_parameter ($link) {
+ 	if (isset($_REQUEST['lang'])) {
+		$link = remove_query_arg( 'lang', $link );  //is there a wpml bug ? or wp bug, we are getting lang twice 
+		$link = add_query_arg( 'lang', $_REQUEST['lang'], $link );
+		}
+	return ($link);
+}
 // ----------------------------------------------------------------------------------------
 
 function amr_get_day_link($thisyear, $thismonth, $thisday, $link) { /* the start date object  and the months to show */
 	$link = add_query_arg( 'days', '1' ,$link);
 	$link = add_query_arg( 'start', $thisyear.str_pad($thismonth,2,'0',STR_PAD_LEFT).str_pad($thisday,2,'0',STR_PAD_LEFT), $link );
+	$link = amr_check_for_wpml_lang_parameter ($link);
 return ($link);
 
 }
@@ -23,7 +31,7 @@ return ($link);
 function amr_monthyeardrop_down($startpassed) {
 global $wp_locale, $amr_globaltz;
 //	$m = isset($_GET['m']) ? (int)$_GET['m'] : 0;  // actually yyyymm
-	$start = isset($_GET['start']) ? (int)$_GET['start'] : $startpassed;
+	$start = !empty($_GET['start']) ? (int)$_GET['start'] : $startpassed;
 	$startobj = new datetime($start,$amr_globaltz);
 	$ym = (int) substr($start, 0, 6);
 	$m  = (int) substr($start, 4, 2);
@@ -62,12 +70,15 @@ function amr_clean_link() { /* get cleaned up version of current url  remove oth
 function amrical_get_month_link($start, $months, $link) { /* the start date object  and the months to show */
 	$link = (add_query_arg( 'start', $start, $link ));
 	$link = (add_query_arg( 'months', $months, $link ));
+	$link = amr_check_for_wpml_lang_parameter ($link);
 return ($link);
 
 }
 // ----------------------------------------------------------------------------------------
 function amrical_calendar_views () {
 	global $amr_listtype, $amr_limits;
+ 
+	amr_ical_load_text(); // do we have to reload all over theplace ?  wp does not always seem to have the translations
 
 	$link = amr_clean_link();
 	$link = remove_query_arg(array(
@@ -118,8 +129,8 @@ function amrical_calendar_views () {
 	return ($html);
 }
 // ----------------------------------------------------------------------------------------
-function amr_month_year_navigation ($start) {
-return ('<form method="post" action="'.htmlentities(remove_query_arg('start')).'">'
+function amr_month_year_navigation ($start) { //note get is faster than post
+return ('<form method="get" action="'.htmlentities(remove_query_arg('start')).'">'
 		.amr_monthyeardrop_down($start->format('Ymd'))
 		.'<input title="'.__('Go to date', 'amr_ical_list_lang').'" type="submit" value="&raquo;&raquo;" >'
 		.'</form>');
@@ -210,9 +221,11 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 
 	// Let's figure out when we are
 
-	$start    = new Datetime('now',$amr_globaltz);
-
+	$start    = new Datetime();
+	
 	$start    = clone $amr_limits['start'];
+//	if (!empty($_GET['start']) ? (int)$_GET['start'] : $startpassed;
+
 
 	$thismonth= $start->format('m');
 
@@ -289,6 +302,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 				foreach ($events as $event) {
 				// convert eventdate to display timezone now for day of month assignment, other dates will be
 				// converted to display timezone at display time.
+				if (empty($event['EventDate'])) continue;   
 				date_timezone_set($event['EventDate'], $amr_globaltz);  // may do this earlier (after recurrence though), no harm in twice
 
 //			var_dump($event);
@@ -441,7 +455,7 @@ function amr_list_one_days_events($events, $order) { /* for the large calendar *
 				else $v =null;
 				if ((isset ($v))  && (!empty($v)))	{
 					$col = $fieldconfig['Column'];
-					if (empty($colhtml[$col])) $colhtml[$col] = '';
+					if (empty($colhtml[$col])) $colhtml[$col] = '';  //huh?
 					$colhtml[$col] .= stripslashes($fieldconfig['Before'])
 						. amr_format_value($v, $field, $e).stripslashes($fieldconfig['After']);  /* amr any special formating here */
 				}

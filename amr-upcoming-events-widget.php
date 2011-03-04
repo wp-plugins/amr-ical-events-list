@@ -24,6 +24,7 @@ class amr_ical_widget extends WP_widget {
 	global $change_view_allowed;
 	global $widget_icalno; /* used to give each ical widget a unique id on a page */
 //
+	amr_ical_load_text(); // do we have to reload all over theplace ?  wp does not always seem to have the translations
 	$change_view_allowed = false;
 	extract ($args, EXTR_SKIP); /* this is for the before / after widget etc*/
 	unset($args);  //nb do not delete this else mucks up the args later
@@ -50,7 +51,8 @@ class amr_ical_widget extends WP_widget {
 	$moreurl = (empty($moreurl)) ? null : $moreurl ;
 	$amr_calendar_url = $moreurl;
 	if (ICAL_EVENTS_DEBUG) echo 'Calendar url = '.$amr_calendar_url;
-	if (!empty ($moreurl)) $title = '<a href= "'.$moreurl.'">'.$title.'</a>';
+	if (isset($_REQUEST['lang'])) $moreurl = add_query_arg('lang',$_REQUEST['lang'],$moreurl);
+	if (!empty ($moreurl)) $title = '<a href= "'.$moreurl.'">'.__($title,'amr_ical_list_lang') .'</a>';
 	if (!(isset($widget_icalno))) $widget_icalno = 0;
 	else $widget_icalno= $widget_icalno + 1;
 
@@ -69,6 +71,7 @@ class amr_ical_widget extends WP_widget {
 
 		$instance['title']             = strip_tags($new_instance['title']);
 		$instance['moreurl']           = strip_tags($new_instance['moreurl']);
+		$instance['moreurl'] 		   = amr_make_sticky_url($instance['moreurl'] );
 		$instance['doeventsummarylink']= strip_tags($new_instance['doeventsummarylink']);
 		$instance['externalicalonly']  = strip_tags($new_instance['externalicalonly']);
 		$instance['shortcode_urls']    = strip_tags($new_instance['shortcode_urls']);
@@ -88,7 +91,7 @@ class amr_ical_widget extends WP_widget {
 			'moreurl' => '',
 			'doeventsummarylink' => true,
 			'externalicalonly'  => false,
-			'shortcode_urls' => 'http://www.google.com/calendar/ical/0bajvp6gevochc6mtodvqcg9o0%40group.calendar.google.com/public/basic.ics'
+			'shortcode_urls' => ''
 			) );
 
 		$title             = $instance['title'];
@@ -154,7 +157,8 @@ class amr_icalendar_widget extends WP_widget {
     /** constructor */
 
     function amr_icalendar_widget() {
-		$widget_ops = array ('description'=>__('Upcoming Events', 'amr_ical_list_lang' ),'classname'=>__('icalendar', 'amr_ical_list_lang' ));
+		$widget_ops = array ('description'=>__('Upcoming Events', 'amr_ical_list_lang' ),
+		'classname'=>__('icalendar', 'amr_ical_list_lang' ));
 
         $this->WP_Widget(false, __('Upcoming Events Calendar', 'amr_ical_list_lang' ), $widget_ops);
 
@@ -170,6 +174,8 @@ class amr_icalendar_widget extends WP_widget {
 	global $widget_icalno; /* used to give each ical widget a unique id on a page */
 	global $amr_calendar_url;
 
+	amr_ical_load_text(); // do we have to reload all over theplace ?  wp does not always seem to have the translations
+	
 	$change_view_allowed = false;
 //	$amr_listtype = '8';  /* default only, can be overwitten in shortcode or query string  */
 	extract ($args, EXTR_SKIP); /* this is for the before / after widget etc*/
@@ -204,9 +210,10 @@ class amr_icalendar_widget extends WP_widget {
 
 	$content 	= amr_process_icalspec($criteria,$amr_limits['start'], $amr_limits['end'], $amr_limits['events'], $widget_icalno);
 
+	if (isset($_GET['debuglang'])) echo '<br />Widget title = '.$title.' ='.__($title,'amr_ical_list_lang'). ' '.__('Upcoming Events','amr_ical_list_lang');
 	//output...
 	echo $before_widget;
-	echo $before_title . $title . $after_title;
+	echo $before_title . __($title,'amr_ical_list_lang') . $after_title;
 	echo $content;
 	echo $after_widget;
 	if (isset ($savedays)) $amr_limits['days'] = $savedays;
@@ -216,9 +223,13 @@ class amr_icalendar_widget extends WP_widget {
 		$instance                      = $old_instance;
 
 		$instance['title']             = strip_tags($new_instance['title']);
-		$instance['externalicalonly']  = strip_tags($new_instance['externalicalonly']);
+		if (!empty($instance['externalicalonly'])) 
+			$instance['externalicalonly']  = strip_tags($new_instance['externalicalonly']);
+		
 		$instance['shortcode_urls']    = strip_tags($new_instance['shortcode_urls']);
 		$instance['moreurl']		   = strip_tags($new_instance['moreurl']);
+		$instance['moreurl'] 		   = amr_make_sticky_url($instance['moreurl'] );
+
 		return $instance;
 
 	}
@@ -236,6 +247,7 @@ class amr_icalendar_widget extends WP_widget {
 		$moreurl           = $instance['moreurl'];
 		$externalicalonly  = $instance['externalicalonly'];
 		$shortcode_urls    = $instance['shortcode_urls'];
+		$seemore =  __('See more','amr_ical_list_lang'); 
 	?><p>
 	<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title', 'amr_ical_list_lang');
 	?><input class="widefat" id="<?php
@@ -262,7 +274,7 @@ class amr_icalendar_widget extends WP_widget {
 	_e('External ics urls and/or optional shortcode parameters separated by spaces.)', 'amr_ical_list_lang'); echo '<br />';
 	_e(' Examples: listtype=8 events=10 days=60 start=yymmdd startoffset=-2... )', 'amr_ical_list_lang');
 	?></em> </label>
-	<a href="http://icalevents.anmari.com/amr-ical-events-list/#shortcode" title="<?php __('See more parameters','amr_ical_list_lang'); ?>"><b>?</b></a>
+	<a href="http://icalevents.anmari.com/amr-ical-events-list/#shortcode" title="<?php echo $seemore; ?>"><b>?</b></a>
 	<textarea cols="25" rows="10" id="<?php echo $this->get_field_id('shortcode_urls');?>" name="<?php echo $this->get_field_name('shortcode_urls'); ?>" ><?php
 
 		echo attribute_escape($shortcode_urls); ?></textarea></p>

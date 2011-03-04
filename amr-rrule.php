@@ -607,13 +607,17 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 		
 	if (isset($_GET['cdebug'])) echo '<br />Limiting the repeats to '.$count;
 	
-	if (!isset($p['UNTIL']))  
-		$until = $aend;
+	$until = new dateTime();			
+	if (!isset($p['UNTIL']))  {
+		$until = clone $aend;
+	}	
 	else {
-		$until = $p['UNTIL'];
-		if ($until > $aend)	$until = $aend;
+		$until = clone $p['UNTIL'];
+		if ($until > $aend)	$until = clone $aend;
 	}
 	if (amr_is_before ($until, $astart )) { return(false); }/* if it ends before our overall start, then skip */
+
+	
 	
 	/* now prepare out "intervales array for date incrementing eg: p[monthly] = 2 etc... Actualy there should only be 1 */
 	if (isset($p['FREQ'])) { /* so know yearly, daily or weekly etc  - setup increments eg 2 yearsly or what */
@@ -632,9 +636,10 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 	/* NOTE we can only do this if we do not have the count or a bysetpos !!!!   */
 //	if (empty($int)) var_dump($p);
 	if (empty($p['COUNT']) and empty($p['BYSETPOS'])) {
-		$start = amr_get_a_closer_start($start, $astart, $int);		
+		$start = amr_get_a_closer_start($start, $astart, $int);				
 	}	
-	
+	// 20110301 the nbydays, especially the negs, require that one initially consider a wider valid range so as not to unintentionally exclude a date before the expand/contract has beeen applied .  Ie we might iterate to 28th and exclude, but actually once one has applied the -2Mo or some such rule, the date would have contracted into the valid range.  So apply restrictions later.	
+	$until = amr_increment_datetime ($until, $int);
 	
 	unset ($p['UNTIL']);  /* unset so we can use other params more cleanly, we have count saved etc */
 	unset ($p['COUNT']); unset ($p['FREQ']); unset ($p['INTERVAL']);
@@ -781,6 +786,7 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 		unset ($datearray);
 		/* now get next start */
 		$start = amr_increment_datetime ($start, $int);
+		
 		if (isset ($_GET['rdebug'])) echo '<hr>Next start data after incrementing = '.$start->format('Y m d l h:i:s');
 	} /* end while*/
 	if (isset($_GET['rdebug'])) { 
@@ -808,7 +814,6 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 
 	}
 /* ---------------------------------------------------------------------------- */
-
 function amr_parse_RRULEparams ( $args)	{
 
 global $amr_bys;
@@ -878,7 +883,6 @@ global $amr_globaltz;
 		if (!empty($p))	return ($p);  /* Need the array values to reindex the array so can acess start positions */
 		else return (false);
 	}
-
 /* ---------------------------------------------------------------------------- */
 
 function amr_get_start_of_week (&$dateobj, $wkst) { /* get the start of the week according to the wkst parameter (Sat/Sun/Mon), returns new dat object  */
@@ -895,9 +899,9 @@ function amr_get_start_of_week (&$dateobj, $wkst) { /* get the start of the week
 	return ($dateobj);
 }
 
-	/* ---------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------- */
 
-	function amr_increment_datetime ($dateobject, $int) {
+function amr_increment_datetime ($dateobject, $int) {
 	/* note we are only incrementing by the freq - can only be one?   */
 	/* Now increment and try next repeat
 	check we have not fallen foul of a by -or is that elsewhere ?? */
@@ -956,7 +960,6 @@ function amr_parseRRULE($rrule)  {
 		return ($p);
 
 	}
-
 
 /* ---------------------------------------------------------------------------- */
 function amr_get_last_xday_of_month ($date, $x=-1)	{ /* helper function format passed is NB.  Can be used for last day of year and last day of month*/

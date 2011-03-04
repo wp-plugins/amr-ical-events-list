@@ -91,25 +91,53 @@ if (!function_exists('amr_simpledropdown')) {
 				else { _e('Invalid Number of Lists', 'amr_ical_list_lang'); return(false);
 				}
 			}
-			update_option( 'amr-ical-events-list', $amr_options);
+			update_option('amr-ical-events-list', $amr_options);
+			amr_ical_events_list_record_version();
+			
 			return(true);
 	}
 /* ---------------------------------------------------------------------- */
-	function amr_ical_validate_list_options($i)	{
-	global $amr_options;
+function  amr_make_sticky_url($url) { 
+	$page_id = url_to_postid($url);
+	
+	if (!$page_id) return false ;
+	else {
+		$sticky_url  = add_query_arg('page_id',$page_id,get_bloginfo('home'));
+		return( $sticky_url) ;
+	}	
+}	
+/* ---------------------------------------------------------------------- */
+function  amr_invalid_url() { 
+?><div class="error fade"><?php	_e('Invalid Url','amr_ical_list_lang');?></div><?php
+}
+/* ---------------------------------------------------------------------- */
+function amr_ical_validate_list_options($i)	{
+global $amr_options;
 	if (isset($_POST['general']))  {
-
-				if (is_array($_POST['general'][$i]))
-				{	foreach ($_POST['general'][$i] as $c => $v)
-					{
-						if (isset($_POST['general'][$i][$c])) {
-								$amr_options[$i]['general'][$c] = $_POST['general'][$i][$c] ;
-								}
-						else	$amr_options[$i]['general'][$c] = '';
+		if (is_array($_POST['general'][$i])){
+			foreach ($_POST['general'][$i] as $c => $v)	{
+				if (isset($_POST['general'][$i][$c])) {
+					if ($c ==='Default Event URL') { 
+						if	(!filter_var($_POST['general'][$i][$c],FILTER_VALIDATE_URL)) {							
+							 amr_invalid_url();
+						}
+						else {
+							$url = filter_var($_POST['general'][$i][$c],FILTER_SANITIZE_URL);
+							$sticky_url = amr_make_sticky_url($url);
+							if (!$sticky_url) $amr_options[$i]['general'][$c] = $url ; //might be external
+							else $amr_options[$i]['general'][$c] = $sticky_url ;
+						}
+					}	
+					else {
+						$amr_options[$i]['general'][$c] 
+						= filter_var($_POST['general'][$i][$c],FILTER_SANITIZE_STRING) ;	
 					}
-				}
-				else echo 'Error in form - general array not found';
+				}	
+				else	$amr_options[$i]['general'][$c] = '';
 			}
+		}
+		else echo 'Error in form - general array not found';
+	}
 
 	if (isset($_POST['limit']))
 			{	if (is_array($_POST['limit'][$i]))
@@ -259,11 +287,19 @@ if (!function_exists('amr_simpledropdown')) {
 			<option value="largecalendar" <?php if ($style==='largecalendar') echo 'selected="selected" '; ?>><?php _e('Large box calendar', 'amr_ical_list_lang'); ?></option>
 			<option value="tableoriginal" <?php if ($style==='tableoriginal') echo 'selected="selected" '; ?>><?php _e('Table with lists in cells (original)', 'amr_ical_list_lang'); ?></option>
 		</select><br />	<br />
-	<label for="defaulturl" ><?php _e('Default Event URL','amr_ical_list_lang'); ?></label>
+	<label for="defaulturl" ><?php _e('Default Event URL','amr_ical_list_lang'); ?><em>
+	<?php
+	_e(' (For ics files in widget. External, or calendar page.)','amr_ical_list_lang'); ?>
+	</em>
+	<a title="<?php _e('More information'); ?>"	href="http://icalevents.anmari.com/1901-widgets-calendar-pages-and-event-urls/" >?</a>
+	</label>
 		<input type="text" class="wide" size="20" id="defaulturl" name="general[<?php echo $i; ?>][Default Event URL]" value="<?php
-				if (isset($amr_options[$i]['general']['Default Event URL'])) echo $amr_options[$i]['general']['Default Event URL']; ?>" />
+				if (isset($amr_options[$i]['general']['Default Event URL'])) 
+					echo esc_textarea($amr_options[$i]['general']['Default Event URL']); ?>" />
 <?php }
-		echo "\n\t".'</div></fieldset>';
+?>
+</div></fieldset>
+<?php
 	return ;
 	}
 	/* ---------------------------------------------------------------------*/

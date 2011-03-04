@@ -9,6 +9,11 @@ You can always refer back to the default css in the plugin folder for the latest
 This file now includes the box calendar css - it may need modification for your theme, if your theme does not have the #content selector
 The #boxical0 id has been added to aim for the css to work even if your theme uses  different selectors.  Note that this will only work for the first "box", after that you have to code your own additional css.
 */
+.vcalendar abbr {  /* do not show the hcalendar abbr - is confusing  especially since the format of the date is ISO8601, not human friendly */
+	border-bottom: none;
+}
+
+
 /* Note #content works for 2010 theme to override default table settings.  You need to find out what works for your theme */
 #wp-calendar td.next,
 div.event-calendar td.next {text-align:right;}
@@ -272,6 +277,10 @@ table.smallcalendar {
 #content #calnav {
 	margin-top: 5px;
 	margin-bottom: 5px;
+}
+
+#calnav ul{
+	list-style: none;
 }
 /* --------------------Delete this is not required   - Needed in some themes that force list bullets in-----------------------------*/
 /* Do our very best to re move the list bullets from some weird themes where we do not want them.

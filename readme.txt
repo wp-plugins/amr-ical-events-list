@@ -1,10 +1,11 @@
-=== Events by list or calendar (aka amr-ical-events-list) ===
+=== amr events with ical files, by list or calendar (aka amr-ical-events-list) ===
 Contributors: anmari
 Donate link: http://webdesign.anmari.com/web-tools/donate/
-Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, ical-feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, ical feed, recurring events, custom post
+Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, ical-feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar,
+
 Requires at least: 2.8
-Tested up to: 3.0.5
-Version: 3.8.1
+Tested up to: 3.1
+Version: 3.9
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.
@@ -41,8 +42,14 @@ Many thanks to the following people for the translations.  Note that I am unable
 
 If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me the .po files for your language.
 
-
 == Changelog ==
+= Version 3.9 =
+*  Change: Table body and row html slightly re-organised to more sensible structure 
+*  Fix: Cleaned up some hcalendar markup to make it totally valid microformat markup
+*  Fix: Fixed spacing on new ++ -- pagination options
+*  Fix: Fixed very specific bug when using numeric bydays (eg: last sunday ) and wanting the small calendar to link to the calendar page, with the 1 day listing.  The logic was cutting off the dates generated before the "contract" to the last x. 
+*  Fix: Fixed the ignore_query logic so it ignores what it should and responds to what it should (eg: for calendars, it must still respond to 'start' at least.
+
 = Version 3.8.1 =
 * Special interim update for arkanto.  Adds a parameter "ignore_query=1" to the widgets or shortcodes parameters.  This tells the plugin to NOT respond to any parameters passed via the query string.  Please use this only after due consideration and understanding and probably only in the "upcoming events list".  This will force the list to be "static" and appear the same no matter whether in a category/tag/author archive or not.  If you are using the box calendar or taxonomy widget to link through to a agenda/calendar page, do NOT use this in the calendar page shortcode.
 
@@ -473,6 +480,9 @@ For the widgets (calendar and list)
 
 1.  Drag to the chosen sidebar
 2.  Enter http://yoururl.ics in the large text area, Save
+
+Note:
+The ics file feed must be PUBLIC - if you cannot access it in a browser without being logged in, then the plugin will not be able to access it either.
 
 
 == Frequently Asked Questions ==

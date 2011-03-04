@@ -22,7 +22,7 @@ $utczobj = timezone_open('UTC');
 if (isset($_REQUEST["debug"]) ) {  /* for debug and support - calendar data is public anyway, so no danger*/
 		define('ICAL_EVENTS_DEBUG', true);
 /*	define('WP_DEBUG', true);  /* when testing only */
-		echo '<h1>Debug Mode</h1>';
+//		echo '<h1>Debug Mode</h1>';
 }
 else define('ICAL_EVENTS_DEBUG', false);
 
@@ -806,7 +806,7 @@ global $amr_options;
 			'feed_css' => true,
 			'cssfile' => ICALSTYLEURL,//'icallist.css',
 			'date_localise' => 'amr',
-			'noeventsmessage' => __('No events found within start and end date','amr_ical_list_lang')
+			'noeventsmessage' => __('No events found within criteria','amr_ical_list_lang')
 			);
 
 
@@ -824,7 +824,7 @@ global $amr_options;
 		_e('Resetting options...', 'amr_ical_list_lang');
 		if (($d = delete_option('AmRiCalEventList')) or ($d = delete_option('amr-ical-events-list')))
 			_e('Options Deleted...','amr_ical_list_lang');
-		else _e('Error deleting option...','amr_ical_list_lang');
+		else _e('Option was not saved before or error deleting option...','amr_ical_list_lang');
 //		if (update_option('amr-ical-events-list', $amr_options)) _e('Options updated with defaults...','amr_ical_list_lang');
 		}
 	else  {/* *First setup the default config  */	
