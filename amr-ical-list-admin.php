@@ -116,7 +116,7 @@ global $amr_options;
 	if (isset($_POST['general']))  {
 		if (is_array($_POST['general'][$i])){
 			foreach ($_POST['general'][$i] as $c => $v)	{
-				if (isset($_POST['general'][$i][$c])) {
+				if (!empty($_POST['general'][$i][$c])) {
 					if ($c ==='Default Event URL') { 
 						if	(!filter_var($_POST['general'][$i][$c],FILTER_VALIDATE_URL)) {							
 							 amr_invalid_url();
@@ -657,7 +657,7 @@ if (version_compare('5.3', PHP_VERSION, '>')) {
 				if (isset($_REQUEST["list"]) and is_numeric($_REQUEST["list"])) {/* then configure just that list */
 					$result = amr_ical_validate_list_options($_REQUEST['list']); /* messages are in the function */
 					if ($result) _e('List saved','amr_ical_list_lang');
-					else _e('Error in saving','amr_ical_list_lang');
+					else _e('No change to options or unexpected error in saving','amr_ical_list_lang');
 				}
 				else {echo '<h2>'.__('Invalid List Type','amr_ical_list_lang').'</h2>';}
 			}

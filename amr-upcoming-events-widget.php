@@ -36,8 +36,9 @@ class amr_ical_widget extends WP_widget {
 		if (!isset($args['listtype'])) $args['listtype'] = $amr_listtype = '4';
 		}
 //
-	if (!empty ($externalicalonly) and $externalicalonly) $args['eventpoststoo'] = false;
-	else $args['eventpoststoo'] = true;
+	if (!empty ($externalicalonly) and $externalicalonly) 
+			$args['eventpoststoo'] = '0';
+	else 	$args['eventpoststoo'] = '1';
 
 	$amrW = 'w';	 /* to maintain consistency with previous version and prevent certain actions */
 	$criteria 	= amr_get_params ($args);  /* this may update listtype, limits  etc */
@@ -185,8 +186,9 @@ class amr_icalendar_widget extends WP_widget {
 	$amr_calendar_url = (empty($moreurl)) ? null : $moreurl ;
 	if (ICAL_EVENTS_DEBUG) echo 'Calendar url = '.$amr_calendar_url;
 	if (!empty ($shortcode_urls)) $atts 		= shortcode_parse_atts($shortcode_urls);
-	if (!empty ($externalicalonly) and $externalicalonly) $atts['eventpoststoo'] = false;
-	else $atts['eventpoststoo'] = true;
+	if (!empty ($externalicalonly) and $externalicalonly) 
+		$atts['eventpoststoo'] = '0';
+	else $atts['eventpoststoo'] = '1';
 //
 	if (!(isset($widget_icalno))) $widget_icalno = 0;
 	else $widget_icalno= $widget_icalno + 1;

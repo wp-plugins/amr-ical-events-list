@@ -77,8 +77,6 @@ return ($link);
 // ----------------------------------------------------------------------------------------
 function amrical_calendar_views () {
 	global $amr_listtype, $amr_limits;
- 
-	amr_ical_load_text(); // do we have to reload all over theplace ?  wp does not always seem to have the translations
 
 	$link = amr_clean_link();
 	$link = remove_query_arg(array(
@@ -88,16 +86,11 @@ function amrical_calendar_views () {
 		'eventmap'));
 
 	if (isset ($amr_limits['agenda'])) $agenda = $amr_limits['agenda'];
-
 	else $agenda = 1;
 	if (isset ($amr_limits['eventmap'])) $eventmap = $amr_limits['eventmap'];
-
 	else $eventmap = false;  // if not explicitly asked for a map, then do not do it
 	if (isset ($amr_limits['calendar'])) $calendar = $amr_limits['calendar'];
-
-	else {
-
-		$calendar = 9;
+	else {		$calendar = 9;
 	}
 
 	if ($agenda) {
@@ -111,7 +104,7 @@ function amrical_calendar_views () {
 	else $agendaviewlink = '';
 	//
 	if ($calendar) {
-		$calendarviewlink = '<a class="calendarlink" href="'
+		$calendarviewlink = ' <a class="calendarlink" href="'
 		. htmlentities(add_query_arg(array('calendar'=>$calendar,'months'=>'1'),$link ))
 
 		. '" title="' . __('Go to calendar view', 'amr_ical_list_lang'). '">'.__('Calendar', 'amr_ical_list_lang').'</a>';
@@ -119,14 +112,15 @@ function amrical_calendar_views () {
 	else $calendarviewlink  = '';
 	//
 	if ($eventmap) {
-		$mapviewlink = '<a class="maplink" href="'
+		$mapviewlink = ' <a class="maplink" href="'
 		. htmlentities(add_query_arg('view','map',$link ))
 
 		. '" title="' . __('Go to map view', 'amr_ical_list_lang'). '">'.__('Map', 'amr_ical_list_lang').'</a>';
 	}
 	else $mapviewlink = '';
-	$html = '<div class="calendarviews">'.$agendaviewlink.' '.$calendarviewlink.' '.$mapviewlink.'</div>';
-	return ($html);
+	$htmlviews = $agendaviewlink.$calendarviewlink.$mapviewlink;
+	if (!empty ($htmlviews ) ) return ('<span class="calendarviews">'.$htmlviews.'</span>');
+	else return ('');
 }
 // ----------------------------------------------------------------------------------------
 function amr_month_year_navigation ($start) { //note get is faster than post

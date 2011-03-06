@@ -5,7 +5,7 @@ Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, i
 
 Requires at least: 2.8
 Tested up to: 3.1
-Version: 3.9
+Version: 3.9.1
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.
@@ -43,6 +43,11 @@ Many thanks to the following people for the translations.  Note that I am unable
 If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me the .po files for your language.
 
 == Changelog ==
+= Version 3.9.1 =
+*  Fix: removed a debug statemennt that displayed in free version
+*  Fix: default event url should not be mandatory
+*  Fix: for list type using "lists" not table, and when useses a grouping, the html validation failed due to a missing html tag.  This highlighted some minor things in the html that could be cleaned up - and so they have been.
+
 = Version 3.9 =
 *  Change: Table body and row html slightly re-organised to more sensible structure 
 *  Fix: Cleaned up some hcalendar markup to make it totally valid microformat markup
