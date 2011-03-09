@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '3.9.1');
+define('AMR_ICAL_LIST_VERSION', '3.9.2');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -2500,6 +2500,9 @@ function amr_get_params ($attributes=array()) {
 	If (ICAL_EVENTS_DEBUG) {echo '<hr> Parsed Query String<br />'; var_dump($queryargs); }
 	unset($queryargs['page_id']);
 	unset($queryargs['debug']);
+
+
+
 //
 	$defaults = array( /* defaults array for shortcode , - these override limits if they exist in limit, */
 	'listtype' => $listtype,
@@ -2525,6 +2528,33 @@ function amr_get_params ($attributes=array()) {
 	);
 
 	$shortcode_params = shortcode_atts( $defaults, $attributes ) ;  
+	
+	//
+	if (!empty ($attributes) ) foreach ($attributes as $i => $v) {
+			if (is_numeric ($i)) {  // ie if it is a value passed with no name, we expect only urls like that 
+				if (substr($v, 0 ,1) == ':') { /* attempt to maintain old filter compatibity */
+					$shortcode_params['urls'][$i] = substr ($v, 1);
+				}
+				$v = (str_ireplace('webcal://', 'http://',$v));
+				if ((function_exists('filter_var')) and (!filter_var($v, FILTER_VALIDATE_URL))) { /* rejecting a valid URL on php 5.2.14  */
+					echo '<h2>'.sprintf(__('Invalid Ical URL %s','amr_ical_list_lang'), $v).'</h2>';
+				}
+				else 	
+					$shortcode_params['urls'][$i] = esc_url($v);
+				unset ($attributes[$i]);
+				}
+			else { /* of it's not a url, it's a query selection criteria */
+				if ($i == 'ics') {
+					$shortcode_params['urls'][] = $v;
+					unset($attributes[$i]);
+					}
+			}
+		}
+
+//
+	
+	
+	
 	If (ICAL_EVENTS_DEBUG) {
 		echo '<hr>Shortcode with shortcode defaults added <br />'; var_dump($shortcode_params); 
 	}
@@ -2653,26 +2683,7 @@ function amr_get_params ($attributes=array()) {
 	}
 /* ---- check for urls that are either passed by query or form, or are in the shortcode with a number or not ie: not ics =  */
 
-	foreach ($shortcode_params as $i => $v) {
-			if (is_numeric ($i)) {  // ie if it is a value passed with no name, we expect only urls like that 
-				if (substr($v, 0 ,1) == ':') { /* attempt to maintain old filter compatibity */
-					$others['urls'][$i] = substr ($v, 1);
-				}
-				$v = (str_ireplace('webcal://', 'http://',$v));
-				if ((function_exists('filter_var')) and (!filter_var($v, FILTER_VALIDATE_URL))) { /* rejecting a valid URL on php 5.2.14  */
-					echo '<h2>'.sprintf(__('Invalid Ical URL %s','amr_ical_list_lang'), $v).'</h2>';
-				}
-				else 	
-					$shortcode_params['urls'][$i] = esc_url($v);
-				unset ($shortcode_params[$i]);
-				}
-			else { /* of it's not a url, it's a query selection criteria */
-				if ($i == 'ics') {
-					$shortcode_params['urls'][] = $v;
-					unset($shortcode_params[$i]);
-					}
-			}
-		}
+
 	//set up global for easier access 
 	$amr_formats = $amr_options[$amr_listtype]['format'];
 // now adjust our start dta if necessary 
