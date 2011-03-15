@@ -102,7 +102,7 @@ function  amr_make_sticky_url($url) {
 	
 	if (!$page_id) return false ;
 	else {
-		$sticky_url  = add_query_arg('page_id',$page_id,get_bloginfo('home'));
+		$sticky_url  = add_query_arg('page_id',$page_id,get_bloginfo('url'));
 		return( $sticky_url) ;
 	}	
 }	
@@ -263,8 +263,9 @@ global $amr_options;
 	return($result);
 }
 	/* ---------------------------------------------------------------------*/
-	function AmRIcal_general ($i) {
+function amrical_general_form ($i) {
 	global $amr_options;
+	update_option('amr-ical-events-list-version', AMR_ICAL_LIST_VERSION); // for upgrade checks 
  ?><fieldset  id="general<?php echo $i; ?>" class="general" >
 	<h4><?php _e('General:', 'amr_ical_list_lang'); ?></h4>
 	<div><?php
@@ -293,7 +294,7 @@ global $amr_options;
 	</em>
 	<a title="<?php _e('More information'); ?>"	href="http://icalevents.anmari.com/1901-widgets-calendar-pages-and-event-urls/" >?</a>
 	</label>
-		<input type="text" class="wide" size="20" id="defaulturl" name="general[<?php echo $i; ?>][Default Event URL]" value="<?php
+		<input type="text" class="wide" size="60" id="defaulturl" name="general[<?php echo $i; ?>][Default Event URL]" value="<?php
 				if (isset($amr_options[$i]['general']['Default Event URL'])) 
 					echo esc_textarea($amr_options[$i]['general']['Default Event URL']); ?>" />
 <?php }
@@ -303,7 +304,7 @@ global $amr_options;
 	return ;
 	}
 	/* ---------------------------------------------------------------------*/
-	function AmRIcal_limits($i) {
+	function amrical_limits($i) {
 	global $amr_options;
 		?><fieldset class="limits" ><h4 class="trigger"><a href="#" ><?php _e('Define maximums:', 'amr_ical_list_lang'); ?></a></h4>
 		<div class="toggle_container">
@@ -321,7 +322,7 @@ global $amr_options;
 	return ;
 	}
 	/* ---------------------------------------------------------------------*/
-	function AmRIcal_componentsoption($i) {
+	function amrical_componentsoption($i) {
 	global $amr_options;
 	?><fieldset id="components<?php echo $i; ?>" class="components" >
 	<h4 class="trigger"><a href="#" ><?php _e('Select components to show:', 'amr_ical_list_lang');
@@ -342,7 +343,7 @@ global $amr_options;
 	return ;
 	}
 	/* ---------------------------------------------------------------------*/
-	function AmRIcal_groupingsoption($i) {
+	function amrical_groupingsoption($i) {
 		global $amr_options;
 
 		?><fieldset class="icalgroupings">
@@ -358,7 +359,7 @@ global $amr_options;
 	return;
 	}
 	/* ---------------------------------------------------------------------*/
-	function AmRIcal_calpropsoption($i) {
+	function amrical_calpropsoption($i) {
 	global $amr_options;
 	global $amr_csize;
 		?><fieldset id="calprop" class="props">
@@ -380,15 +381,18 @@ global $amr_options;
 		return;
 	}
 	/* ---------------------------------------------------------------------*/
-	function AmRIcal_compropsoption($i) {
+	function amrical_compropsoption($i) {
 	global $amr_options;
 	global $amr_csize;
 		?><fieldset id="comprop" class="props" >
 		<h4 class="trigger"><a href="#"><?php _e('Specify fields to show:' , 'amr_ical_list_lang'); ?></a></h4>
 
 		<div class="toggle_container">
-<p><em><?php _e('Note: a 0 (zero) in column = do not show that field.', 'amr_ical_list_lang'); ?></em> <a title="<?php _e('Link to more information', 'amr_ical', 'amr_ical_list_lang'); ?>" href="http://icalevents.anmari.com/list-types/"><?php _e('More information', 'amr_ical', 'amr_ical_list_lang'); ?></a></p><?php
-		?><p><em><?php _e('Uppercase fields are those defined in the iCal specification.', 'amr_ical_list_lang');?></em></p><p><em><?php
+<p>
+<em><?php _e('Note: a 0 (zero) in column = do not show that field.', 'amr_ical_list_lang'); ?></em> <a title="<?php _e('Link to more information', 'amr_ical', 'amr_ical_list_lang'); ?>" href="http://icalevents.anmari.com/list-types/"><?php _e('More information', 'amr_ical', 'amr_ical_list_lang'); ?></a>
+</p><?php
+		?><p><em><?php _e('Uppercase fields are those defined in the iCal specification.', 'amr_ical_list_lang');?></em></p>
+		<p><em><?php
 		_e('Lowercase fields are additional fields added by this plugin and derived from the iCal fields for your convenience.' , 'amr_ical_list_lang');
 		_e('Fields show if "column" > 0 and if there is data available in your event or ics file.', 'amr_ical_list_lang');
 		?></em></p><?php
@@ -413,7 +417,7 @@ global $amr_options;
 
 	/* ---------------------------------------------------------------------*/
 
-	function AmRIcal_col_headings($i) {
+	function amrical_col_headings($i) {
 	/* for component properties only */
 	global $amr_options;
 	global $amr_csize;
@@ -440,27 +444,29 @@ global $amr_options;
 
 function amr_request_acknowledgement () {
 ?><div class="postbox" style="padding:1em 2em; width: 600px;">
-	<p style="border-width: 1px;"><?php _e('I try to make these plugins work <strong>"out of the box"</strong> with minimal effort; that they be easy to use but <strong>very configurable</strong>; <strong>well tested</strong>; with <strong>valid html and css</strong> both at the front and admin area.','amr_ical_list_lang');
+	<p style="border-width: 1px;"><?php _e('I try to make these plugins work <strong>"out of the box"</strong> with minimal effort; that they be easy to use but <strong>very configurable</strong>; <strong>well tested</strong>; with <strong>valid html and css</strong> both at the front and admin area.','amr_ical_list_lang');?> <?php
 _e('If you have a feature request, please do let me know. ','amr_ical_list_lang');
-?></p><p><b><?php _e('To edit events in wordpress:','amr_ical_list_lang'); ?> <a href="http://icalevents.anmari.com" >icalevents.anmari.com</a><?php
-	?></b></p><p>
+?></p><p><b><?php _e('To edit events in wordpress:','amr_ical_list_lang'); ?> <a href="http://icalevents.anmari.com" >icalevents.anmari.com</a></b>
+</div>
+<?php
+}
+/* ---------------------------------------------------------------------*/
+
+function amr_ical_support_links () {
+?><div class="postbox" style="padding:1em 2em; width: 600px;">
+	<p>
 	<a href="http://icalevents.anmari.com" title="Sign up or monitor the feed for regular updates"><?php _e('Documentation', 'amr_ical_list_lang');?></a>
 	&nbsp;&nbsp;
 	<a href="http://forum.anmari.com" title="Support Forum"><?php _e('Support', 'amr_ical_list_lang');?></a>
+	&nbsp;&nbsp;
+	<a href="http://icalevents.anmari.com/videos" title="Events plugin videos"><?php _e('Videos', 'amr_ical_list_lang');?></a>
 	&nbsp;&nbsp;
 	<a href='http://wordpress.org/tags/amr-ical-events-list' title="If you like it rate it..."><?php _e('Rate it at WP', 'amr_ical_list_lang');?></a>
 	&nbsp;&nbsp;
 	<a href="http://icalevents.anmari.com/feed/"><?php _e('Plugin feed', 'amr_ical_list_lang');?></a><img src="http://icalevents.anmari.com/images/amrical-rss.png" alt="Rss icon" style="vertical-align:middle;" />
 	&nbsp;&nbsp;
-	<a href="http://icalevents.anmari.com/comments/feed/"><?php _e('Comments feed', 'amr_ical_list_lang');?></a><img src="http://icalevents.anmari.com/images/amrical-rss.png" alt="Rss icon" style="vertical-align:middle;" />
-	</p><?php
-if (!function_exists('amr_events_settings_menu')) { /* then the paid plugin is already on the system */
-	echo '<div class="updated"><p>';
-	printf(__('Now you can <b>create events</b> and <b>ics feeds</b> directly in wordpress - See screenshots and demo at %s','amr_ical_list_lang'),
-	'<a class="approved" href="http://icalevents.anmari.com/amr-events/">amr-events</a>');
-	echo '</p></div>';
-}
-	?></div><?php
+	<a href="http://forum.anmari.com/rss.php?id=1"><?php _e('Forum feed', 'amr_ical_list_lang');?></a><img src="http://icalevents.anmari.com/images/amrical-rss.png" alt="Rss icon" style="vertical-align:middle;" />		
+	</p></div><?php
 
 	}
 /* ---------------------------------------------------------------------*/
@@ -565,7 +571,7 @@ if (!function_exists('amr_events_settings_menu')) { /* then the paid plugin is a
 			<label for="noeventsmessage">
 			<?php _e('Message if no events found: ', 'amr_ical_list_lang');
 			?></label><br />
-			<input class="wide" type="text" id="noeventsmessage" name="noeventsmessage"
+			<input class="wide regular-text" type="text" id="noeventsmessage" name="noeventsmessage"
 			<?php if (isset($amr_options['noeventsmessage']) and ($amr_options['noeventsmessage']))
 				{echo 'value="'.$amr_options['noeventsmessage'].'"';}?>/>
 			<br />
@@ -594,7 +600,7 @@ if (!function_exists('amr_events_settings_menu')) { /* then the paid plugin is a
 			_e('Edit it and then re-upload to that same folder. Then select it in the box below.', 'amr_ical_list_lang');
 			echo ' ';
 			_e('This file will not be overwritten when the plugin is upgraded or when your theme is upgraded. ', 'amr_ical_list_lang'); ?></em>
-			<a href="http://icalevents.anmari.com/?s=css"><?php _e('More info','amr_ical_list_lang'); ?></a><p>
+			<a href="http://icalevents.anmari.com/?s=css"><?php _e('More info','amr_ical_list_lang'); ?></a><br />
 			<a href="<?php echo ICALLISTPLUGINURL.'css/icallist.css'; ?>"><?php _e('Download the latest provided css file for editing', 'amr_ical_list_lang'); ?></a><?php echo ' '; _e('(optional)','amr_ical_list_lang'); ?><br />
 			<label for="cssfile"><?php _e('Choose plugin default css or choose a custom css and edit it.', 'amr_ical_list_lang'); ?></label>
 			<select id="cssfile" name="cssfile" ><?php
@@ -633,16 +639,14 @@ if (version_compare('5.3', PHP_VERSION, '>')) {
 	}
 
 	/* ---------------------------------------------------------------------*/
-	function AmRIcal_option_page()  {
+	function amrical_option_page()  {
 	global $amr_options;
 	$nonce = wp_create_nonce('amr_ical_list_lang'); /* used for security to verify that any action request comes from this plugin's forms */
 	if (isset($_REQUEST['uninstall'])  OR isset($_REQUEST['reallyuninstall']))  { /*  */
 		amr_ical_check_uninstall();
 		return;
 	}
-	if (isset ($_POST['reset'])) {
-		$amr_options = amr_getset_options (true);
-		}
+	if (isset ($_POST['reset'])) $amr_options = amr_getset_options (true);
 	else $amr_options = amr_getset_options(false);	/* options will be set to defaults here if not already existing */
 
 	if (!(isset ($_POST['reset'])) and (isset ($_POST['action']) and ($_POST['action'] == "save"))) {/* Validate the input and save */
@@ -653,60 +657,70 @@ if (version_compare('5.3', PHP_VERSION, '>')) {
 				else _e('List saved','amr_ical_list_lang');
 
 			}
-			else {
-				if (isset($_REQUEST["list"]) and is_numeric($_REQUEST["list"])) {/* then configure just that list */
-					$result = amr_ical_validate_list_options($_REQUEST['list']); /* messages are in the function */
-					if ($result) _e('List saved','amr_ical_list_lang');
-					else _e('No change to options or unexpected error in saving','amr_ical_list_lang');
-				}
-				else {echo '<h2>'.__('Invalid List Type','amr_ical_list_lang').'</h2>';}
-			}
-
 		}?>
-
-		<div class="wrap" id="AmRIcal">
+		<div class="wrap" id="amrical">
 		<div id="icon-options-general" class="icon32"><br />
 		</div>
 		<h2><?php _e('iCal Events List ', 'amr_ical_list_lang'); echo AMR_ICAL_LIST_VERSION; ?></h2>
-
 		<form method="post" action="<?php esc_url($_SERVER['PHP_SELF']); ?>">
-				<?php  wp_nonce_field('amr_ical_list_lang'); /* outputs hidden field */
-				if (!isset($_GET['list'])) amr_request_acknowledgement();
-			?><div id="listnav"  style="clear:both;"><?php
-				$url = remove_query_arg('list');
-				echo '<a class="button-primary" href="'.$url.'">'.__('General Options','amr_ical_list_lang').'</a> ';
-				_e('Go to list type:','amr_ical_list_lang' );
-				for ($i = 1; $i <= $amr_options['no_types']; $i++) {
-					if ($i > 1) echo '&nbsp;|&nbsp;';
-					echo '&nbsp;<a href="'.$url.'&amp;list='.$i.'">'.$i.' '.$amr_options[$i]['general']['name'].'</a>&nbsp;&nbsp;';
-				}?>
-				</div>
-				<div style="clear: both;">&nbsp;
-				</div>
-				<fieldset id="submit" style="clear:both; float: right; margin: 0 2em;">
-				<input type="hidden" name="action" value="save" />
-				<input type="submit" class="button-primary" title="<?php
-					_e('Save the settings','amr_ical_list_lang') ;
-					?>" value="<?php _e('Update', 'amr_ical_list_lang') ?>" />
-				<input type="submit" class="button" name="uninstall" title="<?php
-					_e('Uninstall the plugin and delete the options from the database.','amr_ical_list_lang') ;
-					?>" value="<?php _e('Uninstall', 'amr_ical_list_lang') ?>" />
-				<input type="submit" class="button" name="reset" title="<?php
-					_e('Warning: This will reset ALL the options immediately.','amr_ical_list_lang') ;
-					?>" value="<?php _e('Reset', 'amr_ical_list_lang') ?>" />
-				</fieldset>
-			<?php
-			if (!isset($_REQUEST['list'])) 	amr_ical_general_form();
-			else amr_configure_list($_REQUEST['list']);
+			<?php  wp_nonce_field('amr_ical_list_lang'); /* outputs hidden field */
+				amr_request_acknowledgement();
+				amr_ical_support_links ();
+
+			amr_ical_submit_buttons ();
+			amr_ical_general_form();
 		?>
 		</form>
 		</div><?php
-	}	//end AmRIcal_option_page
+	}	//end amrical_option_page
 
+	/* ---------------------------------------------------------------------*/
+	function amrical_listing_options_page()  {
+	global $amr_options;
+	$amr_options = amr_getset_options();
 
+	if (isset($_REQUEST["list"]) ) 	$listtype = (int) $_REQUEST["list"];
+	else $listtype = 1;
+	if (isset ($_POST['reset'])) $amr_options = amr_getset_options (true);
+	else {
+		$amr_options = amr_getset_options(false);	/* options will be set to defaults here if not already existing */
+		if ((isset ($_POST['action']) and ($_POST['action'] == "save"))) {/* Validate the input and save */
+			_e('Saving....','amr_ical_list_lang');
+			$result = amr_ical_validate_list_options($listtype); /* messages are in the function */
+			if ($result) _e('List saved','amr_ical_list_lang');
+				else _e('No change to options or unexpected error in saving','amr_ical_list_lang');
+		}
+	}	
+?>
+		<div class="wrap" id="amrical">
+		<div id="icon-options-general" class="icon32"><br />
+		</div>
+		<h2><?php _e('Configure event list type: ', 'amr_ical_list_lang'); echo $listtype; ?></h2>
+
+		<form method="post" action="<?php esc_url($_SERVER['PHP_SELF']); ?>">
+				<?php  wp_nonce_field('amr_ical_list_lang'); /* outputs hidden field */
+
+			?><div id="listnav"  style="clear:both;"><?php
+				$url = remove_query_arg('list');
+				_e('Go to list type:','amr_ical_list_lang' );echo '<br />';
+				for ($i = 1; $i <= $amr_options['no_types']; $i++) {
+					if ($i > 1) echo '&nbsp;|&nbsp;';
+					$text = ' <a href="'.$url.'&amp;list='.$i.'">'.$i.'&nbsp;'.$amr_options[$i]['general']['name'].'</a>&nbsp;&nbsp;';
+					if ($listtype==$i) 	echo '<b>'.$text.'</b>';
+					else echo $text;
+				}?>
+				</div>
+				<?php 
+			amr_ical_submit_buttons (); 
+			amr_configure_list($listtype);
+	
+		?>
+		</form>
+		</div><?php
+	}	//end amrical_option_page
 
 /* -------------------------------------------------------------------------------------------------*/
-	function AmRIcal_formats ($i) {
+	function amrical_formats ($i) {
 	global $amr_options;
 	global $amr_globaltz;
 
@@ -745,30 +759,46 @@ if (version_compare('5.3', PHP_VERSION, '>')) {
 	return ;
 	}
 /* -------------------------------------------------------------------------------------------------------------*/
-
+function amr_ical_submit_buttons () {
+?>
+<div style="clear: both;">&nbsp;
+				</div>
+				<fieldset id="submit" style="clear:both; float: right; margin: 0 2em;">
+				<input type="hidden" name="action" value="save" />
+				<input type="submit" class="button-primary" title="<?php
+					_e('Save the settings','amr_ical_list_lang') ;
+					?>" value="<?php _e('Update', 'amr_ical_list_lang') ?>" />
+				<input type="submit" class="button" name="uninstall" title="<?php
+					_e('Uninstall the plugin and delete the options from the database.','amr_ical_list_lang') ;
+					?>" value="<?php _e('Uninstall', 'amr_ical_list_lang') ?>" />
+				<input type="submit" class="button" name="reset" title="<?php
+					_e('Warning: This will reset ALL the listing options immediately.','amr_ical_list_lang') ;
+					?>" value="<?php _e('Reset all listing options', 'amr_ical_list_lang') ?>" />
+				</fieldset>
+				<?php
+}
+/* -------------------------------------------------------------------------------------------------------------*/
 function amr_configure_list($i) {
-
 global $amr_options;
 
-
 		echo '<fieldset id="List'.$i.'" >' ;
-		echo '<legend>'. __('List Type ', 'amr_ical_list_lang').$i.'</legend>';
-		echo '<a class="expandall" href="" >'.__('Expand/Contract all', 'amr_ical_list_lang').'</a>';
+//		echo '<legend>'. __('List Type ', 'amr_ical_list_lang').$i.'</legend>';
+		echo '<a class="expandall" style="float:right;" href="" >'.__('Expand/Contract all', 'amr_ical_list_lang').'</a>';
 //		echo '<a style="float:right; margin-top:-1em;" name="list'.$i.'" href="#">'.__('go back','amr_ical_list_lang').'</a>';
 		if (!(isset($amr_options[$i])) )  echo 'Error in saved options';
 		else{
 
-			AmRIcal_general($i);
-			AmRIcal_limits($i);
-			AmRIcal_formats ($i);
+			amrical_general_form($i);
+			amrical_limits($i);
+			amrical_formats ($i);
 			if (!(in_array($amr_options[$i]['general']['ListHTMLStyle'],array('smallcalendar','largecalendar'))))
-				AmRIcal_col_headings($i);
+				amrical_col_headings($i);
 			//
-			AmRIcal_compropsoption($i);
-			AmRIcal_componentsoption($i);
+			amrical_compropsoption($i);
+			amrical_componentsoption($i);
 			if (!(in_array($amr_options[$i]['general']['ListHTMLStyle'],array('smallcalendar','largecalendar')))) {
-				AmRIcal_groupingsoption($i);
-				AmRIcal_calpropsoption($i);
+				amrical_groupingsoption($i);
+				amrical_calpropsoption($i);
 			}
 
 

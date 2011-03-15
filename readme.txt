@@ -5,7 +5,7 @@ Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, i
 
 Requires at least: 2.8
 Tested up to: 3.1
-Version: 3.9.2
+Version: 3.9.3
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.
@@ -43,6 +43,13 @@ Many thanks to the following people for the translations.  Note that I am unable
 If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me the .po files for your language.
 
 == Changelog ==
+= Version 3.9.3 =
+*  Change: per barikso's request, messages output when there is a problem with the external ics file have changed.  They are more subtle now (!) with the message on hover, and have a class of error.  The class is so that you may choose to hide the messages if you wish.  The plugin will deliver cached content if possible so your site will not just look bad should the ics file fail. (I elected to go with a fake hyperlink as depending on the problem with your ics file there may be one or more messages.)
+*  Change: defaults have been slightly tweaked, so if you had NOT saved your settings, you may see small changes (eg: timezone and refresh now do NOT show by default)
+*  Change: settings pages restructured and some changes to make it look more like standard wordpress, not a separate look.  I dislike plugins that have their own adminlook and style different from wp. 
+*  Fix: replaced some functions deprecated in wp 3.1.
+*  Fix: grouping logic had an error introduced in last version where last event of a group went into next group rather than previous - fixed. 
+
 = Version 3.9.2 =
 *  Fix: the shortcut of just entering urls without having to say "ics=your url" was lost in a recent update. Sorry!  It's back.
 

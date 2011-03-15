@@ -261,10 +261,10 @@ foreach ($taxonomies as $i=>$tax) {
 $amr_calprop = array (
 		'X-WR-CALNAME'	=> array('Column' => 1, 'Order' => 1, 'Before' => '', 'After' => ''),
 		'X-WR-CALDESC'	=> $dfalse,
-		'X-WR-TIMEZONE'	=> array('Column' => 2, 'Order' => 2, 'Before' => '', 'After' => ''),
+		'X-WR-TIMEZONE'	=> array('Column' => 0, 'Order' => 2, 'Before' => '', 'After' => ''),
 		'icsurl'		=> array('Column' => 2, 'Order' => 2, 'Before' => '', 'After' => ''),
 		'addtogoogle' 	=> array('Column' => 2, 'Order' => 5, 'Before' => '', 'After' => ''),
-		'icalrefresh' 	=> array('Column' => 2, 'Order' => 9, 'Before' => '', 'After' => ''),
+		'icalrefresh' 	=> array('Column' => 0, 'Order' => 9, 'Before' => '', 'After' => ''),
 		/* for linking to the ics file, not intended as a display field really unless you want a separate link to it, intended to sit behind name, with desc as title */
 		'LAST-MODIFIED' => $dtrue
 		//		'CALSCALE'=> $dfalse,
@@ -822,7 +822,8 @@ global $amr_options;
 	/* we are requested to reset the options, so delete and update with default */
 	if ($reset) {
 		_e('Resetting options...', 'amr_ical_list_lang');
-		if (($d = delete_option('AmRiCalEventList')) or ($d = delete_option('amr-ical-events-list')))
+		if (($d = delete_option('AmRiCalEventList')) 
+			or ($d = delete_option('amr-ical-events-list')))
 			_e('Options Deleted...','amr_ical_list_lang');
 		else _e('Option was not saved before or error deleting option...','amr_ical_list_lang');
 //		if (update_option('amr-ical-events-list', $amr_options)) _e('Options updated with defaults...','amr_ical_list_lang');

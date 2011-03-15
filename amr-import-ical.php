@@ -214,19 +214,26 @@ function getRemoteFile($url) // an alternate method to get remote file
 					$checkstart = substr($data,0,15);
 					If (ICAL_EVENTS_DEBUG) { echo '<br /> Check start of data: '.$checkstart;}
 					if (!($checkstart == 'BEGIN:VCALENDAR')) {
-						echo '<br />Unexpected data contents. Please tell administrator.'; var_dump($data);
+						echo '<a class="error" href="#" title="'
+						.__('Unexpected data contents. Please tell administrator.','amr_ical_list_lang' ). ' '
+						.__('See comments in source for response received from ics server.','amr_ical_list_lang' )
+						.'">!</a>';
+						echo '<!-- '; var_dump($data);echo ' -->';
 
 						$text .= '&nbsp;'.sprintf(__('Error getting calendar file with htpp or curl, or custom fn: %s','amr_ical_list_lang'), $url);
 
 						if ( file_exists($cachedfile) ) { // Try use cached file if it exists
-							$text .= '&nbsp;'.sprintf(__('Using File last cached at %s','amr_ical_list_lang'), $amr_lastcache->format('D c'));
-							echo '<br /><span style="text-align:center; font-size:small;"><em>'.__('Warning: Events may be out of date. ','amr_ical_list_lang').$text.'</em></span>';
+							$text .= '&nbsp;...'.sprintf(__('Using File last cached at %s','amr_ical_list_lang'), $amr_lastcache->format('D c'));					
+							echo '<a class="error" href="#" title="'
+							.__('Warning: Events may be out of date. ','amr_ical_list_lang' )
+							. $text.'">!</a>';
 //							$data = file_get_contents($cachedfile);
 							return($cachedfile);  //return file not data
 							}
 						else {
-							_e('No cached ical file for events','amr_ical_list_lang');
-							echo $text;
+							echo '<a class="error" href="#" title="'
+							.__('No cached ical file for events','amr_ical_list_lang' )
+							. $text.'">!</a>';
 							return (false);
 						}
 					}

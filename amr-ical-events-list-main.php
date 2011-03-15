@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '3.9.2');
+define('AMR_ICAL_LIST_VERSION', '3.9.3');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -329,9 +329,7 @@ function amr_output_icalduration ($duarray) {
 	if (!empty($duarray['seconds'])) $d .=    (int)$duarray['seconds'].'S';
 	return ($d);
 }
-
 /* ----------------------------------------------------------------------------------- */
-
 function amr_prepare_pretty_rrule ($rule) {
 
 global $ical_timezone;
@@ -463,7 +461,7 @@ function add_event_to_google($e) {
 global $amr_options;
 
 	if (!isset($e['EventDate'])) return('');
-	if (isset($e['LOCATION'])) $l = 	'&amp;location='.wp_specialchars(strip_tags(str_replace(' ','%20',($e['LOCATION'] ))));
+	if (isset($e['LOCATION'])) $l = 	'&amp;location='.esc_html(strip_tags(str_replace(' ','%20',($e['LOCATION'] ))));
 	else $l = '';
 	if (!isset($e['DESCRIPTION'])) $e['DESCRIPTION'] = '';
 	$t = __("Add event to google" , 'amr_ical_list_lang');
@@ -475,7 +473,7 @@ global $amr_options;
 
 /* adds a button to add the current calemdar link to the users google calendar */
 	$html = '<a href="http://www.google.com/calendar/event?action=TEMPLATE'
-	.'&amp;text='.str_replace(' ','%20',wp_specialchars(strip_tags(amr_just_flatten_array ($e['SUMMARY']))))
+	.'&amp;text='.str_replace(' ','%20',esc_html(strip_tags(amr_just_flatten_array ($e['SUMMARY']))))
 	/* dates and times need to be in UTC */
 	.'&amp;dates='.amr_get_googleeventdate($e)
 	.$l
@@ -589,25 +587,25 @@ function amr_click_and_trim($text) { /* Copy code from make_clickable so we can 
 
 /* --------------------------------------------------  */
 
-function amr_trim_url(&$ret) { /* trim urls longer than 30 chars, but not if the link text doe snot have http */
+function amr_trim_url(&$ret) { /* trim urls longer than 30 chars, but not if the link text does not have http */
 	$links = explode('<a', $ret);
-
     $countlinks = count($links);
 
 	for ($i = 0; $i < $countlinks; $i++) {
-		$link    = $links[$i];
-
+		$link    = $links[$i]; 
 		$link    = (preg_match('#(.*)(href=")#is', $link)) ? '<a' . $link : $link;
 		$begin   = strpos($link, '>');
+		
 		if ($begin) {
+		
 			$begin   = $begin + 1;
 
 			$end     = strpos($link, '<', $begin);
 
 			$length  = $end - $begin;
 
-			$urlname = substr($link, $begin, $length);
-
+			$urlname = substr($link, $begin, $length); 
+			
 			$trimmed = (strlen($urlname) > 50 && preg_match('#^(http://|ftp://|www\.)#is', $urlname)) ? substr_replace($urlname, '.....', 30, -5) : $urlname;
 			$trimmed = str_replace('http://','',$trimmed);
 
@@ -815,38 +813,38 @@ function amr_format_duration ($arr) {
 
 	$d = '';
 	if (isset ($arr['years'] )) {
-		$d .= sprintf (__ngettext ("%u year", "%u years", $arr['years'], 'amr_ical_list_lang'), $arr['years']);
+		$d .= sprintf (_n ("%u year", "%u years", $arr['years'], 'amr_ical_list_lang'), $arr['years']);
 		$d .= $sep;
 		$i = $i-1;
 		}
 	if (isset ($arr['months'] )) {
-		$d .= sprintf (__ngettext ("%u month ", "%u months ", $arr['months'], 'amr_ical_list_lang'), $arr['months']);
+		$d .= sprintf (_n ("%u month ", "%u months ", $arr['months'], 'amr_ical_list_lang'), $arr['months']);
 		if ($i> 1) {$d .= $sep;}
 		$i = $i-1;
 		}
 	if (isset ($arr['weeks'] )) {
-		$d .= sprintf (__ngettext ("%u week ", "%u weeks", $arr['weeks'], 'amr_ical_list_lang'), $arr['weeks']);
+		$d .= sprintf (_n ("%u week ", "%u weeks", $arr['weeks'], 'amr_ical_list_lang'), $arr['weeks']);
 		if ($i> 1) {$d .= $sep;}
 		$i = $i-1;
 		}
 	if ((isset ($arr['days'] )) ) {
-			$d .= sprintf (__ngettext ("%u day", "%u days", $arr['days'], 'amr_ical_list_lang'), $arr['days']);
+			$d .= sprintf (_n ("%u day", "%u days", $arr['days'], 'amr_ical_list_lang'), $arr['days']);
 //			If (ICAL_EVENTS_DEBUG) {echo ' and d = '.$d;}
 			if ($i> 1) {$d .= $sep;}
 			$i = $i-1;
 		}
 	if (isset ($arr['hours'] )) {
-		$d .= sprintf (__ngettext ("%u hour", "%u hours", $arr['hours'], 'amr_ical_list_lang'), $arr['hours']);
+		$d .= sprintf (_n ("%u hour", "%u hours", $arr['hours'], 'amr_ical_list_lang'), $arr['hours']);
 		if ($i> 1) {$d .= $sep;}
 		$i = $i-1;
 		}
 	if (isset ($arr['minutes'] )) {
-		$d .= sprintf (__ngettext ("%u minute", "%u minutes", $arr['minutes'], 'amr_ical_list_lang'), $arr['minutes']);
+		$d .= sprintf (_n ("%u minute", "%u minutes", $arr['minutes'], 'amr_ical_list_lang'), $arr['minutes']);
 		if ($i> 1) {$d .= $sep;}
 		$i = $i-1;
 		}
 	if (isset ($arr['seconds'] )) {
-		$d .= sprintf (__ngettext ("%u second", "%u seconds", $arr['seconds'], 'amr_ical_list_lang'), $arr['seconds']);
+		$d .= sprintf (_n ("%u second", "%u seconds", $arr['seconds'], 'amr_ical_list_lang'), $arr['seconds']);
 
 		}
 	return($d);
@@ -868,9 +866,6 @@ global $amr_globaltz, $amr_options;
 		.htmlentities(add_querystring_var($url,'tz',$tz2)).'" title="'
 		.$text2.'" >'.$t3.' </a></span>');
 }
-
-
-
 
 /* --------------------------------------------------------- */
 function amr_format_attendees ($attendees) {/* receive array of hopefully attendess[] CN and MAILTO, and possibly other */
@@ -966,7 +961,7 @@ function amr_derive_summary (&$e ) {
 		else {return ($e['SUMMARY']);	}
 	}
 	else {
-		$e_url = ' class="url" href="'.clean_url($e_url).'" ' ;
+		$e_url = ' class="url" href="'.esc_url($e_url).'" ' ;
 	}
 	$e_desc =  '';
 	if ($hoverdesc) {
@@ -1698,19 +1693,21 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 					}
 					
 				}
+								// so now e havefinsihed that group, start next 
+				// save the event or row,  for next group 
+				$eprop = $row.($alt ? ' class="alt':' class="').$classes.'"> '
+					.$eprop.$ulc.$cellc.$rowc;
+
+				if ($alt) $alt=false; else $alt=true;
+				$groupedhtml .= $eprop;		/* build  the group of events , ading on eprop */
+//				
 //				if (!empty($changehtml)) {
 					$html .= $body.$changehtml.$groupedhtml.$bodyc; /* package up a group */
 					$groupedhtml = '';
 					$changehtml = '';	
 //				}			
 
-				// so now e havefinsihed that group, start next 
-				// save the event or row,  for next group 
-				$eprop = $row.($alt ? ' class="alt':' class="').$classes.'"> '
-					.$eprop.$ulc.$cellc.$rowc;
-
-				if ($alt) $alt=false; else $alt=true;
-				$groupedhtml .= $eprop;		/* build  the group of events , ading on eprop */		
+		
 			}
 			//end of eprop row 	
 		}
@@ -2227,7 +2224,7 @@ global $amr_limits;
 		}
 	$ical = amr_parse_ical($file);
 	if (! (is_array($ical) )) {
-			echo sprintf('Error finding or parsing ical calendar %s',$url);
+			echo '<a class="error" href="#" title="'.sprintf(__('Error finding or parsing ical calendar %s','amr_ical_list_lang' ),$url).'">!</a>';
 			return($ical);
 		}
 	$ical['icsurl'] = $url;
@@ -2849,9 +2846,9 @@ function amr_ical_load_text() {
 }
 /* ----------------------------------------------------------------------------------- */
 
-update_option('amr-ical-events-list-version', AMR_ICAL_LIST_VERSION); // for upgrade checks 
 
-function AmRIcal_add_options_panel() {
+
+function amrical_add_options_panel() {
 
 	global $wp_version,
 			$current_user,
@@ -2861,11 +2858,8 @@ function AmRIcal_add_options_panel() {
 		$menu_title = $page_title = __('iCal Events List', 'amr_ical_list_lang');
 
 		$parent_slug =  'amr-events';
-
-		$function = 'AmRIcal_option_page';
-
+		$function = 'amrical_option_page';
 		$capability = 'manage_event_settings';
-
 		$menu_slug = 'manage_amr_ical';
 
 		if (function_exists('amr_events_settings_menu')) {
@@ -2874,31 +2868,21 @@ function AmRIcal_add_options_panel() {
 				amr_events_settings_menu();
 				$events_menu_added = true;
 				}
-
-			add_submenu_page( $parent_slug, $page_title, $menu_title, $capability, $menu_slug, $function);
-			add_submenu_page($parent_slug,
-
-				__('Taxonomies Configuration','amr_ical', 'amr_ical_list_lang'), /* page  title */
-
-				__('Taxonomies','amr_ical', 'amr_ical_list_lang'), /* menu title */
-
-				$capability,
-				'amr_event_taxonomies',
-				array( 'amr_event_taxonomy_admin', 'config_page' )
-
-				); /* function */
-
-/*			add_submenu_page($parent_slug,
-				__('Location Configuration','amr_ical'), /* page  title */
-/*				__('Locations','amr_ical'), /* menu title */
-/*				$capability,
-				'amr_event_locations',
-				array( 'amr_event_location_admin', 'config_page' )
-				); /* function */
+			add_submenu_page( $parent_slug, $page_title, $menu_title, $capability, $menu_slug, $function);			
 		}
 
-		else
-		$page = add_options_page($page_title, $menu_title , 'manage_options', $menu_slug, $function);
+		else {
+			add_menu_page($page_title, $menu_title , 'manage_options', $menu_slug, $function);
+			$parent_slug = $menu_slug;
+//		$page = add_options_page($page_title, $menu_title , 'manage_options', $menu_slug, $function);
+
+
+		}
+		$function = 'amrical_listing_options_page';
+		$menu_slug = 'manage_event_listing';
+		$page_title = __('iCal Events Lists', 'amr_ical_list_lang');
+		$menu_title = __('List types', 'amr_ical_list_lang');
+		add_submenu_page( $parent_slug, $page_title, $menu_title,'manage_options', $menu_slug, $function);		
 
 }
 
@@ -2909,7 +2893,7 @@ function amr_ical_widget_init() {
 }
 /* ------------------------------------------------------------------------------------------------ */
 
- function AmRical_add_scripts() {
+ function amrical_add_scripts() {
 
  	wp_enqueue_script('jquery');
 
@@ -2918,9 +2902,9 @@ function amr_ical_widget_init() {
 }
 /* ------------------------------------------------------------------------------------------------ */
 
- function AmRical_add_adminstyle() {
-	if (stristr ($_SERVER['QUERY_STRING'],'manage_amr_ical')) {
-
+ function amrical_add_adminstyle() {
+	if ((stristr ($_SERVER['QUERY_STRING'],'manage_amr_ical')) 
+	or (stristr ($_SERVER['QUERY_STRING'],'manage_event_listing')))   {
 
 		$myStyleUrl = ICALLISTPLUGINURL.'css/icaladmin.css';
 
@@ -2951,10 +2935,9 @@ function amr_ical_exception_handler($exception) {
 
 	if (is_admin() )	{
 
-		add_action('admin_init'         , 'AmRical_add_adminstyle');
-
-		add_action('admin_menu'         , 'AmRIcal_add_options_panel');
-		add_action('admin_print_scripts', 'AmRical_add_scripts');
+		add_action('admin_init'         , 'amrical_add_adminstyle');
+		add_action('admin_menu'         , 'amrical_add_options_panel');
+		add_action('admin_print_scripts', 'amrical_add_scripts');
 	}
 	else // add_action('wp_head'        ,  'amr_ical_events_style');
 		add_action('wp_print_styles'    , 'amr_ical_events_style');

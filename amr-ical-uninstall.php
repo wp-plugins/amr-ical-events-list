@@ -5,7 +5,7 @@
 		if ( $del1 = delete_option('amr-ical-events-list')) {
 			echo '<p>'.__('AmR iCal Options deleted from Database', 'amr_ical_list_lang').'</p>';
 		};
-		if (($del2 = delete_option("AmRiCalWidget")) or ($del2 = delete_option("amr-ical-widget"))){
+		if (($del2 = delete_option("amricalWidget")) or ($del2 = delete_option("amr-ical-widget"))){
 			echo '<p>'.__('AmR iCal Widget Options deleted from Database', 'amr_ical_list_lang').'</p>';
 		}	
 		return ($del1 and $del2);	 
@@ -20,7 +20,7 @@
 	
 	function amr_ical_check_uninstall()
 	{	
-		?><div class="wrap" id="AmRIcal"> 
+		?><div class="wrap" id="amrical"> 
 		<h2><?php _e('Uninstall AmR iCal Events List Options', 'amr_ical_list_lang'); ?></h2>
 		<p><?php _e('Note this function removes the options from the database.  To completely uninstall, one should continue on to use the standard wordpress functions to deactivate the plugin and delete the files.  It is not necessary to run this separately as the uninstall will also run as part of the wordpress delete plug-in files.', 'amr_ical_list_lang');?></p>
 		<p><?php _e('The function is provided here as an aid to someone who has perhaps got their wordpress install in a knot and wishes to temporarily remove the options from the database as part of their debugging or cleanup.  Consider also the use of the RESET.', 'amr_ical_list_lang');?></p>
