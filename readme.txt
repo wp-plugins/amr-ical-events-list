@@ -45,6 +45,17 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 == Changelog ==
 = Version 3.9.5 =
 * Add: html list style options for html5 on process of being added - more changes to come.
+* Change: grouped events will now NEST within a group - they used to just be a kind of heading.  HTML and css tweaked so it looks the same.
+* Add: aded some html5 styles as a experiment and especially for one of you - ability to have your listHTMLstyle - please be careful. See the example included in the plugin.
+* Add: a check for no saved settings.  If defaults change from one upgrade to the next and the settingshad not been saved, this could be confusing - people should save their settings. 
+* Add: added filters to the code to allow folks with very advanced requirements to do very advanced things.  New filters so far are:
+ amr_events_after_sort (after sorting but before limits applied) Passes array of events and must receive one back, 
+ amr_events_after_sort_and_constrain (after sorting but before limits applied) Passes array of events and must receive one back,
+ amr_event_repeats ( can be used to only generate 'x' number of repeats for an event despite what is in the VEVENT COUNT field) - passes the current count value, must receive an integer back.
+  amr-ical-feed-events (after extracting events for ics feed, but before producing feed).  Note a wp-query pre-getposts-filter could also be used. Passes array of events and must receive one back.
+  amr-ical-event-url - passes current url and post id, must receive back a url
+ * Add: added nonbreakingspaces into day and time default formats to help prevent browers wrapping them in the table.
+ * Delete: Got rid of the # bookmark feature which was cumbersome, cluttered up the html, and I do not think anyone really cared about or even knew it was there.
 
 = Version 3.9.3 =
 *  Change: per barikso's request, messages output when there is a problem with the external ics file have changed.  They are more subtle now (!) with the message on hover, and have a class of error.  The class is so that you may choose to hide the messages if you wish.  The plugin will deliver cached content if possible so your site will not just look bad should the ics file fail. (I elected to go with a fake hyperlink as depending on the problem with your ics file there may be one or more messages.)
