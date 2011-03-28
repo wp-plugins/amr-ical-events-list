@@ -16,16 +16,18 @@ class amr_ical_widget extends WP_widget {
 
 /* ============================================================================================== */
 	function widget ($args /* the title etc */, $instance /* the params */) { /* this is the piece that actualy does the widget display */
-	global $amrW;
-	global $amr_options;
-	global $amr_limits;
-	global $amr_listtype;
-	global $amr_calendar_url;
-	global $change_view_allowed;
-	global $widget_icalno; /* used to give each ical widget a unique id on a page */
+	global $amrW,
+	$amr_options,
+	$amr_limits,
+	$amr_listtype,
+	$amr_calendar_url,
+	$amr_ical_am_doing,
+	$change_view_allowed,
+	$widget_icalno; /* used to give each ical widget a unique id on a page */
 //
 	amr_ical_load_text(); // do we have to reload all over theplace ?  wp does not always seem to have the translations
 	$change_view_allowed = false;
+	$amr_ical_am_doing = 'listwidget';
 	extract ($args, EXTR_SKIP); /* this is for the before / after widget etc*/
 	unset($args);  //nb do not delete this else mucks up the args later
 	extract ($instance, EXTR_SKIP); /* this is for the params etc*/
@@ -114,7 +116,7 @@ class amr_ical_widget extends WP_widget {
 	<p>
 	<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title', 'amr_ical_list_lang');
 	?><input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text"
-	value="<?php echo attribute_escape($title); ?>" />		</label></p>
+	value="<?php echo esc_attr($title); ?>" />		</label></p>
 
 	<p>
 	<label for="<?php echo $this->get_field_id('moreurl'); ?>"><b><?php
@@ -122,7 +124,7 @@ class amr_ical_widget extends WP_widget {
 	<?php _e('Calendar page url in this website, for event title links', 'amr_ical_list_lang');
 	?></em> <a href="http://icalevents.anmari.com/1901-widgets-calendar-pages-and-event-urls/" title="<?php echo $seemore; ?>"><b>?</b></a>
 	<input id="<?php echo $this->get_field_id('moreurl'); ?>" name="<?php echo $this->get_field_name('moreurl'); ?>" type="text" style="width: 200px;"
-	value="<?php echo attribute_escape($moreurl); ?>" /></label></p>
+	value="<?php echo esc_attr($moreurl); ?>" /></label></p>
 	<p>
 	<label for="<?php echo $this->get_field_id('doeventsummarylink'); ?>"><b><?php
 	_e('Hover description on Title', 'amr_ical_list_lang'); ?></b><br /><em><?php
@@ -148,7 +150,7 @@ class amr_ical_widget extends WP_widget {
 	<a href="http://icalevents.anmari.com/amr-ical-events-list/#shortcode" title="<?php __('See more parameters','amr_ical_list_lang'); ?>"><b>?</b></a>
 	<textarea cols="25" rows="10" id="<?php echo $this->get_field_id('shortcode_urls');?>" name="<?php echo $this->get_field_name('shortcode_urls'); ?>" ><?php
 
-		echo attribute_escape($shortcode_urls); ?></textarea></p>
+		echo esc_attr($shortcode_urls); ?></textarea></p>
 
 <?php }
 /* ============================================================================================== */
@@ -254,14 +256,14 @@ class amr_icalendar_widget extends WP_widget {
 	<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title', 'amr_ical_list_lang');
 	?><input class="widefat" id="<?php
 	echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text"
-	value="<?php echo attribute_escape($title); ?>" /></label></p>
+	value="<?php echo esc_attr($title); ?>" /></label></p>
 		<p>
 	<label for="<?php echo $this->get_field_id('moreurl'); ?>"><b><?php
 	_e('Calendar page url', 'amr_ical_list_lang'); ?></b><br /><em>
 	<?php _e('Calendar page url in this website, for links from widget', 'amr_ical_list_lang');
 	?></em> <a href="http://icalevents.anmari.com/1901-widgets-calendar-pages-and-event-urls/" title="<?php echo $seemore; ?>"><b>?</b></a>
 	<input id="<?php echo $this->get_field_id('moreurl'); ?>" name="<?php echo $this->get_field_name('moreurl'); ?>" type="text" style="width: 200px;"
-	value="<?php echo attribute_escape($moreurl); ?>" /></label></p>
+	value="<?php echo esc_attr($moreurl); ?>" /></label></p>
 		<p>
 	<label for="<?php echo $this->get_field_id('externalicalonly'); ?>"><b><?php
 	_e('External events only', 'amr_ical_list_lang'); ?></b><br /><em><?php
@@ -279,7 +281,7 @@ class amr_icalendar_widget extends WP_widget {
 	<a href="http://icalevents.anmari.com/amr-ical-events-list/#shortcode" title="<?php echo $seemore; ?>"><b>?</b></a>
 	<textarea cols="25" rows="10" id="<?php echo $this->get_field_id('shortcode_urls');?>" name="<?php echo $this->get_field_name('shortcode_urls'); ?>" ><?php
 
-		echo attribute_escape($shortcode_urls); ?></textarea></p>
+		echo esc_attr($shortcode_urls); ?></textarea></p>
 
 
 <?php }

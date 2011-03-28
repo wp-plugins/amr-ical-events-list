@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '3.9.3');
+define('AMR_ICAL_LIST_VERSION', '3.9.5');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -31,6 +31,7 @@ update_option('amr-ical-events-list-version', AMR_ICAL_LIST_VERSION); // for upg
 /* --------------------------------------------------  */
 global 	$amr_freq,
 		$amr_freq_unit;
+		
 $amr_freq['DAILY'] 			= __('Daily', 'amr_ical_list_lang');
 $amr_freq['WEEKLY'] 		= __('Weekly', 'amr_ical_list_lang');
 $amr_freq['MONTHLY']		= __('Monthly', 'amr_ical_list_lang');
@@ -295,6 +296,8 @@ global 	$amr_freq,
 		if (isset($rule['COUNT'])) $c .= ' '.sprintf(__('%s times','amr_ical_list_lang'), $rule['COUNT']).$sep;
 		if (isset($rule['UNTIL'])) {
 			if ($rule['UNTIL-TIME'] === '00:00') $rule['UNTIL-TIME'] = '';
+			else if (strtolower($rule['UNTIL-TIME']) === '12:00 am') $rule['UNTIL-TIME'] = '';
+
 			$c .= '&nbsp;'.sprintf(__('until %s %s','amr_ical_list_lang'), $rule['UNTIL-DATE'], $rule['UNTIL-TIME']).$sep;
 			}
 		if (isset($rule['MONTH'])) $c .= sprintf(__(' if month is %s','amr_ical_list_lang'),amr_prettyprint_bymonth($rule['MONTH']));
@@ -454,7 +457,7 @@ global $amr_options;
 	if (isset ($amr_options['no_images'])  and $amr_options['no_images']) $text2 = $text1;
 	else	$text2 = '<img src="'.IMAGES_LOCATION.ADDTOGOOGLEIMAGE.'" title="'.$text1.'" alt="'.$text1.'" class="amr-bling" />';
 	return (
-	'<a href="http://www.google.com/calendar/render?cid='.htmlentities($cal).'" target="_blank"  title="'.$text1.'">'.$text2.'</a>');
+	'<a class= "addtogoogle" href="http://www.google.com/calendar/render?cid='.htmlentities($cal).'" target="_blank"  title="'.$text1.'">'.$text2.'</a>');
 }
 /*--------------------------------------------------------------------------------*/
 function add_event_to_google($e) {
@@ -472,7 +475,7 @@ global $amr_options;
 	if (!empty($details)) $details ='&amp;details='.rawurlencode(strip_tags($details));
 
 /* adds a button to add the current calemdar link to the users google calendar */
-	$html = '<a href="http://www.google.com/calendar/event?action=TEMPLATE'
+	$html = '<a class= "addtogoogle" href="http://www.google.com/calendar/event?action=TEMPLATE'
 	.'&amp;text='.str_replace(' ','%20',esc_html(strip_tags(amr_just_flatten_array ($e['SUMMARY']))))
 	/* dates and times need to be in UTC */
 	.'&amp;dates='.amr_get_googleeventdate($e)
@@ -577,51 +580,6 @@ function prepare_order_and_sequence ($orderspec){
 
 	array_multisort($col, SORT_ASC, $seq, SORT_ASC, $order);
 	return ($order);
-}
-/* --------------------------------------------------  */
-function amr_click_and_trim($text) { /* Copy code from make_clickable so we can trimthe text */
-	$text = make_clickable($text);
-	amr_trim_url($text);
-	return $text;
-}
-
-/* --------------------------------------------------  */
-
-function amr_trim_url(&$ret) { /* trim urls longer than 30 chars, but not if the link text does not have http */
-	$links = explode('<a', $ret);
-    $countlinks = count($links);
-
-	for ($i = 0; $i < $countlinks; $i++) {
-		$link    = $links[$i]; 
-		$link    = (preg_match('#(.*)(href=")#is', $link)) ? '<a' . $link : $link;
-		$begin   = strpos($link, '>');
-		
-		if ($begin) {
-		
-			$begin   = $begin + 1;
-
-			$end     = strpos($link, '<', $begin);
-
-			$length  = $end - $begin;
-
-			$urlname = substr($link, $begin, $length); 
-			
-			$trimmed = (strlen($urlname) > 50 && preg_match('#^(http://|ftp://|www\.)#is', $urlname)) ? substr_replace($urlname, '.....', 30, -5) : $urlname;
-			$trimmed = str_replace('http://','',$trimmed);
-
-			$ret     = str_replace('>' . $urlname . '<', '>' . $trimmed . '<', $ret);
-		}
-	}
-   	return ($ret);
-}
-
-/* --------------------------------------------------  */
-
-function check_hyperlink($text) {  /* checks text for links and converts them to html code hyperlinks */
-	return (amr_click_and_trim($text));  /* now works better than the code  below*/
-//	return (make_clickable($text));  /* now works better than the code  below*/
-
-
 }
 /* --------------------------------------------------  */
 function amr_show_refresh_option() {
@@ -852,7 +810,7 @@ function amr_format_duration ($arr) {
 /* --------------------------------------------------------- */
 function amr_format_tz ($tzstring) {
 global $amr_globaltz, $amr_options;
-	$url = $_SERVER['REQUEST_URI'];
+	$url = esc_url($_SERVER['REQUEST_URI']);
 	$tz = timezone_name_get($amr_globaltz);
 	if ($tz === $tzstring) $tz2 = date_default_timezone_get();
 	else $tz2 = $tzstring;
@@ -877,7 +835,8 @@ function amr_format_attendees ($attendees) {/* receive array of hopefully attend
 		foreach ($attendees as $i => $attendee) {
 			$list[] = amr_format_attendee ($attendee);
 		}
-	$text = implode (', ',$list);
+		
+	if (!empty($list)) $text = implode (', ',$list);
 	return($text);
 }
 /* --------------------------------------------------------- */
@@ -889,7 +848,8 @@ function amr_format_attendee ($attendee) {  // do not show emails for privacy re
 		else $text = $attendee['CN'];
 	}
 	else {
-		$text = $attendee;
+		if (is_array($attendee)) $text= implode($attendee);
+		else $text = $attendee;
 	}
 
 	return ($text);
@@ -947,7 +907,9 @@ function amr_derive_summary (&$e ) {
 	if (empty($e_url))  {
 		if (!($amrW == 'w_no_url'))  {
 			if (!empty($amrwidget_options['moreurl'])) {
-				$e_url = ' href="'.clean_url($amrwidget_options['moreurl']).'#'.$e['Bookmark'].'" ';
+				$e_url = ' href="'.clean_url($amrwidget_options['moreurl'])
+//				.'#'.$e['Bookmark']
+				.'" ';
 			}
 			else {
 				if (!empty($amr_options[$amr_listtype]['general']['Default Event URL'])) {
@@ -1244,10 +1206,10 @@ function amr_derive_info_for_list_only (&$e) {
 	if (isset($e['type']))  $e['Classes'] .= ' '.$e['type'];  /* so we can style events, todo's differently */
 	if (isset($e['CATEGORIES']))
 		$e['Classes'] .= ' '.str_replace(',',' ',amr_just_flatten_array($e['CATEGORIES']));
-	if (isset($e['UID'])) {
-		$e['Bookmark'] = str_replace('@','',$e['UID']);  /* must be before summary as it is used there .  Must be a char to start not a number and get rid of odd chars for validation*/
-		$e['Bookmark'] = 'a'.htmlentities(str_replace('http://','',$e['Bookmark'] ).$bookm);
-	}
+//	if (isset($e['UID'])) {
+//		$e['Bookmark'] = str_replace('@','',$e['UID']);  /* must be before summary as it is used there .  Must be a char to start not a number and get rid of odd chars for validation*/
+//		$e['Bookmark'] = 'a'.htmlentities(str_replace('http://','',$e['Bookmark'] ).$bookm);
+//	}
 	$e['SUMMARY'] = amr_derive_summary ($e);  // do not hover the description
 	return ($e);
 }
@@ -1310,7 +1272,7 @@ function amr_derive_calprop_further (&$p) {
 		if (isset ($p['X-WR-CALNAME'])) {
 				$p['subscribe'] = sprintf(__('Subscribe to %s Calendar','amr_ical_list_lang'),
 				htmlentities ($p['X-WR-CALNAME']));
-				$p['X-WR-CALNAME'] = '<a '
+				$p['X-WR-CALNAME'] = '<a class="x-wr-calname" '
 				.' title="'.$p['subscribe'].'"'
 				.' href="'.htmlentities($p['icsurl']).'">'
 				.htmlspecialchars($p['X-WR-CALNAME'])
@@ -1325,16 +1287,36 @@ function amr_derive_calprop_further (&$p) {
 				.$f
 				.'</a>';
 		}
-		$t = __('Calendar', 'amr_ical_list_lang');
-		if (isset ($amr_options['no_images']) and $amr_options['no_images']) $t3 = $t;
-		else $t3 = '<img class="subscribe amr-bling" src="'.IMAGES_LOCATION.CALENDARIMAGE.'" title= "'.$t.'" alt="'.$t.'" />';
-		$p['icsurl'] = '<a class="icalsubscribe" title="'.$p['subscribe']
-					.'" href="'.htmlentities($p['icsurl']).'">'.$t3.'</a>';
+		$t = __('Subscribe to calendar in your calendar application.', 'amr_ical_list_lang');
+		if (isset ($amr_options['no_images']) and $amr_options['no_images']) 
+			$t3 = $t;
+		else 
+			$t3 = '<img class="subscribe amr-bling" src="'.IMAGES_LOCATION.CALENDARIMAGE.'" title= "'.$t.'" alt="'.$t.'" />';
+			
+		$p['icsurl'] = 
+			'<a class="icalsubscribe" title="'.$p['subscribe']
+			.'" href="'.htmlentities($p['icsurl']).'">'
+			.$t3.'</a>';
 		}
 		$p['icalrefresh'] = amr_show_refresh_option();
 		return ($p);
 	}
 /* --------------------------------------------------  */
+function amr_get_htmlstylefile() {
+	global $amr_options;
+	global $amr_listtype;
+
+	$custom_htmlstyle_file = $amr_options[$amr_listtype]['general']['customHTMLstylefile'];
+	if (empty ($custom_htmlstyle_file ) ) 
+		return false;
+	$uploads = wp_upload_dir();
+	if (!file_exists($uploads['basedir'].$custom_htmlstyle_file))  // just in case
+		return false;
+	else 
+		$custom_htmlstyle_file = $uploads['basedir'].$custom_htmlstyle_file ;	
+	return($custom_htmlstyle_file);	
+}
+/* --------------------------------------------------  */	
 function amr_list_properties($icals, $tid, $class) {  /* List the calendar properties if requested in options  */
 	global $amr_options;
 	global $amr_listtype;
@@ -1342,25 +1324,50 @@ function amr_list_properties($icals, $tid, $class) {  /* List the calendar prope
 	$liststyle = (isset ($amr_options[$amr_listtype]['general']['ListHTMLStyle']))
 				? $amr_options[$amr_listtype]['general']['ListHTMLStyle']
 				: $liststyle = 'table';//; 'list'
+	if ($liststyle === 'custom') {  // get the stored file uirl, if it does not exist, set to table
+		$custom_htmlstyle_file = amr_get_htmlstylefile();
+		if (empty ($custom_htmlstyle_file ) ) 
+			$liststyle = 'table';
+	}	
+
 	switch ($liststyle) {
 	case 'list' :
-		$r   = '<div>';  $d ='<span ';
-		$rc  = '</div>'; $dc='</span>';
+		$d ='<span ';
+		$dc='</span>';
+		$r   = '<div>';  
+		$rc  = '</div>'; 
 		$box = '<div';
 		$boxc= '</div>';
 		break;
 	case 'breaks' :
-		$r   = '<span>';  $d ='<span ';
-		$rc  = '</span>'; $dc='</span>';
+		$d ='<span ';
+		$dc ='</span>';
+		$r   = '<span>';  
+		$rc  = '</span>'; 
 		$box = '<div';
 		$boxc= '</div>';
 		break;
 	case 'table':
-		$r   = '<tr> ';  $d ='<td';
-		$rc  = '</tr> '; $dc='</td>';
+	case 'HTML5table':  // still using a table, so columns will work  but with html5 elements too
+		$d 	='<td';
+		$dc	='</td>';
+		$r   = '<tr> ';  
+		$rc  = '</tr> '; 
 		$box = '<table';
 		$boxc= '</table>';
 		break;
+	case 'HTML5':
+		$box 	= '<section';
+		$boxc	= '</section>';
+		$r   	= '<header><h2>'; 
+		$rc  	= '</h2></header> ';
+		$d  	= '';
+		$dc		= '';
+		break;
+	case 'custom':
+		$where_am_i = 'in_calendar_properties';
+		include ($custom_htmlstyle_file);
+		break;	
 	default:  /* the old way or tableoriginal*/
 		$r   = '<tr> ';  $d ='<td';
 		$rc  = '</tr> '; $dc='</td>';
@@ -1381,33 +1388,41 @@ function amr_list_properties($icals, $tid, $class) {  /* List the calendar prope
 			{	if (!($prevcol === '')) {
 					$cprop .= $dc;
 					}  /* end prev column */
-				$cprop .= $d.' class="col'.$col.'">';  /* start next column */
+				if (!empty($d)) $cprop .= $d.' class="col'.$col.'">';  /* start next column */
+				
 				$prevcol = $col;
 			}
-			if (!empty ($icals[$i][$k])) {/*only take the fields that are specified in options  */
-
-			
-				$selector = ($k == 'description')? 'div' : 'span'; // because descriptions may contain html
-				$cprop .= '<'.$selector.' class="'.strtolower($k).'">'.stripslashes($v['Before'])
+			if (!empty ($icals[$i][$k])) {/*only take the fields that are specified in options  */			
+//				$selector = ($k == 'description') ? 'div' : 'span'; // because descriptions may contain html
+				$cprop .=
+//				'<'.$selector.' class="'.strtolower($k).'">'
+				stripslashes($v['Before'])
 				.amr_format_value($icals[$i][$k], $k, $icals[$i] )
-				.stripslashes($v['After']).'</'.$selector.'>';
+				.stripslashes($v['After']);
+//				.'</'.$selector.'>';
 			}
 		}
 		if (!($cprop === '')) {/* if there were some calendar property details*/
 //			if (!($amrW) and ($i == 0 ))  { /* only need to show the refresh once */
 //				 $cprop .= AMR_NL.AMR_TB.'<li class="icalrefresh" >'.amr_show_refresh_option().'</li>';
 //				}
-			$html .= $r.$cprop.$dc.AMR_NL.$rc.AMR_NL;
+			$html .= 
+				$r
+				.$cprop
+				.$dc.AMR_NL
+				.$rc.AMR_NL;
 			}
 	}
 
 	if (!(empty($html)) ) {
-			$html  = $box.' id="'.$tid.'" class="'.$class.'">'
+			$html  = 
+			((!empty($box)) ? $box.' id="'.$tid.'" class="'.$class.'">' : '')
 			.$html
 			.$boxc;
 		}
 	return ($html);
 }
+/* --------------------------------------------------  */
 function amr_doing_box_calendar () {
 global $amr_options,
 	$amr_listtype;
@@ -1458,7 +1473,11 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 			}
 		}
 
-		if (!empty($g)) {foreach ($g as $gi=>$v) {$new[$gi] = $old[$gi] = '';}} /* initialise group change trackers */
+		if (!empty($g)) {
+			foreach ($g as $gi=>$v) {
+				$new[$gi] = $old[$gi] = '';
+			}
+		} /* initialise group change trackers */
 /* ----------- flatten the array of component property options  */
 		foreach ($amr_options[$templisttype]['compprop'] as $k => $v)
 			{ 	foreach ($v as $i=>$j) 	{ $order[$i] = $j; 	}; 	}
@@ -1474,17 +1493,32 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 		}
 /* --- setup the html tags ---------------------------------------------- */
 
+	if ($liststyle === 'custom') {  // get the stored file uirl, if it does not exist, set to table
+		$custom_htmlstyle_file = amr_get_htmlstylefile();
+		if (empty ($custom_htmlstyle_file ) ) 
+			$liststyle = 'table';
+	}		
 	switch ($liststyle) {
 	case 'list' :
 		$ul 	= '<span '; 	$li = '<span ';
 		$ulc	= '</span>'; 	$lic = '</span> ';
-		$row 	= '<li '; 		$hcell	='<span  '; 	$cell 	='<span '; /* allow for a class specifictaion */
-		$rowc 	= '</li> '; 	$hcellc ='</span>'; 	$cellc 	='</span>';
-		$grow	= '<li ';	        
-		$growc  ='</li>'.AMR_NL;    $ghcell = '<span ';      $ghcellc= '</span>'.AMR_NL; 
-		$head 	= '<ul>'; 			$foot 	= '<ul>'; 			$body 	= '<ul>';
-		$headc 	= '</ul>'.AMR_NL; 	$footc 	= '</ul>'.AMR_NL; 	$bodyc 	= '</ul>'.AMR_NL;
-		$box 	= AMR_NL.'<div';
+		$row 	= '<li '; 
+		$rowc 	= '</li>'.AMR_NL; 				
+		$hcell	= '<span  '; 	
+		$cell 	= '<span '; /* allow for a class specifictaion */
+		$hcellc = '</span>'; 	
+		$cellc 	= '</span>';
+		$grow	= '<li ';         
+		$growc  = '</li>'.AMR_NL; 	  
+		$ghcell = '<span ';      
+		$ghcellc= '</span>'.AMR_NL; 
+		$head 	= '<div> '; 		//closed
+		$headc 	= '</div>'.AMR_NL; 		
+		$foot 	= '<div> ';  //closed
+		$footc 	= '</div>'.AMR_NL; 				
+		$body 	= '<ul '; // open
+		$bodyc 	= '</ul>'.AMR_NL;
+		$box 	= AMR_NL.'<div ';
 		$boxc 	= '</div>'.AMR_NL;
 		break;
 	case 'table':
@@ -1494,23 +1528,96 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 		$rowc 	= '</tr> '; $hcellc ='</th>'; 	$cellc 	='</td>';		
 		$grow	= '<tr ';	$ghcell  = '<th colspan="'.$no_cols.'"'; $ghcellc = $hcellc;
 		$growc  ='</tr>'.AMR_NL;       
-		$head 	= '<thead>'; 	$foot 	= '<tfoot>'; 	$body 	= AMR_NL.'<tbody>'.AMR_NL;
-		$headc 	= '</thead>'; 	$footc 	= '</tfoot>'; 	$bodyc 	= AMR_NL.'</tbody>'.AMR_NL;
+		$head 	= '<thead>'; 	
+		$headc 	= '</thead>';
+		$foot 	= '<tfoot>'; 
+		$footc 	= '</tfoot>'; 			
+		$body 	= AMR_NL.'<tbody '; //open
+		$bodyc 	= AMR_NL.'</tbody>'.AMR_NL;
 		$box 	= '<table';
 		$boxc 	= '</table>'.AMR_NL;
 		break;
+	case 'HTML5table' :
+		/* historical - will fall away one day */
+		$ul 	= ''; $li = '';
+		$ulc	= ''; $lic = '';
+		/* allow for a class specifictaion */
+		$row 	= '<tr '; 	
+		$rowc 	= '</tr> '; 				
+		$hcell	='<th '; 		
+		$hcellc ='</th>'; 					
+		$cell 	='<td '; 	
+		$cellc 	='</td>';			
+		$grow	= '<tr ';	
+		$ghcell = '<th colspan="'.$no_cols.'"'; 
+		$ghcellc = $hcellc;
+		$growc  ='</tr>'.AMR_NL;       
+		$head 	= AMR_NL.'<thead>'; 	
+		$headc 	= '</thead>'.AMR_NL; 	
+		$foot 	= AMR_NL.'<tfoot>'; 	
+		$footc 	= '</tfoot>'.AMR_NL; 
+		$body 	= AMR_NL.'<tbody '; //open
+		$bodyc 	= AMR_NL.'</tbody>'.AMR_NL;
+		$box 	= AMR_NL.'<table';
+		$boxc 	= '</table>'.AMR_NL;
+		break;		
+	case 'HTML5' :
+		/* historical - will fall away one day */
+		$ul 	= ''; $li = '';
+		$ulc	= ''; $lic = '';
+		/* allow for a class specifictaion */
+		$row 	= '<article '; 	 // each event
+		$rowc 	= '</article>'.AMR_NL;  
+		$hcell	='<h2 '; 	// the 'column' header cell	
+		$hcellc ='</h2>'; 	
+		$cell 	=''; 	
+		$cellc 	='';	
+//		
+		$grow	 = '<header><h3 ';	// the grouping html text for a group of events - not the surrounding selector
+		$growc   = '</h3></header>'.AMR_NL; 
+		$ghcell  = '';
+		$ghcellc = ''; 
+//		
+		$head 	= '<h2 '; 	
+		$headc 	= '</h2>'; 	 
+		$foot 	= '<div '; 	
+		$footc 	= '</div>';
+//		
+		$body 	= '<section ';	// the grouping html text for a group of events - not the surrounding selector
+		$bodyc 	= '</section>'.AMR_NL;
+//		
+		$box 	= '<section';  // the whole calendar
+		$boxc 	= '</section>'.AMR_NL;
+		break;	
 	case 'breaks' :
-		$ul 	= '<div '; 	$li = '<div ';
-		$ulc	= '</div>'; 	$lic = '</div>';
-		$row 	= '<div '; 	$hcell	='<div '; 	$cell 	='<div '; /* allow for a class specifictaion */
-		$rowc 	= '</div>'; 	$hcellc ='</div>&nbsp;'; 	$cellc 	='</div>';
-		$grow	= '<div ';	    $growc  ='</div>'.AMR_NL;
-		$ghcell = $hcell;       $ghcellc= $hcellc;
-		$head 	= '<div '; 	$foot 	= '<div '; 	$body 	= AMR_NL.'<br />';
-		$headc 	= '</div>'.AMR_NL; 	$footc 	= '</div>'.AMR_NL; 	$bodyc 	= '<br />'.AMR_NL;
+		$ul 	= ''; 	$li = '';
+		$ulc	= ''; 	$lic = '';
+		$row 	= ''; 	
+		$rowc 	= ''; 	
+		$hcell	='<div '; 	
+		$hcellc ='</div>&nbsp;'; 	
+		$cell 	='<div '; /* allow for a class specifictaion */
+		$cellc 	='</div>';
+		$grow	= '<div ';	    
+		$growc  ='</div>'.AMR_NL;
+		$ghcell = $hcell;       
+		$ghcellc= $hcellc;
+		$head 	= '<div> '; 	
+		$headc 	= '</div>'.AMR_NL; 	
+		$foot 	= '<div> '; 	
+		$footc 	= '</div>'.AMR_NL; 	
+		$body 	= AMR_NL.'<div '; //open
+		$bodyc 	= '</div>'.AMR_NL;
 		$box 	= AMR_NL.'<div';
 		$boxc 	= '</div>'.AMR_NL;
 		break;	
+	case 'custom':
+		$where_am_i = 'in_events';
+		$ul 	= ''; 	$li = ''; // we will phase these out eventually 
+		$ulc	= ''; 	$lic = '';
+		include ($custom_htmlstyle_file);
+	break;
+		
 	default:  /* the old way or tableoriginal*/
 		$ul 	= '<ul';	$li = '<li';
 		$ulc	= '</ul>';	$lic = '</li>';
@@ -1519,7 +1626,7 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 		$ghcell = '<th "  colspan="'.$no_cols.'"';
 		$grow	= '<tr ';	        $growc  ='</tr>';
         $ghcellc= $hcellc;
-		$head 	= AMR_NL.'<thead>'; 	$foot 	= AMR_NL.'<tfoot>'; 	$body 	= AMR_NL.'<tbody>';
+		$head 	= AMR_NL.'<thead>'; 	$foot 	= AMR_NL.'<tfoot>'; 	$body 	= AMR_NL.'<tbody ';
 		$headc 	= AMR_NL.'</thead>'; 	$footc 	= AMR_NL.'</tfoot>'; 	$bodyc 	= AMR_NL.'</tbody>';
 		$box 	= AMR_NL.'<table';
 		$boxc 	= '</table>'.AMR_NL;
@@ -1553,51 +1660,67 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 	}
 	else $month_nav = '';
 
-	if (!empty ($views)) 		$views 		= $cell.' class="views">'. $views 	.$cellc;
-	if (!empty ($month_nav)) 	$month_nav 	= $cell.' class="month_nav">'. $month_nav 	.$cellc;
+	if ((!empty ($views)) and !empty($cell))
+		$views 		= $cell.' class="views">'. $views 	.$cellc;
+	if ((!empty ($month_nav)) and !empty($cell)) 	
+		$month_nav 	= $cell.' class="month_nav">'. $month_nav 	.$cellc;
 	if ((!empty ($month_nav)) or (!empty ($views)))
 		$navigation_html = 
 		$box.' id = "'.$amrW.'calnav" >'
-		.$body.$row.' class="calendar_navigation">'
-		.$month_nav.$views
-		.$rowc.$bodyc.$boxc;
+		.$body.'>'
+		.((!empty($row)) ? $row.' class="calendar_navigation">' : '')
+		.$month_nav
+		.$views
+		.$rowc
+		.$bodyc
+		.$boxc;
 	else $navigation_html = '';
 /* -- heading and footers code ------------------------------------------*/
 
-		if (ICAL_EVENTS_DEBUG) {echo '<br />Limit parameters '; var_dump($amr_limits);}
-		if (isset($amr_limits['headings'])) $doheadings = $amr_limits['headings'];
-		else $doheadings = true;
-		if (isset($amr_limits['pagination'])) $dopagination = $amr_limits['pagination'];
-		else $dopagination = true;
+	if (ICAL_EVENTS_DEBUG) {echo '<br />Limit parameters '; var_dump($amr_limits);}
+	if (isset($amr_limits['headings'])) $doheadings = $amr_limits['headings'];
+	else $doheadings = true;
+	if (isset($amr_limits['pagination'])) $dopagination = $amr_limits['pagination'];
+	else $dopagination = true;
 
-		$headhtml = '';
-		if ($doheadings) {
-			$docolheading=false;
+	$headhtml = '';
+	if ($doheadings) {
+		$docolheading=false;
 
-			foreach ($amr_options[$templisttype]['heading'] as $i => $h) if (!empty($h)) $docolheading=true;
-			if ($docolheading) {
-				for ($i = 1; $i <= $no_cols; $i++) { 			/* generate the heading code if requested */
-					if (isset($amr_options[$templisttype]['heading'][$i])) 
-						$colhead = __($amr_options[$templisttype]['heading'][$i],'amr_ical_list_lang');
-					else $colhead = '&nbsp;';
-					$headhtml .= $hcell.'class="amrcol'.$i.'">'.$colhead.$hcellc;
-				}
-				$html .= $head
-				//.$body
-				.$row.'>'.$headhtml.$rowc
-				//.$bodyc
-				.$headc;
+		foreach ($amr_options[$templisttype]['heading'] as $i => $h) {
+			if (!empty($h)) $docolheading=true;
+		}	
+		if ($docolheading) {
+			for ($i = 1; $i <= $no_cols; $i++) { 			/* generate the heading code if requested */
+				if (isset($amr_options[$templisttype]['heading'][$i])) 
+					$colhead = __($amr_options[$templisttype]['heading'][$i],'amr_ical_list_lang');
+				else 
+					$colhead = '&nbsp;';
+				$headhtml .= 
+					((!empty($hcell)) ? $hcell.'class="amrcol'.$i.'">': '')
+					.$colhead
+					.$hcellc;
 			}
+			$html .= $head
+			//.$body
+			.(!empty($row) ? ($row.'>'): '').$headhtml.$rowc
+			//.$bodyc
+			.$headc;
 		}
+	}
 
 
 /* ***** with thechange in list types, we have to rethink how we do the footers .... for tables we say the footers up front, but for others not. */
 		$fhtml = '';
-		if (!(isset($amr_options['ngiyabonga']) and ($amr_options['ngiyabonga']))) $fhtml .= amr_ngiyabonga();
-		else $fhtml .='<!-- event calendar by anmari.com.  See it at icalevents.anmari.com -->';
+		if (!(isset($amr_options['ngiyabonga']) and ($amr_options['ngiyabonga']))) 
+			$fhtml .= amr_ngiyabonga();
+		else 
+			$fhtml .='<!-- event calendar by anmari.com.  See it at icalevents.anmari.com -->';
 		if ((!empty($amr_limits)) and ($amrtotalevents > $amrconstrainedevents) ) {
-			if ($dopagination and function_exists('amr_semi_paginate')) $fhtml .= amr_semi_paginate();
-			if (function_exists('amr_ical_edit')) $fhtml .= amr_add_new_event_link();
+			if ($dopagination and function_exists('amr_semi_paginate')) 
+				$fhtml .= amr_semi_paginate();
+			if (function_exists('amr_ical_edit')) 
+				$fhtml .= amr_add_new_event_link();
 		}
 
 		$alt = false;
@@ -1605,6 +1728,7 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 		if ((!is_array($events)) and (count($events) > 0 )) return ('');
 		$groupedhtml = '';
 		$changehtml = '';
+		$startallgroups = true;
 		foreach ($events as $i => $e) { /* for each event, loop through the properties and see if we should display */
 			amr_derive_component_further ($e);
 			if ((isset($e['Classes'])) and (!empty($e['Classes'])))
@@ -1617,8 +1741,10 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 
 			foreach ($order as $k => $kv) { /* ie for one event, check how to order the bits of the row */
 				/* Now check if we should print the component or not, we may have an array of empty string */
-				if (isset($e[$k])) $v = amr_check_flatten_array ($e[$k]);
-				else $v =null;
+				if (isset($e[$k])) 
+					$v = amr_check_flatten_array ($e[$k]);
+				else 
+					$v =null;
 				if ((isset ($v))  && (!empty($v)))	{			
 					$col = $kv['Column'];
 					if ($col > $prevcol) { /* if new column, then new cell , */
@@ -1628,14 +1754,18 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 						$colcount = $colcount +1;
 						while ($colcount < $col) { /* then we are missing data for this column and need to skip it */
 							$colcount = $colcount +1;
-							$eprop .= $cell.'>&nbsp;'.$cellc;
+							$eprop .= (!empty($cell) ? ($cell.'> '.$cellc) : ' ');
 						}
-						$eprop .= $cell. ' class="amrcol'.$col;
-						if ($col == $no_cols) $eprop .= " lastcol"; /* only want the cell to be lastcol, not the row */
-						$eprop .= '">'
-							.(((!$amrW) and ($col==1))?
-							amr_format_bookmark($e['Bookmark'])	: "")
-							.$ul.' class="amrcol'.$col.' amrcol">';/* each column in a cell or list */
+						if (!empty($cell) ) { // if we have a selector , then add classes
+							$eprop .= $cell. ' class="amrcol'.$col;
+							if ($col == $no_cols) $eprop .= " lastcol"; /* only want the cell to be lastcol, not the row */
+							$eprop .= '">';
+						}
+//						$eprop .=	(((!$amrW) and ($col==1))?
+//							amr_format_bookmark($e['Bookmark'])	: "");
+						$eprop .=	
+							(!empty($ul)) ?( $ul.' class="amrcol'.$col.' amrcol">') : '';
+							/* each column in a cell or list */
 						$prevcol = $col;
 					}
 					
@@ -1647,8 +1777,7 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 						$selector = '<div';
 						$selectorend = '</div>' ;
 						}
-						else {  // else yty to make html as valid as possible
-
+						else {  // else try to make html as valid as possible
 							if (is_array($v)) $v = implode ($v);
 							$v = wp_kses(  $v,
 								array('a' => array
@@ -1657,20 +1786,28 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 									,'em' => array()
 									,'strong' => array())
 									);
-						}			
-						
+						}									
 					}
-			
-					if (!empty($v)) 
-					$eprop .= $selector.' class="'.strtolower($k).'">'.stripslashes($kv['Before'])
-						. amr_format_value($v, $k, $e).stripslashes($kv['After']).$selectorend;  /* amr any special formating here */
-				}
-				
+							
+					if (!empty($v)) {
+						if (!empty($selector)) {
+							$selector .=' class="'.strtolower($k).'">';  
+						/* amr any special formating here */
+						}
+						$eprop .= $selector
+							.stripslashes($kv['Before'])
+							.amr_format_value($v, $k, $e)
+							.stripslashes($kv['After'])
+							.$selectorend;  				
+					}	
+				}				
 			}
+			
 			if (!($eprop === '')) { /* ------------------------------- if we have some event data to list  */
 
 				/* -------------------------- Check for a grouping change, need to end last group, if there was one and start another */
 				$changehtml = '';
+				$groupclass = '';
 				if (!empty($g) and ($g)) {
 					foreach ($g as $gi=>$v) {
 						if (isset($e['EventDate'])) 
@@ -1681,46 +1818,75 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 						if (!($new[$gi] == $old[$gi]))	{  
 						/* we have a new group  */
 							$id = amr_string($gi.$new[$gi]);
-
 							$changehtml .=
-									$grow.'class="group '.$gi.'">'
-									.$ghcell.' class="'.$id.' group '.$gi. '" >'
-									.$grouping
-									.$ghcellc.$growc;
-							$old[$gi] = $new[$gi];
-						
-						}
-					}
-					
+								((!empty($body)) ? $body.' class="'.$gi.'"> ' : '')
+								.((!empty($grow)) ? $grow.'class="group '.$gi.'">' : '')
+								.((!empty($ghcell)) ? $ghcell.' class="'.$id.' group '.$gi. '" >' : '')
+								.$grouping
+								.$ghcellc
+								.$growc
+								;							
+//								
+							$old[$gi] = $new[$gi];	
+ 
+							if (!$startallgroups) {// 	ie if we already had some going	
+								$html .= $bodyc.'<!-- end group that just changed -->'; // finish off the group that just changed								
+							}	
+							//else  we are just starting, so no need to finish off											
+						}						
+					}				
+					$startallgroups = false;	
+					// so now we have finished off any changed groups, so now we can add the new bit in
+					$html .= $changehtml;
+									
 				}
-								// so now e havefinsihed that group, start next 
+				if ($startallgroups) { // there were no groups, so we have no opening body
+					$html .= $body.'>';
+					$startallgroups = false;
+				}  
+
+				// so now we havefinsihed that group, start next 
+				
 				// save the event or row,  for next group 
-				$eprop = $row.($alt ? ' class="alt':' class="').$classes.'"> '
-					.$eprop.$ulc.$cellc.$rowc;
+				$eprop = (!empty($row) ? ($row.($alt ? ' class="odd alt':' class="').$classes.'"> ') : '')
+					.$eprop
+					.$ulc
+					.$cellc
+					.$rowc;
 
-				if ($alt) $alt=false; else $alt=true;
-				$groupedhtml .= $eprop;		/* build  the group of events , ading on eprop */
-//				
-//				if (!empty($changehtml)) {
-					$html .= $body.$changehtml.$groupedhtml.$bodyc; /* package up a group */
-					$groupedhtml = '';
-					$changehtml = '';	
-//				}			
-
-		
+				if ($alt) 
+					$alt=false; 
+				else 
+					$alt=true;
+					
+				$html .= $eprop;		/* build  the group of events , adding on eprop */
+//				$groupedhtml = '';
+//				$changehtml = '';		
 			}
 			//end of eprop row 	
 		}
 		//end of events 
+		// finish off each group as there will not have been a change ?
+		if (!empty($g) and ($g)) {
+			foreach ($g as $gi=>$v) {
+				$html .= $bodyc.'<!-- end grouping '.$gi.'-->';  
+			}	
+		}
+		else {	// there may have been  no  grouping but still events 
+			$html .= $bodyc.'<!-- end if no grouping -->';
+		}
 
-		// there may have been events with no 2nd grouping 
-		$html .= $body.$changehtml.$groupedhtml.$bodyc; /* package up a group */
 
-	if (!empty ($tid)) $tid = ' id="'.$tid.'" ';
-	$html = $box.$tid.' class="'.$class.'">'.$html.$boxc;
-	if (!empty($fhtml))		$html = $html.AMR_NL.$fhtml;
+	if (!empty ($tid)) 
+		$tid = ' id="'.$tid.'" ';
+		$html = ((!empty($box)) ? ($box.$tid.' class="'.$class.'">') : '')
+		.$html
+		.$boxc;
+	if (!empty($fhtml))		
+		$html = $html.AMR_NL.$fhtml;
 
-	$html = $navigation_html.AMR_NL.$html.AMR_NL.AMR_NL;
+	$html = $navigation_html.AMR_NL
+		.$html.AMR_NL;
 return ($html);
 }
 /* -------------------------------------------------------------------------------------------*/
@@ -1746,7 +1912,6 @@ global $amr_formats;
 	}
 }
 /* -------------------------------------------------------------------------------------------*/
-
 function amr_wp_format_date( $format, $datestamp, $gmttf) { /* want a  integer timestamp or a date object  */
 global $amr_options;
 /* Need to get rid the unnecessary dat logic - should only be using date objects for now */
@@ -1775,7 +1940,6 @@ global $amr_options;
 		}
 }
 /* -------------------------------------------------------------------------------------------*/
-
 function amr_format_date( $format, $datestamp) { /* want a  integer timestamp or a date object  */
 global 	$amr_options,
 		$amr_globaltz;
@@ -2107,7 +2271,7 @@ function amr_generate_repeats(&$event, $astart, $aend, $limit) { /* takes an eve
 				if ( amr_is_before ($dtstart, $aend) ) {  /* If the start is after our end limit, then skip this event */
 				if (isset($event['RRULE']) or (isset($event['RDATE']))) {
 							/* if have, must use dtstart in case we are dependent on it's characteristics,. We can exclude too early dates later on */
-					$repeats = amr_repeat_anevent($event,$astart,$aend, $limit );  /**** try for a more efficient start? */
+					$repeats = amr_repeat_anevent($event, $astart, $aend, $limit );  /**** try for a more efficient start? */
 					if (ICAL_EVENTS_DEBUG) {echo '<br>Num of Repeats to be created: '.count($repeats).'<br>';}
 					/* now need to convert back to a full event by copying the event data for each repeat */
 					if (is_array($repeats) and (count($repeats) > 0)) {
@@ -2160,6 +2324,9 @@ global $amr_limits;
 		/* should we be moving to destination date  */
 		if ((count($newevents) < 1) or (!is_array($newevents)))	return (false);
 		$newevents = amr_sort_by_key($newevents , 'EventDate');
+		
+		$newevents = apply_filters('amr_events_after_sort', $newevents);
+		
 		if (ICAL_EVENTS_DEBUG) {
 			echo '<br>Sorted  '.count($newevents).' events';
 			echo '<br>first '.$newevents[0]['EventDate']->format('c');
@@ -2191,6 +2358,7 @@ global $amr_limits;
 				$constrained = amr_do_events_offset ($constrained);
 			}
 		}
+		$constrained = apply_filters('amr_events_after_sort_and_constrain', $constrained);
 		return $constrained;
 	}
 	/* ========================================================================= */
@@ -2242,12 +2410,6 @@ global $amr_limits;
 	}
 	$text = implode (', ',$t);
 	return ($text);
-}
-/* -------------------------------------------------------------------------*/
-function amr_get_ical_name($ical) {
-/* Maybe check for a calendar name and if it exists, then use it for styling? - NOt NOW  */
-	if (isset($ical['X-WR-CALNAME'])) return($ical['X-WR-CALNAME']);
-	else return (basename($path, ".ics"));  /* use number as the name for now, so that we can use it later for styling? ***/
 }
 /* -------------------------------------------------------------------------*/
 function amr_string($s) {
@@ -2334,7 +2496,6 @@ function amr_set_cached_events_from_db($criteria, $events) {
 	if (isset($_REQUEST['debug']))  echo ('<h3>cache set  '.$key.'</h3>');
 	return true;
 }
-
 /* -------------------------------------------------------------------------*/
 function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 /*  parameters - an array of urls, an array of limits (actually in amr_limits)  */
@@ -2350,7 +2511,8 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 	$amr_doing_icallist = true;
 	if (!empty($amrW)) $w = 'w'; /* so we know if we are in the widget or not */
 	else $w = '';
-
+	if (ICAL_EVENTS_DEBUG) {echo '<hr />Doinglist '; var_dump($amr_doing_icallist); }
+	
 	$key = amr_get_events_cache_key ($criteria);
 	if (isset ($amr_one_page_events_cache[$key]))  {
 		$icals 		= $amr_one_page_events_cache[$key]['icals'];
@@ -2373,7 +2535,7 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 				if (!empty($events)) {
 					foreach ($events as $i=>$event) {
 						$events[$i] = amr_parse_unparsed($event);
-						$event = amr_parseRepeats($event);
+						$event 		= amr_parseRepeats($event);
 					}
 					$icals = amr_make_ical_from_posts($events, $criteria);
 					if (ICAL_EVENTS_DEBUG) { echo '<br>Got calendars from posts :'.count($icals).'<br>'; }
@@ -2744,16 +2906,17 @@ function amr_get_params ($attributes=array()) {
 	return ($shortcode_params);  // only return params needed for wp query ? 
 }
 /* -------------------------------------------------------------------------*/
-
 function amr_do_ical_shortcode ($atts, $content = null) {
-global $amr_limits;
-global $change_view_allowed;
-global $amr_icalno;/* used to give each ical  table a unique id on a page or post */
+global $amr_limits,
+	$change_view_allowed,
+	$amr_ical_am_doing,
+	$amr_icalno;/* used to give each ical  table a unique id on a page or post */
 // This is the main function.  It replaces [iCal URL]'s with events. Each as a separate list
 /* Allow multiple urls and only one listtype */
 /*  merge atts with this array, so we will have a default list */
 
 	$change_view_allowed = true;
+	$amr_ical_am_doing = 'list';
 	if (!isset($atts['listtype'])) $atts['listtype'] = '1';
 
 	$criteria =	amr_get_params ($atts);  /* strip out and set any other attstributes  - they will set the limits table */
@@ -2772,16 +2935,19 @@ global $amr_icalno;/* used to give each ical  table a unique id on a page or pos
 
 }
 /* -------------------------------------------------------------------------*/
-
 function amr_do_smallcal_shortcode ($atts, $content = null) {
-global $amr_limits;
-global $amr_listtype;
-global $amr_icalno;/* used to give each ical  table a unique id on a page or post */
-global $change_view_allowed;  // treat as widget anyway to avoid view changes etc
+global $amr_limits,
+ $amr_listtype, 
+ $change_view_allowed,
+ $amr_ical_am_doing,
+ $amr_icalno;/* used to give each ical  table a unique id on a page or post */
+
+// treat as widget anyway to avoid view changes etc
 // This is the main function.  It replaces [iCal URL]'s with events. Each as a separate list   if no listtype set it to 8
 /* Allow multiple urls and only one listtype */
 /*  merge atts with this array, so we will have a default list */
 	$change_view_allowed = false;
+	$amr_ical_am_doing = 'smallcalendar';
 //	if (isset($_REQUEST['days'])) return ('');  // don't show if only doing days
 	if (!isset($atts['listtype'])) $atts['listtype'] = $amr_listtype = '8';
 //	if (!isset($atts['months']))
@@ -2804,17 +2970,18 @@ global $change_view_allowed;  // treat as widget anyway to avoid view changes et
 
 }
 /* -------------------------------------------------------------------------*/
-
 function amr_do_largecal_shortcode ($atts, $content = null) {
-global $amr_limits;
-global $amr_listtype;
-global $change_view_allowed;
-global $amr_icalno;/* used to give each ical  table a unique id on a page or post */
+global $amr_limits,
+ $amr_listtype, 
+ $change_view_allowed,
+ $amr_ical_am_doing,
+ $amr_icalno;/* used to give each ical  table a unique id on a page or post */
 // This is the main function.  It replaces [iCal URL]'s with events. Each as a separate list   if no listtype set it to 8
 /* Allow multiple urls and only one listtype */
 /*  merge atts with this array, so we will have a default list */
 	
 	$change_view_allowed = true;
+	$amr_ical_am_doing = 'largecalendar';
 //	if (isset($_REQUEST['days'])) return ('');  // don't show if only doing days
 
 	if (!isset($atts['listtype'])) $atts['listtype'] = $amr_listtype = '9';
@@ -2845,9 +3012,6 @@ function amr_ical_load_text() {
 	amr_load_text('amr_ical_list_lang','/amr-ical-events-list');	//as per code styling plugin
 }
 /* ----------------------------------------------------------------------------------- */
-
-
-
 function amrical_add_options_panel() {
 
 	global $wp_version,
@@ -2885,14 +3049,12 @@ function amrical_add_options_panel() {
 		add_submenu_page( $parent_slug, $page_title, $menu_title,'manage_options', $menu_slug, $function);		
 
 }
-
 /* -------------------------------------------------------------------------------------------------------------*/
 function amr_ical_widget_init() {
 	register_widget('amr_ical_widget');
 	register_widget('amr_icalendar_widget');
 }
 /* ------------------------------------------------------------------------------------------------ */
-
  function amrical_add_scripts() {
 
  	wp_enqueue_script('jquery');
@@ -2901,7 +3063,6 @@ function amr_ical_widget_init() {
 
 }
 /* ------------------------------------------------------------------------------------------------ */
-
  function amrical_add_adminstyle() {
 	if ((stristr ($_SERVER['QUERY_STRING'],'manage_amr_ical')) 
 	or (stristr ($_SERVER['QUERY_STRING'],'manage_event_listing')))   {
@@ -2920,7 +3081,6 @@ function amr_ical_widget_init() {
 	}
 
 }
-
 /* ------------------------------------------------------------------------------------------------------ */
 function amr_ical_exception_handler($exception) {
 
@@ -2928,9 +3088,7 @@ function amr_ical_exception_handler($exception) {
   _e('<br /><br />An error in the input data may prevent correct display of this page.  Please advise the administrator as soon as possible.', 'amr_ical_list_lang');
 
 }
-
 /* ------------------------------------------------------------------------------------------------------ */
-
 	set_exception_handler('amr_ical_exception_handler');
 
 	if (is_admin() )	{

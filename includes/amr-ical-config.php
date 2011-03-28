@@ -92,9 +92,11 @@ $amr_validrepeatableproperties = array (
 $amr_csize = array('Column' => '2', 'Order' => '2', 'Before' => '10', 'After' => '10', 'ColHeading' => '10');	
 /* the default setup shows what the default display option is */
 
+$dateformat = str_replace(' ','\&\n\b\s\p\;', get_option('date_format'));
+
 $amr_formats = array (
-		'Time' => str_replace(' ', '',get_option('time_format')),
-		'Day' => 'D, '.get_option('date_format'),
+		'Time' => str_replace(' ', '\&\n\b\s\p\;',get_option('time_format')),
+		'Day' => 'D, '.$dateformat,
 //		'Time' => '%I:%M %p',
 //		'Day' => '%a, %d %b %Y',
 //		'Month' => '%b, %Y',		/* %B is the full month name */
@@ -197,7 +199,8 @@ $amr_general = array (
 		'name' 				=> 'Default',
 		'Description'		=> 'A default calendar list. This one set to tables with lists in the cells.  Usually needs the css file enabled. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ',
 		"Default Event URL" => '',
-		'ListHTMLStyle'		=> 'table'
+		'ListHTMLStyle'		=> 'table',
+		'customHTMLstylefile' => ''
 		);
 $amr_limits = array (
 		"events" 	=> 30,
@@ -348,9 +351,6 @@ $amr_compprop = array
 		'LAST-MODIFIED' => $dfalse
 		)
 	);
-
-
-
 }
 
 	/* -------------------------------------------------------------------------------------------------------------*/
@@ -362,7 +362,7 @@ $amr_compprop = array
 		else $t3 = '<img src="'.IMAGES_LOCATION.MAPIMAGE.'" alt="'.	$t1	.'" class="amr-bling" />';
 	/* this is used to determine what should be done if a map is desired - a link to google behind the text ? or some thing else  */
 	
-	return('<a href="http://maps.google.com/maps?q='
+	return('<a class="map" href="http://maps.google.com/maps?q='
 		.str_replace(' ','%20',($text)).'" target="_BLANK"'   //google wants unencoded
 		.' title="'.__('Show location in Google Maps','amr_ical_list_lang').'" >'.$t3.'</a>');
 	}
@@ -387,12 +387,12 @@ $amr_compprop = array
 		case 3:
 			$amr_options[$i]['general']['name']='Timetable';
 			$amr_options[$i]['general']['Description']='Default setting uses the original table with lists in the cells. It is grouped by day. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ';
-
 			$amr_options[$i]['general']['ListHTMLStyle']='table';
 			foreach ($amr_options[$i]['grouping'] as $g=>$v) {$amr_options[$i]['grouping'][$g] = false;}
 			$amr_options[$i]['grouping']['Day'] = true;		
 			$amr_options[$i]['compprop']['Date and Time']['EventDate']['Column'] = 0;
 			$amr_options[$i]['compprop']['Date and Time']['EndDate']['Column'] = 0;
+			$amr_options[$i]['compprop']['Date and Time']['StartTime']['Before'] = '&#32;';
 			$amr_options[$i]['compprop']['Descriptive']['LOCATION']['Column'] = 3;
 			$amr_options[$i]['compprop']['Descriptive']['map']['Column'] = 0;
 			$amr_options[$i]['compprop']['Descriptive']['addevent']['Column'] = 4;
@@ -407,7 +407,7 @@ $amr_compprop = array
 			$amr_options[$i]['general']['Description']='The new default setting for widgets uses lists for the table rows. Good for themes that cannot cope with tables in the sidebar. No grouping. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ';
 
 			$amr_options[$i]['general']['ListHTMLStyle']='list';
-			$amr_options[$i]['format']['Day']='M j';
+			$amr_options[$i]['format']['Day']='M'.'\&\n\b\s\p\;'.'j';
 			$amr_options[$i]['limit'] = array (	"events" => 10,	"days" 	=> 90,"cache" 	=> 24);  /* hours */
 			foreach ($amr_options[$i]['grouping'] as $g => $v) {$amr_options[$i]['grouping'][$g] = false;}
 			/* No calendar properties for widget - keep it minimal */
@@ -424,54 +424,76 @@ $amr_compprop = array
 			$amr_options[$i]['heading']['1'] = $amr_options[$i]['heading']['2'] = $amr_options[$i]['heading']['3'] = '';
 			break;
 		case 5:
-			$amr_options[$i]['general']['name']='Alternative';
-			$amr_options[$i]['general']['Description']='Default setting uses the new table style, with cells separated by breaks and fields by spaces. It is a wacky grouping. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ';
-			$amr_options[$i]['general']['ListHTMLStyle']='table';
-			$amr_options[$i]['format']['Day']='j M';
-			$amr_options[$i]['grouping']['Western Zodiac'] = true;
-			$amr_options[$i]['grouping']['Month'] = false;
-			$amr_options[$i]['heading']['1'] = __('Description','amr_ical_list_lang');
-			$amr_options[$i]['heading']['2'] = __('Timing','amr_ical_list_lang');
-			$amr_options[$i]['heading']['3'] = '';
-			$amr_options[$i]['compprop']['Date and Time']['EventDate']['Column'] = 2;
-			$amr_options[$i]['compprop']['Date and Time']['StartTime']['Column'] = 2;
-			$amr_options[$i]['compprop']['Date and Time']['EndDate']['Column'] = 2;
-			$amr_options[$i]['compprop']['Date and Time']['EndTime']['Column'] = 2;
-			$amr_options[$i]['compprop']['Descriptive']['SUMMARY']['Column'] = 1;
-			$amr_options[$i]['compprop']['Descriptive']['DESCRIPTION']['Column'] = 1;
-			$amr_options[$i]['compprop']['Descriptive']['LOCATION']= array('Column' => 1, 'Order' => 20, 'Before' => '', 'After' => '');
-			$amr_options[$i]['compprop']['Descriptive']['addevent']['Column'] = 0;
-			$amr_options[$i]['compprop']['Descriptive']['map']['Column'] = 0;
-			$amr_options[$i]['compprop']['Descriptive']['SUMMARY'] = array('Column' => 1, 'Order' => 10, 'Before' => '', 'After' => '');
-			break;
-		case 6:
-			$amr_options[$i]['general']['name']='Testing';
-			$amr_options[$i]['general']['Description']='A test option with lots of fields switched on. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ';
-
-			$amr_options[$i]['general']['ListHTMLStyle']='breaks';
-			foreach ($amr_options[$i]['grouping'] as $g => $v) {
-				$amr_options[$i]['grouping'][$g] = false;}
-			foreach ($amr_options[$i]['compprop'] as $g => $v)
-				foreach ($v as $g2 => $v2)
-				{ 	$amr_options[$i]['compprop'][$g][$g2]['After'] = '<br />';
-					$amr_options[$i]['compprop'][$g][$g2]['Before'] = '';
-					if ($v2['Column'] === 0) {
-					$amr_options[$i]['compprop'][$g][$g2]
-					= array('Column' => 2, 'Order' => 99, 'Before' => "<em>".$g2.': ', 'After' => "</em><br />");}
-
-				}
-
-			foreach ($amr_options[$i]['calprop'] as $g => $v)
-				{$amr_options[$i]['calprop'][$g] = array('Column' => 3, 'Order' => 1, 'Before' => '', 'After' => '');}
-			$amr_options[$i]['calprop']['X-WR-CALNAME']['Column'] = 1;
-			$amr_options[$i]['calprop']['X-WR-CALDESC']['Column'] = 1;
-			$amr_options[$i]['calprop']['X-WR-CALDESC']['Before'] = ' ';
-			foreach ($amr_options[$i]['component'] as $g=>$v) {
-				$amr_options[$i]['component'][$g] = true;}
+			$amr_options[$i]['general']['name']='HTML5 Exp 1';
+			$amr_options[$i]['general']['Description']='Experimental new table style aiming to use html5 tags, but still within a table structure to allow columns. One cannot have two levels of grouping with this option as <tbody> cannot be nested. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ';
+			$amr_options[$i]['general']['ListHTMLStyle']='HTML5table';
+			$amr_options[$i]['format']['Day']='j'.'\&\n\b\s\p\;'.'M';
+			$amr_options[$i]['grouping']['Day'] = false;
+			$amr_options[$i]['grouping']['Month'] = true;
 			$amr_options[$i]['heading']['1'] = '';
 			$amr_options[$i]['heading']['2'] = '';
 			$amr_options[$i]['heading']['3'] = '';
-			$amr_options[$i]['format']['Day'] = 'D, F j, Y';
+			$amr_options[$i]['calprop']['X-WR-CALNAME']
+				= array('Column' => 0, 'Order' => 10, 'Before' => '', 'After' => '&#32;'); //space
+			$amr_options[$i]['calprop']['X-WR-CALDESC']
+				= array('Column' => 0, 'Order' => 12, 'Before' => ' - ', 'After' => '');
+			$amr_options[$i]['compprop']['Date and Time']['EventDate'] 
+			= array('Column' => 1, 'Order' => 10, 'Before' => '', 'After' => '');
+			$amr_options[$i]['compprop']['Date and Time']['StartTime']
+			= array('Column' => 1, 'Order' => 12, 'Before' => '&nbsp;', 'After' => '');
+			$amr_options[$i]['compprop']['Date and Time']['EndDate']
+			= array('Column' => 1, 'Order' => 14, 'Before' => '&nbsp;', 'After' => '');
+			$amr_options[$i]['compprop']['Date and Time']['EndTime']
+			= array('Column' => 1, 'Order' => 16, 'Before' => '&nbsp;', 'After' => '');
+			$amr_options[$i]['compprop']['Descriptive']['SUMMARY']
+			= array('Column' => 1, 'Order' => 18, 'Before' => '<h4>', 'After' => '</h4>');
+			$amr_options[$i]['compprop']['Descriptive']['DESCRIPTION']
+				= array('Column' => 1, 'Order' => 30, 'Before' => '', 'After' => '');
+			$amr_options[$i]['compprop']['Descriptive']['LOCATION']
+				= array('Column' => 1, 'Order' => 40, 'Before' => '<address>', 'After' => '</address>');
+			$amr_options[$i]['compprop']['Descriptive']['addevent']['Column'] = 0;
+
+			break;
+		case 6:
+			$amr_options[$i]['general']['name']='HTML5 Exp 2';
+			$amr_options[$i]['general']['Description']='An HTML5 test option that tries to be leaner. You can have two level of grouping with this option. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ';
+			$amr_options[$i]['general']['ListHTMLStyle']='HTML5';
+
+			$amr_options[$i]['calprop']['X-WR-CALNAME']
+				= array('Column' => 0, 'Order' => 10, 'Before' => '<b>', 'After' => '</b>');
+			$amr_options[$i]['calprop']['X-WR-CALDESC']
+				= array('Column' => 0, 'Order' => 12, 'Before' => ' - ', 'After' => '');
+			$amr_options[$i]['grouping']['Day'] = true;
+			foreach ($amr_options[$i]['compprop'] as $g => $v) {
+				foreach ($v as $g2 => $v2)	{ 	
+					if ($amr_options[$i]['compprop'][$g][$g2]['Column'] <> 0)
+						$amr_options[$i]['compprop'][$g][$g2]['Column'] = 1;
+					$amr_options[$i]['compprop'][$g][$g2]['After'] = '&nbsp;';
+					$amr_options[$i]['compprop'][$g][$g2]['Before'] = '';
+				}
+			}	
+			$amr_options[$i]['compprop']['Descriptive']['SUMMARY']
+				= array('Column' => 1, 'Order' => 18, 'Before' => '<h3>', 'After' => '</h3>');
+			$amr_options[$i]['compprop']['Date and Time']['EventDate'] 
+				= array('Column' => 0, 'Order' => 10, 'Before' => '', 'After' => '');
+			$amr_options[$i]['compprop']['Date and Time']['StartTime']['Order'] = 12;
+			$amr_options[$i]['compprop']['Date and Time']['EndDate']
+			= array('Column' => 0, 'Order' => 14, 'Before' => '', 'After' => '');
+			$amr_options[$i]['compprop']['Date and Time']['EndTime']['Order'] = 16;	
+			$amr_options[$i]['compprop']['Descriptive']['subscribeevent']['Order'] = 20;	
+			$amr_options[$i]['compprop']['Descriptive']['addevent']['Order'] = 22;	
+			$amr_options[$i]['compprop']['Descriptive']['LOCATION']
+				= array('Column' => 1, 'Order' => 50, 'Before' => '<address>', 'After' => '');
+			$amr_options[$i]['compprop']['Descriptive']['map']
+				= array('Column' => 1, 'Order' => 51,'Before' => '&nbsp;', 'After' => '</address>');	
+			$amr_options[$i]['compprop']['Descriptive']['DESCRIPTION']
+				= array('Column' => 1, 'Order' => 100, 'Before' => '<p>', 'After' => '</p>');
+
+
+			$amr_options[$i]['heading']['1'] = '';
+			$amr_options[$i]['heading']['2'] = '';
+			$amr_options[$i]['heading']['3'] = '';
+			$amr_options[$i]['format']['Day'] = 'j'.'\&\n\b\s\p\;'.'S,'.'\&\n\b\s\p\;'.'l';
 
 			break;
 		case 7:
@@ -519,10 +541,13 @@ $amr_compprop = array
 			foreach ($amr_options[$i]['compprop'] as $g => $v)
 				foreach ($v as $g2 => $v2) {$amr_options[$i]['compprop'][$g][$g2]['Column'] = 0;}
 			$amr_options[$i]['compprop']['Date and Time']['EventDate']['Column'] = 0;
-			$amr_options[$i]['compprop']['Date and Time']['StartTime']['Column'] = 1;
+			$amr_options[$i]['compprop']['Date and Time']['StartTime']
+			= array('Column' => 1, 'Order' => 10, 'Before' => '', 'After' => '');
 			$amr_options[$i]['compprop']['Date and Time']['EndDate']['Column'] = 0;
-			$amr_options[$i]['compprop']['Date and Time']['EndTime']['Column'] = 1;
-			$amr_options[$i]['compprop']['Descriptive']['SUMMARY'] = array('Column' => 1, 'Order' => 10, 'Before' => '', 'After' => '');
+			$amr_options[$i]['compprop']['Date and Time']['EndTime']
+			= array('Column' => 1, 'Order' => 10, 'Before' => '', 'After' => '');
+			$amr_options[$i]['compprop']['Descriptive']['SUMMARY'] 
+			= array('Column' => 1, 'Order' => 20, 'Before' => '', 'After' => '');
 			$amr_options[$i]['compprop']['Descriptive']['DESCRIPTION']['Column'] = 0;
 			$amr_options[$i]['heading']['1'] = $amr_options[$i]['heading']['2'] = $amr_options[$i]['heading']['3'] = '';
 			break;
@@ -543,13 +568,60 @@ $amr_compprop = array
 			foreach ($amr_options[$i]['compprop'] as $g => $v)
 				foreach ($v as $g2 => $v2) {$amr_options[$i]['compprop'][$g][$g2]['Column'] = 0;}
 			$amr_options[$i]['compprop']['Date and Time']['EventDate']['Column'] = 0;
-			$amr_options[$i]['compprop']['Date and Time']['StartTime'] = array('Column' => 1, 'Order' => 5, 'Before' => '<br />', 'After' => '');
+			$amr_options[$i]['compprop']['Date and Time']['StartTime'] 
+				= array('Column' => 1, 'Order' => 5, 'Before' => '<br />', 'After' => '');
 			$amr_options[$i]['compprop']['Date and Time']['EndDate']['Column'] = 0;
 			$amr_options[$i]['compprop']['Date and Time']['EndTime'] = array('Column' => 1, 'Order' => 6, 'Before' => '-', 'After' => '');
 			$amr_options[$i]['compprop']['Descriptive']['SUMMARY'] = array('Column' => 1, 'Order' => 1, 'Before' => '', 'After' => '');
 			$amr_options[$i]['compprop']['Descriptive']['DESCRIPTION']
 			= array('Column' => 2, 'Order' => 1, 'Before' => '<div class="details">', 'After' => '</div>');
 			$amr_options[$i]['heading']['1'] = $amr_options[$i]['heading']['2'] = $amr_options[$i]['heading']['3'] = '';
+			break;
+
+		case 10:
+			$amr_options[$i]['general']['name']='Testing';
+			$amr_options[$i]['general']['Description']='A test option with lots of fields switched on. It has 2 levels of grouping - this is fine so long as the html in use can be nested. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ';
+
+			$amr_options[$i]['general']['ListHTMLStyle']='breaks';
+			foreach ($amr_options[$i]['grouping'] as $g => $v) {
+				$amr_options[$i]['grouping'][$g] = false;
+			}
+			$amr_options[$i]['grouping']['Day'] = true;
+			$amr_options[$i]['grouping']['Month'] = true;
+			foreach ($amr_options[$i]['compprop'] as $g => $v) {
+				foreach ($v as $g2 => $v2)
+				{ 	$amr_options[$i]['compprop'][$g][$g2]['After'] = '<br />';
+					$amr_options[$i]['compprop'][$g][$g2]['Before'] = '';
+
+
+					if ($v2['Column'] === 0) {
+						$amr_options[$i]['compprop'][$g][$g2]
+						= array('Column' => 1, 'Order' => 99,
+						'Before' => '<em>'.$g2.':</em> ',
+						'After' => "<br />");
+					}
+					else {
+						$amr_options[$i]['compprop'][$g][$g2]['Before']
+					= '<em>'.$g2.':</em> ';
+						$amr_options[$i]['compprop'][$g][$g2]['Column']
+					= 1;
+					}
+
+				}
+			}
+
+			foreach ($amr_options[$i]['calprop'] as $g => $v)
+				{$amr_options[$i]['calprop'][$g] = array('Column' => 3, 'Order' => 1, 'Before' => '', 'After' => '');}
+			$amr_options[$i]['calprop']['X-WR-CALNAME']['Column'] = 1;
+			$amr_options[$i]['calprop']['X-WR-CALDESC']['Column'] = 1;
+			$amr_options[$i]['calprop']['X-WR-CALDESC']['Before'] = '';
+			foreach ($amr_options[$i]['component'] as $g=>$v) {
+				$amr_options[$i]['component'][$g] = true;}
+			$amr_options[$i]['heading']['1'] = '';
+			$amr_options[$i]['heading']['2'] = '';
+			$amr_options[$i]['heading']['3'] = '';
+			$amr_options[$i]['format']['Day'] = 'D, F j, Y';
+
 			break;
 		}
 		return ( $amr_options[$i]);
@@ -581,20 +653,6 @@ $amr_compprop = array
 	return $amr_newlisttype;
 	}
 
-/* ---------------------------------------------------------------------*/
-function array_merge_recursive_distinct ( array &$array1, array &$array2 ) { /* array 2 will replace array 1*/
-  $merged = $array1;
-
-  foreach ( $array2 as $key => &$value )  {
- if ( is_array ( $value ) && isset ( $merged [$key] ) && is_array ( $merged [$key] ) ) {
-   $merged [$key] = array_merge_recursive_distinct ( $merged [$key], $value );
- }
- else {
-   $merged [$key] = $value;
- }
-  }
-  return $merged;
-}
 /* ---------------------------------------------------------------------*/
 	function amr_checkfornewoptions ($i)   /* not required - ussing array  recursive merge instead*/
 	{ /* check if an option has been added, butdoes not exist in the DB - ie we have upgraded.  Do not overwrite!! */
@@ -655,7 +713,7 @@ function array_merge_recursive_distinct ( array &$array1, array &$array2 ) { /* 
 		}			
 	return(true);
 	}
-
+/* ---------------------------------------------------------------------*/
 function Quarter ($D)
 { 	/* Quarters can be complicated.  There are Tax and fiscal quarters, and many times the tax and fiscal year is different from the calendar year */
 	/* We could have used the function commented out for calendar quarters. However to allow for easier variation of the quarter definition. we used the limits concept instead */
@@ -670,7 +728,7 @@ function Traditional_Season ($D)
 {return date_season('Traditional', $D);  }
 function Western_Zodiac ($D){
 return date_season('Zodiac', $D);  }
-
+/* ---------------------------------------------------------------------*/
 function date_season ($type='Meteorological',$D)
 { 	/* Receives ($Dateobject and returns a string with the Meterological season by default*/
 	/* Note that the limits must be defined on backwards order with a seemingly repeated entry at the end to catch all */
@@ -800,7 +858,7 @@ global $amr_options;
 
 	amr_set_defaults();
 	$amr_options = array (
-			'no_types' => 9,
+			'no_types' => 10,
 			'ngiyabonga' => false,
 			'own_css' => false,
 			'feed_css' => true,

@@ -4,7 +4,7 @@ Plugin Name: amr events calendar or lists with ical files(
 Author: anmari
 Author URI: http://anmari.com/
 Plugin URI: http://icalevents.anmari.com
-Version: 3.9.3
+Version: 3.9.5
 Text Domain: amr_ical_list_lang
 Domain Path:  /lang
 
@@ -32,16 +32,16 @@ Description: Display simple or highly customisable and styleable list of events.
 */
 //  NB Change version in list main tooo define('AMR_ICAL_LIST_VERSION', '3.0.1');
 if (!function_exists('ical_ordinalize')) { //check if we have the listing code available already due to amr-events
-	require_once('amr-ical-events-list-main.php');
-	require_once('amr-ical-config.php');
-	require_once('amr-ical-list-admin.php');
-	require_once('amr-import-ical.php');
-	require_once('amr-rrule.php');
-	require_once('amr-ical-uninstall.php');
-	require_once('amr-upcoming-events-widget.php');
-	require_once('amr_date_i18n.php');
-	require_once('amr-ical-calendar.php');
-	require_once('functions.php');
+	require_once('includes/amr-ical-events-list-main.php');
+	require_once('includes/amr-ical-config.php');
+	require_once('includes/amr-ical-list-admin.php');
+	require_once('includes/amr-import-ical.php');
+	require_once('includes/amr-rrule.php');
+	require_once('includes/amr-ical-uninstall.php');
+	require_once('includes/amr-upcoming-events-widget.php');
+	require_once('includes/amr_date_i18n.php');
+	require_once('includes/amr-ical-calendar.php');
+	require_once('includes/functions.php');
 }	
 define( 'AMR_BASENAME', plugin_basename( __FILE__ ) );
 add_filter('plugin_action_links', 'amr_plugin_action', 8, 2);

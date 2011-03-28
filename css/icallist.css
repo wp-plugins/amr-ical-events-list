@@ -9,15 +9,20 @@ You can always refer back to the default css in the plugin folder for the latest
 This file now includes the box calendar css - it may need modification for your theme, if your theme does not have the #content selector
 The #boxical0 id has been added to aim for the css to work even if your theme uses  different selectors.  Note that this will only work for the first "box", after that you have to code your own additional css.
 */
+/* html5 code */
+	article, aside, figure, footer, header, hgroup, menu, nav, section { /* for browsers  that are not up to html5 yet, except will not work on IE  */
+		display: block;
+	}
+
+
+/* older code */
 .vcalendar abbr {  /* do not show the hcalendar abbr - is confusing  especially since the format of the date is ISO8601, not human friendly */
 	border-bottom: none;
 }
-
-
 /* Note #content works for 2010 theme to override default table settings.  You need to find out what works for your theme */
 #wp-calendar td.next,
-div.event-calendar td.next {text-align:right;}
-div.event-calendar td.prev {text-align:left;}
+.event-calendar td.next {text-align:right;}
+.event-calendar td.prev {text-align:left;}
 
 #calnav,
 #content #calnav,
@@ -248,11 +253,9 @@ table.smallcalendar {
 }
 #content  #calnav tr,
 #content  #calnav tr td,
-#content .icalprop ,
 #content .icalprop tr,
 #content .icalprop tr td,
 #content .icalprop tr th,
-.icalprop,
 .icalprop tr,
 .icalprop tr td,
 .icalprop tr th {	
@@ -265,6 +268,7 @@ table.smallcalendar {
 #content #calnav,
 #content .ical,
 #content .icalprop,
+#comprop0,
 .ical,
 .icalprop {	
 	width: 100%;   /* force the calendar  to take as much space as it can so floated items don't force a wrap */
@@ -304,7 +308,7 @@ table.smallcalendar {
 #sidebar .wical  li:before {  /* remove list bullets in the default theme and similar themes , for all fields*/
 		content:"" !important; 
 }
-/* Default Theme and similar only ---------------------------------------------------------------*/
+/* Old Default Theme and similar only ---------------------------------------------------------------*/
 /* add back list bullets for a field only  - see what your theme is using and put it in here */
 #sidebar .wical  li {  
 }
@@ -328,6 +332,10 @@ table.smallcalendar {
 .ical .subscribeevent,
 .ical .icsurl ,
 .ical .map,
+.vcalendar .addtogoogle,
+.vcalendar .icalsubscribe,
+.vcalendar .subevent,
+.vcalendar .map,
 .icalprop .addtogoogle,
 .icalprop .icsurl ,
 .icalprop .icalrefresh ,
@@ -390,10 +398,9 @@ table.smallcalendar {
 	}
 .icalnav { vertical-align:middle;}
 .icalnav a { text-decoration: none; color: 	#ADADAD;}
-.icalnav a.symbol {font-size:x-large; }
+.icalnav a.symbol { font-size:large; }
 .icalnavs:hover  { background-color: #ffffff;}
 .icalnav a:hover  { color: #000000;}
-
 .add-new-event {display: block; clear:both;}
 /* for credits if shown - keep it low key  ------------------------------------------------------- */	
 .amrical_credit,.amrical_credit a,.amrical_credit a:visited {
@@ -408,15 +415,15 @@ table.smallcalendar {
 	color: #000000;
 }
 /* ---------------- IE table border problem -reset all-------------------------------*/
-table.boxical,
-table.boxical tbody,
-table.boxical tr,
+.boxical,
+.boxical tbody,
+.boxical tr,
 #content .boxical,
 #content .boxical tbody,
 #content .boxical tr,
-table.ical,
-table.ical tbody,
-table.ical tr,
+.ical,
+.ical tbody,
+.ical tr,
 #content .ical,
 #content .ical tbody,
 #content .ical tr {
@@ -424,18 +431,18 @@ table.ical tr,
 	border-right: none;
 }
 
-table.icalprop,
-table.icalprop tbody,
-table.icalprop tr,
-table.icalprop tr td ,
+.icalprop,
+.icalprop tbody,
+.icalprop tr,
+.icalprop tr td ,
 #content .icalprop,
 #content .icalprop tbody,
 #content .icalprop tr,
 #content .icalprop tr td,
-table#calnav,
-table#calnav tbody,
-table#calnav tr,
-table#calnav tr td ,
+#calnav,
+#calnav tbody,
+#calnav tr,
+#calnav tr td ,
 #content table#calnav,
 #content table#calnav tbody,
 #content table#calnav tr,

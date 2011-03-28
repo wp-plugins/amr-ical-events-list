@@ -17,41 +17,9 @@ if (!function_exists('amr_simpledropdown')) {
 	}
 }
 //
-	function amr_allowed_html () {
-//	return ('<p><br /><hr /><h2><h3><<h4><h5><h6><strong><em>');
-	return (array(
-		'br' => array(),
-		'em' => array(),
-		'span' => array(),
-		'h1' => array(),
-		'h2' => array(),
-		'h3' => array(),
-		'h4' => array(),
-		'h5' => array(),
-		'h6' => array(),
-		'strong' => array(),
-		'p' => array(),
-		'abbr' => array(
-		'title' => array ()),
-		'acronym' => array(
-			'title' => array ()),
-		'b' => array(),
-		'blockquote' => array(
-			'cite' => array ()),
-		'cite' => array (),
-		'code' => array(),
-		'del' => array(
-			'datetime' => array ()),
-		'em' => array (), 'i' => array (),
-		'q' => array(
-			'cite' => array ()),
-		'strike' => array(),
-		'div' => array()
 
-		));
-	}
 	//build admin interface =======================================================
-	function amr_ical_validate_general_options(){
+function amr_ical_validate_general_options(){
 		global
 		$amr_options,
 		$amr_calprop,
@@ -96,29 +64,17 @@ if (!function_exists('amr_simpledropdown')) {
 			
 			return(true);
 	}
-/* ---------------------------------------------------------------------- */
-function  amr_make_sticky_url($url) { 
-	$page_id = url_to_postid($url);
-	
-	if (!$page_id) return false ;
-	else {
-		$sticky_url  = add_query_arg('page_id',$page_id,get_bloginfo('url'));
-		return( $sticky_url) ;
-	}	
-}	
-/* ---------------------------------------------------------------------- */
-function  amr_invalid_url() { 
-?><div class="error fade"><?php	_e('Invalid Url','amr_ical_list_lang');?></div><?php
-}
+
 /* ---------------------------------------------------------------------- */
 function amr_ical_validate_list_options($i)	{
 global $amr_options;
-	if (isset($_POST['general']))  {
-		if (is_array($_POST['general'][$i])){
-			foreach ($_POST['general'][$i] as $c => $v)	{
-				if (!empty($_POST['general'][$i][$c])) {
-					if ($c ==='Default Event URL') { 
-						if	(!filter_var($_POST['general'][$i][$c],FILTER_VALIDATE_URL)) {							
+	if (isset($_POST['general']))  {  
+		if (is_array($_POST['general'][$i])){ 
+			foreach ($_POST['general'][$i] as $c => $v)	{			
+				if (!empty($_POST['general'][$i][$c])) { 
+					switch ($c) {
+					case 'Default Event URL' : { 
+						if	(!filter_var($_POST['general'][$i][$c],FILTER_VALIDATE_URL)) {					
 							 amr_invalid_url();
 						}
 						else {
@@ -127,11 +83,29 @@ global $amr_options;
 							if (!$sticky_url) $amr_options[$i]['general'][$c] = $url ; //might be external
 							else $amr_options[$i]['general'][$c] = $sticky_url ;
 						}
+						break;
 					}	
-					else {
+					case 'customHTMLstylefile': { 
+							$custom_htmlstyle_file = esc_attr($_POST['general'][$i]['customHTMLstylefile']);
+							
+							if (!($custom_htmlstyle_file[0]  === '/')) 
+								$custom_htmlstyle_file = '/'.$custom_htmlstyle_file;
+							$uploads = wp_upload_dir();
+							if (!file_exists($uploads['basedir'].$custom_htmlstyle_file))  {
+								amr_invalid_file();
+								$amr_options[$i]['general']['customHTMLstylefile'] = ' ';
+								}
+							else { 
+								$amr_options[$i]['general']['customHTMLstylefile']
+								= $custom_htmlstyle_file;
+							}	
+						}
+					break;
+					default: { 
 						$amr_options[$i]['general'][$c] 
 						= filter_var($_POST['general'][$i][$c],FILTER_SANITIZE_STRING) ;	
 					}
+					}	
 				}	
 				else	$amr_options[$i]['general'][$c] = '';
 			}
@@ -271,8 +245,10 @@ function amrical_general_form ($i) {
 	<div><?php
 	if (! isset($amr_options[$i]['general'])) echo 'No general specifications set';
 	else {
-		if (isset($amr_options[$i]['general']['ListHTMLStyle'])) $style = $amr_options[$i]['general']['ListHTMLStyle'];
-		else $style = '';
+		if (isset($amr_options[$i]['general']['ListHTMLStyle'])) 
+			$style = $amr_options[$i]['general']['ListHTMLStyle'];
+		else 
+			$style = '';
 	?><label for="name" ><?php _e('Name','amr_ical_list_lang'); ?></label>
 		<input type="text" class="wide" size="20" id="name" name="general[<?php echo $i; ?>][name]" value="<?php
 		if (isset($amr_options[$i]['general']['name'])) echo $amr_options[$i]['general']['name']; ?>" />
@@ -283,11 +259,29 @@ function amrical_general_form ($i) {
 		<select id="ListHTMLStyle" name="general[<?php echo $i; ?>][ListHTMLStyle]">
 			<option value="table" <?php if ($style==='table') echo 'selected="selected" '; ?>><?php _e('Table', 'amr_ical_list_lang'); ?></option>
 			<option value="list" <?php if ($style==='list') echo 'selected="selected" '; ?>><?php _e('Lists for rows', 'amr_ical_list_lang'); ?></option>
+			<option value="HTML5table" <?php if ($style==='HTML5Table') echo 'selected="selected" '; ?>><?php _e('HTML5 in table', 'amr_ical_list_lang'); ?></option>
+			<option value="HTML5" <?php if ($style==='HTML5') echo 'selected="selected" '; ?>><?php _e('HTML5 clean and lean', 'amr_ical_list_lang'); ?></option>
+			<option value="custom" <?php if ($style==='custom') echo 'selected="selected" '; ?>><?php _e('Custom - file required', 'amr_ical_list_lang'); ?></option>
 			<option value="breaks" <?php if ($style==='breaks') echo 'selected="selected" '; ?>><?php _e('Breaks for rows!', 'amr_ical_list_lang'); ?></option>
 			<option value="smallcalendar" <?php if ($style==='smallcalendar') echo 'selected="selected" '; ?>><?php _e('Small box calendar', 'amr_ical_list_lang'); ?></option>
 			<option value="largecalendar" <?php if ($style==='largecalendar') echo 'selected="selected" '; ?>><?php _e('Large box calendar', 'amr_ical_list_lang'); ?></option>
 			<option value="tableoriginal" <?php if ($style==='tableoriginal') echo 'selected="selected" '; ?>><?php _e('Table with lists in cells (original)', 'amr_ical_list_lang'); ?></option>
+	
 		</select><br />	<br />
+<?php //--------------------------------------------  
+	$uploads = wp_upload_dir();?>
+	<label for="defaulturl" >
+	<?php echo sprintf(__('Custom HTML style file at %s...','amr_ical_list_lang'),$uploads['basedir']); 
+	?><a title="<?php  _e(' (Html and some php knowledge required)','amr_ical_list_lang'); ?>"	
+	href="" >?</a>
+	</label>
+		<input type="text" class="wide" size="60" id="customHTMLstylefile" 
+		name="general[<?php echo $i; ?>][customHTMLstylefile]" value="<?php
+				if (isset($amr_options[$i]['general']['customHTMLstylefile'])) 
+					echo esc_textarea($amr_options[$i]['general']['customHTMLstylefile']); ?>" />
+		
+		
+<?php //--------------------------------------------  ?>		
 	<label for="defaulturl" ><?php _e('Default Event URL','amr_ical_list_lang'); ?><em>
 	<?php
 	_e(' (For ics files in widget. External, or calendar page.)','amr_ical_list_lang'); ?>
@@ -297,7 +291,8 @@ function amrical_general_form ($i) {
 		<input type="text" class="wide" size="60" id="defaulturl" name="general[<?php echo $i; ?>][Default Event URL]" value="<?php
 				if (isset($amr_options[$i]['general']['Default Event URL'])) 
 					echo esc_textarea($amr_options[$i]['general']['Default Event URL']); ?>" />
-<?php }
+<?php //--------------------------------------------
+ }
 ?>
 </div></fieldset>
 <?php
@@ -440,16 +435,7 @@ function amrical_general_form ($i) {
 		echo "\n\t".'</div></fieldset>';
 		return;
 	}
-/* ---------------------------------------------------------------------*/
 
-function amr_request_acknowledgement () {
-?><div class="postbox" style="padding:1em 2em; width: 600px;">
-	<p style="border-width: 1px;"><?php _e('I try to make these plugins work <strong>"out of the box"</strong> with minimal effort; that they be easy to use but <strong>very configurable</strong>; <strong>well tested</strong>; with <strong>valid html and css</strong> both at the front and admin area.','amr_ical_list_lang');?> <?php
-_e('If you have a feature request, please do let me know. ','amr_ical_list_lang');
-?></p><p><b><?php _e('To edit events in wordpress:','amr_ical_list_lang'); ?> <a href="http://icalevents.anmari.com" >icalevents.anmari.com</a></b>
-</div>
-<?php
-}
 /* ---------------------------------------------------------------------*/
 
 function amr_ical_support_links () {

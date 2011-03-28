@@ -564,10 +564,12 @@ function amr_get_a_closer_start ($start, $astart, $int) { // Note can only do th
 }
 /* --------------------------------------------------------------------------------------------------- */
 function amr_limit_occurences ($repeats, $count) { 
-	/* we should check contrainst like count etc here rather */
+	/* we should check contraints like count etc here rather */
 	
 	$num_events = count($repeats);
-	if (isset ($_GET['cdebug'])) {
+	$count = apply_filters('amr_event_repeats',$count);
+	
+	if (isset ($_GET['cdebug'])) { 
 		echo '<br />We have '. $num_events.' events.  We want max:'.$count;
 		foreach ($repeats as $i=>$r) {
 			echo '<br />'.$i.' '.$r->format('c');
@@ -789,6 +791,7 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 		
 		if (isset ($_GET['rdebug'])) echo '<hr>Next start data after incrementing = '.$start->format('Y m d l h:i:s');
 	} /* end while*/
+	//-----------------------------------------------------------------------
 	if (isset($_GET['rdebug'])) { 
 			echo '<hr>Stop now..checked start against until <br>'.$start->format('c').'<br>'.$until->format('c');
 			if ($start > $until) echo '<br /><b>php says start > until </b>';

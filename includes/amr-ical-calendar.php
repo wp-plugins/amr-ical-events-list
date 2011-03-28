@@ -11,13 +11,6 @@
  * @param bool $echo Optional, default is true. Set to false for return.
  */
 
- function amr_check_for_wpml_lang_parameter ($link) {
- 	if (isset($_REQUEST['lang'])) {
-		$link = remove_query_arg( 'lang', $link );  //is there a wpml bug ? or wp bug, we are getting lang twice 
-		$link = add_query_arg( 'lang', $_REQUEST['lang'], $link );
-		}
-	return ($link);
-}
 // ----------------------------------------------------------------------------------------
 
 function amr_get_day_link($thisyear, $thismonth, $thisday, $link) { /* the start date object  and the months to show */
@@ -49,22 +42,7 @@ global $wp_locale, $amr_globaltz;
 	return($html);
 }
 
-// ----------------------------------------------------------------------------------------
 
-function amr_clean_link() { /* get cleaned up version of current url  remove other parameters */
-
-
-	$link = remove_query_arg(array(
-	'months',
-	'hours',
-	'start',
-	'startoffset',
-	'hoursoffset',
-	'eventoffset',
-	'monthsoffset'));
-
-	return ($link);
-}
 // ----------------------------------------------------------------------------------------
 
 function amrical_get_month_link($start, $months, $link) { /* the start date object  and the months to show */

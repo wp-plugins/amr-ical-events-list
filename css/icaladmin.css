@@ -13,6 +13,7 @@
 			div#amrical fieldset.layout legend {font-weight: normal; }
 			div#amrical textarea,
 			div#amrical input {margin-left: 1em; padding: 0.5em; }
+			div#amrical .formats input {width: 20em;}
 			div#amrical fieldset.layout input {margin: 0; padding: 0.2em;}
 			div#amrical fieldset#submit input {padding: 0.4em;}
 			div#amrical fieldset#ListTypes fieldset.formats input { } 
