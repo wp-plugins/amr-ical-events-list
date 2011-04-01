@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '3.9.5');
+define('AMR_ICAL_LIST_VERSION', '3.9.6');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -29,20 +29,7 @@ function amr_ical_events_list_record_version() {
 update_option('amr-ical-events-list-version', AMR_ICAL_LIST_VERSION); // for upgrade checks 
 }
 /* --------------------------------------------------  */
-global 	$amr_freq,
-		$amr_freq_unit;
-		
-$amr_freq['DAILY'] 			= __('Daily', 'amr_ical_list_lang');
-$amr_freq['WEEKLY'] 		= __('Weekly', 'amr_ical_list_lang');
-$amr_freq['MONTHLY']		= __('Monthly', 'amr_ical_list_lang');
-$amr_freq['YEARLY'] 		= __('Yearly', 'amr_ical_list_lang');
-$amr_freq['HOURLY'] 		= __('Hourly', 'amr_ical_list_lang');
-$amr_freq['RDATE'] 			= __('on certain dates', 'amr_ical_list_lang');
-$amr_freq_unit['DAILY'] 	= __('day', 'amr_ical_list_lang');
-$amr_freq_unit['WEEKLY'] 	= __('week', 'amr_ical_list_lang');
-$amr_freq_unit['MONTHLY']	= __('month', 'amr_ical_list_lang');
-$amr_freq_unit['YEARLY'] 	= __('year', 'amr_ical_list_lang');
-$amr_freq_unit['HOURLY'] 	= __('hour', 'amr_ical_list_lang');
+
 
 /* --------------------------------------------------  */
 function ical_ordinalize( $num ){
@@ -1317,7 +1304,8 @@ function amr_get_htmlstylefile() {
 	return($custom_htmlstyle_file);	
 }
 /* --------------------------------------------------  */	
-function amr_list_properties($icals, $tid, $class) {  /* List the calendar properties if requested in options  */
+if (!function_exists('amr_list_properties')) {
+	function amr_list_properties($icals, $tid, $class) {  /* List the calendar properties if requested in options  */
 	global $amr_options;
 	global $amr_listtype;
 /* --- setup the html tags ---------------------------------------------- */
@@ -1422,6 +1410,7 @@ function amr_list_properties($icals, $tid, $class) {  /* List the calendar prope
 		}
 	return ($html);
 }
+}
 /* --------------------------------------------------  */
 function amr_doing_box_calendar () {
 global $amr_options,
@@ -1433,7 +1422,27 @@ global $amr_options,
 	if (in_array ($liststyle, array('smallcalendar','largecalendar')))  return true;
 	else return false;
 }
+
+function amr_get_groupings_requested () {
+global 	$amr_options,
+		$amr_listtype,
+		$amr_groupings;
+
+//		if (isset($_REQUEST['grouping'])) 		$gg = ucwords($_REQUEST['grouping']);
+//		else 	$gg = '';
+//		if (array_key_exists($gg,$amr_groupings)) 
+//			$g[$gg] = true;
+//		else {  // get the listtype groupings 
+			if (isset ($amr_options[$amr_listtype]['grouping'])) {
+				foreach (($amr_options[$amr_listtype]['grouping']) as $i => $v)
+					{	if ($v) { $g[$i] = $v; }			}
+			}
+//		}
+		if (!empty($g)) return ($g);
+		else return false;
+}
 /* --------------------------------------------------  */
+if (!function_exists('amr_list_events') ) {
 function amr_list_events($events,  $tid, $class, $show_views=true) {
 	global $amr_options,
 		$amr_limits,
@@ -1463,16 +1472,8 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 
 //
 /* ----------- check for groupings and compress these to requested groupings only */
-		if (isset($_REQUEST['grouping'])) 		$gg = ucwords($_REQUEST['grouping']);
-		else 									$gg = '';
-		if (array_key_exists($gg,$amr_groupings)) $g[$gg] = true;
-		else {
-			if (isset ($amr_options[$templisttype]['grouping'])) {
-				foreach (($amr_options[$templisttype]['grouping']) as $i => $v)
-					{	if ($v) { $g[$i] = $v; }			}
-			}
-		}
-
+		$g = amr_get_groupings_requested ();
+		
 		if (!empty($g)) {
 			foreach ($g as $gi=>$v) {
 				$new[$gi] = $old[$gi] = '';
@@ -1888,6 +1889,7 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 	$html = $navigation_html.AMR_NL
 		.$html.AMR_NL;
 return ($html);
+}
 }
 /* -------------------------------------------------------------------------------------------*/
 function format_grouping ($grouping, $datestamp) {
@@ -2605,6 +2607,7 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 			if ($do_prop) {
 				$tid 	= $w.'calprop'.$icalno;
 				$class 	= 'vcalendar '.$w.'icalprop '; //20110222
+								
 				$thecal =  amr_list_properties ($icals, $tid, $class);		/* list the calendar properties if requested */
 			}
 			else $thecal = '';
@@ -2616,6 +2619,7 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 				$tid 	= $w.'compprop'.$icalno;
 				$class 	= 'vcalendar '.$w.'ical';
 				$thecal .= amr_list_events($components, $tid, $class, $show_views=true);
+				
 			}
 
 
@@ -2638,10 +2642,26 @@ function amr_get_params ($attributes=array()) {
 	$amr_listtype,
 	$amr_liststyle,
 	$amr_options,
+	$amr_groupings,
 	$amr_formats,
 	$amr_globaltz,
 	$change_view_allowed,
 	$amrW; // indicates if widget
+	
+	global 	$amr_freq,
+		$amr_freq_unit;
+		
+	$amr_freq['DAILY'] 			= __('Daily', 'amr_ical_list_lang');
+	$amr_freq['WEEKLY'] 		= __('Weekly', 'amr_ical_list_lang');
+	$amr_freq['MONTHLY']		= __('Monthly', 'amr_ical_list_lang');
+	$amr_freq['YEARLY'] 		= __('Yearly', 'amr_ical_list_lang');
+	$amr_freq['HOURLY'] 		= __('Hourly', 'amr_ical_list_lang');
+	$amr_freq['RDATE'] 			= __('on certain dates', 'amr_ical_list_lang');
+	$amr_freq_unit['DAILY'] 	= __('day', 'amr_ical_list_lang');
+	$amr_freq_unit['WEEKLY'] 	= __('week', 'amr_ical_list_lang');
+	$amr_freq_unit['MONTHLY']	= __('month', 'amr_ical_list_lang');
+	$amr_freq_unit['YEARLY'] 	= __('year', 'amr_ical_list_lang');
+	$amr_freq_unit['HOURLY'] 	= __('hour', 'amr_ical_list_lang');
 
 	if (!empty ($amrW) ) //must be empty not isset
 		$listtype='4';
@@ -2683,13 +2703,14 @@ function amr_get_params ($attributes=array()) {
 	'calendar_properties' => '1',
 	'pagination' => '1',
 	'headings' => '1',
-	'ignore_query' => '0'
+	'ignore_query' => '0',
+	'grouping' => ''
 	);
 
 	$shortcode_params = shortcode_atts( $defaults, $attributes ) ;  
-	
 	//
-	if (!empty ($attributes) ) foreach ($attributes as $i => $v) {
+	if (!empty ($attributes) ) {
+		foreach ($attributes as $i => $v) {
 			if (is_numeric ($i)) {  // ie if it is a value passed with no name, we expect only urls like that 
 				if (substr($v, 0 ,1) == ':') { /* attempt to maintain old filter compatibity */
 					$shortcode_params['urls'][$i] = substr ($v, 1);
@@ -2708,11 +2729,10 @@ function amr_get_params ($attributes=array()) {
 					unset($attributes[$i]);
 					}
 			}
-		}
+		} // end foreach 
+	} //end if 	
 
 //
-	
-	
 	
 	If (ICAL_EVENTS_DEBUG) {
 		echo '<hr>Shortcode with shortcode defaults added <br />'; var_dump($shortcode_params); 
@@ -2760,6 +2780,15 @@ function amr_get_params ($attributes=array()) {
 
 	unset($queryargs['listtype']);
 	unset($shortcode_params['listtype']);
+// now check groupings 	
+	if (!empty($shortcode_params['grouping'])) $gg = ucwords($shortcode_params['grouping']);
+	if (!empty($_REQUEST['grouping'])) $gg = ucwords($_REQUEST['grouping']);
+	if (array_key_exists($gg,$amr_groupings)) { // if it is a valid grouping
+		unset($amr_options[$amr_listtype]['grouping']);
+		$amr_options[$amr_listtype]['grouping'][$gg] = true;
+		unset ($shortcode_params['grouping']);
+	}		
+	
 //	unset($attributes['listtype']);
 	if ($change_view_allowed) { // we will NOT ignore these query parameters as that  will break our navigation 
 		if (isset($_GET['calendar'])) $amr_listtype = (int) $_GET['calendar'];
@@ -2769,13 +2798,21 @@ function amr_get_params ($attributes=array()) {
 
 	// then get the limits for that list type
 	$amr_limits = $amr_options[$amr_listtype]['limit']; /* get the default limits */
+	
 	If (ICAL_EVENTS_DEBUG) {echo '<hr>Defaults limits before we change them<br />'; var_dump($amr_limits ); }
 	
 	if (!empty ($shortcode_params ) ) {
 		foreach ($shortcode_params as $i => $v) { // must be atts not limits as atts may hold more then limits - limits just has initial limits
 		if (in_array($i, array(
-			'headings','show_views','agenda','eventmap', 'calendar', 'eventpoststoo',
-			'pagination', 'calendar_properties','show_month_nav')	)) {
+			'headings',
+			'show_views',
+			'agenda',
+			'eventmap', 
+			'calendar', 
+			'eventpoststoo',
+			'pagination', 
+			'calendar_properties',
+			'show_month_nav')	)) {
 			$amr_limits[$i] = abs ((int) $v);
 			unset($shortcode_params[$i]);  // only unset if empty  what??? - else will lose others
 		}

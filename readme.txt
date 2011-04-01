@@ -1,11 +1,10 @@
 === amr events with ical files, by list or calendar (aka amr-ical-events-list) ===
 Contributors: anmari
-Donate link: http://webdesign.anmari.com/web-tools/donate/
 Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, ical-feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar,
 
 Requires at least: 2.8
 Tested up to: 3.1
-Version: 3.9.5
+Version: 3.9.6
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.
@@ -43,6 +42,9 @@ Many thanks to the following people for the translations.  Note that I am unable
 If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me the .po files for your language.
 
 == Changelog ==
+= Version 3.9. =
+* Add: made some functions pluggable to allow greater customisation - see plugin website.
+
 = Version 3.9.5 =
 * Add: html list style options for html5 on process of being added - more changes to come.
 * Change: grouped events will now NEST within a group - they used to just be a kind of heading.  HTML and css tweaked so it looks the same.
