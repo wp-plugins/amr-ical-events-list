@@ -31,6 +31,7 @@ Test with your calendar's ics file at the demo site:
 
 Many thanks to the following people for the translations.  Note that I am unable to verify these and they may be out of date with the current version.:
 
+*   Polish by Kasia from [http://onlinecasinobluebook.com/] (http://www.onlinecasinobluebook.com/)
 *   French by fxbenard aka 3emeOeil (no link available)
 *   Danish by [Georg](http://wordpress.blogos.dk/s%C3%B8g-efter-downloads/?did=264)
 *   German by Simon Betschmann
@@ -44,6 +45,7 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 == Changelog ==
 = Version 3.9. =
 * Add: made some functions pluggable to allow greater customisation - see plugin website.
+* Add: polish translation
 
 = Version 3.9.5 =
 * Add: html list style options for html5 on process of being added - more changes to come.
