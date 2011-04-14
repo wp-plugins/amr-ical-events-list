@@ -19,12 +19,12 @@ global $amr_globaltz;
 global $utczobj;
 $utczobj = timezone_open('UTC');
 
-if (isset($_REQUEST["debug"]) ) {  /* for debug and support - calendar data is public anyway, so no danger*/
+if (!defined ('ICAL_EVENTS_DEBUG')) {
+	if (isset($_REQUEST["debug"]) )   /* for debug and support - calendar data is public anyway, so no danger*/
 		define('ICAL_EVENTS_DEBUG', true);
-/*	define('WP_DEBUG', true);  /* when testing only */
-//		echo '<h1>Debug Mode</h1>';
+	else 	
+		define('ICAL_EVENTS_DEBUG', false);
 }
-else define('ICAL_EVENTS_DEBUG', false);
 
 $amr_wkst = ical_get_weekstart();
 
@@ -35,22 +35,31 @@ if (!defined('AMR_TB')) define('AMR_TB',"\t" );
 define('AMR_EVENTS_CACHE_TTL', 60 * 20);  //  20 mins
 define('ICAL_EVENTS_CACHE_TTL', 24 * 60 * 60);  // 1 day
 define('AMR_MAX_REPEATS', 1000); /* if someone wants to repeat something very frequently from some time way in the past, then may need to increase this */
-define('TIMEZONEIMAGE','timezone.png');
-define('MAPIMAGE','map.png');
-define('CALENDARIMAGE','calendar.png');
-define('CALENDARADDTOIMAGE','calendar_add.png');
-define('ADDTOGOOGLEIMAGE','addtogoogle.png');
-define('REFRESHIMAGE','refresh.png');
+
+
+$amr_ical_image_settings = get_option('amr_ical_images_to_use');
+if (empty($amr_ical_image_settings)) {
+	$suffix = '_16';
+}
+else {
+	$size = (isset ($amr_ical_image_settings['images_size']) ? $amr_ical_image_settings['images_size'] : '16');
+	if (in_array($size, array('16', '32') ))	$suffix = '_'.$size;
+	else $suffix = '_16';
+}
+
+define('TIMEZONEIMAGE',			'timezone'.$suffix.'.png');
+define('MAPIMAGE',				'map'.$suffix.'.png');
+define('CALENDARIMAGE',			'calendar'.$suffix.'.png');
+define('CALENDARADDTOIMAGE',	'calendar_add'.$suffix.'.png');
+define('CALENDARADDSERIESIMAGE','calendar_link'.$suffix.'.png');
+define('ADDTOGOOGLEIMAGE',		'addtogoogle'.$suffix.'.png');
+define('REFRESHIMAGE',			'arrow_refresh'.$suffix.'.png');
 
  if ( ! defined( 'WP_PLUGIN_URL' ) )
        define( 'WP_PLUGIN_URL', WP_CONTENT_URL. '/plugins/' );
 
 if ( ! defined( 'WP_PLUGIN_DIR' ) )
        define( 'WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins/' );
-
-if ( !defined('WP_SITEURL') )
-		define( 'WP_SITEURL', get_option('siteurl') );
-
 
 $x = str_replace(basename( __FILE__),"",plugin_basename(__FILE__));
 
@@ -89,7 +98,7 @@ $amr_validrepeatableproperties = array (
 		'URL',
 		'XPARAM', 'X-PROP');
 /* used for admin field sizes */
-$amr_csize = array('Column' => '2', 'Order' => '2', 'Before' => '10', 'After' => '10', 'ColHeading' => '10');	
+$amr_csize = array('Column' => '2', 'Order' => '2', 'Before' => '40', 'After' => '40', 'ColHeading' => '10');	
 /* the default setup shows what the default display option is */
 
 $dateformat = str_replace(' ','\&\n\b\s\p\;', get_option('date_format'));
@@ -107,6 +116,13 @@ $amr_formats = array (
 		'DateTime' => get_option('date_format').' '.get_option('time_format')
 //		'DateTime' => '%d-%b-%Y %I:%M %p'   /* use if displaying date and time together eg the original fields, */
 		);
+		
+$amr_admin_col_head = array (  // Dummy for translation
+	'Column' 	=> __('Column','amr-ical-events-list'),
+	'Order' 	=> __('Order','amr-ical-events-list'),
+	'Before' 	=> __('Before','amr-ical-events-list'),
+	'After' 	=> __('After','amr-ical-events-list'),
+	);		
 
 function amr_getTimeZone($offset) {
  $timezones = array(
@@ -168,8 +184,7 @@ function amr_set_defaults() {
 	global $eventtaxonomies;
 
 If (ICAL_EVENTS_DEBUG) {
-		echo '<br />Plugin Version is: '.AMR_ICAL_LIST_VERSION;
-		echo '<br />Php Version is: '.PHP_VERSION;
+		echo '<br />Note:'.AMR_ICAL_LIST_VERSION.'-'.PHP_VERSION.'-'.get_bloginfo('version');
 }
 if (function_exists ('get_option')) {
 //	if ($d = get_option ('date_format')) $amr_formats['Day'] = $d;
@@ -196,8 +211,8 @@ else $amr_globaltz = timezone_open(date_default_timezone_get());
 $ical_timezone = $amr_globaltz;
 If (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) echo '<br />The default php timezone is set to:'.date_default_timezone_get().'<br />';
 $amr_general = array (
-		'name' 				=> 'Default',
-		'Description'		=> 'A default calendar list. This one set to tables with lists in the cells.  Usually needs the css file enabled. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ',
+		'name' 				=> __('Default','amr-ical-events-list'),
+		'Description'		=> __('A default calendar list. This one set to tables with lists in the cells.  Usually needs the css file enabled. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list'),
 		"Default Event URL" => '',
 		'ListHTMLStyle'		=> 'table',
 		'customHTMLstylefile' => ''
@@ -216,14 +231,14 @@ $amr_components = array (
 		);
 
 $fakeforautolangtranslation = array (
-		__("Year",'amr_ical_list_lang'),
-		__("Quarter",'amr_ical_list_lang'),
-		__("Astronomical Season",'amr_ical_list_lang') ,
-		__("Traditional Season",'amr_ical_list_lang'),
-		__("Western Zodiac",'amr_ical_list_lang'),
-		__("Month",'amr_ical_list_lang'),
-		__("Week",'amr_ical_list_lang') ,
-		__("Day",'amr_ical_list_lang')
+		__("Year",'amr-ical-events-list'),
+		__("Quarter",'amr-ical-events-list'),
+		__("Astronomical Season",'amr-ical-events-list') ,
+		__("Traditional Season",'amr-ical-events-list'),
+		__("Western Zodiac",'amr-ical-events-list'),
+		__("Month",'amr-ical-events-list'),
+		__("Week",'amr-ical-events-list') ,
+		__("Day",'amr-ical-events-list')
 		);
 $amr_groupings = array (
 		"Year" => false,
@@ -237,9 +252,9 @@ $amr_groupings = array (
 		);
 		
 $amr_colheading = array (
-	'1' => __('When','amr_ical_list_lang'),
-	'2' => __('What', 'amr_ical_list_lang'),
-	'3' => __('Where', 'amr_ical_list_lang')
+	'1' => __('When','amr-ical-events-list'),
+	'2' => __('What', 'amr-ical-events-list'),
+	'3' => __('Where', 'amr-ical-events-list')
 	);
 
 $dfalse 	= array('Column' => 0, 'Order' => 1, 'Before' => '', 'After' => '');
@@ -289,11 +304,14 @@ $amr_compprop = array
 		'POSTTHUMBNAIL'=> 	array('Column' => 0, 'Order' => 35, 'Before' => '<br />', 'After' => ''),
 		'LOCATION'=> 		array('Column' => 2, 'Order' => 41, 'Before' => '', 'After' => ''),
 		'map'=> 			array('Column' => 2, 'Order' => 40, 'Before' => '', 'After' => ''),
-		'addevent' => 		array('Column' => 2, 'Order' => 145, 'Before' => '', 'After' => ''),
-		'subscribeevent' => array('Column' => 2, 'Order' => 148, 'Before' => '', 'After' => ''),
+		'addevent' => 		array('Column' => 2, 'Order' => 500, 'Before' => '', 'After' => ''),
+		'subscribeevent' => array('Column' => 2, 'Order' => 501, 'Before' => '', 'After' => ''),
+		'subscribeseries' => array('Column' => 2, 'Order' => 502, 'Before' => '', 'After' => ''),
+		'GEO'=> 			$dfalse,		
+		'ATTACH'=> 			array('Column' => 2, 'Order' => 400, 
+							'Before' => __('More info: ','amr-ical-events-list'),
+							'After' => '<br />'),
 		'GEO'=> 			$dfalse,
-		
-'ATTACH'=> 			$dfalse,
 		'CATEGORIES'=> 		$dfalse,
 		'CLASS'=> 			$dfalse,
 		'COMMENT'=> 		$dfalse,
@@ -326,12 +344,17 @@ $amr_compprop = array
 //		'TZURL'=> $dfalse),
 	'Relationship' => array (
 		'ATTENDEE'=> 		$dfalse,
-//		'attending_event' => $dfalse,
+		'declined' => 		$dfalse,
+		'rsvp' => 			$dfalse,
+		'rsvpwithcomment' => $dfalse,
+		'going_ornot_ormaybe' => $dfalse,
 		'CONTACT'=> 		$dtrue,
 		'ORGANIZER'=> 		array('Column' => 0, 'Order' => 30, 'Before' => '', 'After' => ''),
 		'RECURRENCE-ID'=> 	$dfalse,
 		'RELATED-TO'=> 		$dfalse,
-		'URL'=> 			array('Column' => 0, 'Order' => 10, 'Before' => '', 'After' => ''),
+		'URL'=> 			array('Column' => 0, 'Order' => 10, 
+			'Before' => '<a href="',
+			'After' => '">'.__('Event Link', 'amr-ical-events-list').'</a>'),
 		'UID'=> 			$dfalse
 		),
 	'Recurrence' => array (  /* in case one wants for someone reason to show the "repeating" data, need to create a format rule for it then*/
@@ -357,14 +380,14 @@ $amr_compprop = array
 
 	function amr_ical_showmap ($text) { /* the address text */
 	global $amr_options;
-		$t1 = __('Show in Google map','amr_ical_list_lang');
+		$t1 = __('Show in Google map','amr-ical-events-list');
 		if (isset ($amr_options['no_images']) and $amr_options['no_images']) $t3 = $t1;
 		else $t3 = '<img src="'.IMAGES_LOCATION.MAPIMAGE.'" alt="'.	$t1	.'" class="amr-bling" />';
 	/* this is used to determine what should be done if a map is desired - a link to google behind the text ? or some thing else  */
 	
-	return('<a class="map" href="http://maps.google.com/maps?q='
+	return('<a class="hrefmap" href="http://maps.google.com/maps?q='
 		.str_replace(' ','%20',($text)).'" target="_BLANK"'   //google wants unencoded
-		.' title="'.__('Show location in Google Maps','amr_ical_list_lang').'" >'.$t3.'</a>');
+		.' title="'.__('Show location in Google Maps','amr-ical-events-list').'" >'.$t3.'</a>');
 	}
 	/* -------------------------------------------------------------------------------------------------------------*/
 	/* This is used to tailor the multiple default listing options offered.  A new listtype first gets the common default */
@@ -374,19 +397,21 @@ $amr_compprop = array
 
 	switch ($i)	{
 		case 2:
-			$amr_options[$i]['general']['name']='On Tour';
-			$amr_options[$i]['general']['Description']='Default setting uses the original table with lists in the cells. It is grouped by month. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ';
+			$amr_options[$i]['general']['name'] =__('On Tour','amr-ical-events-list');
+			$amr_options[$i]['general']['Description']=__('Default setting uses the original table with lists in the cells. It is grouped by month. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
 			$amr_options[$i]['general']['ListHTMLStyle']='table';
 			$amr_options[$i]['compprop']['Descriptive']['LOCATION']['Column'] = 2;
-			$amr_options[$i]['compprop']['Descriptive']['DESCRIPTION']['Column'] = 3;
-			$amr_options[$i]['compprop']['Descriptive']['SUMMARY']['Column'] = 3;
+			$amr_options[$i]['compprop']['Descriptive']['DESCRIPTION']['Column'] = 2;
+			$amr_options[$i]['compprop']['Descriptive']['SUMMARY']['Column'] = 2;
 			$amr_options[$i]['compprop']['Descriptive']['addevent']['Column'] = 3;
-			$amr_options[$i]['heading']['2'] = __('Venue','amr_ical_list_lang');
-			$amr_options[$i]['heading']['3'] = __('Description','amr_ical_list_lang');
+			$amr_options[$i]['compprop']['Descriptive']['subscribeevent']['Column'] = 3;
+			$amr_options[$i]['compprop']['Descriptive']['subscribeseries']['Column'] = 3;
+			$amr_options[$i]['heading']['2'] = __('Venue','amr-ical-events-list');
+			$amr_options[$i]['heading']['3'] = __('Description','amr-ical-events-list');
 			break;
 		case 3:
-			$amr_options[$i]['general']['name']='Timetable';
-			$amr_options[$i]['general']['Description']='Default setting uses the original table with lists in the cells. It is grouped by day. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ';
+			$amr_options[$i]['general']['name']=__('Timetable','amr-ical-events-list');
+			$amr_options[$i]['general']['Description']=__('Default setting uses the original table with lists in the cells. It is grouped by day. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
 			$amr_options[$i]['general']['ListHTMLStyle']='table';
 			foreach ($amr_options[$i]['grouping'] as $g=>$v) {$amr_options[$i]['grouping'][$g] = false;}
 			$amr_options[$i]['grouping']['Day'] = true;		
@@ -397,14 +422,15 @@ $amr_compprop = array
 			$amr_options[$i]['compprop']['Descriptive']['map']['Column'] = 0;
 			$amr_options[$i]['compprop']['Descriptive']['addevent']['Column'] = 4;
 			$amr_options[$i]['compprop']['Descriptive']['subscribeevent']['Column'] = 4;
-			$amr_options[$i]['heading']['2'] = __('Date','amr_ical_list_lang');
-			$amr_options[$i]['heading']['2'] = __('Class','amr_ical_list_lang');
-			$amr_options[$i]['heading']['3'] = __('Room','amr_ical_list_lang');
+			$amr_options[$i]['compprop']['Descriptive']['subscribeseries']['Column'] = 4;
+			$amr_options[$i]['heading']['2'] = __('Date','amr-ical-events-list');
+			$amr_options[$i]['heading']['2'] = __('Class','amr-ical-events-list');
+			$amr_options[$i]['heading']['3'] = __('Room','amr-ical-events-list');
 			$amr_options[$i]['format']['Day']='l, jS M';
 			break;
 		case 4:
-			$amr_options[$i]['general']['name']='Widget'; /* No groupings, minimal */
-			$amr_options[$i]['general']['Description']='The new default setting for widgets uses lists for the table rows. Good for themes that cannot cope with tables in the sidebar. No grouping. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ';
+			$amr_options[$i]['general']['name']=__('Widget','amr-ical-events-list'); /* No groupings, minimal */
+			$amr_options[$i]['general']['Description']=__('The new default setting for widgets uses lists for the table rows. Good for themes that cannot cope with tables in the sidebar. No grouping. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
 
 			$amr_options[$i]['general']['ListHTMLStyle']='list';
 			$amr_options[$i]['format']['Day']='M'.'\&\n\b\s\p\;'.'j';
@@ -424,8 +450,8 @@ $amr_compprop = array
 			$amr_options[$i]['heading']['1'] = $amr_options[$i]['heading']['2'] = $amr_options[$i]['heading']['3'] = '';
 			break;
 		case 5:
-			$amr_options[$i]['general']['name']='HTML5 Exp 1';
-			$amr_options[$i]['general']['Description']='Experimental new table style aiming to use html5 tags, but still within a table structure to allow columns. One cannot have two levels of grouping with this option as <tbody> cannot be nested. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ';
+			$amr_options[$i]['general']['name']=__('HTML5 Exp 1','amr-ical-events-list');
+			$amr_options[$i]['general']['Description']= __('Experimental new table style aiming to use html5 tags, but still within a table structure to allow columns. One cannot have two levels of grouping with this option as <tbody> cannot be nested. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
 			$amr_options[$i]['general']['ListHTMLStyle']='HTML5table';
 			$amr_options[$i]['format']['Day']='j'.'\&\n\b\s\p\;'.'M';
 			$amr_options[$i]['grouping']['Day'] = false;
@@ -455,8 +481,8 @@ $amr_compprop = array
 
 			break;
 		case 6:
-			$amr_options[$i]['general']['name']='HTML5 Exp 2';
-			$amr_options[$i]['general']['Description']='An HTML5 test option that tries to be leaner. You can have two level of grouping with this option. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ';
+			$amr_options[$i]['general']['name']=__('HTML5 Exp 2','amr-ical-events-list');
+			$amr_options[$i]['general']['Description']=__('An HTML5 test option that tries to be leaner. You can have two level of grouping with this option. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
 			$amr_options[$i]['general']['ListHTMLStyle']='HTML5';
 
 			$amr_options[$i]['calprop']['X-WR-CALNAME']
@@ -498,8 +524,8 @@ $amr_compprop = array
 			break;
 		case 7:
 
-			$amr_options[$i]['general']['name']='EventInfo'; /* No groupings, minimal */
-			$amr_options[$i]['general']['Description']='For displaying additional event info on posts created as events. The summary and description are switched off as these are the post title and the post content. Calendar properties and groupings are also not relevant. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ';
+			$amr_options[$i]['general']['name']=__('EventInfo','amr-ical-events-list'); /* No groupings, minimal */
+			$amr_options[$i]['general']['Description']=__('For displaying additional event info on posts created as events. The summary and description are switched off as these are the post title and the post content. Calendar properties and groupings are also not relevant. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
 			$amr_options[$i]['limit'] = array (	"events" => 10,	"days" 	=> 366,"cache" 	=> 24);  /* hours */
 			$amr_options[$i]['general']['ListHTMLStyle']='list';
 			$amr_options[$i]['format']['Day']='l, j F Y';
@@ -523,11 +549,13 @@ $amr_compprop = array
 			$amr_options[$i]['compprop']['Descriptive']['SUMMARY']['Column'] = 0;
 			$amr_options[$i]['compprop']['Descriptive']['addevent']['Column'] = 1;
 			$amr_options[$i]['compprop']['Descriptive']['addevent']['Order'] = 1;
+			$amr_options[$i]['compprop']['Descriptive']['subscribeevent']['Column'] = 1;
+			$amr_options[$i]['compprop']['Descriptive']['subscribeevent']['Order'] = 1;
 			$amr_options[$i]['heading']['1'] = $amr_options[$i]['heading']['2'] = $amr_options[$i]['heading']['3'] = '';
 			break;
 	case 8:
-			$amr_options[$i]['general']['name']='Small-Calendar'; /* No groupings, minimal */
-			$amr_options[$i]['general']['Description']='The new default setting for calendar widgets. No grouping, No headings. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ';
+			$amr_options[$i]['general']['name']=__('Small-Calendar','amr-ical-events-list'); /* No groupings, minimal */
+			$amr_options[$i]['general']['Description']=__('The new default setting for calendar widgets. No grouping, No headings. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
 			$amr_options[$i]['general']['ListHTMLStyle']='smallcalendar';
 			$amr_options[$i]['format']['Day']='j';
 			$amr_options[$i]['format']['Week']='D'; // 3 letter day of week
@@ -552,8 +580,8 @@ $amr_compprop = array
 			$amr_options[$i]['heading']['1'] = $amr_options[$i]['heading']['2'] = $amr_options[$i]['heading']['3'] = '';
 			break;
 		case 9:
-			$amr_options[$i]['general']['name']='Large-Calendar'; /* No groupings, minimal */
-			$amr_options[$i]['general']['Description']= __('The new default setting for a large monthly calendar. No grouping, No headings. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is.','amr_ical', 'amr_ical_list_lang');
+			$amr_options[$i]['general']['name']=__('Large-Calendar','amr-ical-events-list'); /* No groupings, minimal */
+			$amr_options[$i]['general']['Description']= __('The new default setting for a large monthly calendar. No grouping, No headings. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is.','amr-ical-events-list');
 			$amr_options[$i]['general']['ListHTMLStyle']='largecalendar';
 			$amr_options[$i]['format']['Day']='M j';
 			$amr_options[$i]['format']['Time']='G:i';
@@ -579,8 +607,8 @@ $amr_compprop = array
 			break;
 
 		case 10:
-			$amr_options[$i]['general']['name']='Testing';
-			$amr_options[$i]['general']['Description']='A test option with lots of fields switched on. It has 2 levels of grouping - this is fine so long as the html in use can be nested. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ';
+			$amr_options[$i]['general']['name']=__('Testing','amr-ical-events-list');
+			$amr_options[$i]['general']['Description']=__('A test option with lots of fields switched on. It has 2 levels of grouping - this is fine so long as the html in use can be nested. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
 
 			$amr_options[$i]['general']['ListHTMLStyle']='breaks';
 			foreach ($amr_options[$i]['grouping'] as $g => $v) {
@@ -843,7 +871,7 @@ global $amr_options;
 		.'<a title="Ical Upcoming Events List version '.AMR_ICAL_LIST_VERSION.'" '
 		.'href="http://icalevents.anmari.com/">'
 //		.'<img src= "http://icalevents.anmari.com/images/plugin-ical1.png" alt ="'
-		.__('Events plugin by anmari','amr_ical_list_lang')
+		.__('Events plugin by anmari','amr-ical-events-list')
 //		.'"</img>'
 		.'</a></span>'
 		);
@@ -864,7 +892,7 @@ global $amr_options;
 			'feed_css' => true,
 			'cssfile' => ICALSTYLEURL,//'icallist.css',
 			'date_localise' => 'amr',
-			'noeventsmessage' => __('No events found within criteria','amr_ical_list_lang')
+			'noeventsmessage' => __('No events found within criteria','amr-ical-events-list')
 			);
 
 
@@ -879,12 +907,12 @@ global $amr_options;
 		}
 	/* we are requested to reset the options, so delete and update with default */
 	if ($reset) {
-		_e('Resetting options...', 'amr_ical_list_lang');
+		_e('Resetting options...', 'amr-ical-events-list');
 		if (($d = delete_option('AmRiCalEventList')) 
 			or ($d = delete_option('amr-ical-events-list')))
-			_e('Options Deleted...','amr_ical_list_lang');
-		else _e('Option was not saved before or error deleting option...','amr_ical_list_lang');
-//		if (update_option('amr-ical-events-list', $amr_options)) _e('Options updated with defaults...','amr_ical_list_lang');
+			_e('Options Deleted...','amr-ical-events-list');
+		else _e('Option was not saved before or error deleting option...','amr-ical-events-list');
+		delete_option('amr_ical_images_to_use');
 		}
 	else  {/* *First setup the default config  */	
 /* general config */
@@ -893,7 +921,7 @@ global $amr_options;
 			if ($alreadyhave = get_option('AmRiCalEventList')) {
 				delete_option('AmRiCalEventList');
 				add_option('amr-ical-events-list', $alreadyhave);
-				_e(' Converting option key to lowercase','amr_ical_list_lang');
+				_e(' Converting option key to lowercase','amr-ical-events-list');
 			}
 
 		}

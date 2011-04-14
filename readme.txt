@@ -1,10 +1,10 @@
-=== amr events with ical files, by list or calendar (aka amr-ical-events-list) ===
+=== amr events calendar or list with ical files (aka amr-ical-events-list) ===
 Contributors: anmari
 Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, ical-feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar,
 
 Requires at least: 2.8
-Tested up to: 3.1
-Version: 3.9.6
+Tested up to: 3.1.1
+Version: 3.10
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.
@@ -43,7 +43,18 @@ Many thanks to the following people for the translations.  Note that I am unable
 If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me the .po files for your language.
 
 == Changelog ==
-= Version 3.9. =
+= Version 3.10 =
+* Add:  A choice of icon sizes 16x16 or 32x32 and many useful additional icons courest of famfam and fatcow.  Css sprites and suggested css code is provided for css experts who wish to make their site more efficient and include the css in their theme css.  At a later stage thsi will be integrated for less expert users.
+* Add: Attachments in ics files are now parsed a bit better. If a url is found, it will be made "clickable".  A pluggable function added to allow you to override html produced for your partcular files. Note there can be multiple ATTACH in an ics file.
+* Add: made more of the admin text translateable
+* Add: allowed for translation of ics file name and description so that you can change them, not just trnslate them 
+* Add: Added css classes to the box calendar events as per the list events
+* Change: exchange WP_SITEURL for get_option('siteurl') - better
+* Change: changed translation text domain to plugin name to avoid confusion.  Tried to clean up language files, had some problems and do hope I have not lost any translations.  With every upgrade there are usually some new strings.
+* Fix: the date number was in the sameplace in the html if there were no events.
+* Add: the large calendar date number will offer a link to a list view for the day's events if there are events
+
+= Version 3.9.6 =
 * Add: made some functions pluggable to allow greater customisation - see plugin website.
 * Add: polish translation
 

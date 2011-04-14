@@ -13,9 +13,21 @@
 
 // ----------------------------------------------------------------------------------------
 
-function amr_get_day_link($thisyear, $thismonth, $thisday, $link) { /* the start date object  and the months to show */
+function amr_get_day_link($thisyear, $thismonth, $thisday, &$link) { /* the start date object  and the months to show */
+	global $amr_limits,
+	$amr_listtype;
+	
+	if (!empty ($amr_limits['agenda'])) {  // do not want listtype unless requested?
+		$agenda = $amr_limits['agenda'];
+//	else 
+//		$agenda = 1;
+		$link = add_query_arg( 'listtype', $agenda ,$link);
+	}
 	$link = add_query_arg( 'days', '1' ,$link);
-	$link = add_query_arg( 'start', $thisyear.str_pad($thismonth,2,'0',STR_PAD_LEFT).str_pad($thisday,2,'0',STR_PAD_LEFT), $link );
+	$link = add_query_arg( 'months', '0' ,$link);  // else existing months will override days 
+	$link = add_query_arg( 'start', 
+		$thisyear.str_pad($thismonth,2,'0',STR_PAD_LEFT).str_pad($thisday,2,'0',STR_PAD_LEFT), 
+		$link );
 	$link = amr_check_for_wpml_lang_parameter ($link);
 return ($link);
 
@@ -41,8 +53,6 @@ global $wp_locale, $amr_globaltz;
 	$html .= amr_simpledropdown('start', $options, $start);
 	return($html);
 }
-
-
 // ----------------------------------------------------------------------------------------
 
 function amrical_get_month_link($start, $months, $link) { /* the start date object  and the months to show */
@@ -55,6 +65,8 @@ return ($link);
 // ----------------------------------------------------------------------------------------
 function amrical_calendar_views () {
 	global $amr_listtype, $amr_limits;
+	
+	if (ICAL_EVENTS_DEBUG) echo '<br />Preparing views<br />';
 
 	$link = amr_clean_link();
 	$link = remove_query_arg(array(
@@ -63,21 +75,23 @@ function amrical_calendar_views () {
 		'listtype',
 		'eventmap'));
 
-	if (isset ($amr_limits['agenda'])) $agenda = $amr_limits['agenda'];
+
+	if (!empty ($amr_limits['agenda'])) $agenda = $amr_limits['agenda'];
 	else $agenda = 1;
-	if (isset ($amr_limits['eventmap'])) $eventmap = $amr_limits['eventmap'];
+	if (!empty ($amr_limits['eventmap'])) $eventmap = $amr_limits['eventmap'];
 	else $eventmap = false;  // if not explicitly asked for a map, then do not do it
-	if (isset ($amr_limits['calendar'])) $calendar = $amr_limits['calendar'];
+	if (!empty($amr_limits['calendar'])) $calendar = $amr_limits['calendar'];
 	else {		$calendar = 9;
 	}
 
 	if ($agenda) {
+
 		$agendaviewlink = remove_query_arg('months',$link );
 		$agendaviewlink = add_query_arg(array('agenda'=>$agenda),$agendaviewlink );
 		$agendaviewlink = '<a class="agendalink button" href="'
 		. htmlentities($agendaviewlink)
 
-		. '" title="' . __('Go to agenda or list view', 'amr_ical_list_lang'). '">'.__('Agenda', 'amr_ical_list_lang').'</a>';
+		. '" title="' . __('Go to agenda or list view', 'amr-ical-events-list'). '">'.__('Agenda', 'amr-ical-events-list').'</a>';
 	}
 	else $agendaviewlink = '';
 	//
@@ -85,7 +99,7 @@ function amrical_calendar_views () {
 		$calendarviewlink = ' <a class="calendarlink" href="'
 		. htmlentities(add_query_arg(array('calendar'=>$calendar,'months'=>'1'),$link ))
 
-		. '" title="' . __('Go to calendar view', 'amr_ical_list_lang'). '">'.__('Calendar', 'amr_ical_list_lang').'</a>';
+		. '" title="' . __('Go to calendar view', 'amr-ical-events-list'). '">'.__('Calendar', 'amr-ical-events-list').'</a>';
 	}
 	else $calendarviewlink  = '';
 	//
@@ -93,21 +107,24 @@ function amrical_calendar_views () {
 		$mapviewlink = ' <a class="maplink" href="'
 		. htmlentities(add_query_arg('view','map',$link ))
 
-		. '" title="' . __('Go to map view', 'amr_ical_list_lang'). '">'.__('Map', 'amr_ical_list_lang').'</a>';
+		. '" title="' . __('Go to map view', 'amr-ical-events-list'). '">'.__('Map', 'amr-ical-events-list').'</a>';
 	}
 	else $mapviewlink = '';
 	$htmlviews = $agendaviewlink.$calendarviewlink.$mapviewlink;
-	if (!empty ($htmlviews ) ) return ('<span class="calendarviews">'.$htmlviews.'</span>');
-	else return ('');
+	if (!empty ($htmlviews ) ) 
+		return ('<span class="calendarviews">'.$htmlviews.'</span>');
+	else 
+		return ('');
 }
 // ----------------------------------------------------------------------------------------
 function amr_month_year_navigation ($start) { //note get is faster than post
 return ('<form method="get" action="'.htmlentities(remove_query_arg('start')).'">'
 		.amr_monthyeardrop_down($start->format('Ymd'))
-		.'<input title="'.__('Go to date', 'amr_ical_list_lang').'" type="submit" value="&raquo;&raquo;" >'
+		.'<input title="'.__('Go to date', 'amr-ical-events-list').'" type="submit" value="&raquo;&raquo;" >'
 		.'</form>');
 }
 // ----------------------------------------------------------------------------------------
+
 function amr_month_year_links ($start,$months) { // returns array ($nextlink, $prevlink, $dropdown
 	global $amr_calendar_url;
 	global $wpdb, $wp_locale;
@@ -141,7 +158,7 @@ function amr_month_year_links ($start,$months) { // returns array ($nextlink, $p
 		'<a href="'
 		. htmlentities(amrical_get_month_link($previous->format('Ymd'), $months, $link)) . '" title="'
 
-		. sprintf(__('Go to %1$s %2$s', 'amr_ical_list_lang'), $wp_locale->get_month($prevmonth), $prevyear) . '">&laquo;'
+		. sprintf(__('Go to %1$s %2$s', 'amr-ical-events-list'), $wp_locale->get_month($prevmonth), $prevyear) . '">&laquo;'
 
 		. $wp_locale->get_month_abbrev($wp_locale->get_month($prevmonth)) . '</a>';
 	}
@@ -150,7 +167,7 @@ function amr_month_year_links ($start,$months) { // returns array ($nextlink, $p
 		$nextlink = '<a href="'
 		. htmlentities(amrical_get_month_link($next->format('Ymd'), $months, $link))
 
-		. '" title="' . esc_attr( sprintf(__('Go to %1$s %2$s', 'amr_ical_list_lang'), $wp_locale->get_month($nextmonth), $nextyear))
+		. '" title="' . esc_attr( sprintf(__('Go to %1$s %2$s', 'amr-ical-events-list'), $wp_locale->get_month($nextmonth), $nextyear))
 
 		. '">' . $wp_locale->get_month_abbrev($wp_locale->get_month($nextmonth)) . '&raquo;</a>';
 	}
@@ -216,6 +233,8 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 			$views = amrical_calendar_views();
 		}
 	else $views = '&nbsp;';
+	
+	
 	//
 	if ($liststyle=="smallcalendar") {
 		$navigation = '<tr class="calendar_navigation">';
@@ -256,7 +275,9 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 				if ($dayofweek == 5) $satday = $wdcount;
 			}
 			foreach ( $myweek as $wd ) {
-				$day_name = ($liststyle=="smallcalendar") ? $wp_locale->get_weekday_initial($wd) : $wp_locale->get_weekday_abbrev($wd);
+				$day_name = ($liststyle=="smallcalendar") ? 
+					$wp_locale->get_weekday_initial($wd) : 
+					$wp_locale->get_weekday_abbrev($wd);
 				$wd = esc_attr($wd);
 				$calendar_output .= "\n\t\t<th scope=\"col\" title=\"$wd\">$day_name</th>";
 			}
@@ -277,18 +298,16 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 				if (empty($event['EventDate'])) continue;   
 				date_timezone_set($event['EventDate'], $amr_globaltz);  // may do this earlier (after recurrence though), no harm in twice
 
-//			var_dump($event);
-
 					if (isset ($event['EventDate']) ) {
 
-
 						$month = $event['EventDate']->format('m');
-						if ($month == $thismonth) {  // this allows to have agenda with more months and events cached, and possibly later adjust code to show multiple boxes
+						if ($month == $thismonth) {  
+						// this allows to have agenda with more months and events cached, and possibly later adjust code to show multiple boxes
 
 							$day = $event['EventDate']->format('j');
-
+							
 							$dayswithevents[] = $day;
-
+	
 							$title = '';
 							if (isset ($event['SUMMARY']) ) $title = $event['SUMMARY'];
 
@@ -297,18 +316,15 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 							$titles[$day][] = $title;
 							$eventsfortheday[$day][] = $event;
 							}
-
 					}
-
 				}
-
 			}
-
 
 			if (isset($dayswithevents)) $dayswithevents = array_unique ($dayswithevents);
 
-
-			if (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false || stripos($_SERVER['HTTP_USER_AGENT'], 'camino') !== false || stripos($_SERVER['HTTP_USER_AGENT'], 'safari') !== false)
+			if (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false 
+			|| stripos($_SERVER['HTTP_USER_AGENT'], 'camino') !== false 
+			|| stripos($_SERVER['HTTP_USER_AGENT'], 'safari') !== false)
 				$ak_title_separator = "\n";
 			else
 				$ak_title_separator = ', ';
@@ -316,13 +332,10 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 			if ( $titles ) {
 				foreach ( $titles as $day => $daywithtitles_array ) {
 
-//				echo '<br />'.$day;
-
 						if (is_array($daywithtitles_array) ) $string = implode(', ',$daywithtitles_array);
 
 						else $string = $daywithtitles_array;
 
-//				echo 'string = '.$string;
 						$daytitles[$day] = esc_attr($string );
 				}
 			}
@@ -330,8 +343,8 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 			/* ----------- flatten the array of component property options  - the order of fields for the event detail */
 			foreach ($amr_options[$amr_listtype]['compprop'] as $k => $v)
 				{ 	foreach ($v as $i=>$j) 	{ $order[$i] = $j; 	}; 	}
-			$order = prepare_order_and_sequence ($order);
-			if (!($order)) return;
+			$columns = prepare_order_and_sequence ($order);
+			if (empty($columns)) return;
 			//-----------------------------------------------------------------------------------
 			
 			if (!empty($eventsfortheday)) { if (ICAL_EVENTS_DEBUG) echo ' we have '.count($eventsfortheday);
@@ -339,7 +352,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 
 						if (ICAL_EVENTS_DEBUG) echo '<br />Day ='.$day. ' with '.count($devents).' events ';
 
-						$dayhtml[$day] = amr_list_one_days_events($devents, $order);
+						$dayhtml[$day] = amr_list_one_days_events($devents, $columns);
 
 						if (ICAL_EVENTS_DEBUG) echo 'string = '.$dayhtml[$day];
 				}
@@ -351,9 +364,10 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 				$calendar_output .= "\n\t\t".'<td colspan="'. esc_attr($pad) .'" class="pad">&nbsp;</td>';
 
 			$daysinmonth = $start->format('t');
+//-----------------------------------------------------------------------------------			
 			for ( $day = 1; $day <= $daysinmonth; ++$day ) {
 				if ( isset($newrow) && $newrow )
-					$calendar_output .= "\n\t</tr>\n\t<tr>\n\t\t";
+					$calendar_output .= AMR_NL.'</tr>'.AMR_NL.'<tr class="week">'.AMR_NL;
 				$newrow = false;
 				$lastinrow = '';
 				// check if after this we need a new row //
@@ -364,24 +378,27 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 				/* wp code - can't we do better ? */
 				$datestring = $day.'-'.$thismonth.'-'.$thisyear; // must use hyphens for uk english dates, els eit goes US
 				$dow = date('N',strtotime($datestring));
-				if ( $day == gmdate('j', current_time('timestamp')) && $thismonth == gmdate('m', current_time('timestamp')) && $thisyear == gmdate('Y', current_time('timestamp')) )
+				if ( $day == gmdate('j', current_time('timestamp')) && 
+					$thismonth == gmdate('m', current_time('timestamp')) && 
+					$thisyear == gmdate('Y', current_time('timestamp')) )
 					$calendar_output .= '<td class="day'.$dow.' today '.$lastinrow.'">';
 				else
 					$calendar_output .= '<td class="day'.$dow.$lastinrow.'">';
-
-				if ((!empty($dayswithevents) ) and ( in_array($day, $dayswithevents) )) {// any posts today?
-
+					
+				if (!empty($daytitles[$day]) ) { // then we have events for that day, so can link to it
+					$daylink = '<a class="daylink" href="'.
+						htmlentities(amr_get_day_link($thisyear, $thismonth, $day, $amr_calendar_url))
+						. '" title="' . htmlentities($daytitles[$day]) . '">'.$day.'</a>';
+				}
+				else 
+					$daylink = $day;
+				
+				$calendar_output .= '<div class="day">'.$daylink.'</div>';
+				if ((!empty($dayswithevents) ) and ( in_array($day, $dayswithevents) )) {// any posts today?			
 					if ($liststyle == 'largecalendar')
-						$calendar_output .= $day.'<div class="day">'.$dayhtml[$day];
-					else
-						$calendar_output .= '<div class="day"><a href="'
-						. htmlentities(amr_get_day_link($thisyear, $thismonth, $day, $amr_calendar_url)) . "\" title=\"" . esc_attr($daytitles[$day]) . "\">$day</a>";
-					}
-				else
-					$calendar_output .= '<div class="day">'.$day;
-				$calendar_output .= '</div></td>';
-
-
+						$calendar_output .= AMR_NL.$dayhtml[$day];
+				}
+				$calendar_output .= '</td>';
 			}
 
 			$pad = 7 - calendar_week_mod(date('w', mktime(0, 0 , 0, $thismonth, $day, $thisyear))-$week_begins);
@@ -396,7 +413,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='event-calendar
 	return($multi_output);
 }
 /* --------------------------------------------------  */
-function amr_list_one_days_events($events, $order) { /* for the large calendar */
+function amr_list_one_days_events($events, $columns) { /* for the large calendar */
 	global $amr_options,
 		$amr_limits,
 		$amr_listtype,
@@ -406,40 +423,47 @@ function amr_list_one_days_events($events, $order) { /* for the large calendar *
 		if (empty($events)) return;
 		$html = '';
 
-//		var_dump($order);
 		$no_cols = 1;
 /* --- setup the html tags ------need to have divs if wantto allow html else must strip---------------------------------------- */
-		$ev = '<div class="event">';
+		$ev = AMR_NL.'<div class="event'; 
 		$evc = '</div> ';
 
 /* -- body code ------------------------------------------*/
 		$groupedhtml = '';
 		foreach ($events as $i => $e) { /* for each event, loop through the properties and see if we should display */
-			amr_derive_component_further ($e);
-			if ((isset($e['Classes'])) and (!empty($e['Classes'])))
+			amr_derive_component_further ($e); 
+			if (!empty($e['Classes']))
 				$classes = strtolower($e['Classes']);
 			else $classes = '';
 			$eventhtml = ''; /*  each event on a new list */
 			$colhtml = array();
-			foreach ($order as $field => $fieldconfig) { /* ie for one event, check how to order the bits */
-								/* Now check if we should print the component or not, we may have an array of empty string - check our event has that value */
-				if (isset($e[$field])) $v = amr_check_flatten_array ($e[$field]);
-				else $v =null;
-				if ((isset ($v))  && (!empty($v)))	{
-					$col = $fieldconfig['Column'];
-					if (empty($colhtml[$col])) $colhtml[$col] = '';  //huh?
-					$colhtml[$col] .= stripslashes($fieldconfig['Before'])
-						. amr_format_value($v, $field, $e).stripslashes($fieldconfig['After']);  /* amr any special formating here */
+			
+
+			foreach ($columns as $col => $order) {
+				$colhtml[$col] = '';
+				foreach ($order as $field => $fieldconfig) { /* ie for one event, check how to order the bits */
+									/* Now check if we should print the component or not, we may have an array of empty string - check our event has that value */
+					if (isset($e[$field])) 
+						$v = amr_check_flatten_array ($e[$field]);
+					else 
+						$v =null;
+					if (!empty($v))	{
+//						$col = $fieldconfig['Column'];
+						$colhtml[$col] .= 
+							amr_format_value($v, $field, $e, 
+							$fieldconfig['Before'],
+							$fieldconfig['After'] );  /* amr any special formating here */
+					}
 				}
 			}
+			
 			foreach ($colhtml as $col => $chtml) {
-				$eventhtml .= '<div class="details'.$col.'">'.$chtml.'</div>';
+				$eventhtml .= AMR_NL.'<div class="details'.$col.'">'.$chtml.'</div>';
 			}
 			if (!($eventhtml === '')) { /* ------------------------------- if we have some event data to list  */
-				/* then finish off the event or row, save till we know whether to do group change heading first */
-				$eventhtml = $ev.$eventhtml.$evc;
+				$eventhtml = $ev.$classes.'">'.$eventhtml.$evc;
 				}
-			$html .= $eventhtml;
+			$html .= AMR_NL.$eventhtml;
 		}
 		//if (!empty($html)) $html = $html.$ulc;
 return ($html);

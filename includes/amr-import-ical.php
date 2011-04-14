@@ -81,10 +81,10 @@ class curl {
 		$cache_path = (ICAL_EVENTS_CACHE_LOCATION. '/ical-events-cache');
 		if (!file_exists($cache_path)) { /* if there is no folder */
 			if (wp_mkdir_p($cache_path, 0777)) {
-				printf('<br />'.__('Your cache directory %s has been created','amr_ical_list_lang'),'<code>'.$cache_path.'</code>');
+				printf('<br />'.__('Your cache directory %s has been created','amr-ical-events-list'),'<code>'.$cache_path.'</code>');
 			}
 			else {
-				die( '<br />'.sprintf(__('Error creating cache directory %s. Please check permissions','amr_ical_list_lang'),$cache_path));
+				die( '<br />'.sprintf(__('Error creating cache directory %s. Please check permissions','amr-ical-events-list'),$cache_path));
 			}
 		}
 		return $cache_path;
@@ -105,7 +105,7 @@ class curl {
           include_once( ABSPATH . WPINC. '/class-http.php' );
 /* ---------------------------------------------------------------------- */
 
-function getRemoteFile($url) // an alternate method to get remote file
+function getRemoteFile($url) // an alternate method to get remote file - OLD, only resorted to if all else fails, but maybe useless
 {
    // get the host name and url path
    $parsedUrl = parse_url($url);
@@ -188,22 +188,26 @@ function getRemoteFile($url) // an alternate method to get remote file
 				}
 			if (version_compare( PHP_VERSION,'5.2.13', '>')) $u = filter_var ($url, FILTER_VALIDATE_URL);
 			else $u = $url;
-			if (!($u) ) { _e('Invalid URL','amr_ical_list_lang'); return(false);}
+			if (!($u) ) { _e('Invalid URL','amr-ical-events-list'); return(false);}
 // first try with http
-			$request = new WP_Http;
-
-			$check = $request->request( $u );
+//			$request = new WP_Http;
+//			$check = $request->request( $u );
+			$check = wp_remote_get($u);
 			if (( is_wp_error($check) ) or  (isset ($check['response']['code']) and !($check['response']['code'] == 200))
 			or (isset ($check[0]) and preg_match ('#404#', $check[0])) /* is this bit still meaningful or needed ? */
 			or (!stristr($check['headers']['content-type'],'text/calendar'))) {
-				If (ICAL_EVENTS_DEBUG) { echo '<br /> http request failed <br /> ';}
-				if (is_wp_error($check)) $text = $check->get_error_message();
+				If (ICAL_EVENTS_DEBUG) { echo '<br /> http request failed <br /> ';
+				//var_dump($check);
+				}
+				if (is_wp_error($check)) 
+					$text = $check->get_error_message();
 				else $text = '';
 // else try curl
 				If (ICAL_EVENTS_DEBUG) { echo '<br /> Trying to get with curl <br /> ';}
 				$filetoget = new curl;
 				$data = $filetoget->getFile($u,30);
-				$checkstart = substr($data,0,15);
+				
+				$checkstart = substr($data,0,100);
 				If (ICAL_EVENTS_DEBUG) { echo '<br /> Check start of data: '.$checkstart;}
 				if (!($checkstart == 'BEGIN:VCALENDAR')) {
 					If (ICAL_EVENTS_DEBUG) {
@@ -212,31 +216,33 @@ function getRemoteFile($url) // an alternate method to get remote file
 					}
 					$data = getRemoteFile($u);
 					$checkstart = substr($data,0,15);
-					If (ICAL_EVENTS_DEBUG) { echo '<br /> Check start of data: '.$checkstart;}
+					If (ICAL_EVENTS_DEBUG) { echo '<br /> Check start of data - see source comment <!--'. substr($data,0,100).'-->'; }
 					if (!($checkstart == 'BEGIN:VCALENDAR')) {
 						echo '<a class="error" href="#" title="'
-						.__('Unexpected data contents. Please tell administrator.','amr_ical_list_lang' ). ' '
-						.__('See comments in source for response received from ics server.','amr_ical_list_lang' )
+						.__('Unexpected data contents. Please tell administrator.','amr-ical-events-list' ). ' '
+						.__('See comments in source for response received from ics server.','amr-ical-events-list' )
 						.'">!</a>';
 						echo '<!-- '; var_dump($data);echo ' -->';
 
-						$text .= '&nbsp;'.sprintf(__('Error getting calendar file with htpp or curl, or custom fn: %s','amr_ical_list_lang'), $url);
+						$text .= '&nbsp;'.sprintf(__('Error getting calendar file with htpp or curl, or custom fn: %s','amr-ical-events-list'), $url);
 
 						if ( file_exists($cachedfile) ) { // Try use cached file if it exists
-							$text .= '&nbsp;...'.sprintf(__('Using File last cached at %s','amr_ical_list_lang'), $amr_lastcache->format('D c'));					
+							$text .= '&nbsp;...'.sprintf(__('Using File last cached at %s','amr-ical-events-list'), $amr_lastcache->format('D c'));					
 							echo '<a class="error" href="#" title="'
-							.__('Warning: Events may be out of date. ','amr_ical_list_lang' )
+							.__('Warning: Events may be out of date. ','amr-ical-events-list' )
 							. $text.'">!</a>';
-//							$data = file_get_contents($cachedfile);
+
 							return($cachedfile);  //return file not data
 							}
 						else {
 							echo '<a class="error" href="#" title="'
-							.__('No cached ical file for events','amr_ical_list_lang' )
+							.__('No cached ical file for events','amr-ical-events-list' )
 							. $text.'">!</a>';
 							return (false);
 						}
+						return (false);
 					}
+					If (ICAL_EVENTS_DEBUG) { echo '<br />We have vaclendar in start of file';}
 				}
 				// else have data
 			}
@@ -616,6 +622,8 @@ Africa/Asmara
 	A duration of 7 weeks would be:  P7W, can be days or weeks, but not both
 	we want to convert so can use like this +1 week 2 days 4 hours 2 seconds ether for calc with modify or output.  Could be neg (eg: for trigger)
 	*/
+
+	
         if (preg_match('/([+]?|[-])P(([0-9]+W)|([0-9]+D)|)(T(([0-9]+H)|([0-9]+M)|([0-9]+S))+)?/',
 			trim($text), $durvalue)) {
 
@@ -787,10 +795,64 @@ global $amr_globaltz;
 		case 'ATTENDEE': {
 			return(amr_parseAttendees($parts));
 			}
+		case 'ATTACH': {
+			$attach = amr_parseAttach($parts);
+			If (ICAL_EVENTS_DEBUG) echo '<br />ATTACH returned:<br />'.print_r($attach,true);
+			return($attach);
+			}	
 		default:
 			if (isset ($parts[1])) return (str_replace ('\,', ',', $parts[1]));  /* replace any slashes added by ical generator */
 			else return;
 	}
+}
+/* ---------------------------------------------------------------------- */
+function amr_parseAttach ($parts) {
+/* 
+This property can be specified multiple times in a
+      "VEVENT", "VTODO", "VJOURNAL", or "VALARM" calendar component with
+      the exception of AUDIO alarm that only allows this property to
+      occur once. 
+Default is a URL ATTACH:http://example.com/public/quarterly-report.doc
+But could also have :
+ATTACH:CID:jsmith.part3.960817T083000.xyzMail@example.com
+ATTACH;FMTTYPE=audio/basic:ftp://example.com/pub/
+ sounds/bell-01.aud
+ATTACH;FMTTYPE=application/msword:http://example.com/
+ templates/agenda.doc
+  ATTACH;FMTTYPE=text/plain;ENCODING=BASE64;VALUE=BINARY:VGhlIH
+      F1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZy4
+
+*/
+	if (ICAL_EVENTS_DEBUG) {echo '<hr><br/>Attach to parse <br />'; var_dump($parts); echo '<hr>';}
+	
+	if (!empty($parts[0])) {
+		if ($parts[0] === 'ATTACH') { // then we have a simple URL or CID
+			if (!empty ($parts[1])) {
+				if (substr($parts[1],0,3) === 'CID' ) {
+					$newattach['type'] = 'CID';
+					$newattach['CID'] = esc_attr(substr($parts[1],4));
+					
+					}
+				else { // must be htpp or ftp 
+					$newattach['type'] = 'url';
+					$newattach['url'] = esc_url_raw($parts[1]);
+				}
+				
+			}
+			else return (null);
+		}
+		else {  // we have an FMTTYPE
+			$newattach['type'] = str_replace('ATTACH;FMTTYPE=','', $parts[0]);  //should be something like application/msword, FMTTYPE=audio/basic
+			if (!stristr($newattach['type'], 'VALUE=BINARY')) { // not binary
+				$newattach['url'] = esc_url_raw($parts[1]);
+				}
+			else {
+				$newattach['binary'] =  amr_remove_folding ($parts[1]);  
+				}
+			}
+	}
+	else return (null);
+	return($newattach);
 }
 /* ---------------------------------------------------------------------- */
 // Replace RFC 2445 escape characters
@@ -862,6 +924,12 @@ function amr_parse_component($type)	{	/* so we know we have a vcalendar at lines
 		return ($subarray);	/* return the possibly nested component */
 	}
 /* ---------------------------------------------------------------------- */
+function amr_remove_folding ($data) {
+		$data = preg_replace ( "/[\r\n]+ /", "", $data );
+	    $data = preg_replace ( "/[\r\n]+/", "\n", $data );
+	return($data);	
+}
+/* ---------------------------------------------------------------------- */
 // Parse the ical file and return an array ('Properties' => array ( name & params, value), 'Items' => array(( name & params, value), )
 function amr_parse_ical ( $cal_file ) {
 /* we will try to continue as much as possible, ignore lines that are problems */
@@ -875,21 +943,6 @@ function amr_parse_ical ( $cal_file ) {
     $event = '';
 	If (ICAL_EVENTS_DEBUG) { echo '<br />Calfile = '; var_dump($cal_file);echo '<br />';}
 	$data = file_get_contents($cal_file);
-	//If (ICAL_EVENTS_DEBUG) { echo '<br />data in file = '; var_dump($data);echo '<br />';}
-/*
-	if (!$fd=fopen($cal_file,"r")) {
-	    echo '<br>'.sprintf(__('Error reading cached file: %s', 'amr_ical_list_lang'), $cal_file);
-	    return ($cal_file);
-	}
-	else {
-	// Read in contents of entire file first
-		$data = '';
-		while (!feof($fd) ) {
-		  $line++;
-		  $data .= fgets($fd, 4096);
-		}
-		fclose($fd);
-*/
 
 		// Now fix folding.  According to RFC, lines can fold by having
 		// a CRLF and then a single white space character.
@@ -898,8 +951,7 @@ function amr_parse_ical ( $cal_file ) {
 
 		/**** we may also need to cope with backslahed backslashes, commas, semicolons as per http://www.kanzaki.com/docs/ical/text.html*/
 
-	    $data = preg_replace ( "/[\r\n]+ /", "", $data );
-	    $data = preg_replace ( "/[\r\n]+/", "\n", $data );
+		$data = amr_remove_folding ($data);
 	    $data = str_replace ( "\;", ";", $data );
 	    $data = str_replace ( "\,", ",", $data );
 		$amr_n = 0;

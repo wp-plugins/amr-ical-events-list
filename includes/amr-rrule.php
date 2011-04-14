@@ -530,7 +530,7 @@ function amr_create_date_from_parts ($d, $tz) { /* create a date object from the
 	try { $possdate =  new DateTime($datestring, $tz);
 		}
 	catch (Exception $e) {
-				echo '<b>'.__('Unexpected error creating date with string: '.$datestring,'amr_ical_list_lang').'</b>';
+				echo '<b>'.__('Unexpected error creating date with string: '.$datestring,'amr-ical-events-list').'</b>';
 				echo $e->getMessage();
 				return (false);
 				}

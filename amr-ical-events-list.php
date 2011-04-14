@@ -1,36 +1,28 @@
 <?php
 /*
-Plugin Name: amr events calendar or lists with ical files(
+Plugin Name: amr events calendar or lists with ical files
 Author: anmari
 Author URI: http://anmari.com/
 Plugin URI: http://icalevents.anmari.com
-Version: 3.9.6
-Text Domain: amr_ical_list_lang
+Version: 3.10
+Text Domain: amr-ical-events-list
 Domain Path:  /lang
 
 Description: Display simple or highly customisable and styleable list of events.  Handles all types of recurring events, notes, journals, freebusy etc. Offers links to add events to viewers calendar or subscribe to whole calendar.  Write Calendar Page</a>  and put [iCal http://yoururl.ics ] where you want the list of events of an ics file and [events] to get internal events.      To tweak: <a href="admin.php?page=manage_amr_ical">Manage Settings Page</a>,  <a href="widgets.php">Manage Widget</a>.
 
 /*  Copyright 2009  AmR iCal Events List  (email : anmari@anmari.com)
-
     This program is free software; you can redistribute it and/or modify
-
     it under the terms of the GNU General Public License as published by
-
     the Free Software Foundation; either version 2 of the License, or
-
     (at your option) any later version.
-
     This program is distributed in the hope that it will be useful,
-
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-
     GNU General Public License see <http://www.gnu.org/licenses/>.
-
     for more details.
 */
 //  NB Change version in list main tooo define('AMR_ICAL_LIST_VERSION', '3.0.1');
+if (!defined ('ICAL_EVENTS_DEBUG')) define('ICAL_EVENTS_DEBUG', false); 
 if (!function_exists('ical_ordinalize')) { //check if we have the listing code available already due to amr-events
 	require_once('includes/amr-ical-events-list-main.php');
 	require_once('includes/amr-ical-config.php');
@@ -52,7 +44,7 @@ function amr_plugin_action($links, $file) {
 
 	if( stristr($this_plugin,$file )) { 
 	/* create link */
-		array_unshift($links,'<a href="admin.php?page=manage_amr_ical">'. __('Settings','amr_ical_list_lang').'</a>' );
+		array_unshift($links,'<a href="admin.php?page=manage_amr_ical">'. __('Settings','amr-ical-events-list').'</a>' );
 	}
 
 	return $links;

@@ -3,6 +3,7 @@
 			div#amrical ul {list-style: none; padding: 0; margin:0;}
 			fieldset.alt {background: #eee;}
 			div#amrical fieldset {float: left; width: 40em; margin: 0.5em 0;}
+			div#amrical fieldset {width: 80em;}
 			div#amrical fieldset#amrglobal label {margin-top: 1em;}
 			div#amrical fieldset#amrglobal { width: 35em; }
 			div#amrical fieldset#submit {width: 20em; margin: 1em 2em 0 1em;}
