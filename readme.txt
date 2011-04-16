@@ -4,7 +4,7 @@ Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, i
 
 Requires at least: 2.8
 Tested up to: 3.1.1
-Version: 3.10
+Version: 3.10.1
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.
@@ -43,6 +43,11 @@ Many thanks to the following people for the translations.  Note that I am unable
 If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me the .po files for your language.
 
 == Changelog ==
+= Version 3.10.1 =
+* Change: If NOT in a widget, then href title on event summary hyperlink will now have excerpt if using amr-events and if excerpt is availble else the word "more info".  It used to hover the whole post content. 
+* Fix:  remove htmlspecial chars from output of event summary - mucks up special chars now in latest wp
+* Update: French translation files update from fxbenard for both amr-events and amr-ical-events-list
+
 = Version 3.10 =
 * Add:  A choice of icon sizes 16x16 or 32x32 and many useful additional icons courest of famfam and fatcow.  Css sprites and suggested css code is provided for css experts who wish to make their site more efficient and include the css in their theme css.  At a later stage thsi will be integrated for less expert users.
 * Add: Attachments in ics files are now parsed a bit better. If a url is found, it will be made "clickable".  A pluggable function added to allow you to override html produced for your partcular files. Note there can be multiple ATTACH in an ics file.

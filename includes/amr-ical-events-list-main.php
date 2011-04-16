@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '3.10');
+define('AMR_ICAL_LIST_VERSION', '3.10.1');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -866,11 +866,18 @@ function amr_derive_summary (&$e ) {
 	global $amrW;
 	global $amrwidget_options;
 /* If there is a event url, use that as href, else use icsurl, use description as title */
-	if (in_array($amr_options[$amr_listtype]['general']['ListHTMLStyle'], array('smallcalendar', 'largecalendar'))) $hoverdesc = false;
+	if (in_array($amr_options[$amr_listtype]['general']['ListHTMLStyle'], 
+		array('smallcalendar', 'largecalendar'))) $hoverdesc = false;
 	else {
-		if ($amrW == 'w_no_url') $hoverdesc = false;
+	
+		if (empty($amrW)) $hoverdesc = false;
+		else if ($amrW == 'w_no_url') $hoverdesc = false;
 		else $hoverdesc ='maybe';
 	}
+	
+	if (!empty($e['EXCERPT'])) { 
+		$e['EXCERPT'] = (amr_just_flatten_array ($e['EXCERPT'] ));
+	}	
 	if (isset($e['SUMMARY'])) $e['SUMMARY'] = (amr_just_flatten_array ($e['SUMMARY'] ));
 //	if (isset($e['SUMMARY'])) $e['SUMMARY'] = htmlspecialchars(amr_just_flatten_array ($e['SUMMARY'] ));
 	else return ('');
@@ -908,6 +915,14 @@ function amr_derive_summary (&$e ) {
 			$e_desc = 'title="'.htmlspecialchars(str_replace( '\n', '  ', (strip_tags($e_desc)))).'"';
 		}
 	}
+	else { 
+		if (!empty ($e['EXCERPT'])) { 
+			$e_desc = strip_tags($e['EXCERPT']);
+			$e_desc = ' title="'.$e_desc.'" ';
+			}
+		else	
+			$e_desc = ' title="'.__('More information', 'amr-ical-events-list').'" ';
+		}
 	if (!empty ($e_url))
 		$e_summ = '<a '.$e_url.$e_desc.'>'. $e['SUMMARY'].'</a>';
 	else $e_summ = $e['SUMMARY'];
@@ -1782,7 +1797,7 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 		$startallgroups = true;
 		foreach ($events as $i => $e) { /* for each event, loop through the properties and see if we should display */
 			amr_derive_component_further ($e);
-			if ((isset($e['Classes'])) and (!empty($e['Classes'])))
+			if (!empty($e['Classes']))
 				$classes = strtolower($e['Classes']);
 			else $classes = '';
 			$eprop = ''; /*  each event on a new list */
@@ -1817,10 +1832,9 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 					.$eprop
 					.$ulc;
 				/* each column in a cell or list */
-					
-				$classes = '';		
+
 				if (!empty($cell) ) { // if we have a selector that surounds each property , then add classes. 
-					$classes = ' amrcol'.$col;
+					$classes .= ' amrcol'.$col;
 					if ($col == $no_cols) $classes .= ' lastcol'; /* only want the cell to be lastcol, not the row */
 					$thiscolumn = $cell.' class="'.$classes.'">' .$eprop. (empty($cellc) ? '' : $cellc);
 				}
