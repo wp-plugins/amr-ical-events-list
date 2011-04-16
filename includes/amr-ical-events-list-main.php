@@ -871,8 +871,8 @@ function amr_derive_summary (&$e ) {
 		if ($amrW == 'w_no_url') $hoverdesc = false;
 		else $hoverdesc ='maybe';
 	}
-
-	if (isset($e['SUMMARY'])) $e['SUMMARY'] = htmlspecialchars(amr_just_flatten_array ($e['SUMMARY'] ));
+	if (isset($e['SUMMARY'])) $e['SUMMARY'] = (amr_just_flatten_array ($e['SUMMARY'] ));
+//	if (isset($e['SUMMARY'])) $e['SUMMARY'] = htmlspecialchars(amr_just_flatten_array ($e['SUMMARY'] ));
 	else return ('');
 	if (isset($e['URL'])) $e_url = amr_just_flatten_array($e['URL']);
 	else $e_url = '';
@@ -1675,7 +1675,7 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 		$ulc	= '</ul>';	$lic = '</li>';
 		$row 	= '<tr '; 				$hcell	='<th '; 	$cell 	='<td '; /* allow for a class specifictaion */
 		$rowc 	= '</tr> '; 			$hcellc ='</th>'; 	$cellc 	='</td>';
-		$ghcell = '<th "  colspan="'.$no_cols.'"';
+		$ghcell = '<th colspan="'.$no_cols.'"';
 		$grow	= '<tr ';	        $growc  ='</tr>';
         $ghcellc= $hcellc;
 		$head 	= AMR_NL.'<thead>'; 	$foot 	= AMR_NL.'<tfoot>'; 	$body 	= AMR_NL.'<tbody ';
