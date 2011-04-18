@@ -619,8 +619,6 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 	}
 	if (amr_is_before ($until, $astart )) { return(false); }/* if it ends before our overall start, then skip */
 
-	
-	
 	/* now prepare out "intervales array for date incrementing eg: p[monthly] = 2 etc... Actualy there should only be 1 */
 	if (isset($p['FREQ'])) { /* so know yearly, daily or weekly etc  - setup increments eg 2 yearsly or what */
 		if (!isset ($p['INTERVAL'])) $p['INTERVAL'] = 1;
@@ -887,7 +885,6 @@ global $amr_globaltz;
 		else return (false);
 	}
 /* ---------------------------------------------------------------------------- */
-
 function amr_get_start_of_week (&$dateobj, $wkst) { /* get the start of the week according to the wkst parameter (Sat/Sun/Mon), returns new dat object  */
 	global  $amr_day_of_week_no;
 	$wkst_no = $amr_day_of_week_no[$wkst];	/* from 1=Mo to 7=SU */
@@ -901,9 +898,7 @@ function amr_get_start_of_week (&$dateobj, $wkst) { /* get the start of the week
 	date_modify ($dateobj,$string);
 	return ($dateobj);
 }
-
 /* ---------------------------------------------------------------------------- */
-
 function amr_increment_datetime ($dateobject, $int) {
 	/* note we are only incrementing by the freq - can only be one?   */
 	/* Now increment and try next repeat
@@ -928,7 +923,6 @@ function amr_increment_datetime ($dateobject, $int) {
 	return ($dateobject);
 }
 /* -------------------------------------------------------------------------------- */
-
 function amr_parseRRULE($rrule)  {
 	 /* RRULE's can vary so much!  Some examples:
 		FREQ=YEARLY;INTERVAL=3;COUNT=10;BYYEARDAY=1,100,200
@@ -939,7 +933,7 @@ function amr_parseRRULE($rrule)  {
 		if (empty($rrule)) return (null);
 
 		if (is_array($rrule) and !isset($rrule['FREQ'])) {
-		//then we may have an array of rrules, just taking first now
+		//then we may have an array of rrules
 			$r = array_shift($rrule);
 			if (!is_string($r)) {
 				// if (isset ($_GET['rdebug'])) {echo '<hr>RRULE already parsed';}
@@ -949,21 +943,17 @@ function amr_parseRRULE($rrule)  {
 		else
 			$r = $rrule;
 
-		if (!is_string($r)) {
+			if (!is_string($r)) {
 				// if (isset ($_GET['rdebug'])) {echo '<hr>RRULE already parsed';}
 				return($r);
 		}
-
 		$p = explode (';', $r);
-
 		// if (isset ($_GET['rdebug'])) { echo '<br/>RRULe: '; var_dump($p);}
-
 		$p = amr_parse_RRULEparams ($p);
 
 		return ($p);
 
 	}
-
 /* ---------------------------------------------------------------------------- */
 function amr_get_last_xday_of_month ($date, $x=-1)	{ /* helper function format passed is NB.  Can be used for last day of year and last day of month*/
 /* php 'last day of month' not working? */
@@ -989,7 +979,6 @@ function amr_get_last_day ($date, $format)	{ /* helper function format passed is
 		$last->modify('-1 day');
 		return ($last);
 }
-
 /* ---------------------------------------------------------------------------- */
 function amr_goto_byday ($dateobj, $byday, $sign)	{
 	global $amr_day_of_week_no;
@@ -1026,7 +1015,7 @@ function amr_process_RDATE($p, $start, $end, $limit)  {
 
 	$repeats = array();
 	if (is_object ($p))	{
-		if (isset($_REQUEST['debugexc'])) {echo '<br> Object passed '. amr_format_date('F j, Y g:i a',$p);}
+		if (isset($_REQUEST['debugexc'])) {echo '<br> R or exdate Object passed '. amr_format_date('F j, Y g:i a',$p);}
 		if (amr_falls_between($p, $start, $end));
 		$repeats[] = $p;
 		}
@@ -1041,5 +1030,6 @@ function amr_process_RDATE($p, $start, $end, $limit)  {
 		echo '<br />****Cannot process RDATE - Not an Object, Not an array passed <br />'; var_dump($p);}
 		//if (amr_falls_between($p, $start, $end))  $repeats[] = $p;
 	}
+	if (isset($_REQUEST['debugexc'])) { echo '<br/>*** Array of repeats '; var_dump($repeats); }
 	return ($repeats);
 	}

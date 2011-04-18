@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '3.10.1');
+define('AMR_ICAL_LIST_VERSION', '3.10.2');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -2202,6 +2202,7 @@ function amr_arrayobj_unique2 (&$arr) { 	/* Process an array of datetime objects
 	}
 	/* ========================================================================= */
 function amr_repeat_anevent(&$event, $astart, $aend, $limit) {
+global $amr_globaltz;
 	/* for a single event, handle the repeats as much as is possible */
 	$repeats = array();
 	$exclusions = array();
@@ -2211,14 +2212,14 @@ function amr_repeat_anevent(&$event, $astart, $aend, $limit) {
 
 	if (!empty($event['RRULE']))	{
 
-		if (isset($_GET['rdebug'])) {
+		if (isset($_GET['debugexc'])) {
 			echo '<hr />After Parsing Repeats:<br />';
 			if (isset ($event['RRULE'])) { echo ' RRULE:<br />';var_dump($event['RRULE']); }
-			echo '<br /> RDATE:<br />';
+			echo '<br />* RDATE:<br />';
 			if (isset ($event['RDATE'])) var_dump($event['RDATE']);
-			echo '<br /> EXDATE:<br />';
+			echo '<br />* EXDATE:<br />';
 			if (isset ($event['EXDATE'])) var_dump($event['EXDATE']);
-			echo '<br /> EXRULE:<br />';
+			echo '<br />* EXRULE:<br />';
 			if (isset ($event['EXRULE'])) var_dump($event['EXRULE']);
 
 			}
@@ -2257,10 +2258,11 @@ function amr_repeat_anevent(&$event, $astart, $aend, $limit) {
 		}
 
 	if (!empty($event['EXDATE']))	{
-			if (ICAL_EVENTS_DEBUG or isset($_GET['rdebug'])) {
-				echo '<br><h4>Have EXDATE </h4>';
-				var_dump($event['EXDATE']);
+			if (ICAL_EVENTS_DEBUG or isset($_GET['debugexc'])) {
+				echo '<br><h4>Have EXDATE to exclude </h4>';
+				foreach ($event['EXDATE'] as $exdate) {echo '<br />'.$exdate->format('c');};
 			}
+			$exclusions  = array();
 			foreach ($event['EXDATE'] as $i => $exdate) {
 				$reps = amr_process_RDATE($exdate, $repeatstart, $aend, $limit);
 				if (is_array($reps) and count($reps) > 0) {
@@ -2268,7 +2270,7 @@ function amr_repeat_anevent(&$event, $astart, $aend, $limit) {
 				}
 
 			}
-			if (ICAL_EVENTS_DEBUG) { foreach ($exclusions as $z => $y) echo '<br />'.$y->format('c');}
+			if (isset($_REQUEST['debugexc']) ) { echo '<br />Exclusions:';foreach ($exclusions as $z => $y) echo '<br />'.$y->format('c');}
 			if (ICAL_EVENTS_DEBUG) { echo '<br />Got  '.count($exclusions). ' exclusions after checking EXDATE';}
 		}
 		
@@ -2277,10 +2279,16 @@ function amr_repeat_anevent(&$event, $astart, $aend, $limit) {
 		if (is_array($exclusions) and count ($exclusions) > 0) {
 			if (ICAL_EVENTS_DEBUG) { echo '<br />'; var_dump($exclusions); }
 			foreach ($exclusions as $i => $excl) {
+				date_timezone_set($excl, $amr_globaltz );
 			    foreach ($repeats as $j => $rep) {
-				    if ($excl->format('c') === $rep->format('c')) {
+					date_timezone_set($rep, $amr_globaltz );
+					if (isset($_REQUEST['debugexc']) ) {
+						echo '<br />'.$excl->format('c'). ' =? '.$rep->format('c');
+					}
+				    if ($excl->format('c') == $rep->format('c')) {
+//					if ($excl === $rep) {
 //					if (!($excl < $rep) and !($excl > $rep)) {
-						if (ICAL_EVENTS_DEBUG) {
+						if (isset($_REQUEST['debugexc'])) {
 							echo '<br> Exclusion matches repeat date, so exclude this date '.$j.' '. $rep->format('c');
 						}
 						unset($repeats[$j]); /* will create a gap in the index, but that's okay, not reliant on it  */

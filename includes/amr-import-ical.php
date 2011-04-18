@@ -673,17 +673,25 @@ function amr_parseRDATE ($string, $tzobj ) {
 
  could be multiple dates after : */
 
-//	if (isset($_GET['rdebug'])) {echo '<hr>In parse RDATE '; var_dump($string);}
+	if (isset($_GET['debugexc'])) {echo '<hr>In parse RDATE '; var_dump($string);}
 
 	if (is_object($string)) {/* already parsed */  return($string); }
 
 	if (is_array($string) ) {
-		$r = $string[0];
-		if (is_object($r)) {/* already parsed  and is an array of dates */  return($string); }
-		else {
-			// only handle 1 for now, normally will only be 1?
-			return(amr_parseRDATE ($r, $tzobj ));
+		$rdatearray = array();
+		foreach ($string as $i => $rdatestring) {
+//			$r = $string[0];
+			if (is_object($rdatestring)) {/* already parsed  and is an array of dates */  return($string); }
+			else {
+				if (isset($_GET['debugexc'])) {echo '<br />Doing next r or exdate '.$i.' '.$rdatestring; }
+				$rdate = amr_parseRDATE ($rdatestring, $tzobj );
+
+			}
+			$rdatearray = array_merge ($rdatearray, $rdate);
 		}
+	
+		if (isset($_GET['debugexc'])) {echo '<br />*** Array of r or exdate '; var_dump($rdatearray); }
+		return ($rdatearray);
 	}
 
 	$rdatestring = explode(':',$string);   /* $VALUE=DATE: or VALUE=DATE-TIME: and a series of dates (no time) */
@@ -707,7 +715,7 @@ function amr_parseRDATE ($string, $tzobj ) {
 		 echo "<br />HELP cannot yet deal with RDATE with VALUE=PERIOD<br />"; return (false);
 			}
 		else {
-//			if (isset($_GET['rdebug'])) {echo '<br />*** Parsing RDATE date time ';	var_dump($rdatestring);}
+			if (isset($_GET['debugexc'])) {echo '<br />*** Parsing RDATE date time ';	var_dump($rdatestring);}
 			if (($rdatestring[0] == 'VALUE=DATE-TIME') and (isset($rdatestring[1])))  {
 				$rdate =  explode(',',$rdatestring[1]);
 			}
@@ -717,7 +725,7 @@ function amr_parseRDATE ($string, $tzobj ) {
 			foreach ($rdate as $i => $r)  {
 					if (empty($r)) { return false; }
 					$dates[$i] = amr_parseDateTime ( $r, $tzobj);
-					//if (isset($_GET['rdebug'])) {echo '<br />*** Parsed as: '; var_dump($dates[$i]);}
+					if (isset($_GET['debugexc'])) {echo '<br />*** Parsed as: '; var_dump($dates[$i]);}
 			}
 			if (empty($dates)) return (false);
 			else return ($dates);
@@ -779,7 +787,7 @@ global $amr_globaltz;
 		case 'BDAY':
 			return (amr_parseDate ($parts[1]));
 
-		case 'EXDATE':
+		case 'EXDATE':  {if (isset($_REQUEST['debugexc'])) {echo '<br>  Parsing EXDATE ';}}
 		case 'RDATE':
 			return (amr_parseRDATE ($parts[1],$tzobj));
 		case 'TRIGGER': /* not supported yet, check for datetime and / or duration */
@@ -905,6 +913,10 @@ function amr_parse_component($type)	{	/* so we know we have a vcalendar at lines
 						$basepart = explode (';', $parts[0], 2);  /* Looking for RRULE; something...*/
 						if (in_array ($basepart[0], $amr_validrepeatableproperties)) {
 								$subarray[$basepart[0]][] = amr_parse_property ($parts);
+//								if (isset($_REQUEST['debugexc'])) {
+//									echo '<br />'.$basepart[0].'<br />';
+//									var_dump ($subarray[$basepart[0]]);
+//								}
 						}
 						else {
 //							if (ICAL_EVENTS_DEBUG) {echo '<br/>*** Parts ';var_dump($parts);			}

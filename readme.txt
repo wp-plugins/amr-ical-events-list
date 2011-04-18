@@ -4,7 +4,7 @@ Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, i
 
 Requires at least: 2.8
 Tested up to: 3.1.1
-Version: 3.10.1
+Version: 3.10.2
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.
@@ -38,11 +38,13 @@ Many thanks to the following people for the translations.  Note that I am unable
 *   Belorussian  by iam from [www.fatcow.com](http://www.fatcow.com)
 *   Russian (partial) by ghost from http://antsar.info/
 *   Hindi translation  by Ashish J. of Outshine solutions
-*   Afrikaans (partial)
 
 If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me the .po files for your language.
 
 == Changelog ==
+= Version 3.10.2 =
+* Fix: Plugin was catering for multiple EXDATES or RDATES where these occurred on same declaration. It was not catering for multiple EXDATE declarations. It does both now.  Thank you to Wilmington  Guitars for having the data that helped flush this out and for taking the time to report it well enough for me to fix it quickly.
+
 = Version 3.10.1 =
 * Change: If NOT in a widget, then href title on event summary hyperlink will now have excerpt if using amr-events and if excerpt is availble else the word "more info".  It used to hover the whole post content. 
 * Fix:  remove htmlspecial chars from output of event summary - mucks up special chars now in latest wp
