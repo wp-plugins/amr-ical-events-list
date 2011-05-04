@@ -4,7 +4,7 @@ Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, i
 
 Requires at least: 2.8
 Tested up to: 3.1.1
-Version: 3.10.2
+Version: 3.10.3
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.
@@ -42,6 +42,9 @@ Many thanks to the following people for the translations.  Note that I am unable
 If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me the .po files for your language.
 
 == Changelog ==
+= Version 3.10.3 =
+* Fix: Remove esc-textarea from admin fields - was preventing display of saved option
+
 = Version 3.10.2 =
 * Fix: Plugin was catering for multiple EXDATES or RDATES where these occurred on same declaration. It was not catering for multiple EXDATE declarations. It does both now.  Thank you to Wilmington  Guitars for having the data that helped flush this out and for taking the time to report it well enough for me to fix it quickly.
 

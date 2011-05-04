@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '3.10.2');
+define('AMR_ICAL_LIST_VERSION', '3.10.3');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -84,7 +84,7 @@ global  $wp_locale;
 
 		'SA'=>$wp_locale->get_weekday('6'),
 
-		'SU'=>$wp_locale->get_weekday('0'),
+		'SU'=>$wp_locale->get_weekday('0')
 
 		);
 		foreach ($fulldayofweek as $i => $d) { /* cater for lack of translations - somehow came back blank for non english */

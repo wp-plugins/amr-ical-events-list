@@ -283,7 +283,7 @@ function amrical_general_form ($i) {
 		<input type="text" class="wide" size="60" id="customHTMLstylefile" 
 		name="general[<?php echo $i; ?>][customHTMLstylefile]" value="<?php
 				if (isset($amr_options[$i]['general']['customHTMLstylefile'])) 
-					echo esc_textarea($amr_options[$i]['general']['customHTMLstylefile']); ?>" />
+					echo ($amr_options[$i]['general']['customHTMLstylefile']); ?>" />
 		
 		
 <?php //--------------------------------------------  ?>		
@@ -296,7 +296,7 @@ function amrical_general_form ($i) {
 	</label>
 		<input type="text" class="wide" size="60" id="defaulturl" name="general[<?php echo $i; ?>][Default Event URL]" value="<?php
 				if (isset($amr_options[$i]['general']['Default Event URL'])) 
-					echo esc_textarea($amr_options[$i]['general']['Default Event URL']); ?>" />
+					echo ($amr_options[$i]['general']['Default Event URL']); ?>" />
 <?php //--------------------------------------------
  }
 ?>
