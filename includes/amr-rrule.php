@@ -263,7 +263,6 @@ function amr_limit (&$datearray, $pby, $type) { /* array of y,m,d,h,m,s, and arr
 	if (isset($_GET['rdebug'])) {echo '<hr>After limiting: '.count($datearray).' <br />';print_date_array($datearray);}
 	return($datearray);
 }
-
 /* --------------------------------------------------------------------------------------------------- */
 function amr_special_expand_by_day_of_week_and_yearly (&$datearray, $pbys, $tz) { /* note 2 */
 	if (isset($_GET['rdebug'])) { echo '<hr>'.'starting special expand by day of week and yearly ';	print_r($pbys); print_date_array($datearray);}
@@ -406,7 +405,6 @@ function amr_special_expand_by_day_of_week_and_month_note2 (&$datearray, $pbys, 
 	return ($newdatearray);
 }
 /* --------------------------------------------------------------------------------------------------- */
-
 function amr_special_expand_by_day_of_week_and_month_note1 (&$datearray, $pbys, $tz) { /* Note 1 in monthly frequency only  */
 	if (isset($_GET['rdebug'])) {
 		echo '<hr><b>starting special expand by day of week in monthly </b>';
@@ -486,7 +484,6 @@ function amr_expand_by_day_of_week_for_year (&$datearray, $pbys, $tz) {
 	if (isset($_GET['rdebug'])) {echo '<hr>New date array: '.count($newdatearray); print_date_array($datearray);}
 	return($newdatearray);
 }
-
 /* --------------------------------------------------------------------------------------------------- */
 function amr_limit_by_yearday (&$datearray, $pbyyearday, $tz) {
 	if (isset($_GET['rdebug'])) { echo '<br>Limit by year day';}
@@ -599,7 +596,11 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 	if (isset($_GET['rdebug'])) {
 		echo '<br />&nbsp;start='.$start->format('c').' <br />astart='.$astart->format('c') .'<br /> parameter passed: ';
 		if (is_array($p))
-		foreach ($p as $k => $i) { echo $k. ' '; print_r($i); echo  '<br />';}
+			foreach ($p as $k => $i) { 
+				echo $k. ' '; 
+				if (is_object($i)) echo $i->format('c'); 
+				else print_r($i); echo  '<br />';
+			}
 		else {echo  '<br />rule passed'; var_dump($p);}
 	}
 	if (!isset($p['COUNT']))   
@@ -609,12 +610,14 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 		
 	if (isset($_GET['cdebug'])) echo '<br />Limiting the repeats to '.$count;
 	
-	$until = new dateTime();			
+	$until = new dateTime();
+	$original_until = new dateTime();	
 	if (!isset($p['UNTIL']))  {
 		$until = clone $aend;
 	}	
 	else {
 		$until = clone $p['UNTIL'];
+		$original_until = clone $p['UNTIL'];
 		if ($until > $aend)	$until = clone $aend;
 	}
 	if (amr_is_before ($until, $astart )) { return(false); }/* if it ends before our overall start, then skip */
@@ -639,6 +642,7 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 		$start = amr_get_a_closer_start($start, $astart, $int);				
 	}	
 	// 20110301 the nbydays, especially the negs, require that one initially consider a wider valid range so as not to unintentionally exclude a date before the expand/contract has beeen applied .  Ie we might iterate to 28th and exclude, but actually once one has applied the -2Mo or some such rule, the date would have contracted into the valid range.  So apply restrictions later.	
+
 	$until = amr_increment_datetime ($until, $int);
 	
 	unset ($p['UNTIL']);  /* unset so we can use other params more cleanly, we have count saved etc */
@@ -650,7 +654,6 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 		$wkst = $amr_wkst;
 	if (count($p) === 0) {$p=null; }  /* If that was all we had, get rid of it anyway */
 
-
 	if (isset ($p['NBYDAY'])) {
 	/* if we separated these in the parsing process, merge them here,    NOOO - will cause problems with the +1's and bool */
 		if (isset ($p['BYDAY'])) $p['BYDAY'] = array_merge ($p['NBYDAY'], $p['BYDAY']);
@@ -659,7 +662,7 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 	}
 	while ($start <= $until) {	 /* don't check astart here - may miss some */
 		if (isset($_GET['rdebug'])) { 
-			echo '<hr>Checked start against until '.$start->format('c').' '.$until->format('c');
+			echo '<hr>Checked start against extra until (1 extra iteration to allow for negativebydays) etc '.$start->format('c').' '.$until->format('c');
 		}
 		$datearray[] = amr_get_date_parts($start);
 		switch ($freq) { /* the 'bys' are now in an array $p .  NOTE THE sequence here is important */
@@ -791,24 +794,44 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 	} /* end while*/
 	//-----------------------------------------------------------------------
 	if (isset($_GET['rdebug'])) { 
-			echo '<hr>Stop now..checked start against until <br>'.$start->format('c').'<br>'.$until->format('c');
-			if ($start > $until) echo '<br /><b>php says start > until </b>';
+			echo '<hr>Stop now..checked start against extra until <br>start='
+			.$start->format('c')
+			.'<br>until='.$until->format('c').' the extra until!';
+			if ($start > $until) echo '<br /><b>php says start > extra until </b>';
 		}
 
 	if (!empty ($repeats)) {
+	
 		$repeats = amr_limit_occurences ($repeats, $count);
 		
 		foreach ($repeats as $i=> $d) { /* check if it is within date limits  */
-			if 	(!(($d <= $until) and ($d >= $astart))) {
+			if (isset ($_GET['rdebug'])) {
+				echo '<br>*** Check for this rrule - original until. '
+				.'<br />-------start='.$astart->format('c')
+				.'<br />instancedate='.$d->format('c')
+				.'<br />originaluntil='.$original_until->format('c')
+				.'<br />';
+			}
+		
+			if 	(!(($d <= $original_until) and ($d >= $astart))) { //note these are rrule limits, not the overall limits
 				unset($repeats[$i]);
 				if (isset ($_GET['rdebug'])) 
-					echo '<br>Event instance not within limits - removed '.$d->format('Y m d h:i');
+					echo '<br>Event instance not within rrule limits - <b>removed</b> '.$d->format('Y m d h:i').'<br />';
+			}
+			else {
+				if (isset ($_GET['rdebug'])) 
+					echo '<br>Event instance within rrule limits '.$d->format('Y m d h:i').'<br />';
 			}
 		}			
 	}
 
 	if (isset ($_GET['rdebug'])) {
-		if (empty ($repeats)) echo '<b>No repeats</b><hr>'; else echo '<b>'.count($repeats).' repeats</b><hr>';
+		if (empty ($repeats)) echo '<b>No repeats!</b><hr>'; 
+		else {
+			echo '<b>'.count($repeats).' repeats before further processing, exclusions etc</b><hr>';
+			foreach ($repeats as $i =>$r) echo '<br />'.$r->format('c');
+			echo '<hr/>Need use debugexc to check exclusion logic';
+			}
 	}
 	if (empty ($repeats)) return(null);
 	return ($repeats);
@@ -999,7 +1022,6 @@ function amr_goto_byday ($dateobj, $byday, $sign)	{
 		if (isset ($_GET['rdebug'])) echo ' Got date = '.	$d2->format('Ymd l');
 	return ($d2);
 	}
-
 /* --------------------------------------------------------------------------------------------------- */
 function amr_process_RDATE($p, $start, $end, $limit)  {
 	 /* RDATE or EXDATE processes  a parsed array.  If the specified event repeats between the given start and
@@ -1015,7 +1037,8 @@ function amr_process_RDATE($p, $start, $end, $limit)  {
 
 	$repeats = array();
 	if (is_object ($p))	{
-		if (isset($_REQUEST['debugexc'])) {echo '<br> R or exdate Object passed '. amr_format_date('F j, Y g:i a',$p);}
+		if (isset($_REQUEST['debugexc'])) {
+			echo '<br> R or exdate Object passed '. amr_format_date('Y m j, g:i a P',$p);}
 		if (amr_falls_between($p, $start, $end));
 		$repeats[] = $p;
 		}
@@ -1030,6 +1053,6 @@ function amr_process_RDATE($p, $start, $end, $limit)  {
 		echo '<br />****Cannot process RDATE - Not an Object, Not an array passed <br />'; var_dump($p);}
 		//if (amr_falls_between($p, $start, $end))  $repeats[] = $p;
 	}
-	if (isset($_REQUEST['debugexc'])) { echo '<br/>*** Array of repeats '; var_dump($repeats); }
+	//if (isset($_REQUEST['debugexc'])) { echo '<br/>*** Array of repeats '; var_dump($repeats); }
 	return ($repeats);
 	}
