@@ -4,7 +4,7 @@ Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, i
 
 Requires at least: 2.8
 Tested up to: 3.1.1
-Version: 3.10.2
+Version: 3.10.5
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.
@@ -42,6 +42,9 @@ Many thanks to the following people for the translations.  Note that I am unable
 If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me the .po files for your language.
 
 == Changelog ==
+= Version 3.10.5 =
+* Fix: Additional check added in 3.10.5 will now work with recurring COUNT as well.
+
 = Version 3.10.4 =
 * Fix: Additional check added to prevent additional instances in recurring logic.  There has to be an initially 1  extra iteration to cope with negative bydays (like -2MO in a month).  However a double check is required to ensure that an extra instance is not inadvertently let through.
 

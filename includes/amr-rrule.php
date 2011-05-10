@@ -614,6 +614,7 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 	$original_until = new dateTime();	
 	if (!isset($p['UNTIL']))  {
 		$until = clone $aend;
+		$original_until = clone $aend;
 	}	
 	else {
 		$until = clone $p['UNTIL'];
