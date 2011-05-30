@@ -20,10 +20,17 @@ global $utczobj;
 $utczobj = timezone_open('UTC');
 
 if (!defined ('ICAL_EVENTS_DEBUG')) {
-	if (isset($_REQUEST["debug"]) )   /* for debug and support - calendar data is public anyway, so no danger*/
+	if (isset($_REQUEST["debug"]) )  { /* for debug and support - calendar data is public anyway, so no danger*/
 		define('ICAL_EVENTS_DEBUG', true);
-	else 	
+
+		}
+	else
 		define('ICAL_EVENTS_DEBUG', false);
+}
+if (ICAL_EVENTS_DEBUG) {
+	echo '<h1>Debug mode</h1>';
+	echo 'Other debug parameters that can be used together or separately: ';
+	echo 'debugexc, rdebug, cdebug, tzdebug <br/>';
 }
 
 $amr_wkst = ical_get_weekstart();
@@ -37,7 +44,7 @@ define('ICAL_EVENTS_CACHE_TTL', 24 * 60 * 60);  // 1 day
 define('AMR_MAX_REPEATS', 1000); /* if someone wants to repeat something very frequently from some time way in the past, then may need to increase this */
 
 
-$amr_ical_image_settings = get_option('amr_ical_images_to_use');
+$amr_ical_image_settings = get_option('amr-ical-images-to-use');
 if (empty($amr_ical_image_settings)) {
 	$suffix = '_16';
 }
@@ -63,14 +70,9 @@ if ( ! defined( 'WP_PLUGIN_DIR' ) )
 
 $x = str_replace(basename( __FILE__),"",plugin_basename(__FILE__));
 
-if (stripos($x,'amr-events') === false) {
-	$url = WP_PLUGIN_URL.'/amr-ical-events-list/';
-	$dir = WP_PLUGIN_DIR.'/amr-ical-events-list/';
-}			
-else {
-	$url = WP_PLUGIN_URL.'/amr-events/listfiles/';
-	$dir = WP_PLUGIN_DIR.'/amr-events/listfiles/';
-}
+$url = WP_PLUGIN_URL.'/amr-ical-events-list/';
+$dir = WP_PLUGIN_DIR.'/amr-ical-events-list/';
+
 define('ICALLISTPLUGINURL', $url);
 define('ICALLISTPLUGINDIR', $dir);
 define('ICALSTYLEURL', $url.'css/icallist.css');
@@ -98,7 +100,7 @@ $amr_validrepeatableproperties = array (
 		'URL',
 		'XPARAM', 'X-PROP');
 /* used for admin field sizes */
-$amr_csize = array('Column' => '2', 'Order' => '2', 'Before' => '40', 'After' => '40', 'ColHeading' => '10');	
+$amr_csize = array('Column' => '2', 'Order' => '2', 'Before' => '40', 'After' => '40', 'ColHeading' => '10');
 /* the default setup shows what the default display option is */
 
 $dateformat = str_replace(' ','\&\n\b\s\p\;', get_option('date_format'));
@@ -113,16 +115,16 @@ $amr_formats = array (
 		'Year' => 'Y',
 		'Week' => '\W\e\e\k W',
 //		'Timezone' => 'T',	/* Not accurate enough, leave at default */
-		'DateTime' => get_option('date_format').' '.get_option('time_format')
+		'DateTime' => $dateformat.' '.get_option('time_format')
 //		'DateTime' => '%d-%b-%Y %I:%M %p'   /* use if displaying date and time together eg the original fields, */
 		);
-		
+
 $amr_admin_col_head = array (  // Dummy for translation
 	'Column' 	=> __('Column','amr-ical-events-list'),
 	'Order' 	=> __('Order','amr-ical-events-list'),
 	'Before' 	=> __('Before','amr-ical-events-list'),
 	'After' 	=> __('After','amr-ical-events-list'),
-	);		
+	);
 
 function amr_getTimeZone($offset) {
  $timezones = array(
@@ -169,6 +171,78 @@ function amr_getTimeZone($offset) {
 	if (isset($timezones[$stroffset])) return ($timezones[$stroffset]);
 		else return false;
 	}
+	/* ---------------------------------------------------------------------------*/
+function amr_set_helpful_descriptions () { // used in the admin screen
+
+	$descriptions = array (
+	'X-WR-CALNAME'	=> '',
+	'X-WR-CALDESC'	=> '',
+	'X-WR-TIMEZONE'	=> '',
+	'icsurl'		=> '',
+	'addtogoogle' 	=> __('A link to allow user to add the whole calendar to their google calendar.','amr-ical-events-list'),
+	'icalrefresh' 	=> __('A link to allow user to refetch an ics file','amr-ical-events-list'),
+	'LAST-MODIFIED' => __('The time the ics file was last modified','amr-ical-events-list'),
+
+	'SUMMARY'=> 		__('WordPress post title or ICS SUMMARY','amr-ical-events-list'),
+	'DESCRIPTION'=> 	__('WordPress content or ICS description','amr-ical-events-list'),
+	'excerpt'=> 		__('WordPress excerpt','amr-ical-events-list'),
+	'postthumbnail'=> 	__('WordPress post thumbnail','amr-ical-events-list'),
+	'LOCATION'=> 		__('Address','amr-ical-events-list'),
+	'map'=> 			__('Link to map','amr-ical-events-list'),
+	'addevent' => 		__('Link to add event to a google calendar','amr-ical-events-list'),
+	'subscribeevent' => __('Link to single event ics file','amr-ical-events-list'),
+	'subscribeseries' => __('Link to recurring event series ics file','amr-ical-events-list'),
+	'GEO'=> 			__('The latitude and longitude','amr-ical-events-list'),
+	'ATTACH'=> 			__('Links to specified ATTACHMENTS (ics)','amr-ical-events-list'),
+
+	'CATEGORIES'=> 		__('WordPress or ics file categories ','amr-ical-events-list'),
+	'CLASS'=> 			__('ics class','amr-ical-events-list'),
+	'COMMENT'=> 		__('ics comment','amr-ical-events-list'),
+	'PERCENT-COMPLETE'=> __('','amr-ical-events-list'),
+	'PRIORITY'=> 		__('ics event priority','amr-ical-events-list'),
+	'RESOURCES'=> 		__('','amr-ical-events-list'),
+	'STATUS'=> 			__('ics event status','amr-ical-events-list'),
+	'EventDate' => 		__('The date of instance of a repeating date, or the event date','amr-ical-events-list'),
+	'StartTime' => 		__('The time of instance of a repeating date, or the event date','amr-ical-events-list'),
+	'EndDate' => 		__('The date an event instance ends.  Blank if same as event date ','amr-ical-events-list'),
+	'EndTime' => 		__('The time an event instance ends. ','amr-ical-events-list'),
+	'DTSTART'=> 		__('The original or first event date of a recurring series','amr-ical-events-list'),
+//		'age'=> $dfalse,
+	'DTEND'=> 		__('The original or first event\'s end date of a recurring series','amr-ical-events-list'),
+	'DUE'=> 		__('The due date of a task.','amr-ical-events-list'),
+	'DURATION'=> 	__('The duration of an event.','amr-ical-events-list'),
+	'allday' => 	__('Says "all day" (translated) if the event has full days.','amr-ical-events-list'),
+	'COMPLETED'=> 	__('If a task is completed.','amr-ical-events-list'),
+	'FREEBUSY'=> 	__('Show busy (translated) if the freebusy component is in use.','amr-ical-events-list'),
+	'TRANSP'=> 		'',
+	'declined' => 		__('Users who have declined.','amr-ical-events-list'),
+	'rsvp' => 			__('Users who have accepted.','amr-ical-events-list'),
+	'rsvpwithcomment' => __('Form to rsvp with comment.','amr-ical-events-list'),
+	'going_ornot_ormaybe' => __('Links to indicate if attending.','amr-ical-events-list'),
+	'CONTACT'=> 		__('The contact person if available.','amr-ical-events-list'),
+	'ORGANIZER'=> 		__('The author of the event.','amr-ical-events-list'),
+	'ATTENDEE'=> 		__('Users who are attending.','amr-ical-events-list'),
+	'RECURRENCE-ID'=> 	__('The unique id of a recurrence instance or exception.','amr-ical-events-list'),
+	'RELATED-TO'=> 		'',
+	'URL'=> 			__('The events url as provided by ics file, or the wordpress event permalink.','amr-ical-events-list'),
+	'UID'=> 			__('The unique identifier of the event.','amr-ical-events-list'),
+	'EXDATE'=> 	__('Dates excluded from the recurring series','amr-ical-events-list'),
+	'EXRULE'=> 	__('Exclusion rule - no longer in spec','amr-ical-events-list'),
+	'RDATE'=> 	__('Individual dates on which event is to be repeated','amr-ical-events-list'),
+	'RRULE'=> 	__('The rule for the recurrence of the event.','amr-ical-events-list'),
+	'ACTION'=> __('Alarm action.','amr-ical-events-list'),
+	'REPEAT'=> __('Alarm repeat.','amr-ical-events-list'),
+	'TRIGGER'=> __('Alarm trigger.','amr-ical-events-list'),
+	'CREATED'=> __('Date event created.','amr-ical-events-list'),
+	'DTSTAMP'=> __('Date event published.','amr-ical-events-list'),
+	'SEQUENCE'=> __('Modification level of event.','amr-ical-events-list'),
+	'LAST-MODIFIED' => __('Date event last modified.','amr-ical-events-list')
+
+);
+
+
+	return ($descriptions);
+}
 /* ---------------------------------------------------------------------------*/
 function amr_set_defaults() {
 	global $amr_calprop;
@@ -182,209 +256,243 @@ function amr_set_defaults() {
 	global $amr_globaltz;
 	global $ical_timezone;
 	global $eventtaxonomies;
+	global $amr_options,$locale;
 
-If (ICAL_EVENTS_DEBUG) {
-		echo '<br />Note:'.AMR_ICAL_LIST_VERSION.'-'.PHP_VERSION.'-'.get_bloginfo('version');
-}
-if (function_exists ('get_option')) {
-//	if ($d = get_option ('date_format')) $amr_formats['Day'] = $d;
-//	if ($d = get_option ('time_format')) $amr_formats['Time'] = $d;
-	if (($a_tz = get_option ('timezone_string') ) and (!empty($a_tz))) {
-			$amr_globaltz = timezone_open($a_tz);
-			date_default_timezone_set($a_tz);
-			If (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) {	echo '<br />Found tz string:'.$a_tz;}
-		}
-	else {
-		If (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) {	echo '<h2>No timezone string found.</h2>';		}
-		if (($gmt_offset = get_option ('gmt_offset')) and (!(is_null($gmt_offset))) and (is_numeric($gmt_offset))) {
-			$a_tz = amr_getTimeZone($gmt_offset);
-			$amr_globaltz = timezone_open($a_tz);
-			date_default_timezone_set($a_tz);
-			If (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) {	echo '<h2>Found gmt offset in wordpress options:'.$gmt_offset.'</h2>';}
-		}
+	If (ICAL_EVENTS_DEBUG) {
+			echo '<br />Note:'.AMR_ICAL_LIST_VERSION.'-'.PHP_VERSION.'-'.get_bloginfo('version');
+	}
+	
+	$amr_options = array (
+			'ngiyabonga' => false,
+			'own_css' => false,
+			'feed_css' => true,
+			'cssfile' => ICALSTYLEURL,//'icallist.css',
+			'date_localise' => 'amr',
+			'noeventsmessage' => __('No events found within criteria','amr-ical-events-list')
+			);
+
+
+	if (defined('AMR_ICAL_VERSION'))	$amr_options['ngiyabonga']	= true; //do not show credit link
+	$alreadyhave = false;
+	if ($locale === 'en_US' ) 
+			$amr_options['date_localise'] = 'none';
+	else 	$amr_options['date_localise'] = 'amr';
+	//
+	if (function_exists ('get_option')) {
+	//	if ($d = get_option ('date_format')) $amr_formats['Day'] = $d;
+	//	if ($d = get_option ('time_format')) $amr_formats['Time'] = $d;
+		if (($a_tz = get_option ('timezone_string') ) and (!empty($a_tz))) {
+				$amr_globaltz = timezone_open($a_tz);
+				date_default_timezone_set($a_tz);
+				If (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) {	echo '<br />Found tz string:'.$a_tz;}
+			}
 		else {
-			$amr_globaltz = timezone_open(date_default_timezone_get());
+			If (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) {	echo '<h2>No timezone string found.</h2>';		}
+			if (($gmt_offset = get_option ('gmt_offset')) and (!(is_null($gmt_offset))) and (is_numeric($gmt_offset))) {
+				$a_tz = amr_getTimeZone($gmt_offset);
+				$amr_globaltz = timezone_open($a_tz);
+				date_default_timezone_set($a_tz);
+				If (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) {	echo '<h2>Found gmt offset in wordpress options:'.$gmt_offset.'</h2>';}
+			}
+			else {
+				$amr_globaltz = timezone_open(date_default_timezone_get());
+			}
 		}
 	}
-}
-else $amr_globaltz = timezone_open(date_default_timezone_get());
-$ical_timezone = $amr_globaltz;
-If (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) echo '<br />The default php timezone is set to:'.date_default_timezone_get().'<br />';
-$amr_general = array (
-		'name' 				=> __('Default','amr-ical-events-list'),
-		'Description'		=> __('A default calendar list. This one set to tables with lists in the cells.  Usually needs the css file enabled. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list'),
-		"Default Event URL" => '',
-		'ListHTMLStyle'		=> 'table',
-		'customHTMLstylefile' => ''
-		);
-$amr_limits = array (
-		"events" 	=> 30,
-		"days" 		=> 90,
-		"cache" 	=> 24, /* hours */
-		"eventscache" => 0.5);  
-$amr_components = array (
-		"VEVENT" 	=> true,
-		"VTODO" 	=> true,
-		"VJOURNAL" 	=> false,
-		"VFREEBUSY" => true
-//		"VTIMEZONE" => false /* special handling required if we want to process this - for now we are going to use the php definitions rather */
+	else $amr_globaltz = timezone_open(date_default_timezone_get());
+	$ical_timezone = $amr_globaltz;
+	If (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) echo '<br />The default php timezone is set to:'.date_default_timezone_get().'<br />';
+	$amr_general = array (
+			'name' 				=> __('Default','amr-ical-events-list'),
+			'Description'		=> __('A default calendar list. This one set to tables with lists in the cells.  Usually needs the css file enabled. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list'),
+			"Default Event URL" => '',
+			'ListHTMLStyle'		=> 'table',
+			'customHTMLstylefile' => ''
+			);
+	$amr_limits = array (
+			"events" 	=> 30,
+			"days" 		=> 90,
+			"cache" 	=> 24, /* hours */
+			"eventscache" => 0.5);
+	$amr_components = array (
+			"VEVENT" 	=> true,
+			"VTODO" 	=> true,
+			"VJOURNAL" 	=> false,
+			"VFREEBUSY" => true
+	//		"VTIMEZONE" => false /* special handling required if we want to process this - for now we are going to use the php definitions rather */
+			);
+
+	$fakeforautolangtranslation = array (
+			__("Year",'amr-ical-events-list'),
+			__("Quarter",'amr-ical-events-list'),
+			__("Astronomical Season",'amr-ical-events-list') ,
+			__("Traditional Season",'amr-ical-events-list'),
+			__("Western Zodiac",'amr-ical-events-list'),
+			__("Month",'amr-ical-events-list'),
+			__("Week",'amr-ical-events-list') ,
+			__("Day",'amr-ical-events-list')
+			);
+	$amr_groupings = array (
+			"Year" => false,
+			"Quarter" => false,
+			"Astronomical Season" => false,
+			"Traditional Season" => false,
+			"Western Zodiac" => false,
+			"Month" => true,
+			"Week" => false,
+			"Day"=> false
+			);
+
+	$amr_colheading = array (
+		'1' => __('When','amr-ical-events-list'),
+		'2' => __('What', 'amr-ical-events-list'),
+		'3' => __('Where', 'amr-ical-events-list')
 		);
 
-$fakeforautolangtranslation = array (
-		__("Year",'amr-ical-events-list'),
-		__("Quarter",'amr-ical-events-list'),
-		__("Astronomical Season",'amr-ical-events-list') ,
-		__("Traditional Season",'amr-ical-events-list'),
-		__("Western Zodiac",'amr-ical-events-list'),
-		__("Month",'amr-ical-events-list'),
-		__("Week",'amr-ical-events-list') ,
-		__("Day",'amr-ical-events-list')
+	$dfalse 	= array('Column' => 0, 'Order' => 999, 'Before' => '', 'After' => '');
+	$dtrue 		= array('Column' => 1, 'Order' => 1, 'Before' => '', 'After' => '');
+	$dtrue2 	= array('Column' => 2, 'Order' => 1, 'Before' => '', 'After' => '');
+
+
+	// check if we have any taxonomies that we may wish to assign an event to
+	$taxonomies=get_taxonomies();
+	$excluded = array ('category','nav_menu','link_category', 'post_format') ;
+	foreach ($taxonomies as $i=>$tax) {
+		  if (in_array($tax, $excluded)) unset ($taxonomies[$i]);
+		}
+	$eventtaxonomies = 	$taxonomies;
+	foreach ($taxonomies as $i=>$tax) {
+		 $eventtaxonomiesprop[$tax] = array('Column' => 2, 'Order' => 200, 'Before' => '', 'After' => '');
+		}
+	$amr_calprop = array (
+			'X-WR-CALNAME'	=> array('Column' => 1, 'Order' => 1, 'Before' => '', 'After' => ''),
+			'X-WR-CALDESC'	=> $dfalse,
+			'X-WR-TIMEZONE'	=> array('Column' => 0, 'Order' => 40, 'Before' => '', 'After' => ''),
+			'icsurl'		=> array('Column' => 2, 'Order' => 20, 'Before' => '', 'After' => ''),
+			'addtogoogle' 	=> array('Column' => 2, 'Order' => 10, 'Before' => '', 'After' => ''),
+			'icalrefresh' 	=> array('Column' => 0, 'Order' => 30, 'Before' => '', 'After' => ''),
+			/* for linking to the ics file, not intended as a display field really unless you want a separate link to it, intended to sit behind name, with desc as title */
+			'LAST-MODIFIED' => $dtrue
+			//		'CALSCALE'=> $dfalse,
+			//		'METHOD'=> $dfalse,
+			//		'PRODID'=> $dfalse,
+			//		'VERSION'=> $dfalse,
+			//		'X-WR-RELCALID'=> $dfalse
+			);
+
+	/* NB need to switch some field s on for initial plugin view.  This will be common default for all, then some are customised separately */
+	$amr_compprop = array
+		(
+		'Descriptive' =>
+	 	array_merge (
+			array (
+			'SUMMARY'=> 		array('Column' => 2, 'Order' => 10, 'Before' => '<b>', 'After' => '</b>'),
+			'DESCRIPTION'=> 	array('Column' => 2, 'Order' => 20, 'Before' => '', 'After' => ''),
+			'excerpt'=> 		array('Column' => 0, 'Order' => 30, 'Before' => '<br />', 'After' => ''),
+			'postthumbnail'=> 	array('Column' => 0, 'Order' => 35, 'Before' => '<br />', 'After' => ''),
+			'LOCATION'=> 		array('Column' => 2, 'Order' => 41, 'Before' => '', 'After' => ''),
+			'map'=> 			array('Column' => 2, 'Order' => 40, 'Before' => '', 'After' => ''),
+			'addevent' => 		array('Column' => 2, 'Order' => 1, 'Before' => '', 'After' => ''),
+			'subscribeevent' => array('Column' => 2, 'Order' => 2, 'Before' => '', 'After' => ''),
+			'subscribeseries' => array('Column' => 2, 'Order' => 3, 'Before' => '', 'After' => ''),
+			'GEO'=> 			$dfalse,
+			'ATTACH'=> 			array('Column' => 2, 'Order' => 150,
+								'Before' => __('More info: ','amr-ical-events-list'),
+								'After' => '<br />'),
+			'CATEGORIES'=> 		array('Column' => 2, 'Order' => 200, 'Before' => '', 'After' => ''),
+			'CLASS'=> 			array('Column' => 2, 'Order' => 210, 'Before' => '', 'After' => ''),
+			'COMMENT'=> 		$dfalse,
+			'PERCENT-COMPLETE'=> $dfalse,
+			'PRIORITY'=> 		array('Column' => 2, 'Order' => 220, 'Before' => '', 'After' => ''),
+			'RESOURCES'=> 		$dfalse,
+			'STATUS'=> 			array('Column' => 2, 'Order' => 230, 'Before' => '', 'After' => ''),
+			),
+			$eventtaxonomiesprop),
+			'Date and Time' => array (
+			'EventDate' => 		array ('Column' => 1, 'Order' => 1, 'Before' => '', 'After' => ''), /* the instnace of a repeating date */
+			'StartTime' => 		array('Column' => 1, 'Order' => 2, 'Before' => ' ', 'After' => ' '),
+			'EndDate' => 		array('Column' => 1, 'Order' => 3, 'Before' => __(' to','amr-ical-events-list').'&nbsp;', 'After' => ''),
+			'EndTime' => 		array('Column' => 1, 'Order' => 4, 'Before' => ' ', 'After' => ''),
+			'DTSTART'=> 		$dfalse,
+	//		'age'=> $dfalse,
+			'DTEND'=> 		$dfalse,
+			'DUE'=> 		$dfalse,
+			'DURATION'=> 	array('Column' => 0, 'Order' => 50, 'Before' => '', 'After' => ''),
+			'allday' => 	array('Column' => 1, 'Order' => 4, 'Before' => '', 'After' => ''),
+			'COMPLETED'=> 	$dfalse,
+			'FREEBUSY'=> 	$dfalse,
+			'TRANSP'=> 		$dfalse),
+
+	//	'Time Zone' => array (
+	//		'TZID'=> $dtrue,  /* but only show if different from calendar TZ */
+	//		'TZNAME'=> $dfalse,
+	//		'TZOFFSETFROM'=> $dfalse,
+	//		'TZOFFSETTO'=> $dfalse,
+	//		'TZURL'=> $dfalse),
+		'Relationship' => array (
+			'CONTACT'=> 		array('Column' => 0, 'Order' => 350, 'Before' => '', 'After' => ''),
+			'ORGANIZER'=> 		array('Column' => 0, 'Order' => 360, 'Before' => '', 'After' => ''),
+			'ATTENDEE'=> 		array('Column' => 0, 'Order' => 370, 'Before' => '', 'After' => ''),
+			'RECURRENCE-ID'=> 	$dfalse,
+			'RELATED-TO'=> 		$dfalse,
+			'URL'=> 			array('Column' => 0, 'Order' => 150,
+				'Before' => '',
+				'After' => ''),
+			'UID'=> 			$dfalse
+			),
+		'Recurrence' => array (  /* in case one wants for someone reason to show the "repeating" data, need to create a format rule for it then*/
+			'EXDATE'=> 	$dfalse,
+			'EXRULE'=> 	$dfalse,
+			'RDATE'=> 	$dfalse,
+			'RRULE'=> 	$dfalse
+		),
+		'Alarm' => array (
+			'ACTION'=> $dfalse,
+			'REPEAT'=> $dfalse,
+			'TRIGGER'=> $dfalse),
+		'Change Management'	=> array ( /* optional and/or for debug purposes */
+			'CREATED'=> $dfalse,
+			'DTSTAMP'=> $dfalse,
+			'SEQUENCE'=> $dfalse,
+			'LAST-MODIFIED' => $dfalse
+			)
 		);
-$amr_groupings = array (
-		"Year" => false,
-		"Quarter" => false,
-		"Astronomical Season" => false,
-		"Traditional Season" => false,
-		"Western Zodiac" => false,
-		"Month" => true,
-		"Week" => false,
-		"Day"=> false
-		);
+		if (function_exists ('amr_rsvp')) {
+		$amr_compprop['Relationship']['declined'] //list
+		= array('Column' => 0, 'Order' => 400, 'Before' => '', 'After' => '');
+		$amr_compprop['Relationship']['rsvp'] // action form
+		= array('Column' => 0, 'Order' => 410, 'Before' => '', 'After' => '');
+		$amr_compprop['Relationship']['rsvpwithcomment'] 
+		= array('Column' => 0, 'Order' => 420, 'Before' => '', 'After' => '');
+		$amr_compprop['Relationship']['going_ornot_ormaybe'] 
+		= array('Column' => 0, 'Order' => 430, 'Before' => '', 'After' => '');
+		$amr_compprop['Relationship']['total_attending'] 
+		= array('Column' => 0, 'Order' => 510, 'Before' => '', 'After' => '');
+		$amr_compprop['Relationship']['total_maybe'] 
+		= array('Column' => 0, 'Order' => 510, 'Before' => '', 'After' => '');
+		$amr_compprop['Relationship']['total_declined'] 
+		= array('Column' => 0, 'Order' => 510, 'Before' => '', 'After' => '');
+		}
+//		
 		
-$amr_colheading = array (
-	'1' => __('When','amr-ical-events-list'),
-	'2' => __('What', 'amr-ical-events-list'),
-	'3' => __('Where', 'amr-ical-events-list')
-	);
-
-$dfalse 	= array('Column' => 0, 'Order' => 1, 'Before' => '', 'After' => '');
-$dtrue 		= array('Column' => 1, 'Order' => 1, 'Before' => '', 'After' => '');
-$dtrue2 	= array('Column' => 2, 'Order' => 1, 'Before' => '', 'After' => '');
-
-
-// check if we have any taxonomies that we may wish to assign an event to
-$taxonomies=get_taxonomies();
-$excluded = array ('category','nav_menu','link_category') ;
-foreach ($taxonomies as $i=>$tax) {
-	  if (in_array($tax, $excluded)) unset ($taxonomies[$i]);
-	}
-$eventtaxonomies = 	$taxonomies;
-foreach ($taxonomies as $i=>$tax) {
-	 $eventtaxonomiesprop[$tax] = $dfalse;
-	}
-
-	//var_dump($taxonomies);
-
-
-$amr_calprop = array (
-		'X-WR-CALNAME'	=> array('Column' => 1, 'Order' => 1, 'Before' => '', 'After' => ''),
-		'X-WR-CALDESC'	=> $dfalse,
-		'X-WR-TIMEZONE'	=> array('Column' => 0, 'Order' => 2, 'Before' => '', 'After' => ''),
-		'icsurl'		=> array('Column' => 2, 'Order' => 2, 'Before' => '', 'After' => ''),
-		'addtogoogle' 	=> array('Column' => 2, 'Order' => 5, 'Before' => '', 'After' => ''),
-		'icalrefresh' 	=> array('Column' => 0, 'Order' => 9, 'Before' => '', 'After' => ''),
-		/* for linking to the ics file, not intended as a display field really unless you want a separate link to it, intended to sit behind name, with desc as title */
-		'LAST-MODIFIED' => $dtrue
-		//		'CALSCALE'=> $dfalse,
-		//		'METHOD'=> $dfalse,
-		//		'PRODID'=> $dfalse,
-		//		'VERSION'=> $dfalse,
-		//		'X-WR-RELCALID'=> $dfalse
-		);
-
-/* NB need to switch some field s on for initial plugin view.  This will be common default for all, then some are customised separately */
-$amr_compprop = array 
-	(
-	'Descriptive' =>
- 	array_merge (
-		array (
-		'SUMMARY'=> 		array('Column' => 2, 'Order' => 10, 'Before' => '<b>', 'After' => '</b>'),
-		'DESCRIPTION'=> 	array('Column' => 2, 'Order' => 20, 'Before' => '<br />', 'After' => ''),
-		'EXCERPT'=> 		array('Column' => 0, 'Order' => 30, 'Before' => '<br />', 'After' => ''),
-		'POSTTHUMBNAIL'=> 	array('Column' => 0, 'Order' => 35, 'Before' => '<br />', 'After' => ''),
-		'LOCATION'=> 		array('Column' => 2, 'Order' => 41, 'Before' => '', 'After' => ''),
-		'map'=> 			array('Column' => 2, 'Order' => 40, 'Before' => '', 'After' => ''),
-		'addevent' => 		array('Column' => 2, 'Order' => 500, 'Before' => '', 'After' => ''),
-		'subscribeevent' => array('Column' => 2, 'Order' => 501, 'Before' => '', 'After' => ''),
-		'subscribeseries' => array('Column' => 2, 'Order' => 502, 'Before' => '', 'After' => ''),
-		'GEO'=> 			$dfalse,		
-		'ATTACH'=> 			array('Column' => 2, 'Order' => 400, 
-							'Before' => __('More info: ','amr-ical-events-list'),
-							'After' => '<br />'),
-		'GEO'=> 			$dfalse,
-		'CATEGORIES'=> 		$dfalse,
-		'CLASS'=> 			$dfalse,
-		'COMMENT'=> 		$dfalse,
-		'PERCENT-COMPLETE'=> $dfalse,
-		'PRIORITY'=> 		$dfalse,
-		'RESOURCES'=> 		$dfalse,
-		'STATUS'=> 			$dfalse
-		),
-		$eventtaxonomiesprop),
-		'Date and Time' => array (
-		'EventDate' => 		array ('Column' => 1, 'Order' => 1, 'Before' => '', 'After' => ''), /* the instnace of a repeating date */
-		'StartTime' => 		array('Column' => 1, 'Order' => 2, 'Before' => '<br />', 'After' => ' '),
-		'EndDate' => 		array('Column' => 1, 'Order' => 3, 'Before' => ' until ', 'After' => ''),
-		'EndTime' => 		array('Column' => 1, 'Order' => 4, 'Before' => ' ', 'After' => ''),
-		'DTSTART'=> 		$dfalse,
-//		'age'=> $dfalse,
-		'DTEND'=> 		$dfalse,
-		'DUE'=> 		$dfalse,
-		'DURATION'=> 	$dfalse,
-		'ALLDAY' => 	$dfalse,
-		'COMPLETED'=> 	$dfalse,
-		'FREEBUSY'=> 	$dfalse,
-		'TRANSP'=> 		$dfalse),
-
-//	'Time Zone' => array (
-//		'TZID'=> $dtrue,  /* but only show if different from calendar TZ */
-//		'TZNAME'=> $dfalse,
-//		'TZOFFSETFROM'=> $dfalse,
-//		'TZOFFSETTO'=> $dfalse,
-//		'TZURL'=> $dfalse),
-	'Relationship' => array (
-		'ATTENDEE'=> 		$dfalse,
-		'declined' => 		$dfalse,
-		'rsvp' => 			$dfalse,
-		'rsvpwithcomment' => $dfalse,
-		'going_ornot_ormaybe' => $dfalse,
-		'CONTACT'=> 		$dtrue,
-		'ORGANIZER'=> 		array('Column' => 0, 'Order' => 30, 'Before' => '', 'After' => ''),
-		'RECURRENCE-ID'=> 	$dfalse,
-		'RELATED-TO'=> 		$dfalse,
-		'URL'=> 			array('Column' => 0, 'Order' => 10, 
-			'Before' => '<a href="',
-			'After' => '">'.__('Event Link', 'amr-ical-events-list').'</a>'),
-		'UID'=> 			$dfalse
-		),
-	'Recurrence' => array (  /* in case one wants for someone reason to show the "repeating" data, need to create a format rule for it then*/
-		'EXDATE'=> 	$dfalse,
-		'EXRULE'=> 	$dfalse,
-		'RDATE'=> 	$dfalse,
-		'RRULE'=> 	$dfalse
-	),
-	'Alarm' => array (
-		'ACTION'=> $dfalse,
-		'REPEAT'=> $dfalse,
-		'TRIGGER'=> $dfalse),
-	'Change Management'	=> array ( /* optional and/or for debug purposes */
-		'CREATED'=> $dfalse,
-		'DTSTAMP'=> $dfalse,
-		'SEQUENCE'=> $dfalse,
-		'LAST-MODIFIED' => $dfalse
-		)
-	);
+		for ($i = 1; $i <= 11; $i++)  { /* setup some list type defaults if we have empty list type arrays */
+				$amr_options['listtypes'][$i] = new_listtype(); // set up basic
+				$amr_options['listtypes'][$i] = customise_listtype( $i);  /* then tweak */
+			}
+	
+//		add_option('amr-ical-events-list', $amr_options);  // hmm what to do - if we autosave, then they do noyt ickup new defaults automatically
+			
 }
 
 	/* -------------------------------------------------------------------------------------------------------------*/
 
-	function amr_ical_showmap ($text) { /* the address text */
+function amr_ical_showmap ($text) { /* the address text */
 	global $amr_options;
 		$t1 = __('Show in Google map','amr-ical-events-list');
 		if (isset ($amr_options['no_images']) and $amr_options['no_images']) $t3 = $t1;
 		else $t3 = '<img src="'.IMAGES_LOCATION.MAPIMAGE.'" alt="'.	$t1	.'" class="amr-bling" />';
 	/* this is used to determine what should be done if a map is desired - a link to google behind the text ? or some thing else  */
-	
+
 	return('<a class="hrefmap" href="http://maps.google.com/maps?q='
 		.str_replace(' ','%20',($text)).'" target="_BLANK"'   //google wants unencoded
 		.' title="'.__('Show location in Google Maps','amr-ical-events-list').'" >'.$t3.'</a>');
@@ -392,270 +500,323 @@ $amr_compprop = array
 	/* -------------------------------------------------------------------------------------------------------------*/
 	/* This is used to tailor the multiple default listing options offered.  A new listtype first gets the common default */
 
-	function customise_listtype($i)	{ /* sets up some variations of the default list type*/
+function customise_listtype($i)	{ /* sets up some variations of the default list type*/
 	global $amr_options;
 
+	$amr_options['listtypes'][$i]['Id'] = $i;
 	switch ($i)	{
-		case 2:
-			$amr_options[$i]['general']['name'] =__('On Tour','amr-ical-events-list');
-			$amr_options[$i]['general']['Description']=__('Default setting uses the original table with lists in the cells. It is grouped by month. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
-			$amr_options[$i]['general']['ListHTMLStyle']='table';
-			$amr_options[$i]['compprop']['Descriptive']['LOCATION']['Column'] = 2;
-			$amr_options[$i]['compprop']['Descriptive']['DESCRIPTION']['Column'] = 2;
-			$amr_options[$i]['compprop']['Descriptive']['SUMMARY']['Column'] = 2;
-			$amr_options[$i]['compprop']['Descriptive']['addevent']['Column'] = 3;
-			$amr_options[$i]['compprop']['Descriptive']['subscribeevent']['Column'] = 3;
-			$amr_options[$i]['compprop']['Descriptive']['subscribeseries']['Column'] = 3;
-			$amr_options[$i]['heading']['2'] = __('Venue','amr-ical-events-list');
-			$amr_options[$i]['heading']['3'] = __('Description','amr-ical-events-list');
+		case 1:
+			$amr_options['listtypes'][$i]['format']['Day']='D'.'\&\n\b\s\p\;'.'jS'.'\&\n\b\s\p\;'.'M';
 			break;
-		case 3:
-			$amr_options[$i]['general']['name']=__('Timetable','amr-ical-events-list');
-			$amr_options[$i]['general']['Description']=__('Default setting uses the original table with lists in the cells. It is grouped by day. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
-			$amr_options[$i]['general']['ListHTMLStyle']='table';
-			foreach ($amr_options[$i]['grouping'] as $g=>$v) {$amr_options[$i]['grouping'][$g] = false;}
-			$amr_options[$i]['grouping']['Day'] = true;		
-			$amr_options[$i]['compprop']['Date and Time']['EventDate']['Column'] = 0;
-			$amr_options[$i]['compprop']['Date and Time']['EndDate']['Column'] = 0;
-			$amr_options[$i]['compprop']['Date and Time']['StartTime']['Before'] = '&#32;';
-			$amr_options[$i]['compprop']['Descriptive']['LOCATION']['Column'] = 3;
-			$amr_options[$i]['compprop']['Descriptive']['map']['Column'] = 0;
-			$amr_options[$i]['compprop']['Descriptive']['addevent']['Column'] = 4;
-			$amr_options[$i]['compprop']['Descriptive']['subscribeevent']['Column'] = 4;
-			$amr_options[$i]['compprop']['Descriptive']['subscribeseries']['Column'] = 4;
-			$amr_options[$i]['heading']['2'] = __('Date','amr-ical-events-list');
-			$amr_options[$i]['heading']['2'] = __('Class','amr-ical-events-list');
-			$amr_options[$i]['heading']['3'] = __('Room','amr-ical-events-list');
-			$amr_options[$i]['format']['Day']='l, jS M';
+		case 2: {
+			$amr_options['listtypes'][$i]['general']['name'] =__('On Tour','amr-ical-events-list');
+			$amr_options['listtypes'][$i]['general']['Description']=__('Default setting uses the original table with lists in the cells. It is grouped by month. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
+			$amr_options['listtypes'][$i]['general']['ListHTMLStyle']='table';
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['LOCATION']['Column'] = 2;
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['DESCRIPTION']['Column'] = 2;
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['SUMMARY']['Column'] = 2;
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['addevent']['Column'] = 3;
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['subscribeevent']['Column'] = 3;
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['subscribeseries']['Column'] = 3;
+			$amr_options['listtypes'][$i]['heading']['2'] = __('Venue','amr-ical-events-list');
+			$amr_options['listtypes'][$i]['heading']['3'] = __('Description','amr-ical-events-list');
 			break;
-		case 4:
-			$amr_options[$i]['general']['name']=__('Widget','amr-ical-events-list'); /* No groupings, minimal */
-			$amr_options[$i]['general']['Description']=__('The new default setting for widgets uses lists for the table rows. Good for themes that cannot cope with tables in the sidebar. No grouping. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
+			}
+		case 3: {
+			$amr_options['listtypes'][$i]['general']['name']=__('Timetable','amr-ical-events-list');
+			$amr_options['listtypes'][$i]['general']['Description']=__('Default setting uses the original table with lists in the cells. It is grouped by day. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
+			$amr_options['listtypes'][$i]['general']['ListHTMLStyle']='table';
+			foreach ($amr_options['listtypes'][$i]['grouping'] as $g=>$v) {$amr_options['listtypes'][$i]['grouping'][$g] = false;}
+			$amr_options['listtypes'][$i]['grouping']['Day'] = true;
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EventDate']['Column'] = 0;
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EndDate']['Column'] = 1;
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['StartTime']['Before'] = '&#32;';
 
-			$amr_options[$i]['general']['ListHTMLStyle']='list';
-			$amr_options[$i]['format']['Day']='M'.'\&\n\b\s\p\;'.'j';
-			$amr_options[$i]['limit'] = array (	"events" => 10,	"days" 	=> 90,"cache" 	=> 24);  /* hours */
-			foreach ($amr_options[$i]['grouping'] as $g => $v) {$amr_options[$i]['grouping'][$g] = false;}
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['addevent']['Order'] = 1;
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['subscribeevent']['Order'] = 2;
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['subscribeseries']['Order'] = 3;
+			$amr_options['listtypes'][$i]['heading']['2'] = __('Date','amr-ical-events-list');
+			$amr_options['listtypes'][$i]['heading']['2'] = __('Class','amr-ical-events-list');
+			$amr_options['listtypes'][$i]['heading']['3'] = __('Room','amr-ical-events-list');
+			$amr_options['listtypes'][$i]['format']['Day']='l, jS M';
+			break;
+			}
+		case 4: {
+			$amr_options['listtypes'][$i]['general']['name']=__('Widget','amr-ical-events-list'); /* No groupings, minimal */
+			$amr_options['listtypes'][$i]['general']['Description']=__('The new default setting for widgets uses lists for the table rows. Good for themes that cannot cope with tables in the sidebar. No grouping. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
+
+			$amr_options['listtypes'][$i]['general']['ListHTMLStyle']='list';
+			$amr_options['listtypes'][$i]['format']['Day']='M'.'\&\n\b\s\p\;'.'j';
+			$amr_options['listtypes'][$i]['limit'] = array (	"events" => 10,	"days" 	=> 90,"cache" 	=> 24);  /* hours */
+			foreach ($amr_options['listtypes'][$i]['grouping'] as $g => $v) {$amr_options['listtypes'][$i]['grouping'][$g] = false;}
 			/* No calendar properties for widget - keep it minimal */
-			foreach ($amr_options[$i]['calprop'] as $g => $v)
-				{$amr_options[$i]['calprop'][$g]['Column'] = 0;}
-			foreach ($amr_options[$i]['compprop'] as $g => $v)
-				foreach ($v as $g2 => $v2) {$amr_options[$i]['compprop'][$g][$g2]['Column'] = 0;}
-			$amr_options[$i]['compprop']['Date and Time']['EventDate']['Column'] = 1;
-			$amr_options[$i]['compprop']['Date and Time']['StartTime']['Column'] = 1;
-			$amr_options[$i]['compprop']['Date and Time']['EndDate']['Column'] = 1;
-			$amr_options[$i]['compprop']['Date and Time']['EndTime']['Column'] = 1;
-			$amr_options[$i]['compprop']['Descriptive']['SUMMARY'] = array('Column' => 1, 'Order' => 10, 'Before' => '<br />', 'After' => '');
-			$amr_options[$i]['compprop']['Descriptive']['DESCRIPTION'] = array('Column' => 0, 'Order' => 20, 'Before' => '<br />', 'After' => '');
-			$amr_options[$i]['heading']['1'] = $amr_options[$i]['heading']['2'] = $amr_options[$i]['heading']['3'] = '';
+			foreach ($amr_options['listtypes'][$i]['calprop'] as $g => $v)
+				{$amr_options['listtypes'][$i]['calprop'][$g]['Column'] = 0;}
+			foreach ($amr_options['listtypes'][$i]['compprop'] as $g => $v)
+				foreach ($v as $g2 => $v2) {$amr_options['listtypes'][$i]['compprop'][$g][$g2]['Column'] = 0;}
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EventDate']['Column'] = 1;
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['StartTime']['Column'] = 1;
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EndDate']['Column'] = 1;
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EndTime']['Column'] = 1;
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['SUMMARY'] = array('Column' => 1, 'Order' => 10, 'Before' => '<br />', 'After' => '');
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['DESCRIPTION'] = array('Column' => 0, 'Order' => 20, 'Before' => '<br />', 'After' => '');
+			$amr_options['listtypes'][$i]['heading']['1'] = $amr_options['listtypes'][$i]['heading']['2'] = $amr_options['listtypes'][$i]['heading']['3'] = '';
 			break;
-		case 5:
-			$amr_options[$i]['general']['name']=__('HTML5 Exp 1','amr-ical-events-list');
-			$amr_options[$i]['general']['Description']= __('Experimental new table style aiming to use html5 tags, but still within a table structure to allow columns. One cannot have two levels of grouping with this option as <tbody> cannot be nested. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
-			$amr_options[$i]['general']['ListHTMLStyle']='HTML5table';
-			$amr_options[$i]['format']['Day']='j'.'\&\n\b\s\p\;'.'M';
-			$amr_options[$i]['grouping']['Day'] = false;
-			$amr_options[$i]['grouping']['Month'] = true;
-			$amr_options[$i]['heading']['1'] = '';
-			$amr_options[$i]['heading']['2'] = '';
-			$amr_options[$i]['heading']['3'] = '';
-			$amr_options[$i]['calprop']['X-WR-CALNAME']
+			}
+		case 5: {
+			$amr_options['listtypes'][$i]['general']['name']=__('HTML5 Exp 1','amr-ical-events-list');
+			$amr_options['listtypes'][$i]['general']['Description']= __('Experimental new table style aiming to use html5 tags, but still within a table structure to allow columns. One cannot have two levels of grouping with this option as tbody cannot be nested. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
+			$amr_options['listtypes'][$i]['general']['ListHTMLStyle']='HTML5table';
+			$amr_options['listtypes'][$i]['format']['Day']='j'.'\&\n\b\s\p\;'.'M';
+			$amr_options['listtypes'][$i]['grouping']['Day'] = false;
+			$amr_options['listtypes'][$i]['grouping']['Month'] = true;
+			$amr_options['listtypes'][$i]['heading']['1'] = '';
+			$amr_options['listtypes'][$i]['heading']['2'] = '';
+			$amr_options['listtypes'][$i]['heading']['3'] = '';
+			$amr_options['listtypes'][$i]['calprop']['X-WR-CALNAME']
 				= array('Column' => 0, 'Order' => 10, 'Before' => '', 'After' => '&#32;'); //space
-			$amr_options[$i]['calprop']['X-WR-CALDESC']
+			$amr_options['listtypes'][$i]['calprop']['X-WR-CALDESC']
 				= array('Column' => 0, 'Order' => 12, 'Before' => ' - ', 'After' => '');
-			$amr_options[$i]['compprop']['Date and Time']['EventDate'] 
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EventDate']
 			= array('Column' => 1, 'Order' => 10, 'Before' => '', 'After' => '');
-			$amr_options[$i]['compprop']['Date and Time']['StartTime']
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['StartTime']
 			= array('Column' => 1, 'Order' => 12, 'Before' => '&nbsp;', 'After' => '');
-			$amr_options[$i]['compprop']['Date and Time']['EndDate']
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EndDate']
 			= array('Column' => 1, 'Order' => 14, 'Before' => '&nbsp;', 'After' => '');
-			$amr_options[$i]['compprop']['Date and Time']['EndTime']
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EndTime']
 			= array('Column' => 1, 'Order' => 16, 'Before' => '&nbsp;', 'After' => '');
-			$amr_options[$i]['compprop']['Descriptive']['SUMMARY']
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['SUMMARY']
 			= array('Column' => 1, 'Order' => 18, 'Before' => '<h4>', 'After' => '</h4>');
-			$amr_options[$i]['compprop']['Descriptive']['DESCRIPTION']
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['DESCRIPTION']
 				= array('Column' => 1, 'Order' => 30, 'Before' => '', 'After' => '');
-			$amr_options[$i]['compprop']['Descriptive']['LOCATION']
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['LOCATION']
 				= array('Column' => 1, 'Order' => 40, 'Before' => '<address>', 'After' => '</address>');
-			$amr_options[$i]['compprop']['Descriptive']['addevent']['Column'] = 0;
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['addevent']['Column'] = 0;
 
 			break;
-		case 6:
-			$amr_options[$i]['general']['name']=__('HTML5 Exp 2','amr-ical-events-list');
-			$amr_options[$i]['general']['Description']=__('An HTML5 test option that tries to be leaner. You can have two level of grouping with this option. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
-			$amr_options[$i]['general']['ListHTMLStyle']='HTML5';
+			}
+		case 6: {
+			$amr_options['listtypes'][$i]['general']['name']=__('HTML5 Exp 2','amr-ical-events-list');
+			$amr_options['listtypes'][$i]['general']['Description']=__('An HTML5 test option that tries to be leaner. You can have two level of grouping with this option. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
+			$amr_options['listtypes'][$i]['general']['ListHTMLStyle']='HTML5';
 
-			$amr_options[$i]['calprop']['X-WR-CALNAME']
+			$amr_options['listtypes'][$i]['calprop']['X-WR-CALNAME']
 				= array('Column' => 0, 'Order' => 10, 'Before' => '<b>', 'After' => '</b>');
-			$amr_options[$i]['calprop']['X-WR-CALDESC']
+			$amr_options['listtypes'][$i]['calprop']['X-WR-CALDESC']
 				= array('Column' => 0, 'Order' => 12, 'Before' => ' - ', 'After' => '');
-			$amr_options[$i]['grouping']['Day'] = true;
-			foreach ($amr_options[$i]['compprop'] as $g => $v) {
-				foreach ($v as $g2 => $v2)	{ 	
-					if ($amr_options[$i]['compprop'][$g][$g2]['Column'] <> 0)
-						$amr_options[$i]['compprop'][$g][$g2]['Column'] = 1;
-					$amr_options[$i]['compprop'][$g][$g2]['After'] = '&nbsp;';
-					$amr_options[$i]['compprop'][$g][$g2]['Before'] = '';
+			$amr_options['listtypes'][$i]['grouping']['Day'] = true;
+			foreach ($amr_options['listtypes'][$i]['compprop'] as $g => $v) {
+				foreach ($v as $g2 => $v2)	{
+					if ($amr_options['listtypes'][$i]['compprop'][$g][$g2]['Column'] <> 0)
+						$amr_options['listtypes'][$i]['compprop'][$g][$g2]['Column'] = 1;
+					$amr_options['listtypes'][$i]['compprop'][$g][$g2]['After'] = '&nbsp;';
+					$amr_options['listtypes'][$i]['compprop'][$g][$g2]['Before'] = '';
 				}
-			}	
-			$amr_options[$i]['compprop']['Descriptive']['SUMMARY']
+			}
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['SUMMARY']
 				= array('Column' => 1, 'Order' => 18, 'Before' => '<h3>', 'After' => '</h3>');
-			$amr_options[$i]['compprop']['Date and Time']['EventDate'] 
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EventDate']
 				= array('Column' => 0, 'Order' => 10, 'Before' => '', 'After' => '');
-			$amr_options[$i]['compprop']['Date and Time']['StartTime']['Order'] = 12;
-			$amr_options[$i]['compprop']['Date and Time']['EndDate']
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['StartTime']['Order'] = 12;
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EndDate']
 			= array('Column' => 0, 'Order' => 14, 'Before' => '', 'After' => '');
-			$amr_options[$i]['compprop']['Date and Time']['EndTime']['Order'] = 16;	
-			$amr_options[$i]['compprop']['Descriptive']['subscribeevent']['Order'] = 20;	
-			$amr_options[$i]['compprop']['Descriptive']['addevent']['Order'] = 22;	
-			$amr_options[$i]['compprop']['Descriptive']['LOCATION']
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EndTime']['Order'] = 16;
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['subscribeevent']['Order'] = 20;
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['addevent']['Order'] = 22;
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['LOCATION']
 				= array('Column' => 1, 'Order' => 50, 'Before' => '<address>', 'After' => '');
-			$amr_options[$i]['compprop']['Descriptive']['map']
-				= array('Column' => 1, 'Order' => 51,'Before' => '&nbsp;', 'After' => '</address>');	
-			$amr_options[$i]['compprop']['Descriptive']['DESCRIPTION']
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['map']
+				= array('Column' => 1, 'Order' => 51,'Before' => '&nbsp;', 'After' => '</address>');
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['DESCRIPTION']
 				= array('Column' => 1, 'Order' => 100, 'Before' => '<p>', 'After' => '</p>');
 
 
-			$amr_options[$i]['heading']['1'] = '';
-			$amr_options[$i]['heading']['2'] = '';
-			$amr_options[$i]['heading']['3'] = '';
-			$amr_options[$i]['format']['Day'] = 'j'.'\&\n\b\s\p\;'.'S,'.'\&\n\b\s\p\;'.'l';
+			$amr_options['listtypes'][$i]['heading']['1'] = '';
+			$amr_options['listtypes'][$i]['heading']['2'] = '';
+			$amr_options['listtypes'][$i]['heading']['3'] = '';
+			$amr_options['listtypes'][$i]['format']['Day'] = 'j'.'\&\n\b\s\p\;'.'S,'.'\&\n\b\s\p\;'.'l';
 
 			break;
-		case 7:
-
-			$amr_options[$i]['general']['name']=__('EventInfo','amr-ical-events-list'); /* No groupings, minimal */
-			$amr_options[$i]['general']['Description']=__('For displaying additional event info on posts created as events. The summary and description are switched off as these are the post title and the post content. Calendar properties and groupings are also not relevant. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
-			$amr_options[$i]['limit'] = array (	"events" => 10,	"days" 	=> 366,"cache" 	=> 24);  /* hours */
-			$amr_options[$i]['general']['ListHTMLStyle']='list';
-			$amr_options[$i]['format']['Day']='l, j F Y';
-
-			$amr_options[$i]['component']['VTODO'] = false;
-			$amr_options[$i]['component']['VFREEBUSY'] = false;
-			foreach ($amr_options[$i]['grouping'] as $g => $v) {$amr_options[$i]['grouping'][$g] = false;}
-			/* No calendar properties for widget - keep it minimal */
-			foreach ($amr_options[$i]['calprop'] as $g => $v)
-				{$amr_options[$i]['calprop'][$g]['Column'] = 0;}
-			foreach ($amr_options[$i]['compprop'] as $g => $v)
-				foreach ($v as $g2 => $v2) {$amr_options[$i]['compprop'][$g][$g2]['Column'] = 0;}
-			$amr_options[$i]['compprop']['Date and Time']['EventDate']['Column'] = 1;
-			$amr_options[$i]['compprop']['Date and Time']['StartTime']['Column'] = 0;
-			$amr_options[$i]['compprop']['Date and Time']['EventDate']['Order'] = 10;
-			$amr_options[$i]['compprop']['Date and Time']['StartTime']['Order'] = 0;
-			$amr_options[$i]['compprop']['Date and Time']['EndDate']['Column'] = 0;
-			$amr_options[$i]['compprop']['Date and Time']['EndTime']['Column'] = 0;
-			$amr_options[$i]['compprop']['Descriptive']['LOCATION']['Order'] = 0;
-			$amr_options[$i]['compprop']['Descriptive']['map']['Order'] = 0;
-			$amr_options[$i]['compprop']['Descriptive']['SUMMARY']['Column'] = 0;
-			$amr_options[$i]['compprop']['Descriptive']['addevent']['Column'] = 1;
-			$amr_options[$i]['compprop']['Descriptive']['addevent']['Order'] = 1;
-			$amr_options[$i]['compprop']['Descriptive']['subscribeevent']['Column'] = 1;
-			$amr_options[$i]['compprop']['Descriptive']['subscribeevent']['Order'] = 1;
-			$amr_options[$i]['heading']['1'] = $amr_options[$i]['heading']['2'] = $amr_options[$i]['heading']['3'] = '';
-			break;
-	case 8:
-			$amr_options[$i]['general']['name']=__('Small-Calendar','amr-ical-events-list'); /* No groupings, minimal */
-			$amr_options[$i]['general']['Description']=__('The new default setting for calendar widgets. No grouping, No headings. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
-			$amr_options[$i]['general']['ListHTMLStyle']='smallcalendar';
-			$amr_options[$i]['format']['Day']='j';
-			$amr_options[$i]['format']['Week']='D'; // 3 letter day of week
-			$amr_options[$i]['format']['Month']='M Y';
-			$amr_options[$i]['limit'] = array (	"events" => 200,	"days" 	=> 31,"cache" 	=> 24 );  /* hours */
-
-			foreach ($amr_options[$i]['grouping'] as $g => $v) {$amr_options[$i]['grouping'][$g] = false;}
-			/* No calendar properties for widget - keep it minimal */
-			foreach ($amr_options[$i]['calprop'] as $g => $v)
-				{$amr_options[$i]['calprop'][$g]['Column'] = 0;}
-			foreach ($amr_options[$i]['compprop'] as $g => $v)
-				foreach ($v as $g2 => $v2) {$amr_options[$i]['compprop'][$g][$g2]['Column'] = 0;}
-			$amr_options[$i]['compprop']['Date and Time']['EventDate']['Column'] = 0;
-			$amr_options[$i]['compprop']['Date and Time']['StartTime']
-			= array('Column' => 1, 'Order' => 10, 'Before' => '', 'After' => '');
-			$amr_options[$i]['compprop']['Date and Time']['EndDate']['Column'] = 0;
-			$amr_options[$i]['compprop']['Date and Time']['EndTime']
-			= array('Column' => 1, 'Order' => 10, 'Before' => '', 'After' => '');
-			$amr_options[$i]['compprop']['Descriptive']['SUMMARY'] 
-			= array('Column' => 1, 'Order' => 20, 'Before' => '', 'After' => '');
-			$amr_options[$i]['compprop']['Descriptive']['DESCRIPTION']['Column'] = 0;
-			$amr_options[$i]['heading']['1'] = $amr_options[$i]['heading']['2'] = $amr_options[$i]['heading']['3'] = '';
-			break;
-		case 9:
-			$amr_options[$i]['general']['name']=__('Large-Calendar','amr-ical-events-list'); /* No groupings, minimal */
-			$amr_options[$i]['general']['Description']= __('The new default setting for a large monthly calendar. No grouping, No headings. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is.','amr-ical-events-list');
-			$amr_options[$i]['general']['ListHTMLStyle']='largecalendar';
-			$amr_options[$i]['format']['Day']='M j';
-			$amr_options[$i]['format']['Time']='G:i';
-			$amr_options[$i]['format']['Month']='F Y';
-			$amr_options[$i]['format']['Week']='l'; // lowercase l = full text date
-			$amr_options[$i]['limit'] = array (	"events" => 200,	"days" 	=> 31,"cache" 	=> 24 );  /* hours */
-
-			foreach ($amr_options[$i]['grouping'] as $g => $v) {$amr_options[$i]['grouping'][$g] = false;}
-			/* No calendar properties for widget - keep it minimal */
-//			foreach ($amr_options[$i]['calprop'] as $g => $v)
-//				{$amr_options[$i]['calprop'][$g]['Column'] = 0;}
-			foreach ($amr_options[$i]['compprop'] as $g => $v)
-				foreach ($v as $g2 => $v2) {$amr_options[$i]['compprop'][$g][$g2]['Column'] = 0;}
-			$amr_options[$i]['compprop']['Date and Time']['EventDate']['Column'] = 0;
-			$amr_options[$i]['compprop']['Date and Time']['StartTime'] 
-				= array('Column' => 1, 'Order' => 5, 'Before' => '<br />', 'After' => '');
-			$amr_options[$i]['compprop']['Date and Time']['EndDate']['Column'] = 0;
-			$amr_options[$i]['compprop']['Date and Time']['EndTime'] = array('Column' => 1, 'Order' => 6, 'Before' => '-', 'After' => '');
-			$amr_options[$i]['compprop']['Descriptive']['SUMMARY'] = array('Column' => 1, 'Order' => 1, 'Before' => '', 'After' => '');
-			$amr_options[$i]['compprop']['Descriptive']['DESCRIPTION']
-			= array('Column' => 2, 'Order' => 1, 'Before' => '<div class="details">', 'After' => '</div>');
-			$amr_options[$i]['heading']['1'] = $amr_options[$i]['heading']['2'] = $amr_options[$i]['heading']['3'] = '';
-			break;
-
-		case 10:
-			$amr_options[$i]['general']['name']=__('Testing','amr-ical-events-list');
-			$amr_options[$i]['general']['Description']=__('A test option with lots of fields switched on. It has 2 levels of grouping - this is fine so long as the html in use can be nested. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
-
-			$amr_options[$i]['general']['ListHTMLStyle']='breaks';
-			foreach ($amr_options[$i]['grouping'] as $g => $v) {
-				$amr_options[$i]['grouping'][$g] = false;
 			}
-			$amr_options[$i]['grouping']['Day'] = true;
-			$amr_options[$i]['grouping']['Month'] = true;
-			foreach ($amr_options[$i]['compprop'] as $g => $v) {
-				foreach ($v as $g2 => $v2)
-				{ 	$amr_options[$i]['compprop'][$g][$g2]['After'] = '<br />';
-					$amr_options[$i]['compprop'][$g][$g2]['Before'] = '';
+		case 7: {
 
+			$amr_options['listtypes'][$i]['general']['name']=__('EventInfo','amr-ical-events-list'); /* No groupings, minimal */
+			$amr_options['listtypes'][$i]['general']['Description']=__('For displaying additional event info on posts created as events. The summary and description are switched off as these are the post title and the post content. Calendar properties and groupings are also not relevant. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
+			$amr_options['listtypes'][$i]['limit'] = array (	"events" => 10,	"days" 	=> 366,"cache" 	=> 24);  /* hours */
+			$amr_options['listtypes'][$i]['general']['ListHTMLStyle']='list';
+			$amr_options['listtypes'][$i]['format']['Day']='l, j F Y';
 
-					if ($v2['Column'] === 0) {
-						$amr_options[$i]['compprop'][$g][$g2]
+			$amr_options['listtypes'][$i]['component']['VTODO'] = false;
+			$amr_options['listtypes'][$i]['component']['VFREEBUSY'] = false;
+			foreach ($amr_options['listtypes'][$i]['grouping'] as $g => $v) {$amr_options['listtypes'][$i]['grouping'][$g] = false;}
+			/* No calendar properties for widget - keep it minimal */
+			foreach ($amr_options['listtypes'][$i]['calprop'] as $g => $v)
+				{$amr_options['listtypes'][$i]['calprop'][$g]['Column'] = 0;}
+			foreach ($amr_options['listtypes'][$i]['compprop'] as $g => $v)
+				foreach ($v as $g2 => $v2) {$amr_options['listtypes'][$i]['compprop'][$g][$g2]['Column'] = 0;}
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EventDate']['Column'] = 1;
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['StartTime']['Column'] = 1;
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EventDate']['Order'] = 12;
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['StartTime']['Order'] = 10;
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['StartTime']['Before'] = '';
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EndDate']['Column'] = 0;
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EndTime']['Column'] = 0;
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['LOCATION']['Order'] = 0;
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['map']['Order'] = 0;
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['SUMMARY']['Column'] = 0;
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['addevent']['Column'] = 1;
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['addevent']['Order'] = 1;
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['subscribeevent']['Column'] = 1;
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['subscribeevent']['Order'] = 1;
+			$amr_options['listtypes'][$i]['heading']['1'] = $amr_options['listtypes'][$i]['heading']['2'] = $amr_options['listtypes'][$i]['heading']['3'] = '';
+			break;
+			}
+	case 8: {
+			$amr_options['listtypes'][$i]['general']['name']=__('Small-Calendar','amr-ical-events-list'); /* No groupings, minimal */
+			$amr_options['listtypes'][$i]['general']['Description']=__('The new default setting for calendar widgets. No grouping, No headings. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
+			$amr_options['listtypes'][$i]['general']['ListHTMLStyle']='smallcalendar';
+			$amr_options['listtypes'][$i]['format']['Day']='j';
+			$amr_options['listtypes'][$i]['format']['Week']='D'; // 3 letter day of week
+			$amr_options['listtypes'][$i]['format']['Month']='M Y';
+			$amr_options['listtypes'][$i]['limit'] = array (	"events" => 200,	"days" 	=> 31,"cache" 	=> 24 );  /* hours */
+
+			foreach ($amr_options['listtypes'][$i]['grouping'] as $g => $v) {
+				$amr_options['listtypes'][$i]['grouping'][$g] = false;}
+			/* No calendar properties for widget - keep it minimal */
+			foreach ($amr_options['listtypes'][$i]['calprop'] as $g => $v)
+				{$amr_options['listtypes'][$i]['calprop'][$g]['Column'] = 0;}
+			foreach ($amr_options['listtypes'][$i]['compprop'] as $g => $v)
+				foreach ($v as $g2 => $v2) {$amr_options['listtypes'][$i]['compprop'][$g][$g2]['Column'] = 0;}
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EventDate']['Column'] = 0;
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['StartTime']
+			= array('Column' => 1, 'Order' => 10, 'Before' => '', 'After' => '');
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EndDate']['Column'] = 0;
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EndTime']
+			= array('Column' => 1, 'Order' => 10, 'Before' => '', 'After' => '');
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['SUMMARY']
+			= array('Column' => 1, 'Order' => 20, 'Before' => '', 'After' => '');
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['DESCRIPTION']['Column'] = 0;
+			$amr_options['listtypes'][$i]['heading']['1'] = $amr_options['listtypes'][$i]['heading']['2'] = $amr_options['listtypes'][$i]['heading']['3'] = '';
+			break;
+			}
+		case 9: {
+			$amr_options['listtypes'][$i]['general']['name']=__('Large-Calendar','amr-ical-events-list'); /* No groupings, minimal */
+			$amr_options['listtypes'][$i]['general']['Description']= __('The new default setting for a large monthly calendar. No grouping, No headings. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is.','amr-ical-events-list');
+			$amr_options['listtypes'][$i]['general']['ListHTMLStyle']='largecalendar';
+			$amr_options['listtypes'][$i]['format']['Day']='M j';
+			$amr_options['listtypes'][$i]['format']['Time']='G:i';
+			$amr_options['listtypes'][$i]['format']['Month']='F Y';
+			$amr_options['listtypes'][$i]['format']['Week']='l'; // lowercase l = full text date
+			$amr_options['listtypes'][$i]['limit'] = array (	"events" => 200,	"days" 	=> 31,"cache" 	=> 24 );  /* hours */
+
+			foreach ($amr_options['listtypes'][$i]['grouping'] as $g => $v) {$amr_options['listtypes'][$i]['grouping'][$g] = false;}
+			/* No calendar properties for widget - keep it minimal */
+//			foreach ($amr_options['listtypes'][$i]['calprop'] as $g => $v)
+//				{$amr_options['listtypes'][$i]['calprop'][$g]['Column'] = 0;}
+			foreach ($amr_options['listtypes'][$i]['compprop'] as $g => $v)
+				foreach ($v as $g2 => $v2) {$amr_options['listtypes'][$i]['compprop'][$g][$g2]['Column'] = 0;}
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EventDate']['Column'] = 0;
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['StartTime']
+				= array('Column' => 1, 'Order' => 5, 'Before' => '<br />', 'After' => '');
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EndDate']['Column'] = 0;
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EndTime'] = array('Column' => 1, 'Order' => 6, 'Before' => '-', 'After' => '');
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['SUMMARY'] = array('Column' => 1, 'Order' => 1, 'Before' => '', 'After' => '');
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['DESCRIPTION']
+			= array('Column' => 2, 'Order' => 1, 'Before' => '<div class="details">', 'After' => '</div>');
+			$amr_options['listtypes'][$i]['heading']['1'] = $amr_options['listtypes'][$i]['heading']['2'] = $amr_options['listtypes'][$i]['heading']['3'] = '';
+			break;
+		}
+		case 10: {
+			$amr_options['listtypes'][$i]['general']['name']=__('Testing','amr-ical-events-list');
+			$amr_options['listtypes'][$i]['general']['Description']=__('A test option with lots of fields switched on. It has 2 levels of grouping - this is fine so long as the html in use can be nested. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
+
+			$amr_options['listtypes'][$i]['general']['ListHTMLStyle']='breaks';
+			foreach ($amr_options['listtypes'][$i]['grouping'] as $g => $v) {
+				$amr_options['listtypes'][$i]['grouping'][$g] = false;
+			}
+			$amr_options['listtypes'][$i]['grouping']['Day'] = true;
+			$amr_options['listtypes'][$i]['grouping']['Month'] = true;
+			foreach ($amr_options['listtypes'][$i]['compprop'] as $g => $v) {
+				foreach ($v as $g2 => $v2) {
+				 	$amr_options['listtypes'][$i]['compprop'][$g][$g2]['After'] = '<br />';
+					$amr_options['listtypes'][$i]['compprop'][$g][$g2]['Before'] = '';
+					if ($v2['Column'] == 0) {
+						$amr_options['listtypes'][$i]['compprop'][$g][$g2]
 						= array('Column' => 1, 'Order' => 99,
 						'Before' => '<em>'.$g2.':</em> ',
 						'After' => "<br />");
 					}
 					else {
-						$amr_options[$i]['compprop'][$g][$g2]['Before']
+						$amr_options['listtypes'][$i]['compprop'][$g][$g2]['Before']
 					= '<em>'.$g2.':</em> ';
-						$amr_options[$i]['compprop'][$g][$g2]['Column']
+						$amr_options['listtypes'][$i]['compprop'][$g][$g2]['Column']
 					= 1;
 					}
 
 				}
 			}
 
-			foreach ($amr_options[$i]['calprop'] as $g => $v)
-				{$amr_options[$i]['calprop'][$g] = array('Column' => 3, 'Order' => 1, 'Before' => '', 'After' => '');}
-			$amr_options[$i]['calprop']['X-WR-CALNAME']['Column'] = 1;
-			$amr_options[$i]['calprop']['X-WR-CALDESC']['Column'] = 1;
-			$amr_options[$i]['calprop']['X-WR-CALDESC']['Before'] = '';
-			foreach ($amr_options[$i]['component'] as $g=>$v) {
-				$amr_options[$i]['component'][$g] = true;}
-			$amr_options[$i]['heading']['1'] = '';
-			$amr_options[$i]['heading']['2'] = '';
-			$amr_options[$i]['heading']['3'] = '';
-			$amr_options[$i]['format']['Day'] = 'D, F j, Y';
+
+//----------------------------------------------------------------------------------------------------
+			foreach ($amr_options['listtypes'][$i]['calprop'] as $g => $v) {
+				$amr_options['listtypes'][$i]['calprop'][$g] =
+				array('Column' => 3, 'Order' => 1, 'Before' => '', 'After' => '');
+			}
+			$amr_options['listtypes'][$i]['calprop']['X-WR-CALNAME']['Column'] = 1;
+			$amr_options['listtypes'][$i]['calprop']['X-WR-CALDESC']['Column'] = 1;
+			$amr_options['listtypes'][$i]['calprop']['X-WR-CALDESC']['Before'] = '&#32;';
+			foreach ($amr_options['listtypes'][$i]['component'] as $g=>$v) {
+				$amr_options['listtypes'][$i]['component'][$g] = true;
+			}
+			$amr_options['listtypes'][$i]['heading']['1'] = '';
+			$amr_options['listtypes'][$i]['heading']['2'] = '';
+			$amr_options['listtypes'][$i]['heading']['3'] = '';
+			$amr_options['listtypes'][$i]['format']['Day'] = 'D, F j, Y';
 
 			break;
 		}
-		return ( $amr_options[$i]);
+		case 11: {
+			$amr_options['listtypes'][$i]['general']['name']=__('Weekly Horizontal','amr-ical-events-list');
+			$amr_options['listtypes'][$i]['general']['Description']=
+			__('Like the large calendar, but different - grouped by week and the weeks continue across months.  Really 2 weeks should be displayed a time.','amr-ical-events-list')
+			.__(' If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
+			$amr_options['listtypes'][$i]['general']['ListHTMLStyle']='weekscalendar';
+			$amr_options['listtypes'][$i]['format']['Time']='H:i';
+			$amr_options['listtypes'][$i]['format']['Day']=
+			'D'.'\&\n\b\s\p\;'.'j'; //'M';
+			foreach ($amr_options['listtypes'][$i]['grouping'] as $g=>$v) {$amr_options['listtypes'][$i]['grouping'][$g] = false;}
+			foreach ($amr_options['listtypes'][$i]['compprop'] as $g => $v) {
+				foreach ($v as $g2 => $v2) {
+					$amr_options['listtypes'][$i]['compprop'][$g][$g2]['Column'] = 0;
+				}
+			}
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['StartTime']
+			= array('Column' => 1, 'Order' => 5, 'Before' => '', 'After' => ' ');
+
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['SUMMARY']
+			= array('Column' => 1, 'Order' => 20, 'Before' => '', 'After' => '');
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['DESCRIPTION']
+			= array('Column' => 2, 'Order' => 1, 'Before' => '', 'After' => '');
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['DURATION']['Column']=2;
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['LOCATION']
+			= array('Column' => 2, 'Order' => 20, 'Before' => '', 'After' => '');
+
+			$amr_options['listtypes'][$i]['heading']['1'] = $amr_options['listtypes'][$i]['heading']['2'] = $amr_options['listtypes'][$i]['heading']['3'] = '';
+
+
+			break;
+			}
+
+
 	}
+			//--- temp fix before re editing all above
+	$amr_options['listtypes'][$i]['compprop'] = amr_remove_array_level ($amr_options['listtypes'][$i]['compprop']);
+// so now we have both versions - need to unset the other, but can leave for now.
+//	var_dump($amr_options['listtypes'][$i]['compprop']);
+	return ( $amr_options['listtypes'][$i]);
+}
 /* ---------------------------------------------------------------------*/
-	function new_listtype()	{
+function new_listtype()	{
 	global $amr_calprop;
 	global $amr_colheading;
 	global $amr_compprop;
@@ -674,79 +835,19 @@ $amr_compprop = array
 		'component' => $amr_components,
 		'grouping' => $amr_groupings,
 		'compprop' => $amr_compprop,
-		'limit' => $amr_limits
+		'limit' => $amr_limits,
+		'Id' => '1'
 		)
-		);
-
+	);
 	return $amr_newlisttype;
 	}
 
-/* ---------------------------------------------------------------------*/
-	function amr_checkfornewoptions ($i)   /* not required - ussing array  recursive merge instead*/
-	{ /* check if an option has been added, butdoes not exist in the DB - ie we have upgraded.  Do not overwrite!! */
-	global $amr_calprop;
-	global $amr_colheading;
-	global $amr_compprop;
-	global $amr_groupings;
-	global $amr_components;
-	global $amr_limits;
-	global $amr_formats;
-	global $amr_general;
-	global $amr_options;
-
-	if (isset ($amr_options[$i]['limit']['Events'])) { /* changed in about 2.4 I think*/
-			$amr_options[$i]['limit']['events'] = $o['limit']['Events'];
-			unset ($amr_options[$i]['limit']['Events']);
-	}
-	if (isset ($amr_options[$i]['limit']['Days'])) {
-		$amr_options[$i]['limit']['days'] = $o['limit']['Days'];
-		unset ($amr_options[$i]['limit']['Days']);
-	}
-	if (!(isset($amr_options[$i]['heading']))) {  /* added in version 2, so may not exist */
-			$amr_options[$i]['heading'] = $amr_colheading; 
-			}
-	if (!(isset($amr_options[$i]['general']['Default Event URL']))) {  /* added, so may not exist */
-			$amr_options[$i]['general']['Default Event URL'] = '' ;
-			}
-	if (!(isset($amr_options[$i]['general']['name']))) {  /* added, so may not exist */
-			$amr_options[$i]['general']['name'] = 'Default' ;
-			}
-	if (!(isset($amr_options[$i]['general']['ListHTMLStyle']))) {  /* added, so may not exist */
-			$amr_options[$i]['general']['ListHTMLStyle'] = 'tableoriginal' ;
-			}
-
-	foreach ($amr_general as $key => $value) {
-		if (!isset($amr_options[i]['general'][$key])) {$amr_options[i]['general'][$key] = $value;  }
-		}
-	foreach ($amr_formats as $key => $value) {
-		if (!isset($amr_options[i]['format'][$key])) {$amr_options[i] ['format'][$key] = $value; }
-		}
-	foreach ($amr_calprop as $key => $value) {
-		if (!isset($amr_options[i] ['calprop'][$key])) {$amr_options[i] ['calprop'][$key] = $value; }
-		}
-	foreach ($amr_colheading as $key => $value) {
-		if (!isset($amr_options[i]['heading'][$key])) {$amr_options[i] ['heading'][$key] = $value; }
-		}
-	foreach ($amr_components as $key => $value) {
-		if (!isset($amr_options[i]['component'][$key])) {$amr_options[i] ['component'][$key] = $value;}
-		}
-	foreach ($amr_groupings as $key => $value) {
-		if (!isset($amr_options[i]['grouping'][$key])) {$amr_options[i]['grouping'][$key] = $value;}
-		}
-	foreach ($amr_compprop as $key => $value) {
-		if (!isset($amr_options[i] ['compprop'][$key])) {$amr_options[i]['compprop'][$key] = $value;}
-		}
-	foreach ($amr_limits as $key => $value) {
-		if (!isset($amr_options[i]['limit'][$key])) {$amr_options[i]['limit'][$key] = $value;}
-		}			
-	return(true);
-	}
 /* ---------------------------------------------------------------------*/
 function Quarter ($D)
 { 	/* Quarters can be complicated.  There are Tax and fiscal quarters, and many times the tax and fiscal year is different from the calendar year */
 	/* We could have used the function commented out for calendar quarters. However to allow for easier variation of the quarter definition. we used the limits concept instead */
 	/* $D->format('Y').__(' Q ').(ceil($D->format('n')/3)); */
-return date_season('Quarter', $D); 
+return date_season('Quarter', $D);
 }
 function Meteorological ($D)
 {return date_season('Meteorological', $D);  }
@@ -757,47 +858,47 @@ function Traditional_Season ($D)
 function Western_Zodiac ($D){
 return date_season('Zodiac', $D);  }
 /* ---------------------------------------------------------------------*/
-function date_season ($type='Meteorological',$D)
-{ 	/* Receives ($Dateobject and returns a string with the Meterological season by default*/
+function date_season ($type='Meteorological',$D) {
+	/* Receives ($Dateobject and returns a string with the Meterological season by default*/
 	/* Note that the limits must be defined on backwards order with a seemingly repeated entry at the end to catch all */
 
 	if (!(isset($D))) $D =  date_create();
 	$Y = amr_format_date('Y',$D);
  $limits ['Quarter']=array(
-	
+
 	/* for different quarters ( fiscal, tax, etc,) change the date ranges and the output here  */
-		'/12/31'=> $Y.' Q1',	
+		'/12/31'=> $Y.' Q1',
 		'/09/31'=> $Y.' Q4',
 		'/06/30'=> $Y.' Q3',
 		'/03/31'=> $Y.' Q2',
-		'/01/00'=> $Y.' Q1',				
-		);   
-   
+		'/01/00'=> $Y.' Q1',
+		);
+
    $limits ['Meteorological']=array(
 		'/12/01'=>'N. Winter, S. Summer',
 		'/09/01'=>'N. Fall, S. Spring',
 		'/06/01'=>'N. Summer, S. Winter',
 		'/03/01'=>'N. Spring, S. Autumn',
 		'/01/00'=>'N. Winter, S. Summer'
-		);  
-		
-	$limits ['Astronomical']=array( 
+		);
+
+	$limits ['Astronomical']=array(
 		'/12/21'=>'N. Winter, S. Summer',
 		'/09/23'=>'N. Fall, S. Spring',
 		'/06/21'=>'N. Summer, S. Winter',
 		'/03/21'=>'N. Spring, S. Autumn',
 		'/01/00'=>'N. Winter, S. Summer'
-		);  
-		
+		);
+
 	$limits ['Traditional']=array(
 	/*  actual dates vary , so this is an approximation */
 		'/11/08'=>'N. Winter, S. Summer',
 		'/08/06'=>'N. Fall, S. Spring',
-		'/06/05'=>'N. Summer, S. Winter',  
+		'/06/05'=>'N. Summer, S. Winter',
 		'/02/05'=>'N. Spring, S. Autumn',
 		'/01/00'=>'N. Winter, S. Summer'
-		);  		
-		
+		);
+
 	$limits ['Zodiac']=array(
 	/*  actual dates vary , so this is an approximation */
 		'/12/22'=>'Capricorn',
@@ -812,14 +913,14 @@ function date_season ($type='Meteorological',$D)
 		'/03/21'=>'Aries',
 		'/02/19'=>'Pisces',
 		'/01/20'=>'Aquarius',
-		'/01/00'=>'Capricon',		
-		); 	
+		'/01/00'=>'Capricon',
+		);
 
 	/* get the current year */
-   foreach ($limits[$type] AS $key => $value) 
-   {			  
+   foreach ($limits[$type] AS $key => $value)
+   {
 	/* add the current year to the limit */
-    $limit = $key; 
+    $limit = $key;
 	   $input = amr_format_date ('/m/d', $D);
 		/* if date is later than limit, then return the current value, else continue to check the next limit */
 
@@ -828,26 +929,7 @@ function date_season ($type='Meteorological',$D)
 	   }
    }
 }
-/* -----------------------------------------------------------------------------------------------------*/
-
-function ical_get_weekstart() {
-
-	$wkst = get_option('start_of_week');  /* Somewhat annoyingly, wp has sunday as 0 and sat as 6 !! */
-	if (!$wkst) $wkst = 0; /* only becuase this is wp default */
-	$ical_day_of_week = array ( /* translate from wp day of week to  ical day of week  */
-		'1' => 'MO',
-		'2' => 'TU',
-		'3' => 'WE',
-		'4' => 'TH',
-		'5' => 'FR',
-		'6' => 'SA',
-		'0' => 'SU');
-	$wkst = $ical_day_of_week[$wkst];
-	return ($wkst);
-}
 /*----------------------------------------------------------------------------------------*/
-
-
 global	$gnu_freq_conv;
 $gnu_freq_conv = array (
 /* used to convert from ical FREQ to gnu relative items for date strings useed by php datetime to do maths */
@@ -860,87 +942,73 @@ $gnu_freq_conv = array (
 			'SECONDLY' => 'second'
 			);
 
-function amr_ngiyabonga() {
-		/* The credit text styling is designed to be as subtle as possible (small font size with leight weight text, and right aligned, and at the bottom) and fit in within your theme as much as possible by not styling colours etc */
-		/* You may however style it more gently, and/or subtly to fit in within your theme.  It is good manners to donate if you remove it */
-
-global $amr_options;
-	if (!$amr_options['ngiyabonga'])		
-	return (
-		'<span class="amrical_credit" style="float:right;font-size:x-small;font-weight:lighter;font-style:italic;" >'
-		.'<a title="Ical Upcoming Events List version '.AMR_ICAL_LIST_VERSION.'" '
-		.'href="http://icalevents.anmari.com/">'
-//		.'<img src= "http://icalevents.anmari.com/images/plugin-ical1.png" alt ="'
-		.__('Events plugin by anmari','amr-ical-events-list')
-//		.'"</img>'
-		.'</a></span>'
-		);
-}
 /* ------------------------------------------------------------------------------------------------------ */
-	function amr_getset_options ($reset=false) {
+function amr_getset_options ($reset=false) {
 	/* get the options from wordpress if in wordpress
 	if no options, then set defaults */
-
 	global $locale, $amr_options;  /* has the initial default configuration */
 			/* set up some global config initially */
 
-	amr_set_defaults();
-	$amr_options = array (
-			'no_types' => 10,
-			'ngiyabonga' => false,
-			'own_css' => false,
-			'feed_css' => true,
-			'cssfile' => ICALSTYLEURL,//'icallist.css',
-			'date_localise' => 'amr',
-			'noeventsmessage' => __('No events found within criteria','amr-ical-events-list')
-			);
+	if (ICAL_EVENTS_DEBUG) echo '<br /><b>get setting options </b>';
+	amr_set_defaults(); 
 
 
-	if (defined('AMR_ICAL_VERSION'))	$amr_options['ngiyabonga']	= true; //do not show credit link
-	$alreadyhave = false;
-	if ($locale === 'en_US' ) $method = 'none';
-	else $method = 'amr';
-
-	for ($i = 1; $i <= $amr_options['no_types']; $i++)  { /* setup some list type defaults if we have empty list type arrays */
-			$amr_options[$i] = new_listtype();
-			$amr_options[$i] = customise_listtype( $i);  /* then tweak from the one */
-		}
 	/* we are requested to reset the options, so delete and update with default */
 	if ($reset) {
+		echo '<div class="updated"><p>';
 		_e('Resetting options...', 'amr-ical-events-list');
-		if (($d = delete_option('AmRiCalEventList')) 
-			or ($d = delete_option('amr-ical-events-list')))
+		if (($d = delete_option('amr-ical-events-list')) or 
+			($d = delete_option('AmRiCalEventList')))
 			_e('Options Deleted...','amr-ical-events-list');
 		else _e('Option was not saved before or error deleting option...','amr-ical-events-list');
 		delete_option('amr_ical_images_to_use');
+		echo '</p></div>';
 		}
-	else  {/* *First setup the default config  */	
+	else  {/* *First setup the default config  */
 /* general config */
-		if ($alreadyhave = get_option('amr-ical-events-list')) {}
-		else
+		$amr_options = get_option('amr-ical-events-list');
+		if (!empty($amr_options)) { 
+			$alreadyhave = true;
+			//if had one global option, now split into separate ?
+			if (!empty($amr_options['no_types'])) {
+			//and !empty($amr_options['1']))  { // then we have old list types, lets convert to new
+				for ($i = 1; $i <= $amr_options['no_types']; $i++)  {
+					$amr_options['listtypes'][$i] = $amr_options[$i];
+					$amr_options['listtypes'][$i]['compprop'] = amr_remove_array_level ($amr_options['listtypes'][$i]['compprop']);
+					unset ($amr_options[$i]);
+				}
+
+				unset ($amr_options['no_types']); // no longer relevant
+				if (is_admin()) { // else might be on a front end page
+					amr_notice_listtypes_converted();
+					update_option('amr-ical-events-list', $amr_options);
+				}
+
+			}
+		}
+		else {  // really old - can delete one day?
 			if ($alreadyhave = get_option('AmRiCalEventList')) {
 				delete_option('AmRiCalEventList');
 				add_option('amr-ical-events-list', $alreadyhave);
 				_e(' Converting option key to lowercase','amr-ical-events-list');
 			}
+		}
 
 		}
-	if ($alreadyhave ) { /* will be false if there were none, want to check for older versions  */
-		$amr_options = 	array_merge_recursive_distinct( $amr_options, $alreadyhave );
-//		for ($i = 1; $i <= $amr_options['no_types']; $i++) {
-//			foreach ($amr_options[$i]['Descriptive']['Days']
-//		}
+	if (!$alreadyhave ) amr_set_defaults(); 
 
-		if (isset ($amr_options[$i]['limit']['Events'])) { /* changed in about 2.4 I think*/
-				$amr_options[$i]['limit']['events'] = $o['limit']['Events'];
-				unset ($amr_options[$i]['limit']['Events']);
-			}
-		if (isset ($amr_options[$i]['limit']['Days'])) {
-					$amr_options[$i]['limit']['days'] = $o['limit']['Days'];
-					unset ($amr_options[$i]['limit']['Days']);
-			}
 
-	}
 	return ($amr_options);
 	}
+//----------------------------------------------  temp adjust
+function amr_remove_array_level ($compprop) {
+	$newcompprop = array();
+	foreach ($compprop as $g => $v) { // remove one level
+
+		$newcompprop = array_merge ($newcompprop, $v);
+	}
+	$newcompprop = amr_sort_by_two_cols_asc('Column','Order',$newcompprop);
+
+	return($newcompprop);
+}
 ?>

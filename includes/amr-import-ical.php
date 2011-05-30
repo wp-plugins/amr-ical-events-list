@@ -62,8 +62,6 @@ class curl {
   }
 
 }
-
-
 /* ---------------------------------------------------------------------- */
 	/*
 	 * Return the full path to the cache file for the specified URL.
@@ -104,7 +102,6 @@ class curl {
 	if( !class_exists( 'WP_Http' ) )
           include_once( ABSPATH . WPINC. '/class-http.php' );
 /* ---------------------------------------------------------------------- */
-
 function getRemoteFile($url) // an alternate method to get remote file - OLD, only resorted to if all else fails, but maybe useless
 {
    // get the host name and url path
@@ -199,14 +196,14 @@ function getRemoteFile($url) // an alternate method to get remote file - OLD, on
 				If (ICAL_EVENTS_DEBUG) { echo '<br /> http request failed <br /> ';
 				//var_dump($check);
 				}
-				if (is_wp_error($check)) 
+				if (is_wp_error($check))
 					$text = $check->get_error_message();
 				else $text = '';
 // else try curl
 				If (ICAL_EVENTS_DEBUG) { echo '<br /> Trying to get with curl <br /> ';}
 				$filetoget = new curl;
 				$data = $filetoget->getFile($u,30);
-				
+
 				$checkstart = substr($data,0,100);
 				If (ICAL_EVENTS_DEBUG) { echo '<br /> Check start of data: '.$checkstart;}
 				if (!($checkstart == 'BEGIN:VCALENDAR')) {
@@ -227,7 +224,7 @@ function getRemoteFile($url) // an alternate method to get remote file - OLD, on
 						$text .= '&nbsp;'.sprintf(__('Error getting calendar file with htpp or curl, or custom fn: %s','amr-ical-events-list'), $url);
 
 						if ( file_exists($cachedfile) ) { // Try use cached file if it exists
-							$text .= '&nbsp;...'.sprintf(__('Using File last cached at %s','amr-ical-events-list'), $amr_lastcache->format('D c'));					
+							$text .= '&nbsp;...'.sprintf(__('Using File last cached at %s','amr-ical-events-list'), $amr_lastcache->format('D c'));
 							echo '<a class="error" href="#" title="'
 							.__('Warning: Events may be out of date. ','amr-ical-events-list' )
 							. $text.'">!</a>';
@@ -356,11 +353,11 @@ NOT USING FOR NOW - INTERNAL ATTENDEES ONLY
 			tz dealt with already ?*/
 
 		if (empty($d)) {
-			echo 'Unexpected error - empty date string to parse ';		
+			echo 'Unexpected error - empty date string to parse ';
 			return false;
 			}
-				
-			
+
+
 		if ((substr($d, strlen($d)-1, 1) === 'Z')) {  /*datetime is specifed in UTC */
 			$tzobj = $utczobj;
 			$d = substr($d, 0, strlen($d)-1);
@@ -381,8 +378,6 @@ NOT USING FOR NOW - INTERNAL ATTENDEES ONLY
 			echo '<br />Unable to create DateTime object from '.$d.' <br />'.$e->getMessage();
 			return (false);
 		}
-
-		//If (ICAL_EVENTS_DEBUG) { echo '<br />** Datetime '.$d.' parsed as : '; var_dump($dt);}
 
 	return ($dt);
     }
@@ -451,8 +446,6 @@ Africa/Asmara
 
 	        if (isset($c[1])) $tzcities[$c[1]] = $value;
 			else $tzcities[$c[0]] = $value;
-
-
 
 	     }
 		//print_r($tzcities);
@@ -553,7 +546,6 @@ Africa/Asmara
 		}
 		return ($arr);
 	}
-
 	/* ---------------------------------------------------------------------- */
    function amr_deal_with_tzpath_in_date ( $tzstring )	{
    /* Receive something like   /mozilla.org/20070129_1/Europe/Berlin
@@ -581,7 +573,7 @@ Africa/Asmara
 			if (ICAL_EVENTS_DEBUG) {echo 'For value: '.$VALUE.' text is blank';}
 			return (false);
 			}
-	
+
 		switch ($VALUE) {
 			case 'DATE-TIME': {
 				if (!($d = amr_parseDateTime($text, $tzobj))) return (false);
@@ -623,7 +615,7 @@ Africa/Asmara
 	we want to convert so can use like this +1 week 2 days 4 hours 2 seconds ether for calc with modify or output.  Could be neg (eg: for trigger)
 	*/
 
-	
+
         if (preg_match('/([+]?|[-])P(([0-9]+W)|([0-9]+D)|)(T(([0-9]+H)|([0-9]+M)|([0-9]+S))+)?/',
 			trim($text), $durvalue)) {
 
@@ -654,6 +646,12 @@ Africa/Asmara
             return false;
         }
     }
+
+/* ---------------------------------------------------------------------- */
+function amr_parse_CATEGORIES ($text ) {
+	$cats = explode(',',$text);
+	return($cats);
+}
 /* ---------------------------------------------------------------------- */
 function amr_track_last_mod($date) {
 global $amr_last_modified;
@@ -673,8 +671,6 @@ function amr_parseRDATE ($string, $tzobj ) {
 
  could be multiple dates after : */
 
-	if (isset($_GET['debugexc'])) {echo '<hr>In parse RDATE '; var_dump($string);}
-
 	if (is_object($string)) {/* already parsed */  return($string); }
 
 	if (is_array($string) ) {
@@ -683,14 +679,14 @@ function amr_parseRDATE ($string, $tzobj ) {
 //			$r = $string[0];
 			if (is_object($rdatestring)) {/* already parsed  and is an array of dates */  return($string); }
 			else {
-				if (isset($_GET['debugexc'])) {echo '<br />Doing next r or exdate '.$i.' '.$rdatestring; }
+				//if (isset($_GET['debugexc'])) {echo '<br />Doing next r or exdate '.$i.' '.$rdatestring; }
 				$rdate = amr_parseRDATE ($rdatestring, $tzobj );
 
 			}
 			$rdatearray = array_merge ($rdatearray, $rdate);
 		}
-	
-		if (isset($_GET['debugexc'])) {echo '<br />*** Array of r or exdate '; var_dump($rdatearray); }
+
+		//if (isset($_GET['debugexc'])) {echo '<br />*** Array of r or exdate '; var_dump($rdatearray); }
 		return ($rdatearray);
 	}
 
@@ -715,7 +711,7 @@ function amr_parseRDATE ($string, $tzobj ) {
 		 echo "<br />HELP cannot yet deal with RDATE with VALUE=PERIOD<br />"; return (false);
 			}
 		else {
-			if (isset($_GET['debugexc'])) {echo '<br />*** Parsing RDATE date time ';	var_dump($rdatestring);}
+//			if (isset($_GET['debugexc'])) {echo '<br />*** Parsing RDATE date time ';	var_dump($rdatestring);}
 			if (($rdatestring[0] == 'VALUE=DATE-TIME') and (isset($rdatestring[1])))  {
 				$rdate =  explode(',',$rdatestring[1]);
 			}
@@ -725,7 +721,7 @@ function amr_parseRDATE ($string, $tzobj ) {
 			foreach ($rdate as $i => $r)  {
 					if (empty($r)) { return false; }
 					$dates[$i] = amr_parseDateTime ( $r, $tzobj);
-					if (isset($_GET['debugexc'])) {echo '<br />*** Parsed as: '; var_dump($dates[$i]);}
+					if (isset($_GET['debugexc'])) {echo '<br />*** Parsed as: '.$dates[$i]->format('c');}
 			}
 			if (empty($dates)) return (false);
 			else return ($dates);
@@ -807,45 +803,61 @@ global $amr_globaltz;
 			$attach = amr_parseAttach($parts);
 			If (ICAL_EVENTS_DEBUG) echo '<br />ATTACH returned:<br />'.print_r($attach,true);
 			return($attach);
+			}
+		case 'CATEGORIES': {
+			$cats = amr_parse_CATEGORIES($parts[1]);
+			If (ICAL_EVENTS_DEBUG) {
+				var_dump($parts[1]);
+				echo '<br />catreturned  :<br />'.print_r($cats ,true);
 			}	
+			return($cats );
+			}
 		default:
-			if (isset ($parts[1])) return (str_replace ('\,', ',', $parts[1]));  /* replace any slashes added by ical generator */
+			if (isset ($parts[1])) return (str_replace ('\,', ',', $parts[1]));
+			/* replace any slashes added by ical generator */
 			else return;
 	}
 }
 /* ---------------------------------------------------------------------- */
 function amr_parseAttach ($parts) {
-/* 
+/*
 This property can be specified multiple times in a
+
       "VEVENT", "VTODO", "VJOURNAL", or "VALARM" calendar component with
+
       the exception of AUDIO alarm that only allows this property to
-      occur once. 
+
+      occur once.
 Default is a URL ATTACH:http://example.com/public/quarterly-report.doc
 But could also have :
 ATTACH:CID:jsmith.part3.960817T083000.xyzMail@example.com
 ATTACH;FMTTYPE=audio/basic:ftp://example.com/pub/
+
  sounds/bell-01.aud
+
 ATTACH;FMTTYPE=application/msword:http://example.com/
+
  templates/agenda.doc
   ATTACH;FMTTYPE=text/plain;ENCODING=BASE64;VALUE=BINARY:VGhlIH
+
       F1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZy4
 
 */
 	if (ICAL_EVENTS_DEBUG) {echo '<hr><br/>Attach to parse <br />'; var_dump($parts); echo '<hr>';}
-	
+
 	if (!empty($parts[0])) {
 		if ($parts[0] === 'ATTACH') { // then we have a simple URL or CID
 			if (!empty ($parts[1])) {
 				if (substr($parts[1],0,3) === 'CID' ) {
 					$newattach['type'] = 'CID';
 					$newattach['CID'] = esc_attr(substr($parts[1],4));
-					
+
 					}
-				else { // must be htpp or ftp 
+				else { // must be htpp or ftp
 					$newattach['type'] = 'url';
 					$newattach['url'] = esc_url_raw($parts[1]);
 				}
-				
+
 			}
 			else return (null);
 		}
@@ -855,7 +867,7 @@ ATTACH;FMTTYPE=application/msword:http://example.com/
 				$newattach['url'] = esc_url_raw($parts[1]);
 				}
 			else {
-				$newattach['binary'] =  amr_remove_folding ($parts[1]);  
+				$newattach['binary'] =  amr_remove_folding ($parts[1]);
 				}
 			}
 	}
@@ -939,7 +951,7 @@ function amr_parse_component($type)	{	/* so we know we have a vcalendar at lines
 function amr_remove_folding ($data) {
 		$data = preg_replace ( "/[\r\n]+ /", "", $data );
 	    $data = preg_replace ( "/[\r\n]+/", "\n", $data );
-	return($data);	
+	return($data);
 }
 /* ---------------------------------------------------------------------- */
 // Parse the ical file and return an array ('Properties' => array ( name & params, value), 'Items' => array(( name & params, value), )

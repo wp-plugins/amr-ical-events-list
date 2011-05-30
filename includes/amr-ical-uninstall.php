@@ -1,7 +1,8 @@
 <?php
 /* This is the amr ical uninstall file */
 	function amr_ical_uninstall(){	
-	if (function_exists ('delete_option')) {  			
+	if (function_exists ('delete_option')) {  		
+		delete_option('amr-ical-calendar_preview_url');
 		if ( $del1 = delete_option('amr-ical-events-list')) {
 			echo '<p>'.__('AmR iCal Options deleted from Database', 'amr-ical-events-list').'</p>';
 		};

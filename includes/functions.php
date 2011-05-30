@@ -28,8 +28,10 @@ function array_merge_recursive_distinct ( array &$array1, array &$array2 ) { /* 
   }
   return $merged;
 }
+
 /* ---------------------------------------------------------------------*/
 function amr_clean_link() { /* get cleaned up version of current url  remove other parameters */
+global $post;
 
 	$link = remove_query_arg(array(
 	'months',
@@ -38,10 +40,19 @@ function amr_clean_link() { /* get cleaned up version of current url  remove oth
 	'startoffset',
 	'hoursoffset',
 	'eventoffset',
-	'monthsoffset'));
+	'monthsoffset',
+	'calendar',
+	'agenda',
+	'eventmap'));
+	
+	if (is_front_page() and (isset($post->ID))) {
+		$pageid = $post->ID;
+		$link = add_query_arg(array('page_id'=>$pageid),$link);
+	}
 
 	return ($link);
 }
+/* ---------------------------------------------------------------------*/
 	function amr_allowed_html () {
 //	return ('<p><br /><hr /><h2><h3><<h4><h5><h6><strong><em>');
 	return (array(
@@ -81,7 +92,7 @@ function  amr_make_sticky_url($url) {
 	
 	if (!$page_id) return false ;
 	else {
-		$sticky_url  = add_query_arg('page_id',$page_id,get_bloginfo('url'));
+		$sticky_url  = add_query_arg('page_id',$page_id, get_bloginfo('url'));
 		return( $sticky_url) ;
 	}	
 }	
@@ -135,8 +146,39 @@ function amr_request_acknowledgement () {
 ?><div class="postbox" style="padding:1em 2em; width: 600px;">
 	<p style="border-width: 1px;"><?php _e('I try to make these plugins work <strong>"out of the box"</strong> with minimal effort; that they be easy to use but <strong>very configurable</strong>; <strong>well tested</strong>; with <strong>valid html and css</strong> both at the front and admin area.','amr-ical-events-list');?> <?php
 _e('If you have a feature request, please do let me know. ','amr-ical-events-list');
-?></p><p><b><?php _e('To edit events in wordpress:','amr-ical-events-list'); ?> <a href="http://icalevents.anmari.com" >icalevents.anmari.com</a></b>
+?></p><p><b><?php _e('To edit events in wordpress:','amr-ical-events-list'); ?> <a href="http://icalevents.com" >icalevents.com</a></b></p>
 </div>
 <?php
+}
+/* -------------------------------------------------------------------------------------------------------------*/
+if (!function_exists('amr_simpledropdown')) { 
+	function amr_simpledropdown($name, $options, $selected) {
+//			
+		$html = '<select name=\''.$name.'\'>';
+		foreach ($options as $i => $option) {
+//				
+			$sel = selected($i, $selected, false); //wordpress function returns with single quotes, not double 
+			$html .= '<OPTION '.$sel.' label=\''.$option.'\' value=\''.$i.'\'>'.$option.'</OPTION>';
+		}
+		$html .= '</select>';
+		return ($html);
+	}
+}
+/* -------------------------------------------------------------------------------------------------------------*/
+function amr_ngiyabonga() {
+		/* The credit text styling is designed to be as subtle as possible (small font size with leight weight text, and right aligned, and at the bottom) and fit in within your theme as much as possible by not styling colours etc */
+		/* You may however style it more gently, and/or subtly to fit in within your theme.  It is good manners to donate if you remove it */
+
+global $amr_options;
+	if (empty($amr_options['ngiyabonga']))		
+	return (
+		'<span class="amrical_credit" style="float:right;font-size:x-small;font-weight:lighter;font-style:italic;" >'
+		.'<a title="Ical Upcoming Events List version '.AMR_ICAL_LIST_VERSION.'" '
+		.'href="http://icalevents.com/">'
+//		.'<img src= "http://icalevents.com/images/plugin-ical1.png" alt ="'
+		.__('Events plugin by anmari','amr-ical-events-list')
+//		.'"</img>'
+		.'</a></span>'
+		);
 }
 ?>

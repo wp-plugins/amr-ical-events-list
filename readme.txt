@@ -3,8 +3,8 @@ Contributors: anmari
 Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, ical-feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar,
 
 Requires at least: 2.8
-Tested up to: 3.1.1
-Version: 3.10.5
+Tested up to: 3.1.3
+Version: 4.0
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.
@@ -42,8 +42,17 @@ Many thanks to the following people for the translations.  Note that I am unable
 If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me the .po files for your language.
 
 == Changelog ==
-= Version 3.10.5 =
-* Fix: Additional check added in 3.10.5 will now work with recurring COUNT as well.
+= Version 4 =
+* Add: can now have multi-month calendar listings - like a year view.  use months=n in the calendar shortcodes
+* Add: better support for multi day in box calendar. Multiday (ie where duration is > 1 day) will now appear on each day box. Css tags are offered so that you can style them creatively (firstday, middledays, lastday).  The default css in 2010 based themes shows a solid bar of the events.  Please check your theme for padding if you wish a similar effect.
+* Add: Import and Export of List types, delete, copy 
+* Change: NB: some html tweaks and a major css cleanup - PLEASE check all your output after updating, especially if you were using your own css.
+* Change: NB: Default settings have also changed.  If you did not have your settings saved and were just using defaults, the listings will be a bit different. 
+* Change: change to way fields are listed for including in the listing templates - they will now be sorted by the column and  the order.
+* Change: categories from a ics file in an event listing now have links to query the page with the events for just those categories of events 
+* Fix: Bigger images option will work now
+* Fix: if you want your main calendar on the home page, the linking will now use the pageid to tell wordpress to stay on the home page and just pass the other query parameters on so the plugin can use them - else wordpress starts trying to figure out what kind of archive you want!
+
 
 = Version 3.10.4 =
 * Fix: Additional check added to prevent additional instances in recurring logic.  There has to be an initially 1  extra iteration to cope with negative bydays (like -2MO in a month).  However a double check is required to ensure that an extra instance is not inadvertently let through.
