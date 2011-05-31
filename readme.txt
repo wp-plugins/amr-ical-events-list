@@ -4,7 +4,7 @@ Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, i
 
 Requires at least: 2.8
 Tested up to: 3.1.3
-Version: 4.0
+Version: 4.0.1
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.
@@ -42,6 +42,9 @@ Many thanks to the following people for the translations.  Note that I am unable
 If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me the .po files for your language.
 
 == Changelog ==
+= Version 4.0.1 =
+* Fix: put the upcoming events list widget title back - should not have been messed with.
+
 = Version 4 =
 * Add: can now have multi-month calendar listings - like a year view.  use months=n in the calendar shortcodes
 * Add: better support for multi day in box calendar. Multiday (ie where duration is > 1 day) will now appear on each day box. Css tags are offered so that you can style them creatively (firstday, middledays, lastday).  The default css in 2010 based themes shows a solid bar of the events.  Please check your theme for padding if you wish a similar effect.

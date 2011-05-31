@@ -78,7 +78,9 @@ class amr_ical_widget extends WP_widget {
 	
 	//var_dump($criteria);
 	echo $before_widget;
-	if (!empty($criteria['headings'])) echo $before_title . $title . $after_title ;
+	
+//	if (!empty($criteria['headings'])) 
+	echo $before_title . $title . $after_title ;
 
 	echo $content;
 	echo $after_widget;
