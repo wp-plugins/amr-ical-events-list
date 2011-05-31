@@ -124,7 +124,7 @@ table.smallcalendar td.today a {
 }
 table.largecalendar td.today a {
 	color: #111;
-}
+}	
 table.smallcalendar td.hasevents{
 	/* background: green; */  /* enter a colour code here to have days with events stand out - maybe for availability */
 }
@@ -155,6 +155,15 @@ table.smallcalendar,
 #events_wrap  table tbody td .lastday { /* Multi day styling */
       background: #eee;
      }	
+	 
+#events_wrap  table tbody td.selected .firstday,	  
+#events_wrap  table tbody td.selected .middleday,  
+#events_wrap  table tbody td.selected .lastday { /* to override Multi day styling */
+    background: #777;
+     }
+	 
+ 
+	 
 /* unfortunately we need to use divs to hide the details if we want to allow html in details and keep html valid */
 /* ------------------------------ In Box Calendar-- hide the details until we want them -----------*/
 #events_wrap table.ical td .event div.details2{ /* hide column 2 */
@@ -350,4 +359,8 @@ table.largecalendar tbody td:hover div.day { /* and then use this to see the day
 	font-size: x-small; 
 	font-style: italic;
 	color: #000000;
+}
+/* ---- ----------------------------------------------  to make large images okay */
+.eventinfo ul li {  
+	clear: both;
 }

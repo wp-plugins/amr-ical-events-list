@@ -4,7 +4,7 @@ Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, i
 
 Requires at least: 2.8
 Tested up to: 3.1.3
-Version: 4.0.1
+Version: 4.0.2
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.
@@ -42,6 +42,10 @@ Many thanks to the following people for the translations.  Note that I am unable
 If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me the .po files for your language.
 
 == Changelog ==
+= Version 4.0.2 =
+* Fix: the sorting of events within a day in the large calendar got a bit messed by the new sorting for the multi day.  Now it sorts as follows: multidays to the top in order of earliest start date.  Then all days, then any other events in order of start time.
+* Change: little default css tweak for anyone using large images - they are greater than the default theme line height which made the floats in the eventinfo go a bit wonky - cleared now
+
 = Version 4.0.1 =
 * Fix: put the upcoming events list widget title back - should not have been messed with.
 
