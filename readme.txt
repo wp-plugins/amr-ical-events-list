@@ -4,7 +4,7 @@ Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, i
 
 Requires at least: 2.8
 Tested up to: 3.1.3
-Version: 4.0.3
+Version: 4.0.4
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.
@@ -42,6 +42,11 @@ Many thanks to the following people for the translations.  Note that I am unable
 If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me the .po files for your language.
 
 == Changelog ==
+= Version 4.0.4 =
+* Fix: large calendar sorting within a day (supposed to be fxoed in 4.0.2) was not properly uploaded before. 
+* Change: only admin can run uninstall, and only from listing screen 
+* Fix: non-english installs can now also delete list types
+
 = Version 4.0.3 =
 * Change: added some more 'text' to the admin area to highlight how to configure a list type.  Also added a preview link to the configure screens.
 

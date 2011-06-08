@@ -399,7 +399,12 @@ function amr_list_one_days_events($events, $columns) { /* for the large calendar
 
 /* -- body code ------------------------------------------*/
 		$groupedhtml = '';
+		
+		// need to resort in case we have messed the timing up, keep the multi days to the top, hopefully in the order that they were in before.
+		$events = amr_sort_by_two_cols ('dummytime','MultiDay', $events);
+		
 		foreach ($events as $i => $e) { /* for each event, loop through the properties and see if we should display */
+	
 			amr_derive_component_further ($e); 
 			if (!empty($e['Classes']))
 				$classes = strtolower($e['Classes']);
@@ -564,7 +569,31 @@ function amr_sort_by_two_cols ($col1, $col2, &$data) {  // sorts by two columns 
 			$column2[$key]  = '-999';
 
 	}
+	
 	array_multisort($column1, SORT_ASC, $column2, SORT_DESC,   $data);
+
+	return $data;
+}
+// ----------------------------------------------------------------------------------------
+function amr_sort_by_three_cols ($col1, $col2, $col3, &$data) {  // sorts by two columns ascending
+	// Obtain a list of columns
+	foreach ($data as $key => $row) {
+		// if col1 is an object ? 
+	    if (!empty($row[$col1])) 
+			$column1[$key]  = $row[$col1];
+		else 
+			$column1[$key]  = '-1';//will never happen
+		if (!empty($row[$col2])) 
+			$column2[$key]  = $row[$col2];
+		else 
+			$column2[$key]  = '-999';
+		if (!empty($row[$col3])) 
+			$column3[$key]  = $row[$col3];
+		else 
+			$column3[$key]  = '-999';	
+
+	}
+	array_multisort($column1, SORT_ASC, $column2, SORT_DESC, $column2, SORT_ASC,   $data);
 
 	return $data;
 }
@@ -611,6 +640,7 @@ global $amr_globaltz;
 				$events[$m]['dummyYMD'] = $event['EventDate']->format('Ymd'); 
 				$events[$m]['MultiDay'] = '0'; // to force non multidays to bottom
 			}
+			$events[$m]['dummytime'] = $event['EventDate']->format('His'); //for sorting
 		}
 		//once we have processed all the events, THEN we can add the dummies in, so we do not reprocess them!
 		if (!empty($dummy )) {
@@ -620,7 +650,7 @@ global $amr_globaltz;
 				}
 			}
 		}
-
+		//$events = amr_sort_by_three_cols ('dummyYMD', 'MultiDay', 'dummytime', $events);
 		$events = amr_sort_by_two_cols ('dummyYMD', 'MultiDay', $events);
 	}
 	return ($events);
