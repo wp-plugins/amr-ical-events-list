@@ -51,6 +51,7 @@ padding: 0 3px;
 #events_wrap table a { /* generally in the table , better notto have these */
 	text-decoration: none;
 }
+
 /*----------------------------------------------- */
 /* Calendar Widget  - styles to look like thepost calendar widget */
 /* Note this works for 2011 theme to override default table settings and achieve compatibility with the wpcalendar widget .
@@ -109,14 +110,27 @@ padding: 0 3px;
 #events_wrap table td.pad {
 	/* background: #fefefe; */  /* if you wanted the padding cells to show - else let background come through */
 }
+#events_wrap .smallcalendar td.hasevents:hover,
 #events_wrap table.largecalendar td.today ,
 #multismallcalendar td.today,
 table.smallcalendar td.selected,
 table.smallcalendar td.today {
 	background: #777;
 	color: #fff;
-	
 }
+/* highlight which day we are hovering over */
+#events_wrap .smallcalendar td.hasevents a:hover {
+color: #fff;
+}
+/* highlight which day we are hovering over */
+#events_wrap  .largecalendar td.hasevents:hover .day{
+	background: #777;
+	color: #fff;
+}
+#events_wrap  .largecalendar td.hasevents:hover .day a{
+	color: #fff;
+}
+
 #events_wrap table.largecalendar td.today a,
 table.smallcalendar td.selected a,
 table.smallcalendar td.today a {
@@ -275,8 +289,18 @@ table.smallcalendar,
 #events_wrap table.weekscalendar  caption {
 	/* text-align: left; */
 }
-#events_wrap  .weekscalendar  	tr th {
-	text-align: left;
+#events_wrap  .weekscalendar  	tr.caption {
+	background: #eee; /* do not normally want to do this, but looks shite in 2011 otherwise*/
+}
+#events_wrap  .weekscalendar  	th,
+#events_wrap  .weekscalendar  	td {
+	width: 14%;
+	padding: 0;
+	margin: 0;
+}
+#events_wrap  .weekscalendar 	td div.event {
+	padding-left: 2px;
+	padding-right: 2px; 
 }
 /*----------------------------------------ics calendar properties  */
 .icalprop,
@@ -321,6 +345,14 @@ table.largecalendar tbody td:hover div.day { /* and then use this to see the day
 	border: none !important;
 	vertical-align: text-bottom;
 	}
+#events_wrap .vevent {  /*--/ helps */
+	clear: right;
+}
+/*------------------------------if event posts have large images in the content - can make the table too wide -------------- */
+#events_wrap table img {
+		max-width: 400px;
+}	
+	
 /* ------------------------------- the bling icons -------------------------------*/
 .amr-bling { /* float our little icons to the right */
 	float: right;
@@ -364,3 +396,13 @@ table.largecalendar tbody td:hover div.day { /* and then use this to see the day
 .eventinfo ul li {  
 	clear: both;
 }
+/* ------------------------------------------------------ more optional catgeory or tag styling , by name or id (using tid) 
+#events_wrap .eventscat,
+#events_wrap table tr.eventscat td.amrcol1 {     
+	border-left: solid 5px green;
+}
+#events_wrap table tr.t1 td.amrcol1 { 
+	border-left: solid 5px red;
+}
+
+ */

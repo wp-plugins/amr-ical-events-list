@@ -1,4 +1,11 @@
 <?php //comonly useful functions
+function amr_memory_convert($size)
+ {
+    $unit=array('b','kb','mb','gb','tb','pb');
+    return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
+ }
+// ----------------------------------------------------------------------------------------
+
 if (!function_exists('esc_textarea') ) {
 	function esc_textarea( $text ) {
 	$safe_text = htmlspecialchars( $text, ENT_QUOTES );

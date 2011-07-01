@@ -31,7 +31,11 @@ function amr_get_events_in_months_format ($events, $months, $start) {
 		foreach ($events as $event) {
 			
 			//$yearmonth = $event['EventDate']->format('Ym');
-			if (empty ($event['dummyYMD'])) {echo '<br />Error in dummy yMD'; var_dump($event);}
+			if (empty ($event['dummyYMD'])) {
+				if (ICAL_EVENTS_DEBUG) {
+					echo '<br />Error in dummy YMD for multi day event'; var_dump($event); 
+				}				
+			}
 			else $yearmonth = substr($event['dummyYMD'],0,6); // quicker?
 			if (isset($monthsofevents[$yearmonth])) // then we have generated dummy events past our end date, so stop
 				$monthsofevents[$yearmonth][] = $event;
@@ -68,12 +72,13 @@ function amr_prepare_day_titles ($titles) {
 // ----------------------------------------------------------------------------------------
 function amr_get_events_in_weeks_format ($events, $weeks, $start) {
 
+	if (isset($_GET['debugwks'])) { echo '<br />Separate '.count($events).' events into weeks for '.$weeks.' weeks';}
 	$weeksofevents= array();
 // prepare the months array so we show a calendar even if no events 
 	$dummydate = new Datetime();
 	$dummydate = clone $start ;
-	for ($i = 0; $i <= $weeks; $i++) {
-		$weekbeginning = $dummydate->format('Ymj');
+	for ($i = 0; $i < $weeks; $i++) {
+		$weekbeginning = $dummydate->format('Ymj'); if (isset($_GET['debugwks'])) {echo '<br />weekbeginning'.$weekbeginning; }
 		$weeksofevents[$weekbeginning] = array();
 		date_modify($dummydate, '+7 days');
 	}
@@ -82,15 +87,19 @@ function amr_get_events_in_weeks_format ($events, $weeks, $start) {
 // assign events to the box of their year and month	
 	if (!empty ($events)) {
 		foreach ($events as $event) {
-			$dummydate = clone $event['EventDate'];
-			$dummydate = amr_get_human_start_of_week ($dummydate , $wkst);
-			$weekbeginning = $dummydate->format('Ymj');
-			if (isset($weeksofevents[$weekbeginning])) 
-				$weeksofevents[$weekbeginning][] = $event;
+			if (!empty($event['EventDate']) ) {
+				$dummydate = clone $event['EventDate'];
+				$dummydate = amr_get_human_start_of_week ($dummydate , $wkst);
+				$weekbeginning = $dummydate->format('Ymj');
+				if (isset($weeksofevents[$weekbeginning])) 
+					$weeksofevents[$weekbeginning][] = $event;
+				else 	$weeksofevents['20000101'][] = $event;
+			}
+			else if (isset($_GET['debugwks'])) {echo '<br />event with no event date'; var_dump($event);}
 		}
 	}
 	if (isset($_GET['debugwks'])) {
-		echo '<br />Have adate for:';
+		echo '<br />Have dates for:'.count($weeksofevents).' weeks';
 		foreach ($weeksofevents as $i => $monthevents) {
 			echo '<br />'.$i.' '.count($monthevents);
 			foreach($monthevents as $i => $e) {
@@ -100,6 +109,10 @@ function amr_get_events_in_weeks_format ($events, $weeks, $start) {
 	}
 
 	return ($weeksofevents);
+}
+// ----------------------------------------------------------------------------------------
+function amr_clear_html ($html) {
+	return '';
 }
 // ----------------------------------------------------------------------------------------
 function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = true) { /* startingpoint was wp calendar */
@@ -118,11 +131,15 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 		$link = amr_clean_link();
 
 	$months = 1;
-	$weeks = 0;
-	if (isset ($amr_limits['months'])) 
+	$weeks = 1;
+	if (isset ($amr_limits['months'])) {
 		$months = $amr_limits['months'];  //may need later on if we are going to show multiple boxes on one page
-	else if (isset ($amr_limits['weeks'])) 	
+		$weeks = 0;
+		}
+	else if (isset ($amr_limits['weeks'])) 	{
 		$weeks = $amr_limits['weeks'];
+		$months=0;
+		}
 
 	// testing 
 	//$weeks = 2;		
@@ -142,7 +159,6 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 	else 	
 		$start->setDate($thisyear, $thismonth, $start->format('j'));
 
-	
 	// what was asked for  in url (in case using small calendar as a selector )
 
 	if (!empty($_REQUEST['start']) and is_numeric($_REQUEST['start'] )) {	
@@ -157,15 +173,17 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 	}	
 
 	$events = amr_check_for_multiday_events ($events); // now have dummy multi day events added and field dummyYMD
+	
 
 	if (!($liststyle === 'weekscalendar')) 
 		$monthsofevents = amr_get_events_in_months_format ($events, $months, $start);
 	else
 		$weeksofevents = amr_get_events_in_weeks_format ($events, $weeks, $start);
 	
+	
+//	var_dump($weeksofevents);
 
-	if ($liststyle === 'weekscalendar') {
-		
+	if ($liststyle === 'weekscalendar') {		
 		if (!empty($amr_options['listtypes'][$amr_listtype]['format']['Day']))
 				$caption_format = $amr_options['listtypes'][$amr_listtype]['format']['Day'];
 		else 	$caption_format = 'j M';	
@@ -189,7 +207,9 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 	if (!empty($amr_limits['show_views']) and $change_view_allowed) 
 		$views = amrical_calendar_views();
 	else $views = '';
-	$multi_output = $views;
+	$html = $views;
+	$calendar_output = '';
+	$multi_output = '';
 
 	if (empty($amr_limits['show_month_nav'])) {
 		$navigation ='';
@@ -197,19 +217,18 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 	}
 	else {	
 			$navigation = amr_calendar_navigation($start, $months, $weeks, $liststyle); // include month year dropdown	with links	
+			add_filter('amr_events_table_caption','amr_clear_html');	
 			if (($liststyle == 'smallcalendar' ) and ($months < 2))	{
 				$tfoot = '<tfoot><tr><td class="calendar_navigation" colspan="7">'.$navigation.'</td></tr></tfoot>';
 				}
 			else {
 				$tfoot = '';
-				$multi_output .= '<div class="calendar_navigation">'.$navigation.'</div>';
-			}
-		
+				$html .= '<div class="calendar_navigation">'.$navigation.'</div>';
+			}		
 	}
 
 	$columns = prepare_order_and_sequence ($amr_options['listtypes'][$amr_listtype]['compprop']);
 	if (empty($columns)) return;
-	
 
 	// now do for each month or week-------------------------------------------------------------------------------------------------------
 	if (isset ($weeksofevents)) $monthsofevents = $weeksofevents; //temp
@@ -224,16 +243,24 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 	
 		if (ICAL_EVENTS_DEBUG) echo '<br />'.$ym;
 		if (isset($_GET['debugwks'])) echo '<br />weeks = '.$weeks.' '.$start->format('c');
+		
+		$dayheaders = 	'<tr class="dayheaders">'.amr_calendar_colheaders($liststyle, $start).'</tr>';
 	
-		if ($liststyle === 'weekscalendar') 
-				$calendar_caption = amr_weeks_caption($start) ;
-		else 	$calendar_caption = amr_date_i18n ($caption_format, $start);
-			
-			$calendar_output = '<table '.$id.' class="'.$class.'" >
-			<caption>' . $calendar_caption. '</caption>
-			<thead><tr>'.amr_calendar_colheaders($liststyle, $start).'</tr></thead>'			
-			.$tfoot
-			.'<tbody>';
+		if ($liststyle === 'weekscalendar') {  // then cannot use thead as can only have one thead per table- else is data
+				$calendar_caption = apply_filters('amr_events_table_caption',amr_weeks_caption($start));
+				if (!empty($calendar_caption) ) 
+					$calendar_caption = '<tr class="caption"><th colspan="7">'.$calendar_caption.'</th></tr>';
+				$calendar_output .= '<tbody>';
+				$calendar_output .= $dayheaders;
+		}
+		else 	{
+			$calendar_caption = apply_filters('amr_events_table_caption',amr_date_i18n ($caption_format, $start));
+			if (!empty($calendar_caption) ) 
+				$calendar_caption = '<caption>' .$calendar_caption.'</caption>';			
+			$calendar_output .= '<table '.$id.' class="'.$class.'" >' . $calendar_caption;
+			$calendar_output .= '<thead>'.$dayheaders.'</thead>'.$tfoot.'<tbody>';
+		}	
+
 
 
 		// Get days with events
@@ -267,6 +294,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 			}
 		}
 
+
 		if (isset($dayswithevents)) $dayswithevents = array_unique ($dayswithevents);
 		$daytitles = amr_prepare_day_titles ($titles);
 
@@ -280,6 +308,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 				//if (ICAL_EVENTS_DEBUG) echo '<br />Day: '.$day.' '.$dayhtml[$day];
 			}
 		}
+//		else echo 'EMPTY events forday';
 
 /* ------See how much we should pad in the beginning */
 			$week = 1;
@@ -300,7 +329,9 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 				$day1 = 1;
 				$daysinmonth = $start->format('t');	
 			}
-			if (isset($_GET['debugwks'])) echo '<br />Days 1= '.$day1;
+			if (isset($_GET['debug'])) echo '<br />Day 1= '.$day1;
+		
+			$newrow = false;
 		
 			for ( $day = $day1; $day <= $daysinmonth; ++$day ) {		
 				
@@ -309,8 +340,10 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 					if ($week > 1) { // then we need to end the previous row
 						$calendar_output .= AMR_NL.'</tr>';						
 						$calendar_output .= AMR_NL.'<tr class="week week'.$week.'">'.AMR_NL;	
-					}	
+					}
+					//else echo 'new row but $week = '.$week;					
 				}	
+				
 				$newrow = false;
 				$lastinrow = '';
 				// check if after this we need a new row //
@@ -319,9 +352,12 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 					$lastinrow = ' endweek';
 					$week = $week+1; // helps to balance out the multi month view	
 				}
+				
+				
 				/* wp code - can't we do better ? */
-				$datestring = $day.'-'.$thismonth.'-'.$thisyear; // must use hyphens for uk english dates, els eit goes US
-				$dow = date('N',strtotime($datestring));
+				$datestring = $day.'-'.$thismonth.'-'.$thisyear; // must use hyphens for uk english dates, else it goes US
+				$dow = date('N',strtotime($datestring)); // does not like dates earlier than 1902
+
 				if (!empty($daytitles[$day]) ) { // then we have events for that day, so can link to it
 					$hasevents = ' hasevents ';
 					$daylink = '<a class="daylink" href="'.
@@ -358,8 +394,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 				$calendar_output .= '</td>';
 			}	
 				
-
-			// now chcek if we need to pad to the end of the week
+			// now check if we need to pad to the end of the week
 			$pad = 7 - calendar_week_mod(date('w', mktime(0, 0 , 0, $thismonth, $day, $thisyear))-$week_begins);
 			if ( $pad != 0 && $pad != 7 ) 
 				$calendar_output .= "\n\t\t".'<td class="pad" colspan="'. esc_attr($pad) .'">&nbsp;</td>';
@@ -371,15 +406,25 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 					"\n\t".'</tr><tr><td class="pad" colspan="7" >&nbsp;</td>'
 					."\n\t";
 				}
-			}			
-			$calendar_output .= "\n\t</tr>\n\t</tbody>\n\t</table>";
+			}	
+				
+			
+			if ($liststyle === 'weekscalendar') 
+				$calendar_output .= "\n\t</tr>\n\t</tbody>\n\t";
+			else 
+				$calendar_output .= "\n\t</tr>\n\t</tbody>\n\t</table>";
 			$multi_output .= $calendar_output;
+			$calendar_output = '';
 			if (isset ($weeks)) date_modify($start, '+7 days');
 			else				date_modify($start, '+1 month');
 			
 	} // for each month
 	
-	return($multi_output);
+	if ($liststyle === 'weekscalendar') // if we are doing weekly, we want only one table so all will line up
+		$multi_output = '<table '.$id.' class="'.$class.'" >'.$multi_output.'</table><!-- end weekly table -->';
+	
+	$html .= $multi_output;
+	return($html);
 }
 /* --------------------------------------------------  */
 function amr_list_one_days_events($events, $columns) { /* for the large calendar */
@@ -432,7 +477,7 @@ function amr_list_one_days_events($events, $columns) { /* for the large calendar
 			}
 			
 			foreach ($colhtml as $col => $chtml) {
-				$eventhtml .= AMR_NL.'<div class="details'.$col.'">'.$chtml.'</div>';
+				$eventhtml .= (empty($chtml)) ?  AMR_NL : AMR_NL.'<div class="details'.$col.'">'.$chtml.'</div>';
 			}
 			if (!($eventhtml === '')) { /* ------------------------------- if we have some event data to list  */
 				$eventhtml = $ev.$classes.'">'.$eventhtml.$evc;
@@ -602,45 +647,53 @@ function amr_check_for_multiday_events (&$events) {	//for each event passed, chc
 global $amr_globaltz;
 	
 	if (!empty ($events)) {
-		foreach ($events as $m => $event) {										
-			date_timezone_set($event['EventDate'], $amr_globaltz);  // may do this earlier (after recurrence though), no harm in twice
-			$days = amr_event_is_multiday($event);
-			if (isset($_GET['debugmulti'])) echo '<br /> multiday = '.$days;
-			if ($days > 1 ) {
-				$day = 1;				
-				if (empty ($events[$m]['Classes'])) $events[$m]['Classes'] = '';
-				$events[$m]['Classes'] .= ' firstday ';	// already have first day
-				$events[$m]['dummyYMD'] = $event['EventDate']->format('Ymd'); 
-				$events[$m]['MultiDay'] = $day; 
-				$tempdate = new DateTime;  // create new obect so we do not update the same object
-				while ($day <= ($days-1)) {
-					if (isset($_GET['debugmulti'])) echo '<br /> day = '.$day;
-			
-					$tempdate = clone $event['EventDate']; // copy the current event date		
-					date_modify ($tempdate,'+'.$day.' days');  // adjust days to currenmt midddle date if necessary
-					// must do like above in case we go over a month 
-					$day = $day+1;
-					$dummy[$m][$day] = $events[$m]; // copy event data over , but use dumy so we do not reprocess the additions
-					$dummy[$m][$day]['dummyYMD'] = $tempdate->format('Ymd');;  // now set the date for this dummy event
-					$dummy[$m][$day]['MultiDay'] = $day;  // flag it as a multi day
-					// set the classes so we can style multi days
-						
-					if ($day >= $days) {
-						$dummy[$m][$day]['Classes'] .= ' lastday ';
-						$dummy[$m][$day]['Classes'] = str_replace ('firstday', '', $dummy[$m][$day]['Classes']);
-					}
-					else {
-						$dummy[$m][$day]['Classes'] = str_replace ('firstday', '', $dummy[$m][$day]['Classes']);
-						$dummy[$m][$day]['Classes'] .= ' middleday ';
-					}
+		foreach ($events as $m => $event) {	
+			if (empty($event['EventDate'])) {
+				if (ICAL_EVENTS_DEBUG) {
+					echo 'Unexpected empty event date for event '; 
+					print_r($event, true);
 				}
-				
 			}
 			else {
-				$events[$m]['dummyYMD'] = $event['EventDate']->format('Ymd'); 
-				$events[$m]['MultiDay'] = '0'; // to force non multidays to bottom
-			}
-			$events[$m]['dummytime'] = $event['EventDate']->format('His'); //for sorting
+				date_timezone_set($event['EventDate'], $amr_globaltz);  // may do this earlier (after recurrence though), no harm in twice
+				$days = amr_event_is_multiday($event);
+				if (isset($_GET['debugmulti'])) echo '<br /> multiday = '.$days;
+				if ($days > 1 ) {
+					$day = 1;				
+					if (empty ($events[$m]['Classes'])) $events[$m]['Classes'] = '';
+					$events[$m]['Classes'] .= ' firstday ';	// already have first day
+					$events[$m]['dummyYMD'] = $event['EventDate']->format('Ymd'); 
+					$events[$m]['MultiDay'] = $day; 
+					$tempdate = new DateTime;  // create new obect so we do not update the same object
+					while ($day <= ($days-1)) {
+						if (isset($_GET['debugmulti'])) echo '<br /> day = '.$day;
+				
+						$tempdate = clone $event['EventDate']; // copy the current event date		
+						date_modify ($tempdate,'+'.$day.' days');  // adjust days to currenmt midddle date if necessary
+						// must do like above in case we go over a month 
+						$day = $day+1;
+						$dummy[$m][$day] = $events[$m]; // copy event data over , but use dumy so we do not reprocess the additions
+						$dummy[$m][$day]['dummyYMD'] = $tempdate->format('Ymd');;  // now set the date for this dummy event
+						$dummy[$m][$day]['MultiDay'] = $day;  // flag it as a multi day
+						// set the classes so we can style multi days
+							
+						if ($day >= $days) {
+							$dummy[$m][$day]['Classes'] .= ' lastday ';
+							$dummy[$m][$day]['Classes'] = str_replace ('firstday', '', $dummy[$m][$day]['Classes']);
+						}
+						else {
+							$dummy[$m][$day]['Classes'] = str_replace ('firstday', '', $dummy[$m][$day]['Classes']);
+							$dummy[$m][$day]['Classes'] .= ' middleday ';
+						}
+					}
+					
+				}
+				else {
+					$events[$m]['dummyYMD'] = $event['EventDate']->format('Ymd'); 
+					$events[$m]['MultiDay'] = '0'; // to force non multidays to bottom
+				}
+				$events[$m]['dummytime'] = $event['EventDate']->format('His'); //for sorting
+			}	
 		}
 		//once we have processed all the events, THEN we can add the dummies in, so we do not reprocess them!
 		if (!empty($dummy )) {

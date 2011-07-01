@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.0.4');
+define('AMR_ICAL_LIST_VERSION', '4.0.5');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -272,18 +272,24 @@ global 	$amr_freq,
 		$wp_locale;
 	$sep = '&nbsp;';
 	$c = '';
+	
 	if (isset($rule['FREQ'])) {
 		$nicefrequnit = $amr_freq_unit[$rule['FREQ']]; /* already translated value */
-		if (isset($rule['INTERVAL'])) /*   the freq as it is repetitive */
-			$interval  = ' '.sprintf(__('Every %s %s','amr-ical-events-list'), ical_ordinalize($rule['INTERVAL']),$nicefrequnit).$sep;
+		if (isset($rule['INTERVAL'])) {/*   the freq as it is repetitive */
+			$interval  = ' '
+			.sprintf(__('Every %s %s','amr-ical-events-list'),
+    			ical_ordinalize($rule['INTERVAL']),
+				$nicefrequnit).$sep;
+		}
 //		else $interval = ' '.sprintf( __('every %s','amr-ical-events-list'), $nicefrequnit).$sep; // sounds funny to have daily every day, only have if every 2nd etc
-
 //		$nicefreq = $amr_freq[$rule['FREQ']].$interval; /* already translated value */
 
 		else $interval = $amr_freq[$rule['FREQ']]; /* already translated value */
 
 		if (isset($rule['BYSETPOS'])) $c .= ' '.
-			sprintf(__('On %s instance within %s', 'amr-ical-events-list'),amr_prettyprint_byordinal($rule['BYSETPOS']),$interval);
+			sprintf(__('On %s instance within %s', 'amr-ical-events-list')
+			,amr_prettyprint_byordinal($rule['BYSETPOS'])
+			,$interval);
 //		else $c .= 	$nicefreq;
 		else $c .= 	$interval;
 		if (isset($rule['COUNT'])) $c .= ' '.sprintf(__('%s times','amr-ical-events-list'), $rule['COUNT']).$sep;
@@ -1013,7 +1019,7 @@ what about all day?
 			case 'UNTIL': {
 				$htmlcontent = amr_format_date ($amr_formats['Day'], $content);
 				if (empty($event['allday']) or !($event['allday'] == 'allday'))
-					$htmlcontent  .= ' '.amr_format_date ($amr_formats['Time'], $content);
+					$htmlcontent  .= ' '.amr_format_time ($amr_formats['Time'], $content);
 				break;
 				}
 			case 'X-WR-TIMEZONE': { /* amr  need to add code to reformat the timezone as per admin entry.  Also only show if timezone different ? */
@@ -1290,7 +1296,9 @@ function amr_derive_info_for_list_only (&$e) {
 	if (isset($e['name']))  $e['Classes'] .= ' '.$e['name'];
 	if (isset($e['type']))  $e['Classes'] .= ' '.$e['type'];  /* so we can style events, todo's differently */
 	if (isset($e['CATEGORIES']))
-		$e['Classes'] .= ' '.str_replace(',',' ',amr_just_flatten_array($e['CATEGORIES']));
+		$e['Classes'] .= ' '.implode(' ',$e['CATEGORIES']);
+	if (isset($e['tag_ids']))
+		$e['Classes'] .= ' t'.implode(' t',$e['tag_ids']);
 //	if (isset($e['UID'])) {
 //		$e['Bookmark'] = str_replace('@','',$e['UID']);  /* must be before summary as it is used there .  Must be a char to start not a number and get rid of odd chars for validation*/
 //		$e['Bookmark'] = 'a'.htmlentities(str_replace('http://','',$e['Bookmark'] ).$bookm);
@@ -1439,14 +1447,14 @@ global 	$amr_options,
 		$amr_globaltz;
 
 	date_timezone_set ($datestamp, $amr_globaltz);  /* Converting here, but then some derivations wrong eg: unsetting of end date */
-
 	// check for midnight, midday, noon etc
 	$time = $datestamp->format('His');
 	if (isset($_GET['tzdebug'])) echo  '<br />'.$time;
-	if ($time === '000000') return (''); //midnight, start of day
-	if ($time === '120000') return (__('midday', 'amr-ical-events-list'));  // to avoid am/pm confusion
-
-	return (amr_format_date( $format, $datestamp))	;
+	
+	$humanspeak = apply_filters('amr_human_time',$time);
+	if (!($time === $humanspeak )) return($humanspeak);
+	else 
+		return (amr_format_date( $format, $datestamp))	;
 }
 /* -------------------------------------------------------------------------------------------*/
 function amr_format_date( $format, $datestamp) { /* want a  integer timestamp or a date object  */
@@ -2125,9 +2133,10 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 			}
 			If (isset($_REQUEST['debug'])) echo '<br />Got x events '.count($components);
 			$components = amr_process_icalevents($components, $start, $end, $no_events);
+			If (isset($_REQUEST['debug'])) echo '<br />After proces ical -Got x events '.count($components);
 			$amrtotalevents = count($components);
 			$components = amr_constrain_components($components, $start, $end, $no_events);
-			If (ICAL_EVENTS_DEBUG) echo '<br />After constrain '.count($components);
+			If ((ICAL_EVENTS_DEBUG) or (isset($_REQUEST['debug']))) echo '<br />After constrain '.count($components);
 		}
 		if (!isset ($amr_one_page_events_cache[$key])) {
 				$amr_one_page_events_cache[$key]['components'] = $components;
@@ -2189,20 +2198,7 @@ function amr_get_params ($attributes=array()) {
 	$amr_calendar_url,	
 	$amrW; // indicates if widget
 
-	global 	$amr_freq,
-		$amr_freq_unit;
 
-	$amr_freq['DAILY'] 			= __('Daily', 'amr-ical-events-list');
-	$amr_freq['WEEKLY'] 		= __('Weekly', 'amr-ical-events-list');
-	$amr_freq['MONTHLY']		= __('Monthly', 'amr-ical-events-list');
-	$amr_freq['YEARLY'] 		= __('Yearly', 'amr-ical-events-list');
-	$amr_freq['HOURLY'] 		= __('Hourly', 'amr-ical-events-list');
-	$amr_freq['RDATE'] 			= __('on certain dates', 'amr-ical-events-list');
-	$amr_freq_unit['DAILY'] 	= __('day', 'amr-ical-events-list');
-	$amr_freq_unit['WEEKLY'] 	= __('week', 'amr-ical-events-list');
-	$amr_freq_unit['MONTHLY']	= __('month', 'amr-ical-events-list');
-	$amr_freq_unit['YEARLY'] 	= __('year', 'amr-ical-events-list');
-	$amr_freq_unit['HOURLY'] 	= __('hour', 'amr-ical-events-list');
 
 //	if (!empty ($amrW) ) //must be empty not isset
 //		$amr_listtype='4';
@@ -2231,7 +2227,9 @@ function amr_get_params ($attributes=array()) {
 	'calendar' => '',
 	'eventmap' => '0',
 	'show_views' => '1',
-	'show_month_nav' => '1',
+	'show_month_nav' => '0',
+	'month_year_dropdown' => '0',
+	'month_prev_next' => '0',
 	'calendar_properties' => '1',
 	'pagination' => '1',
 	'headings' => '1',
@@ -2389,7 +2387,10 @@ function amr_get_params ($attributes=array()) {
 			'pagination',
 			'calendar_properties',
 			'no_filters',
-			'show_month_nav')	)) {
+			'show_month_nav',
+			'month_year_dropdown',
+			'month_prev_next'
+			)	)) {
 			$amr_limits[$i] = abs (intval ( $v));
 			unset($shortcode_params[$i]);  // only unset if empty  what??? - else will lose others
 		}
@@ -2686,7 +2687,7 @@ global $amr_limits,
 	$defaults['weeks'] = 2;
 	$defaults['months'] = 0;
 	$defaults['days'] = 14;
-	$defaults['show_month_nav'] = 0;
+	$defaults['show_month_nav'] = 1;  // will actually do weeks
 	$defaults['show_views'] = '';
 
 	if (empty($attributes)) $atts = $defaults;

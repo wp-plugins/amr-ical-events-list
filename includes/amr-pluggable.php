@@ -2,6 +2,16 @@
 */
 // ----------------------------------------------------------------------------------------
 
+if (!function_exists( 'amr_human_time')) {
+	function amr_human_time ($time) { 
+		if ($time == '000000') return (__('midnight', 'amr-ical-events-list'));  // to avoid am/pm confusion, note midnight is start of day
+		else if ($time == '120000') return (__('midday', 'amr-ical-events-list'));  // to avoid am/pm confusion
+		else return ($time);
+	}
+}
+add_filter ('amr_human_time','amr_human_time');
+// ----------------------------------------------------------------------------------------
+
 if (!function_exists('amrical_calendar_views')) {
 function amrical_calendar_views () {
 	global $amr_limits;
@@ -444,7 +454,8 @@ if (!function_exists('amr_format_attach'))  {
 
 			if (!empty($item['url'])) {
 
-				$item_title = apply_filters('amr_attachment_title', $item_title , $event);
+				$tmp = apply_filters('amr_attachment_title', array('title'=>$item_title , 'event'=>$event));
+				$item_title =$tmp['title'];
 
 				$hrefhtml .= '<a class="ics_attachment" href="'
 				.$item['url']
@@ -677,17 +688,22 @@ if (!function_exists('amr_list_properties')) {
 /* --------------------------------------------------  */
 if (!function_exists('amr_list_events') ) {
 function amr_list_events($events,  $tid, $class, $show_views=true) {
-	global $amr_options,
+	global $wp_locale,$locale,
+		$amr_options,
 		$amr_limits,
 		$amr_listtype,
 		$amr_liststyle,
+		$amr_current_event,
 		$amrW,
 		$amrtotalevents,
 		$amr_globaltz,
 		$amr_groupings,
 		$change_view_allowed;
 
-	if (ICAL_EVENTS_DEBUG) echo '<h2>Now Listing</h2>';
+	if (ICAL_EVENTS_DEBUG) {
+		echo '<br />Peak Memory So far :'.amr_memory_convert(memory_get_usage(true));
+		echo '<h2>Now Listing, and locale = '.$locale.' and list type = '.$amr_listtype.'</h2>';
+	}
 
 	if (!defined('AMR_NL')) define('AMR_NL','PHP_EOL');
 		/* we want to maybe be able to replace the table html for alternate styling - may need to  keep the li items though */
@@ -867,16 +883,32 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 	else $views = '';
 	/* -- show month year nav options or not  ----------------NOT IN USE - need to lift code out for reuse --------------------------*/
 
+	$start    = new Datetime('now',$amr_globaltz);
+	$start    = clone $amr_limits['start'];	
+	$navigation = '';
+//	if (ICAL_EVENTS_DEBUG) {
+//	echo '<br />Limit parameters '; var_dump($amr_limits);
+//	}
 	if ((isset($amr_limits['show_month_nav']))
 	and ($amr_limits['show_month_nav']) ) {
 		if (isset ($amr_limits['months']))	$months = $amr_limits['months'];
 		else $months = 1;
-		$start    = new Datetime('now',$amr_globaltz);
-		$start    = clone $amr_limits['start'];
+//		$start    = new Datetime('now',$amr_globaltz);
+//		$start    = clone $amr_limits['start'];
 		$navigation = amr_calendar_navigation($start, $months, 0, $amr_liststyle); // include month year dropdown	with links
 		$navigation = '<div class="calendar_navigation">'.$navigation.'</div>';
 	}
-	else $navigation = '';
+	else {
+		if ((isset($amr_limits['month_prev_next'])) and $amr_limits['month_prev_next'] 
+		and function_exists('amr_do_month_prev_next_shortcode')) {
+			$navigation .= amr_do_month_prev_next_shortcode();
+		}
+		if ((isset($amr_limits['month_year_dropdown'])) and $amr_limits['month_year_dropdown'] 
+		and function_exists('amr_month_year_navigation')) {
+			$navigation .= amr_month_year_navigation($start);		
+		}
+
+	}
 
 /* -- heading and footers code ------------------------------------------*/
 
@@ -929,7 +961,7 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 
 		$alt = false;
 /* -- body code ------------------------------------------*/
-		if ((!is_array($events)) and (count($events) > 0 )) return ('');
+		if ((!is_array($events)) or (count($events) < 0 )) return ('');
 		$groupedhtml = '';
 		$changehtml = '';
 		$startallgroups = true;
@@ -944,7 +976,7 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 			$col = 1; /* reset where we are with columns */
 
 			$rowhtml = '';
-			foreach ($columns as $col => $order) {
+			foreach ($columns as $col => $order) {  // prepare the row
 				$eprop = '';
 				foreach ($order as $k => $kv) { /* ie for one column in event, check how to order the bits  */
 					/* Now check if we should print the component or not, we may have an array of empty string */
@@ -961,14 +993,21 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 							.amr_format_value($v, $k, $e,$kv['Before'],$kv['After'] )
 							.$selectorend;
 					}
-				} // end of a col
+				} 
 
 				if (empty($eprop)) $eprop = '&nbsp;';  // a value for a dummytable cell if tere were no values in the column
-
-				if (!empty($ul))  // will phase this out eventually
+					
+				// annoying but only way to pass variables by reference is through an array, must return array to then.	
+				// so to allow filter of column and pass which column it is, thsi is how we do it
+				$tmp = apply_filters('amr_events_column_html', 
+					array('colhtml'=>$eprop, 'col'=>$col));
+				$eprop = $tmp['colhtml'];
+				
+				if (!empty($ul))  // will phase the ul's  out eventually
 					$eprop = $ul.' class="amrcol'.$col.' amrcol">'
 					.$eprop
 					.$ulc;
+					
 				/* each column in a cell or list */
 				$cellclasses = '';
 				if (!empty($cell) ) { // if we have a selector that surounds each property , then add classes.
@@ -977,33 +1016,44 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 					$thiscolumn = $cell.' class="'.$cellclasses.'">' .$eprop. (empty($cellc) ? '' : $cellc);
 				}
 				else $thiscolumn = $eprop;
-
-				$rowhtml .= $thiscolumn; // build up the row
-			}
+	
+				$rowhtml .= $thiscolumn; // build up the row with each column 
+			} // end row
 
 //			if (!($eprop === '')) { /* ------------------------------- if we have some event data to list  */
 
 				/* -------------------------- Check for a grouping change, need to end last group, if there was one and start another */
 				$changehtml = '';
+//				$changehtml = $rowhtml;
 				$groupclass = '';
-				if (!empty($g) and ($g)) {
+				if (!empty($g) and ($g)) {  // if there is a already
 					foreach ($g as $gi=>$v) {
 						if (isset($e['EventDate']))
 							$grouping = format_grouping($gi, $e['EventDate']) ;
 						else
 							$grouping = '';
 						$new[$gi] = amr_string($grouping);
-						if (!($new[$gi] == $old[$gi]))	{
-						/* we have a new group  */
+						if (!($new[$gi] == $old[$gi]))	{   // if there is a change of group
+						    /* we have a new group  */
 							$id = amr_string($gi.$new[$gi]);
-							$changehtml .=
-								((!empty($body)) ? $body.' class="'.$gi.'"> ' : '')
-								.((!empty($grow)) ? $grow.'class="group '.$gi.'">' : '')
-								.((!empty($ghcell)) ? $ghcell.' class="'.$id.' group '.$gi. '" >' : '')
+							$changehtml =
+								((!empty($grow)) ? $grow.'class="group '.$gi.'">' : '')
+								.((!empty($ghcell)) ? $ghcell.' class="group '.$gi. '" >' : '')
 								.$grouping
 								.$ghcellc
-								.$growc
-								;
+								.$growc;
+							// allow the row to be filterd to maybe add a column								
+							$tmp = apply_filters ('amr_events_event_html', array('rowhtml'=>$rowhtml, 'event'=>$e));	
+							$rowhtml = $tmp['rowhtml'];
+							// end filter
+							$changehtml .=  // start a new body with the row we just processed that flagged that we had a change of group
+								((!empty($body)) ? $body.' class="'.$gi.'"> ' : '')
+								.(!empty($row) ? ($row.($alt ? ' class="odd alt':' class="').$classes.'"> ') : '')
+								.$rowhtml
+								.$rowc;
+							$rowhtml = '';
+							if ($alt) $alt=false;
+							else $alt=true;
 //
 							$old[$gi] = $new[$gi];
 
@@ -1018,26 +1068,28 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 					$html .= $changehtml;
 
 				}
+				
 				if ($startallgroups) { // there were no groups, so we have no opening body
 					$html .= $body.'>';
 					$startallgroups = false;
 				}
 
 				// so now we havefinsihed that group, start next
-
 				// save the event or row,  for next group
-				$rowhtml = (!empty($row) ? ($row.($alt ? ' class="odd alt':' class="').$classes.'"> ') : '')
+				if (!empty($rowhtml)) {
+					$tmp = apply_filters('amr_events_event_html', array('rowhtml'=>$rowhtml, 'event'=>$e));
+					$rowhtml = $tmp['rowhtml'];
+					$rowhtml = (!empty($row) ? ($row.($alt ? ' class="odd alt':' class="').$classes.'"> ') : '')
 					.$rowhtml
 					.$rowc;
 
-				if ($alt)
-					$alt=false;
-				else
-					$alt=true;
+				if ($alt) $alt=false;
+				else $alt=true;
 
 				$html .= $rowhtml;		/* build  the group of events , adding on eprop */
-//				$groupedhtml = '';
-//				$changehtml = '';
+				$rowhtml = '';
+				}
+			
 			}
 			//end of row or event
 		// finish off each group as there will not have been a change ?
@@ -1067,6 +1119,7 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 	}
 
 }
+
 
 
 /* --------------------------------------------------------- */

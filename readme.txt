@@ -3,8 +3,8 @@ Contributors: anmari
 Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, ical-feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar,
 
 Requires at least: 2.8
-Tested up to: 3.1.3
-Version: 4.0.4
+Tested up to: 3.2. RC2
+Version: 4.0.5
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.
@@ -13,7 +13,7 @@ Event Calendar or Agenda list, add tab views, multiple ics files, handles any re
 
 Display event lists, big box calendars, upcoming events widgets or small calendar widgets. Encourage viewers to subscribe to or bookmark your events on their calendars.  This plugin offers a thorough Ical calendar parser - copes with all the ical recurrence possibilities, and a large part of the rest of the spec. The free version accepts one or many ical urls for ics files.  It produces a very stylable list of events, notes, todo's or freebusy info.
 
-For more information, please see [plugin home page](http://icalevents.anmari.com)
+For more information, please see [plugin home page](http://icalevents.com)
 
 Displays events from multiple calendars in out the box or with customised grouping, formatting and styling. Multiple pages or post or widget or both.
 
@@ -23,15 +23,16 @@ List upcoming recurring or single events, notes, journal, freebusy information f
 
 Group events by month/week/day or many other for presentation and styling. Offers your viewers the option to subscribe or add the events or the whole calendar to their calendars (google or other).
 
-If you also want a complete "inhouse" solution where you can create events in wordpress with multiple event classification options, and produce your own ics feeds from those, please see [amr-events](http://icalevents.anmari.com). amr-events is an extension of this plugin and will use any configuration from it.
+If you also want a complete "inhouse" solution where you can create events in wordpress with multiple event classification options, and produce your own ics feeds from those, please see [amr-events](http://icalevents.com). amr-events is an extension of this plugin and will use any configuration from it.
 
 Test with your calendar's ics file at the demo site:
 
-[Demo site](http://icalevents.anmari.com) 
+[Demo site](http://test.icalevents.com) 
 
 Many thanks to the following people for the translations.  Note that I am unable to verify these and they may be out of date with the current version.:
 
-*   Polish by Kasia from [http://onlinecasinobluebook.com/] (http://www.onlinecasinobluebook.com/)
+*   Italian by Andrea [http://wordpress.org/support/profile/sciamannikoo](sciamannikoo)
+*   Polish by Kasia from [http://onlinecasinobluebook.com/](http://www.onlinecasinobluebook.com/)
 *   French by fxbenard aka 3emeOeil (no link available)
 *   Danish by [Georg](http://wordpress.blogos.dk/s%C3%B8g-efter-downloads/?did=264)
 *   German by Simon Betschmann
@@ -39,11 +40,23 @@ Many thanks to the following people for the translations.  Note that I am unable
 *   Russian (partial) by ghost from http://antsar.info/
 *   Hindi translation  by Ashish J. of Outshine solutions
 
-If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me the .po files for your language.
+If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me both the .mo and .po files for your language.
 
 == Changelog ==
+= Version 4.0.5 =
+* Add: Italian translation.
+* Fix: some translations strings and function calls.  
+* Add: added filters for 'row html' ie html per event  and 'column html' - html per group of event.  This allows you to add own fields to all 'columns' - previously could add to content or excerpt using wordpress filters
+* Add: added filter 'amr_events_table_caption' for box calendar table caption
+* Add: added logic for box calendar caption - if month year drop down navigation shown, then clear the caption as it is redundant (uses the filter mentioned above).
+* Add: a weekly horizontal option, and a sample weekly vertical
+* Add: a filter 'amr_human_time', removable and pluggable to convert 12:00 am to midnight and 12:00 pm to midday, translateable.
+* Change: to default css - add a max image size in event tables, so a big image does not force table too wide.
+* Change: to default css - if larger images chosen, try to clear them so they line up else looks funny if text not as tall as large icon.
+* Change: to boxcalendar - if no content for pseudo 2nd column, the hover details, then the wrap html is not generated - no empty hover box.
+
 = Version 4.0.4 =
-* Fix: large calendar sorting within a day (supposed to be fxoed in 4.0.2) was not properly uploaded before. 
+* Fix: large calendar sorting within a day (supposed to be fixed in 4.0.2) was not properly uploaded before. 
 * Change: only admin can run uninstall, and only from listing screen 
 * Fix: non-english installs can now also delete list types
 
@@ -240,7 +253,7 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 *  Fixed a minor bug with dates that did have an end date,but duration was 0.  Some php datetime installations did not take kindly to being told to add 0 anything.
 *  Almost Totally rewrote the recurrence engine - it will now cater for ALL valid recurrence rules
 *  Woo hoo - hopefully a big improvement in listing options - the start of many more!  Please note - they will change again - they need to be 'cleaner' in their html - will be along the same lines though, so have aplay if you wish.
-*  Caters for all kinds of weird and wonderful timezone ids (in response to [lespaul](http://wordpress.org/support/topic/plugin-amr-ical-events-list-date-time-problem?replies=7).  See also [this note] (http://icalevents.anmari.com/2613-what-every-developer-ought-to-know-about-timezones-wrt-calendar-files/)
+*  Caters for all kinds of weird and wonderful timezone ids (in response to [lespaul](http://wordpress.org/support/topic/plugin-amr-ical-events-list-date-time-problem?replies=7).  See also [this note] (http://icalevents.com/2613-what-every-developer-ought-to-know-about-timezones-wrt-calendar-files/)
 
 = Version 2.9.5 =
 *  Will now cope with ics files that have their dates TZID's enclosed in quotes.
@@ -258,7 +271,7 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 *  Tweaked the summary event url business a bit.  If no url and no default event url either, then no link!
 
 = Version 2.9.2 =
-*  Offers event styling by event categories. IE: if there are categories in the ics file, these will be echoed as classes on the event row.  See (styling of events) [http://icalevents.anmari.com/2382-styling-of-ical-events/]
+*  Offers event styling by event categories. IE: if there are categories in the ics file, these will be echoed as classes on the event row.  See (styling of events) [http://icalevents.com/2382-styling-of-ical-events/]
 *  Fix for display bug noticed by [shanafourder] (http://wordpress.org/support/topic/426964?replies=3#post-1610258) where if the ics event spanned 2 days in it's original timezone. (since some ical generators reduce all events to the UTC timezone, since this very possible).  In this instance the end date would still be shown even if on conversion to display timezone it was the same day as the start date (normally suppressed).  Behaviour has been adjusted so that decision not to show end date is made in the display timezone.
 *   Update of Danish translation from GeorgWP
 
@@ -267,7 +280,7 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 *  Simplified the css a bit, to let theme styling take more effect - removed the box around "today's" events and removed the alt styling on the rows.  If you liked these, then create a custom css in the plugin folder, copy the css from one of the older files.
 
 = Version 2.9 =
-*  Prompted by [Jillian's request](http://icalevents.anmari.com/troubleshooting/comment-page-1/#comment-607), the widget's event summary hyperlink with description text is now optional.  Untick the widget's option and it will give you a leaner widget, with no further information on the event, unless of course you add additional fields via the list type settings.
+*  Prompted by [Jillian's request](http://icalevents.com/troubleshooting/comment-page-1/#comment-607), the widget's event summary hyperlink with description text is now optional.  Untick the widget's option and it will give you a leaner widget, with no further information on the event, unless of course you add additional fields via the list type settings.
 *  Fixed a new bug (introduced in last version update - sorry) that shows up with exceptions and modifications.  Thanks to Georg for advising.
 *  Added the hours parameter similar to months in prior version.  This is an alternative to days, and months and will override those settings.  The startdatetime of the listing will be set to the beginning of the hour for consistency with the other parameters.
 *  With hours added, the days parameter has been changed to start with time 00:00:00 (days used to be 24 hours starting from now).  They will now be clean days, and so the events from earlier in the day will show as history.  If you wish to stay with only current or future events, then enter the appropriate number of hours (ie: days*24). This allows [polyfade and Jaguwar](http://wordpress.org/support/topic/396038) to have their one day calendars (use days=1).
@@ -283,7 +296,7 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 
 = Version 2.7.1 =
 *  Added some exception handling to cope slightly more gracefully with any "bad" dates in the ics file.
-*  At [Alec's request] (http://icalevents.anmari.com/troubleshooting/comment-page-1/#comment-581) titles have been added to the little images.  There were already titles on the hyperlinks and alt on the images.  Html has been revalidated.
+*  At [Alec's request] (http://icalevents.com/troubleshooting/comment-page-1/#comment-581) titles have been added to the little images.  There were already titles on the hyperlinks and alt on the images.  Html has been revalidated.
 *  Fixed a bug that occurred if you had one timezone in your wp and another in the ics file events and had recurring entries that went over a daylight saving change in the files. Recurring events will now have their repeats generated in the original timezone and then converted to the display timezone, not the other way around.
 *  Updated the default css, so that text will align at the top of the table cells in the new twentyten default theme.
 
@@ -301,7 +314,7 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 *  A bug fix for those who experienced date_modify unexpected character errors when using negative date or hour offsets.  The problem was not occuring on my site, so hard to verify that these changes will fix it, however I did find some code that although behaving itself on my sites, could conceivable cause a problem elsewhere.  Also cleaned up a few minor 'notices' that appeared when all levels of php messages were switched on.
 
 = Version 2.6.10 =
-*  Allowed for recurring event rules with numeric "BYDAYS" positive and negative.  See [examples](http://icalevents.anmari.com/2162-ical-positive-and-negative-numeric-bydays-now-implemented/)
+*  Allowed for recurring event rules with numeric "BYDAYS" positive and negative.  See [examples](http://icalevents.com/2162-ical-positive-and-negative-numeric-bydays-now-implemented/)
 *  Removed css styling for feeds as this was breaking some feeds and is not necessary for most people.  I tried many other ways (filtser and rss actions), but have not yet found an acceptable way to include the stylesheet for those few who may have calendars in your posts.
 *  changed the bookmark name anchors to id's for html 5 validation
 *  changed specific group id's to classes since if you have multiple calendars on one page with same grouping, this would fail html validation
@@ -312,7 +325,7 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 *  Also did quick check through on wordpress 3.0 beta on shortcode and wigget - all seems fine.  Also checked it out on the new default wordpress theme twentyten - no problems there either (eg: in old default we had css problems due to li styling)
 
 = Version 2.6.8 =
-*  Fixed floating time creation problem recently introduced - it was creating in UTC timezone (and then converted to wordpress install timezone), when they should be created directly in the wordpress or plugin requested timezone. See [floating times](http://icalevents.anmari.com/2064-ical-local-or-floating-date-times/) for commentary.
+*  Fixed floating time creation problem recently introduced - it was creating in UTC timezone (and then converted to wordpress install timezone), when they should be created directly in the wordpress or plugin requested timezone. See [floating times](http://icalevents.com/2064-ical-local-or-floating-date-times/) for commentary.
 *  Fixed bug where multiple changes to single instances within a recurring entry where not always handled correctly
 *  Changed widget handling to use the multi instance widget API.  This means that you must at least be using wordpress 2.8.
 *  Widget option setting is now simplified and follows the shortcode syntax.  So now anything you can do in the page or post with a shortcode, you can now also do in a widget. I have attempted to convert your prior settings to the new setup.  PLEASE check your widget is doing what you expect it to after the upgrade if you had made any special changes.  Note the widget defaults are still events=5, days=30, and listtype=4.  These do not have to be specified if you are happy with them.  See the shortcode usage section on the plugin webste front page.
@@ -361,11 +374,11 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 *	For those who like to play around with the options without going back to admin options, you can do quite a bt through a URL or in the shortcode.  A recent addition is grouping=txt, where text is on of the allowed groupings as seen in the settings. EG: Day, Month, Year, Quarter, Astronomical Season, Traditional Season, Western Zodiac.
 
 = Version 2.6 =
-*  See (http://icalevents.anmari.com/1901-widgets-calendar-pages-and-event-urls/)  Event summaries/ titles in the widget will jump to the event detail in a calendar page if
+*  See (http://icalevents.com/1901-widgets-calendar-pages-and-event-urls/)  Event summaries/ titles in the widget will jump to the event detail in a calendar page if
     *  the calendar page has been specified in the widget
 	*  the calendar page is using the same ics file as the widget (duh!)
     *  there is no event URL for that event in the ics file.  Google for example does not allow one to define a event URL.
-*  Additional css file provided which includes css to hide the description if  displayed in widget, and then to display the description when hovering over the event.	See (http://icalevents.anmari.com/1908-hovers-lightboxes-or-clever-css/)
+*  Additional css file provided which includes css to hide the description if  displayed in widget, and then to display the description when hovering over the event.	See (http://icalevents.com/1908-hovers-lightboxes-or-clever-css/)
 *  Fixed typos affecting language domain
 
 = Version 2.5.11 =
@@ -570,7 +583,7 @@ The ics file feed must be PUBLIC - if you cannot access it in a browser without 
 
 
 == Frequently Asked Questions ==
- see the plugin website (http://icalevents.anmari.com)
+ see the plugin website (http://icalevents.com)
 
 == Screenshots ==
 

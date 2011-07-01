@@ -28,7 +28,7 @@ function amrical_add_options_panel() {
 		}
 
 		else {
-			add_menu_page($page_title, $menu_title , 'manage_options', $menu_slug, $function);
+			add_menu_page($page_title, $menu_title , $capability, $menu_slug, $function);
 			$parent_slug = $menu_slug;
 //		$page = add_options_page($page_title, $menu_title , 'manage_options', $menu_slug, $function);
 
@@ -37,7 +37,7 @@ function amrical_add_options_panel() {
 		$menu_slug = 'manage_event_listing';
 		$page_title = __('iCal Events Lists', 'amr-ical-events-list');
 		$menu_title = __('List types', 'amr-ical-events-list');
-		add_submenu_page( $parent_slug, $page_title, $menu_title,'manage_options', $menu_slug, $function);
+		add_submenu_page( $parent_slug, $page_title, $menu_title,$capability, $menu_slug, $function);
 
 }
 
@@ -264,10 +264,10 @@ global $amr_options;
 function amrical_general_form ($i) {
 	global $amr_options;
 
+
 	$listtype = $amr_options['listtypes'][$i];
 	update_option('amr-ical-events-list-version', AMR_ICAL_LIST_VERSION); // for upgrade checks
  ?><fieldset  id="general" class="general" >
-	<h4><?php _e('General:', 'amr-ical-events-list'); ?></h4>
 	<div><?php
 	if (! isset($listtype['general'])) echo 'No general specifications set';
 	else {
@@ -791,6 +791,8 @@ function amrical_admin_navigation()  {
 	if (!isset($_REQUEST["list"]) ) { $list = '';}
 	else $list = intval( $_REQUEST["list"]);
 	$url = remove_query_arg('list');
+	
+	_e('Configure another list type: ','amr-ical-events-list');
 
 	foreach ($amr_options['listtypes'] as $i => $listtype) {
 		if ($i > 1) echo '&nbsp;';
@@ -928,14 +930,17 @@ global $calendar_preview_url;
 
 		if (!empty($listtype['general']) ) {
 			echo '<td>';
-			echo '<a href="'.htmlspecialchars(add_query_arg('list',$id)).'" '
-			.' title="'.$listtype['general']['Description'].'" >'
+			echo '<a href="'.esc_attr(add_query_arg('list',$id)).'" '
+			.' title="'.__('Configure: ','amr-ical-events-list').$listtype['general']['Description'].'" >'
 			.$listtype['general']['name'].'</a>'
 			.'<div class="row_action">';
+			echo '<a href="'.esc_attr(add_query_arg('list',$id)).'" '
+			.' title="'.__('Click to choose the fields, the columns and set other parameters.','amr-ical-events-list').'" >'
+			.__('Configure', 'amr-ical-events-list').'</a>&nbsp;|&nbsp;';
 			if ($calendar_preview_url) {
 				echo '<a target="wp-preview" href="'
-				.htmlspecialchars(add_query_arg(array('listtype'=>$id, 'preview'=>'true'),$calendar_preview_url)).'" '
-				.' title="'.$listtype['general']['name'].'" >'
+				.esc_attr(add_query_arg(array('listtype'=>$id, 'preview'=>'true'),$calendar_preview_url)).'" '
+				.' title="'.__('Preview the list using a calendar page.','amr-ical-events-list').'" >'
 				.__('Preview','amr-ical-events-list').'</a>';
 			}
 			else {
@@ -991,7 +996,12 @@ function amrical_manage_listings()  {
 
 
 	$url = remove_query_arg('list');
-	echo '<p><em>'.__('Be careful when editing or deleting - some listtypes are defaults for shortcodes and widgets. ','amr-ical-events-list'  )
+	echo '<h3>'.__('Click the name of each list type below to configure that list.','amr-ical-events-list').'</h3>';
+	echo '<p><em>'
+	.'<a target="new" title="'.__('Go to plugin website for documentation.','amr-ical-events-list' ).'" '
+	.' href="http://icalevents.com/documentation/list-types/#config">'
+	.__('Configuration help','amr-ical-events-list' ).'</a>&nbsp;'
+	.__('Be careful when editing or deleting - some listtypes are defaults for shortcodes and widgets. ','amr-ical-events-list'  )
 	.'<br />'.__('Add listtype=n in the parameters of the shortcode or widget to use another list type.','amr-ical-events-list'  )
 	.'</em></p>';
 
@@ -1004,20 +1014,22 @@ function amrical_manage_listings()  {
 	echo '<th>'.__('Name','amr-ical-events-list').'</th>';
 	echo '<th>'.__('List HTML Style','amr-ical-events-list').'</th>';
 
-	echo '<th>'.__('Export / Copy','amr-ical-events-list')
+	echo '<th>'.__('To export or copy a list type','amr-ical-events-list')
 	.'<br /><em>'.__('Select ALL the content, and COPY.','amr-ical-events-list')
 	.' <a href="" title="'
+	.__('The encoding is to prevent errors when copying and pasting.','amr-ical-events-list').' '
+	.__('The whole string must be selected (it should be when you click on the text box)',   'amr-ical-events-list').' '
 	.__('The list type is a huge array.','amr-ical-events-list'). ' '
 	.__('Without encoding, there were varying problems with slashes. Encoding was more stable.','amr-ical-events-list')
 	.'" >'.__('Why encode?','amr-ical-events-list').'</a>'
 
 	.'</em>'
 	.'</th>';
-	echo '<th>'.__('Import / Paste','amr-ical-events-list')
+	echo '<th>'.__('To import or paste a list type','amr-ical-events-list')
 	.'<br /><em>'.__('PASTE list type string','amr-ical-events-list')
 	.' <a href="http://www.google.com/search?q=online+base64_decode" title="'
-	.__('If you did not produce the string and are concerned, then inspect the list type string using a decode tool. You should see a serialised array.','amr-ical-events-list')
-	.' - '.__('Click to search','amr-ical-events-list' ).'" >'.__('Test decode','amr-ical-events-list').'</a>'
+	.__('If you did not produce the string and are concerned about the contents, then inspect the list type string using a decode tool. You should see a serialised array.','amr-ical-events-list')
+	.' - '.__('Click to search for decoding tools','amr-ical-events-list' ).'" >'.__('Test decode','amr-ical-events-list').'</a>'
 	.'</em>'
 	.'</th>';
 	echo '</tr></thead>';
@@ -1078,7 +1090,7 @@ function amrical_listing_options_page()  {
 	if (!isset($_REQUEST["list"]) ) {
 		amrical_admin_heading(__('Manage Event List Types', 'amr-ical-events-list') ) ;
 
-		if ((isset ($_POST['delete']) and ($_POST['delete'] == "Delete"))) /* Validate the input and save */
+		if (!empty($_POST['delete']) ) /* Validate the input and save */
 				amrical_delete_listings();
 		elseif ((isset ($_POST['action']) and ($_POST['action'] == "save")) and !isset($_POST['reset'])) /* Validate the input and save */
 			amrical_validate_manage_listings();
@@ -1093,6 +1105,14 @@ function amrical_listing_options_page()  {
 
 		amrical_admin_heading(__('Configure event list type: ', 'amr-ical-events-list'). $listtype ) ;
 		amrical_admin_navigation();
+
+		$calendar_preview_url = get_option('amr-ical-calendar_preview_url' );
+		if ($calendar_preview_url) {
+			echo '<a target="wp-preview"  href="'
+			.htmlspecialchars(add_query_arg(array('listtype'=>$listtype, 'preview'=>'true'),$calendar_preview_url)).'" '
+			.' title="'.__('Preview the list using a calendar page.','amr-ical-events-list').'" >'
+			.__('Preview','amr-ical-events-list').'</a>';
+		}
 
 
 		if ((isset ($_POST['action']) and ($_POST['action'] == "save")) and !isset($_POST['reset'])) {/* Validate the input and save */
@@ -1156,14 +1176,23 @@ function amr_ical_submit_buttons () {
 				<input type="submit" class="button-primary" title="<?php
 					_e('Save the settings','amr-ical-events-list') ;
 					?>" value="<?php _e('Update', 'amr-ical-events-list') ?>" />
-				<input type="submit" class="button" name="uninstall" title="<?php
+<?php 			if (isset($_GET['page'])	and ($_GET['page'] === 'manage_amr_ical')
+and current_user_can('install_plugins')) {				
+					echo '<input type="submit" class="button" name="uninstall" title="';
 					_e('Uninstall the plugin and delete the options from the database.','amr-ical-events-list') ;
-					?>" value="<?php _e('Uninstall', 'amr-ical-events-list') ?>" />
-				<input type="submit" class="button" name="reset" title="<?php
-					_e('Warning: This will reset ALL the listing options immediately.','amr-ical-events-list') ;
-					?>" value="<?php _e('Reset all listing options', 'amr-ical-events-list') ?>" />
-				</fieldset>
-				<?php
+					echo '" value="';
+					_e('Uninstall', 'amr-ical-events-list'); 
+					echo '" />';
+				}
+				
+				echo '<input type="submit" class="button" name="reset" title="';
+				_e('Warning: This will reset ALL the listing options immediately.','amr-ical-events-list') ;
+					
+				echo '" value="';
+				_e('Reset all listing options', 'amr-ical-events-list');
+				echo '" />
+				</fieldset>';
+				
 }
 /* -------------------------------------------------------------------------------------------------------------*/
 function amr_configure_list($i) {
@@ -1171,7 +1200,8 @@ global $amr_options;
 
 		echo '<fieldset class="List" >' ;
 //		echo '<legend>'. __('List Type ', 'amr-ical-events-list').$i.'</legend>';
-		echo '<a class="expandall" style="float:right;" href="" >'.__('Expand/Contract all', 'amr-ical-events-list').'</a>';
+		echo '<a class="expandall" style="float:right;" href="" >'.__('Expand/Contract all', 'amr-ical-events-list').'</a>';	
+			
 //		echo '<a style="float:right; margin-top:-1em;" name="list'.$i.'" href="#">'.__('go back','amr-ical-events-list').'</a>';
 		if (!(isset($amr_options['listtypes'])) )  echo 'Error in saved options';
 		else {

@@ -324,7 +324,8 @@ function amr_special_expand_by_day_of_week_and_yearly (&$datearray, $pbys, $tz) 
 function amr_expand_by_day_of_week_for_weekly (&$datearray, $pbys, $tz, $wkst) { /* Note 1 in monthly frequency only  */
 	if (isset($_GET['rdebug'])) { echo '<hr><b>starting special expand by day of week in weekly with wkst:'.$wkst.' </b>';
 		var_dump($pbys);
-		print_date_array($datearray);}
+		print_date_array($datearray);
+	}
 	if (isset($pbys['BYDAY']))  $pbyday = $pbys['BYDAY'];
 	else if (isset($pbys['NBYDAY']))  $pbyday = $pbys['NBYDAY'];
 	else return ($datearray);
@@ -1043,7 +1044,7 @@ function amr_goto_byday ($dateobj, $byday, $sign)	{
 	return ($d2);
 	}
 /* --------------------------------------------------------------------------------------------------- */
-function amr_process_RDATE($p, $start, $end, $limit)  {
+function amr_process_RDATE($p, $start, $end)  {
 	 /* RDATE or EXDATE processes  a parsed array.  If the specified event repeats between the given start and
 	 * end times, return one or more nonrepeating date strings in array
 

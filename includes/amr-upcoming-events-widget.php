@@ -41,7 +41,7 @@ class amr_ical_widget extends WP_widget {
 	if (!empty ($externalicalonly) and $externalicalonly) 
 			$args['eventpoststoo'] = '0';
 	else 	$args['eventpoststoo'] = '1';
-	$args['show_month_nav'] = '0'; 
+//	$args['show_month_nav'] = '0';    // comment out, otherwise cannot have at all if requetsed?
 	$args['headings'] = '1';
 	$args['show_views'] = '0';
 
@@ -49,8 +49,7 @@ class amr_ical_widget extends WP_widget {
 	$amrW = 'w';	 /* to maintain consistency with previous version and prevent certain actions */
 
 	$criteria 	= amr_get_params ($args);  /* this may update listtype, limits  etc */
-	
-// what was this for ??	
+
 // what was this for ??	
 	if (isset ($criteria['event'])) unset ( $criteria['event']);  //*** later may need to check for other custo posttypes 
 	
@@ -215,6 +214,7 @@ class amr_icalendar_widget extends WP_widget {
 	$atts['show_views'] = '0';	
 	$atts['ignore_query'] = 1;		
 	$atts['agenda'] = '4';
+	$atts['show_month_nav'] = 1;
 //
 	if (!(isset($widget_icalno))) $widget_icalno = 0;
 	else $widget_icalno= $widget_icalno + 1;
