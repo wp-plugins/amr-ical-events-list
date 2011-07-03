@@ -3,17 +3,12 @@
 Description: Display a sweet, concise list of events from iCal sources, using a list type from the amr iCal plugin <a href="options-general.php?page=manage_amr_ical">Manage Settings Page</a> and  <a href="widgets.php">Manage Widget</a>
 
 */
-
 class amr_ical_widget extends WP_widget {
     /** constructor */
-
     function amr_ical_widget() {
-		$widget_ops = array ('description'=>__('Upcoming Events', 'amr-ical-events-list' ),'classname'=>__('events', 'amr-ical-events-list' ));
-
+		$widget_ops = array ('description'=>__('Upcoming Events', 'amr-ical-events-list' ),'classname'=>'events');
         $this->WP_Widget(false, __('Upcoming Events List', 'amr-ical-events-list' ), $widget_ops);
-
     }
-
 /* ============================================================================================== */
 	function widget ($args /* the title etc */, $instance /* the params */) { /* this is the piece that actualy does the widget display */
 	global $amrW,
@@ -29,8 +24,7 @@ class amr_ical_widget extends WP_widget {
 	$change_view_allowed = false;
 	$amr_ical_am_doing = 'listwidget';
 	extract ($args, EXTR_SKIP); /* this is for the before / after widget etc*/
-	unset($args);  //nb do not delete this else mucks up the args later
-	
+	unset($args);  //nb do not delete this else mucks up the args later	
 	extract ($instance, EXTR_SKIP); /* this is for the params etc*/
 
 	if (!empty ($shortcode_urls)) // get any args stored in the widget settings
@@ -45,14 +39,11 @@ class amr_ical_widget extends WP_widget {
 	$args['headings'] = '1';
 	$args['show_views'] = '0';
 
-
 	$amrW = 'w';	 /* to maintain consistency with previous version and prevent certain actions */
-
 	$criteria 	= amr_get_params ($args);  /* this may update listtype, limits  etc */
 
 // what was this for ??	
 	if (isset ($criteria['event'])) unset ( $criteria['event']);  //*** later may need to check for other custo posttypes 
-	
 	
 	if (ICAL_EVENTS_DEBUG) echo '<hr>ical list widget:'.$amr_listtype.' <br />'.amr_echo_parameters();
 
@@ -68,8 +59,6 @@ class amr_ical_widget extends WP_widget {
 	if (!(isset($widget_icalno))) 
 		$widget_icalno = 0;
 	else $widget_icalno= $widget_icalno + 1;
-
-	
 	
 	$content = amr_process_icalspec($criteria, 
 		$amr_limits['start'], $amr_limits['end'], $amr_limits['events'], $widget_icalno);
@@ -179,7 +168,7 @@ class amr_icalendar_widget extends WP_widget {
 
     function amr_icalendar_widget() {
 		$widget_ops = array ('description'=>__('Upcoming Events', 'amr-ical-events-list' ),
-		'classname'=>__('widget_calendar', 'amr-ical-events-list' ));
+		'classname'=>'widget_calendar');
 
         $this->WP_Widget(false, __('Upcoming Events Calendar', 'amr-ical-events-list' ), $widget_ops);
 
@@ -199,13 +188,15 @@ class amr_icalendar_widget extends WP_widget {
 	
 	$change_view_allowed = false;
 //	$amr_listtype = '8';  /* default only, can be overwitten in shortcode or query string  */
-	extract ($args, EXTR_SKIP); /* this is for the before / after widget etc*/
-	extract ($instance, EXTR_SKIP); /* this is for the before / after widget etc*/
-	if (isset ($moreurl) ) $moreurl = trim($moreurl," ");
 
+	extract ($args, EXTR_SKIP); /* this is for the before / after widget etc*/
+	unset($args);
+	extract ($instance, EXTR_SKIP); /* the widget form fields */
+	
+	if (isset ($moreurl) ) $moreurl = trim($moreurl," ");
 	$amr_calendar_url = (empty($moreurl)) ? null : $moreurl ;
-	if (ICAL_EVENTS_DEBUG) echo 'Calendar url = '.$amr_calendar_url;
-	if (!empty ($shortcode_urls)) 
+
+	if (!empty ($shortcode_urls)) // from the instance
 		$atts 		= shortcode_parse_atts($shortcode_urls);
 	if (!empty ($externalicalonly) and $externalicalonly) 
 		$atts['eventpoststoo'] = '0';
@@ -213,19 +204,18 @@ class amr_icalendar_widget extends WP_widget {
 		$atts['eventpoststoo'] = '1';
 	$atts['show_views'] = '0';	
 	$atts['ignore_query'] = 1;		
-	$atts['agenda'] = '4';
+//	$atts['agenda'] = '4';  // do not hardcode - may want to pass it
 	$atts['show_month_nav'] = 1;
 //
 	if (!(isset($widget_icalno))) $widget_icalno = 0;
 	else $widget_icalno= $widget_icalno + 1;
 	$amrW = 'w';	 /* to maintain consistency with previous version */
-	
-	$content 	= amr_do_smallcal_shortcode($atts);
-	
-	if (isset ($criteria['event'])) unset ( $criteria['event']);  // huh?? later may need to check for other custo posttypes 
+
+	$content 	= amr_do_smallcal_shortcode($atts);  // thsi will check query params etc
 
 	//output...
-	if (!empty($before_widget)) echo $before_widget;
+
+	if (!empty($before_widget)) echo $before_widget; 	
 	if (!empty($before_title)) echo $before_title; 
 	if (!empty($title)) echo __($title,'amr-ical-events-list') ;
 	if (!empty($after_title)) echo  $after_title;

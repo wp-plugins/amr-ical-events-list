@@ -56,7 +56,11 @@ function amr_ical_validate_general_options(){
 
 			if (isset($_POST['ngiyabonga'])) 	$amr_options['ngiyabonga'] =  true;
 			else 	$amr_options['ngiyabonga'] =  false;
-			if (isset($_POST['noeventsmessage'])) 	$amr_options['noeventsmessage'] =  $_POST['noeventsmessage'];
+			if (isset($_POST['noeventsmessage'])) 	
+				$amr_options['noeventsmessage'] =  $_POST['noeventsmessage'];
+			if (isset($_POST['lookmoremessage'])) 	{ echo 'YESY!';
+				$amr_options['lookmoremessage'] =  $_POST['lookmoremessage'];
+				}
 			if (isset($_POST["own_css"])) $amr_options['own_css'] =  true;
 			else $amr_options['own_css'] =  false;
 			if ((isset($_POST["date_localise"])) and (in_array($_POST["date_localise"], array('none', 'wp', 'wpgmt', 'amr')) )) $amr_options['date_localise'] =  $_POST["date_localise"];		/* from dropdown */
@@ -652,6 +656,13 @@ function amr_ical_general_form() {
 			<input class="wide regular-text" type="text" id="noeventsmessage" name="noeventsmessage"
 			<?php if (isset($amr_options['noeventsmessage']) and ($amr_options['noeventsmessage']))
 				{echo 'value="'.$amr_options['noeventsmessage'].'"';}?>/>
+			<br />
+			<label for="lookmoresmessage">
+			<?php _e('Look for more events message: ', 'amr-ical-events-list');
+			?></label><br />
+			<input class="wide regular-text" type="text" id="lookmoremessage" name="lookmoremessage"
+			<?php if (isset($amr_options['lookmoremessage']) and ($amr_options['lookmoremessage']))
+				{echo 'value="'.$amr_options['lookmoremessage'].'"';}?>/>
 			<br />
 			<label for="ngiyabonga">
 			<input type="checkbox" id="ngiyabonga" name="ngiyabonga" value="ngiyabonga"

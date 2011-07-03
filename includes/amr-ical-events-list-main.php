@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.0.5');
+define('AMR_ICAL_LIST_VERSION', '4.0.6');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -965,7 +965,7 @@ function amr_format_repeatable_property ($content, $k, $event, $before='', $afte
 	return ($c);
 }
 /* --------------------------------------------------------- */
-function amr_format_value ($content, $k, $event,$before='', $after='') { /* include the event so we can check for things like all day */
+function amr_format_value ($content, $k, $event, $before='', $after='') { /* include the event so we can check for things like all day */
 /*  Format each Ical value for our presentation purposes
 Note: Google does toss away the html when editing the text, but it is there if you add but don't edit.
 what about all day?
@@ -1007,7 +1007,7 @@ what about all day?
 				break;
 			}
 			case 'EndTime':
-			case 'StartTime':{
+			case 'StartTime':{  
 				if (isset($event['allday']) and ($event['allday'] == 'allday'))
 					$htmlcontent = '';
 				else
@@ -1103,7 +1103,7 @@ what about all day?
 				break;
 			}
 			case 'allday': {
-				$htmlcontent =(amr_format_allday(($content)));
+				$htmlcontent =(amr_format_allday($content));
 				break;
 			}
 
@@ -1163,6 +1163,7 @@ function amr_add_duration_to_date (&$e, $d) {
  /* ------------------------------------------------------------------------------------*/
 function amr_derive_dates (&$e) {
 /* Derive basic date dependent data  - called early on before repeating */
+	if (isset ($e['ALLDAY']) ) { $e['allday'] = 'allday'; } // for stored events that were setup with capitals
 	if (!isset($e['DTSTART']) ) return (false);
 	if (is_array($e['DTSTART'])) $e['DTSTART'] = $e['DTSTART'][0];
 	if (isset($e['DTEND']) and is_array($e['DTEND'])) $e['DTEND'] = $e['DTEND'][0];
@@ -1224,7 +1225,6 @@ global $amr_globaltz;
 			}
 	}
 	else $e['StartTime'] = $e['EventDate']; /* will format to time, later keep date  for max flex */
-
 
 	if ((isset($e['allday']) and ($e['allday'] == 'allday')) OR
 	    ((isset ($e['EndDate']) ) and (amr_is_all_day($e['EventDate'], $e['EndDate'])))) {
@@ -2136,7 +2136,9 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 			If (isset($_REQUEST['debug'])) echo '<br />After proces ical -Got x events '.count($components);
 			$amrtotalevents = count($components);
 			$components = amr_constrain_components($components, $start, $end, $no_events);
-			If ((ICAL_EVENTS_DEBUG) or (isset($_REQUEST['debug']))) echo '<br />After constrain '.count($components);
+			$amr_last_date_time = amr_save_last_event_date($components);
+			If ((ICAL_EVENTS_DEBUG) or (isset($_REQUEST['debug']))) 
+				echo '<br />After constrain '.count($components).' and last event date time is'.$amr_last_date_time;
 		}
 		if (!isset ($amr_one_page_events_cache[$key])) {
 				$amr_one_page_events_cache[$key]['components'] = $components;
@@ -2155,7 +2157,6 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 			}
 			else $thecal = '';
 
-
 			if ((!amr_doing_box_calendar())
 			and empty($components)
 			and (!empty($amr_options['noeventsmessage']))) {
@@ -2168,17 +2169,21 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 				$tid 	= '';
 				$class 	= ' ical ';
 				$thecal .= amr_list_events($components, $tid, $class, $show_views=true);
-
 			}
 
-
 		}
-
 		else $thecal = '';	/* the urls were not valid or some other error ocurred, for this spec, we have nothing to print */
 /* amr  end of core calling code --- */
 	return ($thecal);
 
 	}
+/* -------------------------------------------------------------------------*/
+function amr_save_last_event_date($events) { // must have been sorted
+global $amr_last_date_time;
+	if (is_array($events)) $lastevent = end($events);
+	else {echo 'not an array'; var_dump($events);}
+	if (!empty($lastevent['EventDate'])) $amr_last_date_time =   $lastevent['EventDate'];
+}
 /* -------------------------------------------------------------------------*/
 function amr_get_params ($attributes=array()) {
 /*  We are passed the widget or shortcode attributes,
@@ -2198,8 +2203,6 @@ function amr_get_params ($attributes=array()) {
 	$amr_calendar_url,	
 	$amrW; // indicates if widget
 
-
-
 //	if (!empty ($amrW) ) //must be empty not isset
 //		$amr_listtype='4';
 //	else
@@ -2207,7 +2210,6 @@ function amr_get_params ($attributes=array()) {
 	If (ICAL_EVENTS_DEBUG) {echo '<hr>Shortcode Attributes passed<br />'; var_dump($attributes); }
 //
 	$amr_options = amr_getset_options();
-
 //
 	$defaults = array( /* defaults array for shortcode , - these override limits if they exist in limit, */
 	'listtype' => $amr_listtype,
@@ -2228,6 +2230,8 @@ function amr_get_params ($attributes=array()) {
 	'eventmap' => '0',
 	'show_views' => '1',
 	'show_month_nav' => '0',
+	'show_look_more' => '0',
+	'day_links' => '1',
 	'month_year_dropdown' => '0',
 	'month_prev_next' => '0',
 	'calendar_properties' => '1',
@@ -2330,11 +2334,10 @@ function amr_get_params ($attributes=array()) {
 			? $amr_options['listtypes'][$amr_listtype]['general']['ListHTMLStyle']
 			: $amr_liststyle = 'table';//; 'list'
 			
-	if (isset ($shortcode_params['more_url']) ) {
+	if (!empty ($shortcode_params['more_url']) ) {
 		$amr_calendar_url =  $shortcode_params['more_url'];
 		unset($shortcode_params['more_url']);
 	}
-
 	
 // always respond to start 
 //	if (in_array ($amr_liststyle, array('smallcalendar','largecalendar', 'weekscalendar'))) {
@@ -2374,7 +2377,6 @@ function amr_get_params ($attributes=array()) {
 		}
 	}
 
-
 	if (!empty ($shortcode_params ) ) {
 		foreach ($shortcode_params as $i => $v) { // must be atts not limits as atts may hold more then limits - limits just has initial limits
 		if (in_array($i, array(
@@ -2388,6 +2390,9 @@ function amr_get_params ($attributes=array()) {
 			'calendar_properties',
 			'no_filters',
 			'show_month_nav',
+			'show_look_more',
+			'day_links',
+			'more_url',
 			'month_year_dropdown',
 			'month_prev_next'
 			)	)) {
@@ -2583,7 +2588,7 @@ global $amr_limits,
 
 }
 /* -------------------------------------------------------------------------*/
-function amr_do_smallcal_shortcode ($attributes, $content = null) {
+function amr_do_smallcal_shortcode ($attributes) {
 global $amr_limits,
  $amr_listtype,
  $change_view_allowed,
@@ -2596,6 +2601,7 @@ global $amr_limits,
 /*  merge atts with this array, so we will have a default list */
 	$change_view_allowed = true;
 	$amr_ical_am_doing = 'smallcalendar';
+	// set defaults, can be overridden by shortcode parameters
 	$defaults['listtype'] = 8;
 	$defaults['months'] = 1;
 	$defaults['show_views'] = 0;
@@ -2825,7 +2831,6 @@ function amr_plugin_links($links, $file) {
 // add_action('plugins_loaded'          , 'amr_ical_widget_init');
 	add_action('widgets_init'           , 'amr_ical_widget_init');
 	amr_ical_load_text();
-
 
 	add_action('plugins_loaded'         , 'amr_ical_load_text' );
 	add_action( 'init'             		, 'amr_ical_load_text' );

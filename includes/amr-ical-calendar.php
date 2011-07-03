@@ -45,7 +45,10 @@ function amr_get_events_in_months_format ($events, $months, $start) {
 }
 
 // ----------------------------------------------------------------------------------------
-function amr_prepare_day_titles ($titles) {
+function amr_prepare_day_titles ($titles, $liststyle) {
+	
+		// if it is a largecalendar, then show info only
+		$daylinktext = __('Go to events for this day only','amr-ical-events-list');	
 
 		if (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false 
 		|| stripos($_SERVER['HTTP_USER_AGENT'], 'camino') !== false 
@@ -56,13 +59,16 @@ function amr_prepare_day_titles ($titles) {
 // if small calendar
 		if ( $titles ) {
 			foreach ( $titles as $day => $daywithtitles_array ) {
-
+				if ($liststyle == 'largecalendar') $daytitles[$day] = $daylinktext;
+				else {
 					if (is_array($daywithtitles_array) ) 
 						//$string = implode(',',$daywithtitles_array);
 						$string = implode($ak_title_separator,$daywithtitles_array);
-					else $string = $daywithtitles_array;
+					else
+					$string = $daywithtitles_array;
 
 					$daytitles[$day] = ($string );
+				}
 			}
 		}
 		else return;
@@ -129,6 +135,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 		$link = $amr_calendar_url;
 	else 
 		$link = amr_clean_link();
+
 
 	$months = 1;
 	$weeks = 1;
@@ -296,7 +303,8 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 
 
 		if (isset($dayswithevents)) $dayswithevents = array_unique ($dayswithevents);
-		$daytitles = amr_prepare_day_titles ($titles);
+		$daytitles = amr_prepare_day_titles ($titles, $liststyle);
+		unset ($titles);
 
 		//-----------------------------------------------------------------------------------
 		
@@ -308,6 +316,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 				//if (ICAL_EVENTS_DEBUG) echo '<br />Day: '.$day.' '.$dayhtml[$day];
 			}
 		}
+		unset($eventsfortheday);
 //		else echo 'EMPTY events forday';
 
 /* ------See how much we should pad in the beginning */
@@ -357,17 +366,19 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 				/* wp code - can't we do better ? */
 				$datestring = $day.'-'.$thismonth.'-'.$thisyear; // must use hyphens for uk english dates, else it goes US
 				$dow = date('N',strtotime($datestring)); // does not like dates earlier than 1902
-
-				if (!empty($daytitles[$day]) ) { // then we have events for that day, so can link to it
-					$hasevents = ' hasevents ';
-					$daylink = '<a class="daylink" href="'.
-						htmlentities(amr_get_day_link($thisyear, $thismonth, $day, $link))
-						. '" title="' . ($daytitles[$day]) . '">'.$day.'</a>';
-				}
+				
+				$hasevents = '';
+				if ((!empty ($amr_limits['day_links'])) and ($amr_limits['day_links']) and
+					 (!empty($daytitles[$day]) )) { // then we have events for that day, so can link to it
+						$hasevents = ' hasevents ';
+						$daylink = '<a class="daylink" href="'.
+							htmlentities(amr_get_day_link($thisyear, $thismonth, $day, $link))
+							. '" title="' . ($daytitles[$day]) . '">'.$day.'</a>';
+					}
 				else {
-					$hasevents = '';
-					$daylink = $day;
-				}
+						$daylink = $day;
+					}
+				
 					
 				if ( ($day == $today_day) && 
 					($thismonth == $today_month) && 
@@ -493,8 +504,7 @@ function amr_get_day_link($thisyear, $thismonth, $thisday, &$link) { /* the star
 	$amr_listtype;
 		
 	if (!empty ($amr_limits['agenda']))   // do not want listtype unless requested?
-		$agenda = $amr_limits['agenda'];
-		
+		$agenda = $amr_limits['agenda'];		
 	else 
 		$agenda = 1;
 	

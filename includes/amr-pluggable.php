@@ -224,6 +224,47 @@ if (!function_exists('amr_weeks_caption')) {
 	}
 }
 
+
+// ----------------------------------------------------------------------------------------
+if (!function_exists('amr_calendar_navigation')) {
+function amr_calendar_navigation($start, $months, $weeks, $liststyle, $views='') {
+
+	if ($liststyle === 'weekscalendar') 
+		$month_nav_html = amr_week_links ($start, $weeks); // returns array ($nextlink, $prevlink, $dropdown
+	else	
+		$month_nav_html = amr_month_year_links ($start, $months); // returns array ($nextlink, $prevlink, $dropdown
+	$prevlink = $month_nav_html['prevlink'];
+	$nextlink = $month_nav_html['nextlink'];		
+	//
+	if (($liststyle === 'weekscalendar') OR 
+	(($months < 2) and ($liststyle == "smallcalendar"))) {
+		$navigation = $prevlink.'&nbsp;&nbsp;'.$nextlink;
+	}
+	else {
+		$navigation = 
+		amr_month_year_navigation ($start)
+		.$prevlink.'&nbsp;'
+		.$nextlink
+		;
+	}
+	return ($navigation);	
+		//------------------------end navigation-----------
+}
+}
+/* --------------------------------------------------  */
+if (!function_exists('amr_weeks_caption')) {
+	function amr_weeks_caption($start) {  
+	// do not just want to use day format here, as may be too concise and week format cannot handle the start date, and there is no universal consistency on the week number logic 
+	// later may offer an option we can use, but for now people can write a function
+	// should we use this for weeks grouping too ?   maybe
+		$caption_format = 'l jS F';
+		$calendar_caption = sprintf(
+			__('Week starting %s','amr-ical-events-list'),
+			amr_date_i18n ($caption_format, $start));
+		return($calendar_caption);	
+	}
+}
+
 /* --------------------------------------------------  */
 if (!function_exists('amr_semi_paginate')) {
 function amr_semi_paginate() {
@@ -333,6 +374,7 @@ function amr_semi_paginate() {
 		);
 	}
 }
+
 /* -------------------------------------------------------------------------------------------*/
 if (!function_exists('amr_format_CID'))  {
 	function amr_format_CID ($cid, $event) {
@@ -486,7 +528,7 @@ if (!function_exists('amr_format_binary'))  {
 if (!function_exists('amr_format_allday') ) {
 	function amr_format_allday ($content) {
 		if ($content == 'allday')
-			return (_x('all&nbsp;day', 'when an event runs for full days, not the &nbsp; prevents the text wrappping in a table.','amr-ical-events-list'));
+			return (_x('all&nbsp;day', 'when an event runs for full days, note the &nbsp; prevents the text wrappping in a table.','amr-ical-events-list'));
 		else return ('');
 	}
 }
@@ -952,6 +994,10 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 			$fhtml .= amr_ngiyabonga();
 		else
 			$fhtml .='<!-- event calendar by anmari.com.  See it at icalevents.com -->';
+		
+		if ((isset($amr_limits['show_look_more'])) and ($amr_limits['show_look_more'])) {
+				$fhtml .= amr_show_look_more();
+		}	
 		if ((!empty($amr_limits)) and ($amrtotalevents > $amrconstrainedevents) ) {
 			if ($dopagination and function_exists('amr_semi_paginate'))
 				$fhtml .= amr_semi_paginate();
@@ -1120,7 +1166,51 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 
 }
 
+/* --------------------------------------------------  */
+if (!function_exists('amr_show_look_more')) {  // does a google style next
+function amr_show_look_more() {
+ 	global $amr_limits,
+	$amr_options,
+	$amr_formats,
+	$amr_last_date_time;
 
+	$next = new datetime();
+	if (!empty($amr_last_date_time)) $next = clone $amr_last_date_time; // get  last used event date
+	date_time_set($next,0,0,0); // set to the beginning of the day
+	$nextd = $next->format("Ymd");
+	$nexturl = (add_query_arg (array ('start'=>$nextd )));
+	
+	$explaint = sprintf (__('Displaying %s events.'),$amr_limits['events']) ;
+	// due to events limit, it may not show all events in a given day, so do not say displaying until date,
+	// rather just start the next display from that last date - may be a few events that overlap.
+		
+	foreach ($amr_limits as $i=>$value) {
+		if (in_array ($i, array('days','hours','months','weeks'))) {
+			$nexturl = add_query_arg ($i, $value, $nexturl);
+		}
+	}
+	// NB MUST increase the number of events otherwise one can get caught in a situation where if num of evemnts less than events in a day, one can never get past that day.
+	$nexturl = add_query_arg ('events', $amr_limits['events']*2, $nexturl);
+	
+	if (empty($amr_options['lookmoremessage'])) $moret    =  __('Look for more', 'amr-events');
+	else $moret    = $amr_options['lookmoremessage'];
+	$morett    = sprintf( __('Look for more from %s' ,'amr-events'),$amr_last_date_time->format($amr_formats['Day']));
+	
+	if (!empty($_GET['start'])) {
+		$reset = __('Reset','amr-events' );
+		$reseturl = remove_query_arg(array('start','startoffset','events','days','months','hours','weeks'));
+		$reset ='&nbsp;<a id="icalareset"  href="'.esc_attr($reseturl).'">'.$reset.'</a>';
+	}
+	else $reset = '';
+	return (
+		'<div id="icallookmore" class="icalnext" >'
+		
+		.'<a id="icalalookmore"  title="'.$explaint.' '.$morett.'" href="'.esc_attr($nexturl).'">'.$moret.'</a>'
+		.$reset
+		.'</div>'
+		);
+	}
+}
 
 /* --------------------------------------------------------- */
 if (!function_exists('amr_format_organiser')) {

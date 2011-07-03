@@ -4,7 +4,7 @@ Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, i
 
 Requires at least: 2.8
 Tested up to: 3.2. RC2
-Version: 4.0.5
+Version: 4.0.6
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.
@@ -43,6 +43,13 @@ Many thanks to the following people for the translations.  Note that I am unable
 If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me both the .mo and .po files for your language.
 
 == Changelog ==
+= Version 4.0.6 =
+* Add: a simpler google style "look for more" events type link that can be used instead of the complex semi pagination. add show_look_more=1 to the shortcode.
+* Add: option to switch off day_of_month_links in the largecalendar. use day_links=0 in the shortcode.
+* Update: Updated Italian translation.
+* Fix: all day was not being picked up correctly (showed up in multi day all day events) - this applies actually to amr-events too.
+* Fix: small calendar days link was not picking up agenda parameter.  Also the input form calendar page url was being overwritten by blank default more_url, so only enterign more_url would work.  Forum field should work.
+
 = Version 4.0.5 =
 * Add: Italian translation.
 * Fix: some translations strings and function calls.  

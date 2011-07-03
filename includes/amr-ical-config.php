@@ -197,9 +197,9 @@ function amr_set_helpful_descriptions () { // used in the admin screen
 	'CATEGORIES'=> 		__('WordPress or ics file categories ','amr-ical-events-list'),
 	'CLASS'=> 			__('ics class','amr-ical-events-list'),
 	'COMMENT'=> 		__('ics comment','amr-ical-events-list'),
-	'PERCENT-COMPLETE'=> __('','amr-ical-events-list'),
+//	'PERCENT-COMPLETE'=> __('','amr-ical-events-list'),
 	'PRIORITY'=> 		__('ics event priority','amr-ical-events-list'),
-	'RESOURCES'=> 		__('','amr-ical-events-list'),
+//	'RESOURCES'=> 		__('','amr-ical-events-list'),
 	'STATUS'=> 			__('ics event status','amr-ical-events-list'),
 	'EventDate' => 		__('The date of instance of a repeating date, or the event date','amr-ical-events-list'),
 	'StartTime' => 		__('The time of instance of a repeating date, or the event date','amr-ical-events-list'),
@@ -213,10 +213,10 @@ function amr_set_helpful_descriptions () { // used in the admin screen
 	'allday' => 	__('Says "all day" (translated) if the event has full days.','amr-ical-events-list'),
 	'COMPLETED'=> 	__('If a task is completed.','amr-ical-events-list'),
 	'FREEBUSY'=> 	__('Show busy (translated) if the freebusy component is in use.','amr-ical-events-list'),
-	'TRANSP'=> 		'',
-	'declined' => 		__('Users who have declined.','amr-ical-events-list'),
+//	'TRANSP'=> 		'',
+//	'declined' => 		__('Users who have declined.','amr-ical-events-list'),
 	'rsvp' => 			__('Users who have accepted.','amr-ical-events-list'),
-	'rsvpwithcomment' => __('Form to rsvp with comment.','amr-ical-events-list'),
+//	'rsvpwithcomment' => __('Form to rsvp with comment.','amr-ical-events-list'),
 	'going_ornot_ormaybe' => __('Links to indicate if attending.','amr-ical-events-list'),
 	'CONTACT'=> 		__('The contact person if available.','amr-ical-events-list'),
 	'ORGANIZER'=> 		__('The author of the event.','amr-ical-events-list'),
@@ -267,7 +267,8 @@ function amr_set_defaults() {
 			'feed_css' => true,
 			'cssfile' => ICALSTYLEURL,//'icallist.css',
 			'date_localise' => 'amr',
-			'noeventsmessage' => __('No events found within criteria','amr-ical-events-list')
+			'noeventsmessage' => __('No events found within criteria','amr-ical-events-list'),
+			'lookmoremessage' => __('Look for more','amr-ical-events-list')
 			);
 
 
