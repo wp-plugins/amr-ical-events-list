@@ -48,7 +48,7 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 * Add: option to switch off day_of_month_links in the largecalendar. use day_links=0 in the shortcode.
 * Update: Updated Italian translation.
 * Fix: all day was not being picked up correctly (showed up in multi day all day events) - this applies actually to amr-events too.
-* Fix: small calendar days link was not picking up agenda parameter.  Also the input form calendar page url was being overwritten by blank default more_url, so only enterign more_url would work.  Forum field should work.
+* Fix: small calendar days link was not picking up agenda parameter.  Also the input form calendar page url was being overwritten by blank default more_url, so only entering more_url would work.  Form field should work.
 
 = Version 4.0.5 =
 * Add: Italian translation.
