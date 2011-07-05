@@ -3,8 +3,8 @@ Contributors: anmari
 Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, ical-feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar,
 
 Requires at least: 2.8
-Tested up to: 3.2. RC2
-Version: 4.0.6
+Tested up to: 3.2.
+Version: 4.0.7
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.
@@ -43,6 +43,9 @@ Many thanks to the following people for the translations.  Note that I am unable
 If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me both the .mo and .po files for your language.
 
 == Changelog ==
+= Version 4.0.7 =
+* Revert: one line of code which 'broke' some situations with categories. Reverted. See also http://forum.anmari.com/topic.php?id=179 if you prefer to change manually.
+
 = Version 4.0.6 =
 * Add: a simpler google style "look for more" events type link that can be used instead of the complex semi pagination. add show_look_more=1 to the shortcode.
 * Add: option to switch off day_of_month_links in the largecalendar. use day_links=0 in the shortcode.

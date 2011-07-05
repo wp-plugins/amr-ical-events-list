@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.0.6');
+define('AMR_ICAL_LIST_VERSION', '4.0.7');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -1296,8 +1296,8 @@ function amr_derive_info_for_list_only (&$e) {
 	if (isset($e['name']))  $e['Classes'] .= ' '.$e['name'];
 	if (isset($e['type']))  $e['Classes'] .= ' '.$e['type'];  /* so we can style events, todo's differently */
 	if (isset($e['CATEGORIES']))
-		$e['Classes'] .= ' '.implode(' ',$e['CATEGORIES']);
-	if (isset($e['tag_ids']))
+		$e['Classes'] .= ' '.str_replace(',',' ',amr_just_flatten_array($e['CATEGORIES']));  //is not always an array, this function allows non array
+	if (isset($e['tag_ids']) and is_array($e['tag_ids']))
 		$e['Classes'] .= ' t'.implode(' t',$e['tag_ids']);
 //	if (isset($e['UID'])) {
 //		$e['Bookmark'] = str_replace('@','',$e['UID']);  /* must be before summary as it is used there .  Must be a char to start not a number and get rid of odd chars for validation*/
@@ -2740,10 +2740,7 @@ if (!function_exists('amr_load_custom_text') ) { // for filter
 	function amr_load_custom_text( $mofile, $domain='' ) {
 	//only do for the plugins/themes you want
 	if (!in_array($domain, array('amr-ical-events-list', 'amr-events')))
-
         return $mofile;
-
-
 
     $pathinfo = pathinfo($mofile);
 	$custom_mofile = WP_CONTENT_DIR."/languages/" . $pathinfo["basename"];
@@ -2758,7 +2755,6 @@ add_filter ('load_textdomain_mofile','amr_load_custom_text',10,2 );
 /* -------------------------------------------------------------------------------------------------------------*/
 function amr_ical_load_text() {
 	$result = load_plugin_textdomain('amr-ical-events-list', false/* nlr */, 'amr-ical-events-list/lang');
-	if (ICAL_EVENTS_DEBUG) error_log( 'Result of trying to load language: '.$result);
 }
 
 /* -------------------------------------------------------------------------------------------------------------*/

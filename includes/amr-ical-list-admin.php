@@ -15,19 +15,23 @@ function amrical_add_options_panel() {
 
 		$parent_slug =  'amr-events';
 		$function = 'amrical_option_page';
-		$capability = 'manage_event_settings';
+		
 		$menu_slug = 'manage_amr_ical';
 
 		if (function_exists('amr_events_settings_menu')) {
 			$menu_title = $page_title = __('Listing Events', 'amr-ical-events-list');
+			$capability = 'manage_event_settings';
 			if (empty($events_menu_added) or (!$events_menu_added)) {
 				amr_events_settings_menu();
 				$events_menu_added = true;
 				}
 			add_submenu_page( $parent_slug, $page_title, $menu_title, $capability, $menu_slug, $function);
+			if (!(current_user_can('manage_event_settings'))) 
+			add_submenu_page( $parent_slug, $page_title, $menu_title, 'manage_options', $menu_slug, $function); // some sites need this
 		}
 
 		else {
+			$capability = 'manage_options';
 			add_menu_page($page_title, $menu_title , $capability, $menu_slug, $function);
 			$parent_slug = $menu_slug;
 //		$page = add_options_page($page_title, $menu_title , 'manage_options', $menu_slug, $function);
@@ -750,7 +754,7 @@ if (version_compare('5.3', PHP_VERSION, '>')) {
 function amrical_option_page()  {
 	global $amr_options;
 	//$nonce = wp_create_nonce('amr-ical-events-list'); /* used for security to verify that any action request comes from this plugin's forms */	
-	amrical_admin_heading(__('iCal Events List ', 'amr-ical-events-list').' '.AMR_ICAL_LIST_VERSION);
+	amrical_admin_heading(__('iCal Events List ', 'amr-ical-events-list'));
 	
 	if (isset($_REQUEST['uninstall'])  OR isset($_REQUEST['reallyuninstall']))  { /*  */
 		amr_ical_check_uninstall();
@@ -783,7 +787,7 @@ function amrical_admin_heading($title)  {
 	echo '<div class="wrap" id="amrical">
 		<div id="icon-options-general" class="icon32"><br />
 		</div>
-		<h2>'.$title.'</h2>
+		<h2>'.$title.' '.AMR_ICAL_LIST_VERSION.'</h2>
 		<form method="post" action="'
 //		.esc_url($_SERVER['PHP_SELF'])
 		.'">';
@@ -1102,7 +1106,7 @@ function amrical_listing_options_page()  {
 		amrical_admin_heading(__('Manage Event List Types', 'amr-ical-events-list') ) ;
 
 		if (!empty($_POST['delete']) ) /* Validate the input and save */
-				amrical_delete_listings();
+			amrical_delete_listings();
 		elseif ((isset ($_POST['action']) and ($_POST['action'] == "save")) and !isset($_POST['reset'])) /* Validate the input and save */
 			amrical_validate_manage_listings();
 		
