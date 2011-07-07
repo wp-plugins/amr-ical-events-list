@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.0.8');
+define('AMR_ICAL_LIST_VERSION', '4.0.9');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
