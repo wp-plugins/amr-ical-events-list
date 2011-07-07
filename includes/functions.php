@@ -89,8 +89,9 @@ global $post;
 		'q' => array(
 			'cite' => array ()),
 		'strike' => array(),
-		'div' => array()
-
+		'div' => array(),
+		'a' => array('href' => array(),'title' => array()),  // maybe add - need to see if quotes will work too
+		'img' => array('src' => array(),'title' => array(),'alt' => array())  // not sure whether his is a good idea - rather use a pluggable format function.
 		));
 	}
 	/* ---------------------------------------------------------------------- */

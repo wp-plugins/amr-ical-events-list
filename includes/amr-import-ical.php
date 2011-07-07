@@ -1003,3 +1003,14 @@ function amr_parse_ical ( $cal_file ) {
 			}
 
 }
+//------------------------------------------------------------------------------------------------------------
+function amr_create_date_time ($datetimestring, $tzobj) { // date time create with exception trap to avoid fatal errors
+
+		try {	$dt = new DateTime($datetimestring,	$tzobj); }
+		catch(Exception $e) {
+			echo '<br />Unable to create DateTime object from '.$d.' <br />'.$e->getMessage();
+			return (false);
+		}
+	return ($dt);
+}		
+		

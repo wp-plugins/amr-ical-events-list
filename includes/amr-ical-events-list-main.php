@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.0.7');
+define('AMR_ICAL_LIST_VERSION', '4.0.8');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -2181,8 +2181,9 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 function amr_save_last_event_date($events) { // must have been sorted
 global $amr_last_date_time;
 	if (is_array($events)) $lastevent = end($events);
-	else {echo 'not an array'; var_dump($events);}
+//	else {echo 'not an array'; var_dump($events);}
 	if (!empty($lastevent['EventDate'])) $amr_last_date_time =   $lastevent['EventDate'];
+// else will not save a last date.	
 }
 /* -------------------------------------------------------------------------*/
 function amr_get_params ($attributes=array()) {
@@ -2280,8 +2281,8 @@ function amr_get_params ($attributes=array()) {
 	if (!empty($taxo_selection)) 	$shortcode_params = array_merge ($shortcode_params,$taxo_selection );
 
 	If (ICAL_EVENTS_DEBUG) {
-	echo '<hr>Other selection (taxo? <br />'; if (!empty($taxo_selection)) var_dump($taxo_selection);
-	echo '<hr>Shortcode atts with taxo <br />'; var_dump($shortcode_params);
+	echo '<hr>Other selection (taxonomies? <br />'; if (!empty($taxo_selection)) var_dump($taxo_selection);
+
 	}
 //---------------------------------------------------------------------------------------------------------------------------------------------- now check for query or post
 	

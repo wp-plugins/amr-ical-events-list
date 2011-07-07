@@ -4,7 +4,7 @@ Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, i
 
 Requires at least: 2.8
 Tested up to: 3.2.
-Version: 4.0.7
+Version: 4.0.8
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.
@@ -43,6 +43,10 @@ Many thanks to the following people for the translations.  Note that I am unable
 If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me both the .mo and .po files for your language.
 
 == Changelog ==
+= Version 4.0.8 =
+* Fix: Delete one line of debug code which showed when there were no events.
+* Change: the sanitisation around the admin list types before / after - to use wp functions rather than neat php.
+
 = Version 4.0.7 =
 * Revert: one line of code which 'broke' some situations with categories. Reverted. See also http://forum.anmari.com/topic.php?id=179 if you prefer to change manually.
 

@@ -30,7 +30,7 @@ class amr_ical_widget extends WP_widget {
 	if (!empty ($shortcode_urls)) // get any args stored in the widget settings
 		$args		= shortcode_parse_atts($shortcode_urls);
 
-	if (!isset($args['listtype'])) $amr_listtype = $args['listtype'] =  '4';	
+	if (!isset($args['listtype'])) $args['listtype'] = $amr_listtype =   '4';	
 //
 	if (!empty ($externalicalonly) and $externalicalonly) 
 			$args['eventpoststoo'] = '0';

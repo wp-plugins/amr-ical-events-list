@@ -251,10 +251,17 @@ global $amr_options;
 							else $amr_options['listtypes'][$i]['compprop'][$c][$p] = $pv;
 							break;
 						case 'Before':
-							$amr_options['listtypes'][$i]['compprop'][$c][$p] = wp_kses($pv, amr_allowed_html());
+							$bef = wp_kses($pv, amr_allowed_html());
+							$bef = wp_kses_stripslashes($bef);
+							if (stripos($bef, '\\"')) echo 'YES still there';
+							$bef = str_replace('\\"', '"', $bef);
+							$amr_options['listtypes'][$i]['compprop'][$c][$p] = $bef;
+							if ($c == 'URL') echo 'TEST:'. $bef.' else '.$amr_options['listtypes'][$i]['compprop'][$c][$p];
+							
+							
 							break;
 						case 'After':
-							$amr_options['listtypes'][$i]['compprop'][$c][$p] = wp_kses($pv, amr_allowed_html());
+							$amr_options['listtypes'][$i]['compprop'][$c][$p] = wp_kses_stripslashes(wp_kses($pv, amr_allowed_html()));
 							break;
 						endswitch;
 					}
@@ -489,7 +496,7 @@ function amrical_compropsoption($i) {
 
 					echo '<td style="border-bottom: 0; ">'
 						.'<input type="text" size="'.$amr_csize[$s].'"  class="'.$s.'"  id="'.$p.$s
-						.'"  name="'.'ComP['.$p.']['.$s.']"  value= "'.htmlspecialchars($sv).'"  />'
+						.'"  name="'.'ComP['.$p.']['.$s.']"  value= "'.(esc_attr(wp_kses_stripslashes($sv))).'"  />'
 						.'</td>';
 				}
 				echo '</tr><tr ><td colspan="5" style="padding: 0 20px 20px; 0" >'.$text.'</td></tr>';
