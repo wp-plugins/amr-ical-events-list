@@ -1008,7 +1008,7 @@ what about all day?
 			}
 			case 'EndTime':
 			case 'StartTime':{  
-				if (isset($event['allday']) and ($event['allday'] == 'allday'))
+				if (isset($event['allday']) and ($event['allday'] === 'allday'))
 					$htmlcontent = '';
 				else
 					$htmlcontent = amr_format_time ($amr_formats['Time'], $content);
@@ -1163,7 +1163,7 @@ function amr_add_duration_to_date (&$e, $d) {
  /* ------------------------------------------------------------------------------------*/
 function amr_derive_dates (&$e) {
 /* Derive basic date dependent data  - called early on before repeating */
-	if (isset ($e['ALLDAY']) ) { $e['allday'] = 'allday'; } // for stored events that were setup with capitals
+	if (isset ($e['ALLDAY']) and $e['ALLDAY'] == 'allday') { $e['allday'] = 'allday'; } // for stored events that were setup with capitals
 	if (!isset($e['DTSTART']) ) return (false);
 	if (is_array($e['DTSTART'])) $e['DTSTART'] = $e['DTSTART'][0];
 	if (isset($e['DTEND']) and is_array($e['DTEND'])) $e['DTEND'] = $e['DTEND'][0];
@@ -1449,7 +1449,7 @@ global 	$amr_options,
 	date_timezone_set ($datestamp, $amr_globaltz);  /* Converting here, but then some derivations wrong eg: unsetting of end date */
 	// check for midnight, midday, noon etc
 	$time = $datestamp->format('His');
-	if (isset($_GET['tzdebug'])) echo  '<br />'.$time;
+	if (isset($_GET['tzdebug'])) echo  '<br />Time='.$time;
 	
 	$humanspeak = apply_filters('amr_human_time',$time);
 	if (!($time === $humanspeak )) return($humanspeak);
