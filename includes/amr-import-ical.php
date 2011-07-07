@@ -615,11 +615,13 @@ Africa/Asmara
 	we want to convert so can use like this +1 week 2 days 4 hours 2 seconds ether for calc with modify or output.  Could be neg (eg: for trigger)
 	*/
 
-
+	if (isset($_GET['debugdur'])) {echo '<br />Entering Pregmatch.. ';}
+	
         if (preg_match('/([+]?|[-])P(([0-9]+W)|([0-9]+D)|)(T(([0-9]+H)|([0-9]+M)|([0-9]+S))+)?/',
 			trim($text), $durvalue)) {
 
 			/* 0 is the full string, 1 is the sign, 2 is the , 3 is the week , 6 is th T*/
+			if (isset($_GET['debugdur'])) {echo 'Pregmatch gives '; var_dump($durvalue);}
 
 			if ($durvalue[1] == "-") {  // Sign.
                 $dur['sign'] = '-';
@@ -788,7 +790,9 @@ global $amr_globaltz;
 			return (amr_parseRDATE ($parts[1],$tzobj));
 		case 'TRIGGER': /* not supported yet, check for datetime and / or duration */
 		case 'DURATION':
-			return (amr_parseDuration ($parts[1]));
+			$dur = amr_parseDuration ($parts[1]);
+			if (isset($_GET['debugdur'])) {echo '<br />Parts1 = '.$parts[1].'<br />Duration = '; var_dump($dur);}
+			return ($dur);
 		case 'FREEBUSY':
 			return ( amr_parsePeriod ($parts[1]));
 		case 'TZID': /* ie TZID is a property, not part of a date spec */

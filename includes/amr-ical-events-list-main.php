@@ -324,12 +324,14 @@ global 	$amr_freq,
 /* --------------------------------------------------  */
 function amr_output_icalduration ($duarray) {
 	$d = '';
-	if (!empty($duarray['weeks'])) 	$d  = 'P'.(int)$duarray['weeks'].'W';
+	$t = '';
+	if (!empty($duarray['weeks'])) 	$d  = (int)$duarray['weeks'].'W';
 	if (!empty($duarray['days'])) 	$d .=     (int)$duarray['days'].'D';
-	if (!empty($duarray['hours'])) 	$d .= 'T'.(int)$duarray['hours'].'H';
-	if (!empty($duarray['minutes'])) $d .=    (int)$duarray['minutes'].'M';
-	if (!empty($duarray['seconds'])) $d .=    (int)$duarray['seconds'].'S';
-	return ($d);
+	if (!empty($duarray['hours'])) 	$t .= (int)$duarray['hours'].'H';
+	if (!empty($duarray['minutes'])) $t .=    (int)$duarray['minutes'].'M';
+	if (!empty($duarray['seconds'])) $t .=    (int)$duarray['seconds'].'S';
+	if (!empty($t)) $t = 'T'.$t;
+	return ('P'.$d.$t);
 }
 /* ----------------------------------------------------------------------------------- */
 function amr_prepare_pretty_rrule ($rule) {
@@ -659,7 +661,7 @@ function get_oldweekdays ($d) { /* Looks like it works compared to http://www.se
 }
 /* --------------------------------------------------  */
 function amr_same_time ($d1, $d2) {
-	if ($d1->format('His') === $d2->format('His')) return (true);
+	if ($d1->format('YmdHis') === $d2->format('YmdHis')) return (true);  //v 4.0.9  maybe should check whole day ?
 	else return (false);
 }
 /* --------------------------------------------------  */

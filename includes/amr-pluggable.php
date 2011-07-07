@@ -1,7 +1,6 @@
 <?php /* Pluggable functions that need to be loaded after the theme so that a theme functions.php can override 
 */
 // ----------------------------------------------------------------------------------------
-
 if (!function_exists( 'amr_human_time')) {
 	function amr_human_time ($time) { 
 		if ($time == '000000') return (__('midnight', 'amr-ical-events-list'));  // to avoid am/pm confusion, note midnight is start of day
@@ -25,7 +24,6 @@ function amrical_calendar_views () {
 		'listtype',
 		'eventmap'), $link);
 
-
 	if (!empty ($amr_limits['agenda'])) $agenda = $amr_limits['agenda'];
 	else $agenda = 1;
 	if (!empty ($amr_limits['eventmap'])) $eventmap = $amr_limits['eventmap'];
@@ -35,7 +33,6 @@ function amrical_calendar_views () {
 	}
 
 	if ($agenda) {
-
 		$agendaviewlink = remove_query_arg('months',$link );
 		$agendaviewlink = add_query_arg(array('agenda'=>$agenda),$agendaviewlink );
 		$agendaviewlink = '<a class="agendalink button" href="'
@@ -113,7 +110,6 @@ function amr_week_links ($start,$weeks) { // returns array ($nextlink, $prevlink
 		. '" title="' 
 		. sprintf(__('Week starting %1$s', 'amr-ical-events-list'), $nextstring2)
 		. '">'._x('&rarr;','for next navigation, translate allows you to use words', 'amr-ical-events-list').'</a>';
-	
 
 	return (array('prevlink'=>$prevlink,'nextlink'=>$nextlink));
 }
@@ -1013,6 +1009,7 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 		$startallgroups = true;
 		foreach ($events as $i => $e) { /* for each event, loop through the properties and see if we should display */
 			amr_derive_component_further ($e);
+			if (isset($_GET['debugevent'])) var_dump($e);
 			if (!empty($e['Classes']))
 				$classes = strtolower($e['Classes']);
 			else $classes = '';
