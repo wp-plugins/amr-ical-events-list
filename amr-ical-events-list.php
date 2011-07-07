@@ -4,7 +4,7 @@ Plugin Name: amr events calendar or lists with ical files
 Author: anmari
 Author URI: http://anmari.com/
 Plugin URI: http://icalevents.com
-Version: 4.0.7
+Version: 4.0.8
 Text Domain: amr-ical-events-list
 Domain Path:  /lang
 
