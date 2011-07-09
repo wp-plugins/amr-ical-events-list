@@ -19,9 +19,8 @@ function amr_get_events_in_months_format ($events, $months, $start) {
 	$dummydate = new Datetime();
 	$dummydate = clone $start ;
 
-
 	for ($i = 1; $i <= $months; $i++) {
-		$yearmonth = $dummydate->format('Ym');
+		$yearmonth = $dummydate->format('Ym'); //numerical so do not need amr_date_format
 		$monthsofevents[$yearmonth] = array();
 		date_modify($dummydate, '+1 month');
 	}
@@ -30,7 +29,7 @@ function amr_get_events_in_months_format ($events, $months, $start) {
 	if (!empty ($events)) {
 		foreach ($events as $event) {
 			
-			//$yearmonth = $event['EventDate']->format('Ym');
+			//$yearmonth = $event['EventDate']->format('Ym');   //numerical so do not need amr_date_format
 			if (empty ($event['dummyYMD'])) {
 				if (ICAL_EVENTS_DEBUG) {
 					echo '<br />Error in dummy YMD for multi day event'; var_dump($event); 
@@ -84,7 +83,8 @@ function amr_get_events_in_weeks_format ($events, $weeks, $start) {
 	$dummydate = new Datetime();
 	$dummydate = clone $start ;
 	for ($i = 0; $i < $weeks; $i++) {
-		$weekbeginning = $dummydate->format('Ymj'); if (isset($_GET['debugwks'])) {echo '<br />weekbeginning'.$weekbeginning; }
+		$weekbeginning = $dummydate->format('Ymj'); //numerical so do not need amr_date_format
+		if (isset($_GET['debugwks'])) {echo '<br />weekbeginning'.$weekbeginning; }
 		$weeksofevents[$weekbeginning] = array();
 		date_modify($dummydate, '+7 days');
 	}
@@ -109,7 +109,7 @@ function amr_get_events_in_weeks_format ($events, $weeks, $start) {
 		foreach ($weeksofevents as $i => $monthevents) {
 			echo '<br />'.$i.' '.count($monthevents);
 			foreach($monthevents as $i => $e) {
-				echo '<br />&nbsp;&nbsp;'.$e['EventDate']->format('Ymd');
+				echo '<br />&nbsp;&nbsp;'.$e['EventDate']->format('Ymd');   //numerical so do not need amr_date_format
 			}
 		}
 	}
@@ -559,7 +559,7 @@ global $wp_locale,
 				break;
 			}
 			case "weekscalendar" : {//else weekscalendar
-				$day_name = $dummydate->format($format);
+				$day_name = amr_format_date($format,$dummydate); // v 4.0.9
 				
 				break;
 			}
@@ -597,13 +597,14 @@ function amr_event_is_multiday($event) { //determine if event is a multi day eve
 	$days = 0;
 	if (!empty($duration['days']) and ($duration['days'] >= 1 )) {
 		$days=$duration['days']; 
-		if ( (!empty($duration['hours']) and ($duration['hours'] >= 1 )) or
+		}
+	if ( (!empty($duration['hours']) and ($duration['hours'] >= 1 )) or
 		(!empty($duration['minutes']) and ($duration['minutes'] >= 1 ))  or
 		(!empty($duration['seconds']) and ($duration['seconds'] >= 1 ))  ) {
 		// then we go over 1 day into the next
 			$days = $days + 0.5;
 		}
-	}
+	
 	if (!empty($duration['weeks']) and ($duration['weeks'] >= 1 )) 
 		$days = $days + (7*$duration['weeks']); 
 	if (isset($_GET['debugmulti'])) echo '<br /> days = '.$days;
@@ -672,10 +673,10 @@ global $amr_globaltz;
 					$day = 1;				
 					if (empty ($events[$m]['Classes'])) $events[$m]['Classes'] = '';
 					$events[$m]['Classes'] .= ' firstday ';	// already have first day
-					$events[$m]['dummyYMD'] = $event['EventDate']->format('Ymd'); 
+					$events[$m]['dummyYMD'] = $event['EventDate']->format('Ymd'); //numerical so do not need amr_date_format
 					$events[$m]['MultiDay'] = $day; 
 					$tempdate = new DateTime;  // create new obect so we do not update the same object
-					while ($day <= ($days-1)) {
+					while ($day <= ($days)) {
 						if (isset($_GET['debugmulti'])) echo '<br /> day = '.$day;
 				
 						$tempdate = clone $event['EventDate']; // copy the current event date		
@@ -683,7 +684,7 @@ global $amr_globaltz;
 						// must do like above in case we go over a month 
 						$day = $day+1;
 						$dummy[$m][$day] = $events[$m]; // copy event data over , but use dumy so we do not reprocess the additions
-						$dummy[$m][$day]['dummyYMD'] = $tempdate->format('Ymd');;  // now set the date for this dummy event
+						$dummy[$m][$day]['dummyYMD'] = $tempdate->format('Ymd');;  // now set the date for this dummy event //numerical so do not need amr_date_format
 						$dummy[$m][$day]['MultiDay'] = $day;  // flag it as a multi day
 						// set the classes so we can style multi days
 							
@@ -699,7 +700,7 @@ global $amr_globaltz;
 					
 				}
 				else {
-					$events[$m]['dummyYMD'] = $event['EventDate']->format('Ymd'); 
+					$events[$m]['dummyYMD'] = $event['EventDate']->format('Ymd');  //numerical so do not need amr_date_format
 					$events[$m]['MultiDay'] = '0'; // to force non multidays to bottom
 				}
 				$events[$m]['dummytime'] = $event['EventDate']->format('His'); //for sorting

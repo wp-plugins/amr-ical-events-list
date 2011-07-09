@@ -274,9 +274,9 @@ function amr_set_defaults() {
 
 	if (defined('AMR_ICAL_VERSION'))	$amr_options['ngiyabonga']	= true; //do not show credit link
 	$alreadyhave = false;
-	if ($locale === 'en_US' ) 
-			$amr_options['date_localise'] = 'none';
-	else 	$amr_options['date_localise'] = 'amr';
+//	if ($locale === 'en_US' )  $amr_options['date_localise'] = 'none';   // v4.0.9 commented out - multi lingual situations may have en as base, but will need localisation
+//	else 	
+	$amr_options['date_localise'] = 'wp';
 	//
 	if (function_exists ('get_option')) {
 	//	if ($d = get_option ('date_format')) $amr_formats['Day'] = $d;

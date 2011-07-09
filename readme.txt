@@ -4,7 +4,7 @@ Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, i
 
 Requires at least: 2.8
 Tested up to: 3.2.
-Version: 4.0.9
+Version: 4.0.10
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.
@@ -43,6 +43,11 @@ Many thanks to the following people for the translations.  Note that I am unable
 If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me both the .mo and .po files for your language.
 
 == Changelog ==
+= Version 4.0.10 =
+* Fix: In some date time output, the date time localisation calls were not called so some months/day of weeks were not translating.
+* Fix: multi day events with partial days will now show on the partial days too.
+* Fix: upcoming widget was not responding to listtype change in advanced input field - will now
+
 = Version 4.0.9 =
 * Fix: Changed one line of code made some events look like allday and so appear to lose end time. !
 

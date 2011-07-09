@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.0.9');
+define('AMR_ICAL_LIST_VERSION', '4.0.10');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -107,19 +107,19 @@ global  $wp_locale;
 
 	$daysofweek = array ( /* use the wordpress localisation functions so we do not have to retranslate ourselevs */
 
-		'MO'=> $wp_locale->get_weekday_abbrev('Monday'),
+		'MO'=> $wp_locale->get_weekday_abbrev(__('Monday')),
 
-		'TU'=> $wp_locale->get_weekday_abbrev('Tuesday'),
+		'TU'=> $wp_locale->get_weekday_abbrev(__('Tuesday')),
 
-		'WE'=> $wp_locale->get_weekday_abbrev('Wednesday'),
+		'WE'=> $wp_locale->get_weekday_abbrev(__('Wednesday')),
 
-		'TH'=> $wp_locale->get_weekday_abbrev('Thursday'),
+		'TH'=> $wp_locale->get_weekday_abbrev(__('Thursday')),
 
-		'FR'=> $wp_locale->get_weekday_abbrev('Friday'),
+		'FR'=> $wp_locale->get_weekday_abbrev(__('Friday')),
 
-		'SA'=> $wp_locale->get_weekday_abbrev('Saturday'),
+		'SA'=> $wp_locale->get_weekday_abbrev(__('Saturday')),
 
-		'SU'=> $wp_locale->get_weekday_abbrev('Sunday'),
+		'SU'=> $wp_locale->get_weekday_abbrev(__('Sunday')),
 
 	);
 
@@ -185,8 +185,6 @@ global $amr_formats;  /* amr check that this get set to the chosen list type */
 		foreach ($rdate as $i => $d) {
 			if (is_object($d))
 				$html[] = amr_format_date ($amr_formats['Day'], $d);
-
-
 //			 = $d->format($df);  /* *** is it already in the right timezone or not ? If just doing 'date' for now, is okay? */
 			else $html[] = $d;
 		}
@@ -256,10 +254,13 @@ function amr_prettyprint_duration ($duration) {
 	if (!is_array($duration)) echo $duration;
 	else { $h = array();
 		foreach ($duration as $i => $v) {
-			$h[] = sprintf(_n(	'%s '.rtrim($i,'s') /* singular */ , '%s '.$i /* plural */, $v , 'amr-ical-events-list'), $v);
+			$h[] = sprintf( _n(	'%u '.rtrim($i,'s') /* singular */ 
+			                  , '%u '.$i /* plural */
+							  ,$v  // number
+							  ,'amr-ical-events-list'),// domain
+							  $v);
 		}
 		$html = implode (',&nbsp;',$h);
-
 	}
 	echo $html;
 }
@@ -356,9 +357,9 @@ global $ical_timezone, $amr_formats;
 
 			date_timezone_set($rule['UNTIL'], $ical_timezone);
 
-			$rule['UNTIL-DATE'] = $rule['UNTIL']->format($df);
-
-			$rule['UNTIL-TIME'] = $rule['UNTIL']->format($tf);
+//			$rule['UNTIL-DATE'] = $rule['UNTIL']->format($df);
+			$rule['UNTIL-DATE'] = amr_format_date($df, $rule['UNTIL']);
+			$rule['UNTIL-TIME'] = amr_format_date($tf, $rule['UNTIL']);
 
 	}
 
@@ -707,7 +708,7 @@ function amr_secondsDifference( $beginDate, $endDate){ /* *** what if dates are 
 
 }
 /* --------------------------------------------------  */
-function amr_calc_duration ( $start, $end) { /* assume in same timezone */
+function amr_calc_duration ( $start, $end) { /* assume in same timezone , ics dtend? */
 	/* In php 5.3 there is a date diff calculation */
 	/* calculate weeks, days etc and return in array */
 	/* don't want to use unix date stamp */
@@ -1430,6 +1431,7 @@ global $amr_options;
 		}
 	else if (is_integer ($datestamp)) $dateInt = $datestamp;
 	else return(false);
+	
 	if (stristr($format, '%') ) return (strftime( $format, $dateInt ));  /* keep this for compatibility!  will not localise though */
 	else {
 		$text = date_i18n($format, $dateInt, $gmttf); /*  should  be false, otherwise we get the utc/gmt time.   */
@@ -1463,7 +1465,7 @@ function amr_format_date( $format, $datestamp) { /* want a  integer timestamp or
 global 	$amr_options,
 		$amr_globaltz;
 	if (isset ($amr_options ['date_localise'])) $method = $amr_options ['date_localise'];
-	else $method = 'none';
+	else $method = 'wp';  // v4.0.9 was none
 
 	if (isset($_GET['tzdebug'])) echo  '<br />set tz for: '.$datestamp->format('c');
 
