@@ -3,8 +3,8 @@ Contributors: anmari
 Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, ical-feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar,
 
 Requires at least: 2.8
-Tested up to: 3.2.
-Version: 4.0.10
+Tested up to: 3.2.1
+Version: 4.0.11
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.
@@ -43,6 +43,13 @@ Many thanks to the following people for the translations.  Note that I am unable
 If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me both the .mo and .po files for your language.
 
 == Changelog ==
+= Version 4.0.11 =
+* Change: A cleanup of the import ics url code - .ics urls that had ampersands in their urls were being handled well when the import function was called.  On older php versions they were being encoded with esc_url and not decoded.  Now using esc_url_raw which is not supposed to encode html entities.  Somehow a decode still seems to be required!
+* It has also come to my attention that the php filter_var with FILTER_VALIDATE_URL will not handle internationalised domain names. If this affects anyone, please contact me.
+* Fix: A filter function that cleared the large calendar caption was left in when it should not have been.  The ability to use the filter  'amr_events_table_caption' is still there should you want to do your own caption text, or not have the caption html.  
+* Reversal: the month dropdown navigation default got temporarily changed.  All was fine either way if you were using show_month_nav in your shortcode.  But if you weren't the dropdown as a default for the large calendar got lost between versions. Apologies.  
+ 
+
 = Version 4.0.10 =
 * Fix: In some date time output, the date time localisation calls were not called so some months/day of weeks were not translating.
 * Fix: multi day events with partial days will now show on the partial days too.

@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.0.10');
+define('AMR_ICAL_LIST_VERSION', '4.0.11');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -623,8 +623,6 @@ global $amr_globaltz, $amr_lastcache, $amr_options, $amr_last_modified;
 	return ( '<a class="refresh amr-bling" href="'.htmlentities($uri).'" title="'.$text.' '.$text2.'">'.$t3.'</a>');
 }
 /* --------------------------------------------------  */
-
-
 function ical_get_weekstart() {
 
 	$wkst = get_option('start_of_week');  /* Somewhat annoyingly, wp has sunday as 0 and sat as 6 !! */
@@ -857,7 +855,7 @@ function amr_format_duration ($arr) {
 /* --------------------------------------------------------- */
 function amr_format_tz ($tzstring) {
 global $amr_globaltz, $amr_options;
-	$url = esc_url($_SERVER['REQUEST_URI']);
+	$url = esc_url_raw($_SERVER['REQUEST_URI']);
 	$tz = timezone_name_get($amr_globaltz);
 	if ($tz === $tzstring) $tz2 = date_default_timezone_get();
 	else $tz2 = $tzstring;
@@ -871,8 +869,6 @@ global $amr_globaltz, $amr_options;
 		.htmlentities(add_querystring_var($url,'tz',$tz2)).'" title="'
 		.$text2.'" >'.$t3.' </a>');
 }
-
-
 /* --------------------------------------------------------- */
 function amr_format_bookmark ($text) {
 	return ('<a id="'.$text.'"></a>');  /* ***/
@@ -954,7 +950,6 @@ function amr_derive_summary (&$e ) {
 	else $e_summ = $e['SUMMARY'];
 	return( $e_summ );
 }
-
 /* --------------------------------------------------------- */
 function amr_format_repeatable_property ($content, $k, $event, $before='', $after='') {
 // for properties that can have multiple values and for which we have received an array of those values, we need to do the format routine for each value
@@ -1126,7 +1121,6 @@ what about all day?
 	return ($before.$htmlcontent.$after);
 
 }
-
 /* ------------------------------------------------------------------------------------*/
 function amr_add_duration_to_date (&$e, $d) {
 /* NOTE: some date modify installations cannot cope with 0 durations, or just a +, so do not pass that ! */
@@ -1353,7 +1347,6 @@ function add_querystring_var($url, $key, $value) {
 	   }
 
 }
-
 /* --------------------------------------------------  */
 function amr_get_htmlstylefile() {
 	global $amr_options;
@@ -1369,7 +1362,6 @@ function amr_get_htmlstylefile() {
 		$custom_htmlstyle_file = $uploads['basedir'].$custom_htmlstyle_file ;
 	return($custom_htmlstyle_file);
 }
-
 /* --------------------------------------------------  */
 function amr_doing_box_calendar () {
 global $amr_options,
@@ -1393,7 +1385,6 @@ global 	$amr_options,
 		if (!empty($g)) return ($g);
 		else return false;
 }
-
 /* -------------------------------------------------------------------------------------------*/
 function format_grouping ($grouping, $datestamp) {
 /* check what the format for the grouping should be, call functions as necessary*/
@@ -1912,7 +1903,6 @@ function amr_process_icalevents($events, $astart, $aend, $limit) {
 		return ($dates) ;
 	}
 /* -------------------------------------------------------------------------*/
-
 function process_icalurl($url) {
 global $amr_limits;
 /* cache the url if necessary, and then parse it into basic nested structure */
@@ -1931,7 +1921,6 @@ global $amr_limits;
 
 	return ($ical);
 }
-
 /* -------------------------------------------------------------------------*/
 function amr_echo_parameters() {
 global $amr_limits;
@@ -2252,24 +2241,19 @@ function amr_get_params ($attributes=array()) {
 	//
 	if (!empty ($attributes) ) {  // if there is stuff left - must be urls
 		foreach ($attributes as $i => $v) {
-			if (is_numeric ($i)) {  // ie if it is a value passed with no name, we expect only urls like that
+			if (is_numeric ($i) or ($i == 'ics')) {  // ie if it is a value passed with no name, we expect only urls like that
 				if (substr($v, 0 ,1) == ':') { /* attempt to maintain old filter compatibity */
 					$shortcode_params['urls'][$i] = substr ($v, 1);
 				}
 				$v = (str_ireplace('webcal://', 'http://',$v));
 				if ((function_exists('filter_var')) and (!filter_var($v, FILTER_VALIDATE_URL))) { /* rejecting a valid URL on php 5.2.14  */
 					echo '<h2>'.sprintf(__('Invalid Ical URL %s','amr-ical-events-list'), $v).'</h2>';
+					echo '<p>Note: the php validation functon does not cope with internationalised domain, please contact the developer if this affects you.</p>';
 				}
 				else
-					$shortcode_params['urls'][$i] = esc_url($v);
+					$shortcode_params['urls'][$i] = esc_url_raw($v);
 				unset ($attributes[$i]);
 				}
-			else { /* of it's not a url, it's a query selection criteria */
-				if ($i == 'ics') {
-					$shortcode_params['urls'][] = $v;
-					unset($attributes[$i]);
-					}
-			}
 		} // end foreach
 	} //end if
 //
@@ -2543,7 +2527,6 @@ function amr_get_params ($attributes=array()) {
 	If (ICAL_EVENTS_DEBUG) {echo '<hr> Left in params to pass to wp query?: <br />'; var_dump($shortcode_params); }
 	return ($shortcode_params);  // only return params needed for wp query ?
 }
-
 /* -------------------------------------------------------------------------*/
 function amr_get_id_for_shortcode () {  // allows for the possibility of multiple shortcodes in one page. 
 global $amr_icalno;
@@ -2655,10 +2638,10 @@ global $amr_limits,
 
 	$defaults['listtype'] = 9;
 	$defaults['months'] = 1;
+	$defaults['show_month_nav'] = 1; // default is on in calendar 
 
 	if (empty($attributes)) $atts = $defaults;
-	else $atts = array_merge( $defaults, $attributes ) ;
-	
+	else $atts = array_merge( $defaults, $attributes ) ;	
 
 	$criteria =	amr_get_params ($atts);  /* strip out and set any other attstributes  - they will set the limits table */
 	

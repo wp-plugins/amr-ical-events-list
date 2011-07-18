@@ -117,10 +117,6 @@ function amr_get_events_in_weeks_format ($events, $weeks, $start) {
 	return ($weeksofevents);
 }
 // ----------------------------------------------------------------------------------------
-function amr_clear_html ($html) {
-	return '';
-}
-// ----------------------------------------------------------------------------------------
 function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = true) { /* startingpoint was wp calendar */
 
 	global $amr_options, $amr_listtype, $amr_limits, $amrW;
@@ -224,7 +220,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 	}
 	else {	
 			$navigation = amr_calendar_navigation($start, $months, $weeks, $liststyle); // include month year dropdown	with links	
-			add_filter('amr_events_table_caption','amr_clear_html');	
+
 			if (($liststyle == 'smallcalendar' ) and ($months < 2))	{
 				$tfoot = '<tfoot><tr><td class="calendar_navigation" colspan="7">'.$navigation.'</td></tr></tfoot>';
 				}

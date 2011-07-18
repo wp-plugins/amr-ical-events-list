@@ -20,48 +20,6 @@
  *
  */
 
-
-class curl {
-
-  var $timeout;
-
-  var $url;
-
-  var $file_contents;
-
-  function getFile($url,$timeout=0) {
-
-    # use CURL library to fetch remote file
-
-    $ch = curl_init();
-
-    $this->url = $url;
-
-    $this->timeout = $timeout;
-
-    curl_setopt ($ch, CURLOPT_URL, $this->url);
-
-    curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
-
-    curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, true);
-
-    curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $this->timeout);
-
-    $this->file_contents = curl_exec($ch);
-
-    if ( curl_getinfo($ch,CURLINFO_HTTP_CODE) !== 200 ) {
-
-      return(false);
-
-    } else {
-
-      return $this->file_contents;
-
-    }
-
-  }
-
-}
 /* ---------------------------------------------------------------------- */
 	/*
 	 * Return the full path to the cache file for the specified URL.
@@ -102,70 +60,34 @@ class curl {
 	if( !class_exists( 'WP_Http' ) )
           include_once( ABSPATH . WPINC. '/class-http.php' );
 /* ---------------------------------------------------------------------- */
-function getRemoteFile($url) // an alternate method to get remote file - OLD, only resorted to if all else fails, but maybe useless
-{
-   // get the host name and url path
-   $parsedUrl = parse_url($url);
-   $host = $parsedUrl['host'];
-   if (isset($parsedUrl['path'])) {
-      $path = $parsedUrl['path'];
-   } else {
-      // the url is pointing to the host like http://www.mysite.com
-      $path = '/';
-   }
 
-   if (isset($parsedUrl['query'])) {
-      $path .= '?' . $parsedUrl['query'];
-   }
+function amr_check_start_of_file ($data) {// check if the file looks like a icsfile
+	if (empty($data)) return false;
+	$checkstart = substr($data,0,15);
+	if (!($checkstart == 'BEGIN:VCALENDAR')) {
+		If (ICAL_EVENTS_DEBUG) {
+			echo '<br /> No VCALENDAR in file. Start has: '.$checkstart.' end';
+		}
+		echo '<a class="error" href="#" title="'
+			.__('Unexpected data contents. Please tell administrator.','amr-ical-events-list' ). ' '
+			.__('See comments in source for response received from ics server.','amr-ical-events-list' )
+			.'">!</a>';
+		echo '<!-- Some of the content returned is: '; var_dump(substr ($data,0,200)); echo ' end of dump -->';
+		return false;
+	}
+	return true;	
 
-   if (isset($parsedUrl['port'])) {
-      $port = $parsedUrl['port'];
-   } else {
-      // most sites use port 80
-      $port = '80';
-   }
-
-   $timeout = 10;
-   $response = '';
-
-   // connect to the remote server
-   $fp = @fsockopen($host, $port, $errno, $errstr, $timeout );
-
-   if( !$fp ) {
-      return(false);
-   } else {
-      // send the necessary headers to get the file
-      fputs($fp, "GET $path HTTP/1.0\r\n" .
-                 "Host: $host\r\n" .
-                 "User-Agent: ".$host." ical listing."  .
-                 "Accept: */*\r\n" .
-                 "Accept-Language: en-us,en;q=0.5\r\n" .
-                 "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7\r\n" .
-                 "Keep-Alive: 300\r\n" .
-                 "Connection: keep-alive\r\n" .
-                 "Referer: http://$host\r\n\r\n");
-
-      // retrieve the response from the remote server
-      while ( $line = fread( $fp, 4096 ) ) {
-         $response .= $line;
-      }
-
-      fclose( $fp );
-
-      // strip the headers
-      $pos      = strpos($response, "\r\n\r\n");
-      $response = substr($response, $pos + 4);
-   }
-
-   // return the file content
-   return $response;
 }
+
 /* ---------------------------------------------------------------------- */
 	function amr_cache_url($url, $cache=ICAL_EVENTS_CACHE_TTL) {
 	global $amr_lastcache;
 	global $amr_globaltz;
-
-		If (ICAL_EVENTS_DEBUG) echo '<br />url: '.$url.'<br />';
+	
+		$text = '';
+		If (ICAL_EVENTS_DEBUG) echo '<hr />url before decode: '.$url.'<br />';
+		$url = html_entity_decode($url);
+		If (ICAL_EVENTS_DEBUG) echo '<br />url decoded: '.$url.'<hr />';
 		$cachedfile = get_cache_file($url);
 		if ( file_exists($cachedfile) ) {
 			$c = filemtime($cachedfile);
@@ -179,72 +101,69 @@ function getRemoteFile($url) // an alternate method to get remote file - OLD, on
 		// must we refresh ?
 		if ( isset($_REQUEST['nocache']) or isset($_REQUEST['refresh'])
 			or (!(file_exists($cachedfile))) or ((time() - ($c)) >= ($cache*60*60))) 	{
-			If (ICAL_EVENTS_DEBUG) {
-				echo '<br>Get ical file remotely, it is time to refresh or it is not cached: <br />';
-				print_r ($url);
-				}
-			if (version_compare( PHP_VERSION,'5.2.13', '>')) $u = filter_var ($url, FILTER_VALIDATE_URL);
-			else $u = $url;
-			if (!($u) ) { _e('Invalid URL','amr-ical-events-list'); return(false);}
-// first try with http
-//			$request = new WP_Http;
-//			$check = $request->request( $u );
-			$check = wp_remote_get($u);
+			If (ICAL_EVENTS_DEBUG) echo '<br>Get ical file remotely, it is time to refresh or it is not cached: <br />';
+
+			//$url = urlencode($u);  - do NOT encode - that gives an invalid URL response
+			$check = wp_remote_get($url);
 			if (( is_wp_error($check) ) or  (isset ($check['response']['code']) and !($check['response']['code'] == 200))
-			or (isset ($check[0]) and preg_match ('#404#', $check[0])) /* is this bit still meaningful or needed ? */
-			or (!stristr($check['headers']['content-type'],'text/calendar'))) {
-				If (ICAL_EVENTS_DEBUG) { echo '<br /> http request failed <br /> ';
-				//var_dump($check);
+			or (isset ($check[0]) and preg_match ('#404#', $check[0]))) {/* is this bit still meaningful or needed ? */
+
+				If (ICAL_EVENTS_DEBUG) { echo '<hr /><b>Http request failed </b><br /> Dumping response: ';
+				var_dump($check);
 				}
 				if (is_wp_error($check))
-					$text = $check->get_error_message();
+					$text = '<br />'.$check->get_error_message().'</br>';
 				else $text = '';
-// else try curl
-				If (ICAL_EVENTS_DEBUG) { echo '<br /> Trying to get with curl <br /> ';}
-				$filetoget = new curl;
-				$data = $filetoget->getFile($u,30);
-
-				$checkstart = substr($data,0,100);
-				If (ICAL_EVENTS_DEBUG) { echo '<br /> Check start of data: '.$checkstart;}
-				if (!($checkstart == 'BEGIN:VCALENDAR')) {
-					If (ICAL_EVENTS_DEBUG) {
-						echo '<br /> No VCALENDAR in file. Start has:'.$checkstart.'...';
-						echo '<br /> Trying to get with custom remote function. <br /> ';
+				$data = false;
+			}	
+			elseif  (!stristr($check['headers']['content-type'],'text/calendar')) {
+			
+				if (amr_check_start_of_file ($data = $check['body'])) { // well wrong content type, but has the content!! - bad calendar provider
+					$data = $check['body']; 
+					if (current_user_can('manage_options')) { 
+					echo '<br />This message is only shown to the administrator, and only when we refresh the file.';
+					echo '<br />The ics url given is issuing an incorrect content type of text/html.'
+					.' It should be text/calendar. '
+					.' Luckily we persevere and check if the content looks like an ics file.'
+					.'Please inform the provider of the url. '
+					.'Their urls may not be recognised by browsers as ics files. <br />';					
 					}
-					$data = getRemoteFile($u);
-					$checkstart = substr($data,0,15);
-					If (ICAL_EVENTS_DEBUG) { echo '<br /> Check start of data - see source comment <!--'. substr($data,0,100).'-->'; }
-					if (!($checkstart == 'BEGIN:VCALENDAR')) {
+				}
+				else {
+					if (ICAL_EVENTS_DEBUG) {
+						echo '<br />The url given is not returning a calendar file';
+						echo '<br />The response was '; var_dump($check['response']);
+						echo '<br />The content type is '.$check['headers']['content-type'];
+						echo '<br />The content type of an ics file should be text/calendar. <br />';
+						
+					}
+					$data = false;
+				}
+			
+			}
+			else $data = $check['body'];  // from the http request		
+
+			if (!amr_check_start_of_file ($data)) {			
+
+					$text .= '&nbsp;'.sprintf(__('Error getting calendar file with htpp or curl %s','amr-ical-events-list'), $url);
+
+					if ( file_exists($cachedfile) ) { // Try use cached file if it exists
+						$text .= '&nbsp;...'.sprintf(__('Using File last cached at %s','amr-ical-events-list'), $amr_lastcache->format('D c'));
 						echo '<a class="error" href="#" title="'
-						.__('Unexpected data contents. Please tell administrator.','amr-ical-events-list' ). ' '
-						.__('See comments in source for response received from ics server.','amr-ical-events-list' )
-						.'">!</a>';
-						echo '<!-- '; var_dump($data);echo ' -->';
-
-						$text .= '&nbsp;'.sprintf(__('Error getting calendar file with htpp or curl, or custom fn: %s','amr-ical-events-list'), $url);
-
-						if ( file_exists($cachedfile) ) { // Try use cached file if it exists
-							$text .= '&nbsp;...'.sprintf(__('Using File last cached at %s','amr-ical-events-list'), $amr_lastcache->format('D c'));
-							echo '<a class="error" href="#" title="'
-							.__('Warning: Events may be out of date. ','amr-ical-events-list' )
-							. $text.'">!</a>';
-
-							return($cachedfile);  //return file not data
-							}
-						else {
-							echo '<a class="error" href="#" title="'
-							.__('No cached ical file for events','amr-ical-events-list' )
-							. $text.'">!</a>';
-							return (false);
+						.__('Warning: Events may be out of date. ','amr-ical-events-list' )
+						. $text.'">!</a>';
+						return($cachedfile);  //return file not data
 						}
+					else {
+						echo '<a class="error" href="#" title="'
+						.__('No cached ical file for events','amr-ical-events-list' )
+						. $text.'">!</a>';
 						return (false);
 					}
-					If (ICAL_EVENTS_DEBUG) { echo '<br />We have vaclendar in start of file';}
+					return (false);
 				}
-				// else have data
-			}
-			else $data = $check['body'];  // from the http request
-
+			else If (ICAL_EVENTS_DEBUG) { echo '<br />We have vcalendar in start of file';}
+	
 			if ($data) { /* now save it as a cached file */
 				if ($dest = fopen($cachedfile, 'w')) {
 					if (!(fwrite($dest, $data))) die ('Error writing cache file'.$dest);
@@ -256,10 +175,7 @@ function getRemoteFile($url) // an alternate method to get remote file - OLD, on
 					return (false);
 				}
 			}
-			else {
-				echo '<br>Error opening remote file for refresh '.$url;
-				return false;
-				}
+			else {	echo '<br>Error opening remote file for refresh '.$url;	return false;}
 			if (!isset($amr_lastcache))	$amr_lastcache = date_create (date('Y-m-d H:i:s'), $amr_globaltz);
 		}
 		else {}// no need to refresh, use the cached file
