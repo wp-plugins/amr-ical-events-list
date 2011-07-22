@@ -4,10 +4,10 @@ Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, i
 
 Requires at least: 2.8
 Tested up to: 3.2.1
-Version: 4.0.11
+Version: 4.0.12
 Stable tag: trunk
 
-Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.
+Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.  
 
 == Description ==
 
@@ -43,6 +43,15 @@ Many thanks to the following people for the translations.  Note that I am unable
 If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me both the .mo and .po files for your language.
 
 == Changelog ==
+= Version 4.0.12 =
+* Fixed: when there are no events, the old pagination was showing and ignoring what had been specified in the shortcode.  Also an error due to no 'last event date' being available.  
+* Fix: adding new list type and pasting a predefined list type at same time caused a minor glitch. Now add, then paste in the list type code.  
+* Change: for people using amr-events.  It was possible to use DTEND (the technical 'ics' end date).in the display of event information single view.  For all day events, this looks like one day more.  Humans need the end of the previous day (not the start of the next). The template now offers the human friend end date rather to use.   THis facilitates this, however you will need soon to be released amr-events 3.0.4.
+* Add: for advanced users - more of the functions are now pluggable, especially the ones with icons. see [pluggables](http://icalevents.com/documentation/filters-and-pluggable-functions/)
+* Change: move pluggable functions definition later in the wordpress actions so can be more easily overwritten
+* Change: tweaked the default box calendar css to stop very wide content (like links) from breaking out of the hover box.
+* Change: if system tries to use a list type that has been deleted, will now look for an available one to use. Will give message, but better than dieing.
+
 = Version 4.0.11 =
 * Change: A cleanup of the import ics url code - .ics urls that had ampersands in their urls were being handled well when the import function was called.  On older php versions they were being encoded with esc_url and not decoded.  Now using esc_url_raw which is not supposed to encode html entities.  Somehow a decode still seems to be required!
 * It has also come to my attention that the php filter_var with FILTER_VALIDATE_URL will not handle internationalised domain names. If this affects anyone, please contact me.

@@ -496,7 +496,10 @@ function amrical_compropsoption($i) {
 
 					echo '<td style="border-bottom: 0; ">'
 						.'<input type="text" size="'.$amr_csize[$s].'"  class="'.$s.'"  id="'.$p.$s
-						.'"  name="'.'ComP['.$p.']['.$s.']"  value= "'.(esc_attr(wp_kses_stripslashes($sv))).'"  />'
+						.'"  name="'.'ComP['.$p.']['.$s.']"  value= "'
+// v 4.0.12	- want to be able to see &nbsp;					.(esc_attr(wp_kses_stripslashes($sv)))
+						.htmlspecialchars ($sv)
+						.'"  />'
 						.'</td>';
 				}
 				echo '</tr><tr ><td colspan="5" style="padding: 0 20px 20px; 0" >'.$text.'</td></tr>';
@@ -974,26 +977,30 @@ global $calendar_preview_url;
 			echo '</div>';
 			echo '</td>';
 			echo '<td>'.$listtype['general']['ListHTMLStyle'];
+			echo '</td>';
+			echo '<td><textarea id="export'
+			.$i.'" rows="2" cols="50" readonly="readonly"  '
+			.' style="margin: 0;" '
+//		.'onClick="select_all(\'export'.$id.'\');"'
+			.'name="export['.$id.']" >';
+			if (!empty($listtype) ) {
+				echo base64_encode(serialize($listtype));  // too many problems when not encoded
+			}
+			echo '</textarea></td>';
+			echo '<td><textarea id="import'.$id.'" rows="2" cols="50" '
+			.' style="margin: 0;" '
+//		.'onClick="select_all(\'import'.$id.'\');"'
+			.'name="import['.$id.']" >'
+			.'</textarea></td>';
 		}
 		else {
 			echo '<td colspan="2">';
 			_e('Enter a list number to start a list type with new default settings.','amr-ical-events-list');
+			echo '</td><td>'
+			.__('After that, cut and paste from the list type closest to what you want to get you started','amr-ical-events-list')
+			.'</td><td></td>';
 		}
-		echo '</td>';
-		echo '<td><textarea id="export'
-		.$i.'" rows="2" cols="50" readonly="readonly"  '
-		.' style="margin: 0;" '
-//		.'onClick="select_all(\'export'.$id.'\');"'
-		.'name="export['.$id.']" >';
-		if (!empty($listtype) ) {
-			echo base64_encode(serialize($listtype));  // too many problems when not encoded
-		}
-		echo '</textarea></td>';
-		echo '<td><textarea id="import'.$id.'" rows="2" cols="50" '
-		.' style="margin: 0;" '
-//		.'onClick="select_all(\'import'.$id.'\');"'
-		.'name="import['.$id.']" >'
-		.'</textarea></td>';
+		
 		echo '</tr></tbody>';
 }
 

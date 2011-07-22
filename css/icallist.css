@@ -169,14 +169,12 @@ table.smallcalendar,
 #events_wrap  table tbody td .lastday { /* Multi day styling */
       background: #eee;
      }	
-	 
+/* to override Multi day styling - But no,not useful ? */	 
 #events_wrap  table tbody td.selected .firstday,	  
 #events_wrap  table tbody td.selected .middleday,  
-#events_wrap  table tbody td.selected .lastday { /* to override Multi day styling */
-    background: #777;
+#events_wrap  table tbody td.selected .lastday { 
+   /* background: #777; */
      }
-	 
- 
 	 
 /* unfortunately we need to use divs to hide the details if we want to allow html in details and keep html valid */
 /* ------------------------------ In Box Calendar-- hide the details until we want them -----------*/
@@ -194,6 +192,7 @@ table.smallcalendar,
         width:200px; 
         z-index:100;
 		border: 1px solid #000000;
+		overflow: hidden;  /* v 4.0.12 */
         }
 #events_wrap table.ical .event:hover  div.details2 {
 	display: block;
@@ -322,10 +321,11 @@ table.smallcalendar,
 /* ---------------------------------------------------OPTIONAL --------------*/
 	   
 
-table.largecalendar tbody td div.day	    { /* use this if you want to force each box to be a fixed size - day div required becuase cannot force a td height  */
- /*     height: 66px; 
-	  overflow: hidden;	   */
- }
+/* #events_wrap .largecalendar tbody td div.event    { /* use this if you want to force each box to be a fixed size - day div required becuase cannot force a td height  */
+/* 	line-height: 26px; 
+	  overflow: hidden;
+white-space: nowrap;	  
+ } */
 table.largecalendar tbody td:hover div.day { /* and then use this to see the day box on hover - confusing with too manu hover's though, so maybe do not use desc hover then */
 /*	position: absolute;
 	border: 1px solid #000000;

@@ -1,6 +1,28 @@
 <?php /* Pluggable functions that need to be loaded after the theme so that a theme functions.php can override 
 */
 // ----------------------------------------------------------------------------------------
+if (!function_exists( 'amr_handle_no_events')) {
+	function amr_handle_no_events () { 
+		global $amr_options,
+		$amr_limits;
+		
+		$thecal = '';
+		if (!empty($amr_options['noeventsmessage'])) {
+			$thecal .=  '<a class="noeventsmessage" style="cursor:help;" href="" title="'
+			.amr_echo_parameters().'"> '
+			.$amr_options['noeventsmessage'].'</a>';
+				
+			if ((isset($amr_limits['show_look_more'])) and ($amr_limits['show_look_more'])) {
+					$thecal .= amr_show_look_more();
+			}					
+			if ((isset($amr_limits['pagination'])) and ($amr_limits['pagination'])) {			
+					$thecal .= amr_semi_paginate();
+			}
+		}
+		return ($thecal);
+	} // end function	
+}
+// ----------------------------------------------------------------------------------------
 if (!function_exists( 'amr_human_time')) {
 	function amr_human_time ($time) { 
 		if ($time == '000000') return (__('midnight', 'amr-ical-events-list'));  // to avoid am/pm confusion, note midnight is start of day
@@ -443,6 +465,27 @@ if (!function_exists('amr_format_attendee') ) {
 	}
 }
 /* -------------------------------------------------------------------------------------------*/
+if (!function_exists ('amr_ical_showmap')) {
+	function amr_ical_showmap ($text) { /* the address text */
+	global $amr_options;
+		$t1 = __('Show in Google map','amr-ical-events-list');
+		if (isset ($amr_options['no_images']) and $amr_options['no_images']) $t3 = $t1;
+		else $t3 = '<img src="'.IMAGES_LOCATION.MAPIMAGE.'" alt="'.	$t1	.'" class="amr-bling" />';
+	/* this is used to determine what should be done if a map is desired - a link to google behind the text ? or some thing else  */
+	
+	return('<a class="hrefmap" href="http://maps.google.com/maps?q='
+		.str_replace(' ','%20',($text)).'" target="_BLANK"'   //google wants unencoded
+		.' title="'.__('Show location in Google Maps','amr-ical-events-list').'" >'.$t3.'</a>');
+	}
+}
+/* --------------------------------------------------------- */
+if (!function_exists('amr_format_allday')) {
+	function amr_format_allday ($content) {
+			if ($content == 'allday') return (__('all day', 'amr-ical-events-list'));
+		else return ('');
+	}
+}
+/* -------------------------------------------------------------------------------------------*/
 if (!function_exists('amr_format_attach'))  {
 	function amr_format_attach ($item, $event) {  // receive 1 attachment each being an array of type, url, binary (opt)
 
@@ -624,6 +667,145 @@ function amr_derive_calprop_further (&$p) {
 		return ($p);
 	}
 }
+
+/* --------------------------------------------------------- */
+if (!function_exists('amr_derive_summary')) {
+	function amr_derive_summary (&$e ) {
+		global $amr_options;
+		global $amr_listtype;
+		global $amrW;
+		global $amrwidget_options;
+		global $amr_liststyle;
+	/* If there is a event url, use that as href, else use icsurl, use description as title */
+		if (in_array($amr_liststyle, array('smallcalendar', 'largecalendar','weekscalendar'))) $hoverdesc = false;
+		else {
+
+			if (empty($amrW)) $hoverdesc = false;
+			else if ($amrW == 'w_no_url') $hoverdesc = false;
+			else $hoverdesc ='maybe';
+		}
+
+		if (!empty($e['excerpt'])) {
+			$e['excerpt'] = (amr_just_flatten_array ($e['excerpt'] ));
+		}
+		if (isset($e['SUMMARY'])) $e['SUMMARY'] = (amr_just_flatten_array ($e['SUMMARY'] ));
+	//	if (isset($e['SUMMARY'])) $e['SUMMARY'] = htmlspecialchars(amr_just_flatten_array ($e['SUMMARY'] ));
+		else return ('');
+		if (isset($e['URL'])) $e_url = amr_just_flatten_array($e['URL']);
+		else $e_url = '';
+		/* If not a widget, not listype 4, then if no url, do not need or want a link */
+		/* Correction - we want a link to the bookmark anchor on the calendar page***/
+		if (empty($e_url))  {
+			if (!($amrW == 'w_no_url'))  {
+				if (!empty($amrwidget_options['moreurl'])) {
+					$e_url = ' href="'.clean_url($amrwidget_options['moreurl'])
+	//				.'#'.$e['Bookmark']
+					.'" ';
+				}
+				else {
+					if (!empty($amr_options['listtypes'][$amr_listtype]['general']['Default Event URL'])) {
+						$e_url = ' class="url" href="'
+							.clean_url($amr_options['listtypes'][$amr_listtype]['general']['Default Event URL']).'" ';
+						}
+					else $e_url = ''; /*empty anchor as defined by w3.org */
+					/* not a widget */
+				}
+			}
+			else {return ($e['SUMMARY']);	}
+		}
+		else {
+			$e_url = ' class="url" href="'.esc_url($e_url).'" ' ;
+		}
+		$e_desc =  '';
+		if ($hoverdesc) {
+			if (isset ($e['DESCRIPTION'])) {
+				$e_desc = amr_just_flatten_array($e['DESCRIPTION']);
+				}
+		    if (!empty($e_desc)) {
+				$e_desc = 'title="'.htmlspecialchars(str_replace( '\n', '  ', (strip_tags($e_desc)))).'"';
+			}
+		}
+		else {
+			if (!empty ($e['excerpt'])) {
+				$e_desc = strip_tags($e['excerpt']);
+				$e_desc = ' title="'.$e_desc.'" ';
+				}
+			else
+				$e_desc = ' title="'.$e['SUMMARY'].' - '.__('More information', 'amr-ical-events-list').'" ';
+			}
+		if (!empty ($e_url))
+			$e_summ = '<a '.$e_url.$e_desc.'>'. $e['SUMMARY'].'</a>';
+		else $e_summ = $e['SUMMARY'];
+		return( $e_summ );
+	}
+}
+/*--------------------------------------------------------------------------------*/
+if (!function_exists('add_cal_to_google')) {
+	function add_cal_to_google($cal) {
+	global $amr_options;
+	/* adds a button to add the current calemdar link to the users google calendar */
+		$text1 = __('Add to google calendar', 'amr-ical-events-list');
+		if (isset ($amr_options['no_images'])  and $amr_options['no_images'])
+			$text2 = __('Add to google', 'amr-ical-events-list');
+		else
+			$text2 = '<img src="'.IMAGES_LOCATION.ADDTOGOOGLEIMAGE.'" title="'.$text1.'" alt="'.$text1.'" class="amr-bling" />';
+		return (
+		'<a class= "amr-bling addtogoogle" href="http://www.google.com/calendar/render?cid='.htmlentities($cal).'" target="_blank"  title="'.$text1.'">'.$text2.'</a>');
+	}
+}
+/*--------------------------------------------------------------------------------*/
+if (!function_exists('add_event_to_google')) {
+	function add_event_to_google($e) {
+	global $amr_options;
+
+		if (!isset($e['EventDate'])) return('');
+		if (isset($e['LOCATION'])) $l = 	'&amp;location='.esc_html(strip_tags(str_replace(' ','%20',($e['LOCATION'] ))));
+		else $l = '';
+		if (!isset($e['DESCRIPTION'])) $e['DESCRIPTION'] = '';
+		$t = __("Add event to google" , 'amr-ical-events-list');
+
+		if (isset ($amr_options['no_images']) and $amr_options['no_images']) $t2 = $t;
+		else $t2 = '<img src="'.IMAGES_LOCATION.ADDTOGOOGLEIMAGE.'" alt="'.$t.'" class="amr-bling"/>';
+		$details = amr_just_flatten_array ($e['DESCRIPTION']); //var_dump($details);
+		if (!empty($details)) $details ='&amp;details='.rawurlencode(strip_tags($details));
+
+	/* adds a button to add the current calemdar link to the users google calendar */
+		$html = '<a class= "amr-bling hrefaddtogoogle" href="http://www.google.com/calendar/event?action=TEMPLATE'
+		.'&amp;text='.str_replace(' ','%20',esc_html(strip_tags(amr_just_flatten_array ($e['SUMMARY']))))
+		/* dates and times need to be in UTC */
+		.'&amp;dates='.amr_get_googleeventdate($e)
+		.$l
+		.'&amp;trp=false'
+		.$details
+		.'" target="_blank" title="'.$t.'" >'.$t2.'</a>';
+		return ($html);/* Note google only allows simple html*/
+	}
+}
+/* --------------------------------------------------  */
+if (!function_exists('amr_show_refresh_option')) {
+	function amr_show_refresh_option() {
+	global $amr_globaltz, $amr_lastcache, $amr_options, $amr_last_modified;
+		$uri = add_query_arg(array('nocache'=>'true'), $_SERVER['REQUEST_URI']);
+		if (!is_object($amr_lastcache)) $text = __('Last Refresh time unexpectedly not available','amr-ical-events-list');
+		else {
+			date_timezone_set($amr_lastcache, $amr_globaltz);
+			$t = $amr_lastcache->format(get_option('time_format').' T');
+			$text = __('Refresh calendars','amr-ical-events-list');
+			$text2 = sprintf(__('Last refresh was at %s. ','amr-ical-events-list'),$t);
+			}
+		if (!is_object($amr_last_modified)) $text2 =  __('Remote file had no modifications. ','amr-ical-events-list');
+		else {
+			date_timezone_set($amr_last_modified, $amr_globaltz);
+			$t2 = $amr_last_modified->format(get_option('date_format').' '.get_option('time_format').' T.');
+			$text2 = sprintf(__('The remote file was last modified on %s.','amr-ical-events-list'),$t2);
+			}
+
+		if (isset ($amr_options['no_images']) and $amr_options['no_images']) $t3 = $text;
+		else $t3 = '<img src="'.IMAGES_LOCATION.REFRESHIMAGE
+			.'" class="amr-bling" title="'.__('Click to refresh','amr-ical-events-list').' '.$text2.'" alt="'.$text.'" />';
+		return ( '<a class="refresh amr-bling" href="'.htmlentities($uri).'" title="'.$text.' '.$text2.'">'.$t3.'</a>');
+	}
+}
 /* --------------------------------------------------  */
 if (!function_exists('amr_list_properties')) {
 	function amr_list_properties($icals, $tid, $class) {  /* List the calendar properties if requested in options  */
@@ -722,7 +904,31 @@ if (!function_exists('amr_list_properties')) {
 	return ($html);
 }
 }
+/* -------------------------------------------------------------------------------------------*/
 
+if (!function_exists('amr_format_grouping') ) {
+	function amr_format_grouping ($grouping, $datestamp) {
+	/* check what the format for the grouping should be, call functions as necessary*/
+	global $amr_options;
+	global $amr_listtype;
+	global $amr_formats;
+		if (in_array ($grouping ,array ('Year', 'Month', 'Day')))
+			return (amr_format_date( $amr_options['listtypes'][$amr_listtype]['format'][$grouping], $datestamp));
+		else if ($grouping === 'Week') {
+				$f = $amr_formats['Week'];
+				$w = amr_format_date( 'W', $datestamp);
+				return (sprintf(__('Week  %u', 'amr-ical-events-list'),$w));
+			}
+		else
+		{ 	/* for "Quarter",	"Astronomical Season",	"Traditional Season",	"Western Zodiac",	"Solar Term" */
+			$func = str_replace(' ','_',$grouping);
+			if (function_exists($func) ) {
+				return call_user_func($func,$datestamp);
+				}
+			else  return ('No function defined for Date Grouping '.$grouping);
+		}
+	}
+}
 /* --------------------------------------------------  */
 if (!function_exists('amr_list_events') ) {
 function amr_list_events($events,  $tid, $class, $show_views=true) {
@@ -1072,7 +1278,7 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 				if (!empty($g) and ($g)) {  // if there is a already
 					foreach ($g as $gi=>$v) {
 						if (isset($e['EventDate']))
-							$grouping = format_grouping($gi, $e['EventDate']) ;
+							$grouping = amr_format_grouping($gi, $e['EventDate']) ;
 						else
 							$grouping = '';
 						$new[$gi] = amr_string($grouping);
@@ -1170,14 +1376,19 @@ function amr_show_look_more() {
 	$amr_options,
 	$amr_formats,
 	$amr_last_date_time;
-
+	
 	$next = new datetime();
 	if (!empty($amr_last_date_time)) $next = clone $amr_last_date_time; // get  last used event date
+	else {
+		$amr_last_date_time = $amr_limits['end'] ;
+		$next = $amr_limits['end'] ;
+	}
 	date_time_set($next,0,0,0); // set to the beginning of the day
 	$nextd = $next->format("Ymd");
 	$nexturl = (add_query_arg (array ('start'=>$nextd )));
 	
-	$explaint = sprintf (__('Displaying %s events.'),$amr_limits['events']) ;
+	// if no events, then this makes no sense  $explaint = sprintf (__('Displaying %s events.'),$amr_limits['events']) ;
+	$explaint = '';
 	// due to events limit, it may not show all events in a given day, so do not say displaying until date,
 	// rather just start the next display from that last date - may be a few events that overlap.
 		
@@ -1196,7 +1407,9 @@ function amr_show_look_more() {
 	if (!empty($_GET['start'])) {
 		$reset = __('Reset','amr-events' );
 		$reseturl = remove_query_arg(array('start','startoffset','events','days','months','hours','weeks'));
-		$reset ='&nbsp;<a id="icalareset"  href="'.esc_attr($reseturl).'">'.$reset.'</a>';
+		$reset ='&nbsp;<a id="icalareset"  title="'
+		.__('Go back to initial view' ,'amr-events')
+		.'" href="'.esc_attr($reseturl).'">'.$reset.'</a>';
 	}
 	else $reset = '';
 	return (
@@ -1229,5 +1442,13 @@ if (!function_exists('amr_format_organiser')) {
 			$text .= __('Sent by ','amr-ical-events-list').'<a href="mailto:'.$org['SENT-BY'].'" >'.$org['SENT-BY'].'</a>';
 		}
 		return($text);
+	}
+}
+
+/* --------------------------------------------------------- */
+if (!function_exists('adebug')) {  // we are loading late, so hope fully this should be fine - don'twant top long a name
+	function adebug( $text, $whattodebug=true) {
+		if ((isset ($_REQUEST['debug']) ) and ($_REQUEST['debug'] == $whattodebug))
+			echo $text;
 	}
 }

@@ -154,7 +154,7 @@ class amr_ical_widget extends WP_widget {
 	_e('External ics urls and/or optional shortcode parameters separated by spaces.)', 'amr-ical-events-list'); echo '<br />';
 	_e(' Examples: listtype=4 events=10 days=60 start=yyyymmdd startoffset=-2... )', 'amr-ical-events-list');
 	?></em> </label>
-	<a href="http://icalevents.com/amr-ical-events-list/#shortcode" title="<?php __('See more parameters','amr-ical-events-list'); ?>"><b>?</b></a>
+	<a href="http://icalevents.com/amr-ical-events-list/#shortcode" title="<?php _e('See more parameters','amr-ical-events-list'); ?>"><b>?</b></a>
 	<textarea cols="25" rows="10" id="<?php echo $this->get_field_id('shortcode_urls');?>" name="<?php echo $this->get_field_name('shortcode_urls'); ?>" ><?php
 
 		echo esc_attr($shortcode_urls); ?></textarea></p>

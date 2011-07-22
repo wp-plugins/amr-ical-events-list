@@ -87,7 +87,7 @@ define('ICAL_EVENTS_CSS_DIR',ICAL_EVENTS_CACHE_LOCATION.'/css/'); /* where to st
 define('ICAL_EVENTS_CSS_URL',$uploads['baseurl'].'/css/'); /* where to store custom css so does not get overwritten */
 define('ICAL_EVENTS_CACHE_DEFAULT_EXTENSION','ics');
 $amr_validrepeatablecomponents = array ('VEVENT', 'VTODO', 'VJOURNAL', 'VFREEBUSY', 'VTIMEZONE');
-$amr_validrepeatableproperties = array (
+$amr_validrepeatableproperties = array (   // properties that may have multiple entries either in the meta or the icsfile
 		'ATTACH', 'ATTENDEE',
 		'CATEGORIES','COMMENT','CONTACT','CLASS' ,
 		'DESCRIPTION', 'DAYLIGHT',
@@ -358,10 +358,10 @@ function amr_set_defaults() {
 	$taxonomies=get_taxonomies();
 	$excluded = array ('category','nav_menu','link_category', 'post_format') ;
 	foreach ($taxonomies as $i=>$tax) {
-		  if (in_array($tax, $excluded)) unset ($taxonomies[$i]);
+		  if (!(in_array($tax, $excluded))) $eventtaxonomies[] = $tax;
 		}
-	$eventtaxonomies = 	$taxonomies;
-	foreach ($taxonomies as $i=>$tax) {
+	
+	foreach ($eventtaxonomies as $i=>$tax) {
 		 $eventtaxonomiesprop[$tax] = array('Column' => 2, 'Order' => 200, 'Before' => '', 'After' => '');
 		}
 	$amr_calprop = array (
@@ -457,6 +457,9 @@ function amr_set_defaults() {
 			'LAST-MODIFIED' => $dfalse
 			)
 		);
+//		if (function_exists ('amr_indicate_attendance')) {    //pluggable does not exist yet
+
+//		}
 		if (function_exists ('amr_rsvp')) {
 		$amr_compprop['Relationship']['declined'] //list
 		= array('Column' => 0, 'Order' => 400, 'Before' => '', 'After' => '');
@@ -465,7 +468,7 @@ function amr_set_defaults() {
 		$amr_compprop['Relationship']['rsvpwithcomment'] 
 		= array('Column' => 0, 'Order' => 420, 'Before' => '', 'After' => '');
 		$amr_compprop['Relationship']['going_ornot_ormaybe'] 
-		= array('Column' => 0, 'Order' => 430, 'Before' => '', 'After' => '');
+			= array('Column' => 0, 'Order' => 430, 'Before' => '', 'After' => '');
 		$amr_compprop['Relationship']['total_attending'] 
 		= array('Column' => 0, 'Order' => 510, 'Before' => '', 'After' => '');
 		$amr_compprop['Relationship']['total_maybe'] 
