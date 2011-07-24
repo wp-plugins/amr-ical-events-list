@@ -419,6 +419,7 @@ function amr_get_googletime($time)   {
    }
 /*--------------------------------------------------------------------------------*/
 function amr_get_googledate($time)   {
+	if (!(is_object($time))) return;
 	$t = clone ($time);
     $t->setTimezone(new DateTimeZone("UTC"));
     return ($t->format("Ymd"));
