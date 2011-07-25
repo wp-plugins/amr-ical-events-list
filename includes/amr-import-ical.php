@@ -371,7 +371,7 @@ Africa/Asmara
    function amr_parseTZID($text)    {
    global $amr_globaltz;
    /* take a string that may have a olson tz object and try to return a tz object */
-   /* accept long and short TZ's, --- assume website tz if ot valid eg Zimbra's: GMT+01.00/+02.00 */
+   /* accept long and short TZ's, --- assume website tz if not valid eg Zimbra's: GMT+01.00/+02.00 */
 		$icstzid = trim($text,'"=' ); /* check for enclosing quotes like zimbra issues */
 
 		$globaltzstring = timezone_name_get($amr_globaltz);
@@ -380,7 +380,7 @@ Africa/Asmara
 //			$strip = array ('(',' ');
 //			$icstzid = str_replace($strip,'',$icstzid);
 			$gmtend = stripos($icstzid,')'); /* do we have a brackedt GMT ? */
-			if (isset ($_REQUEST['tzdebug'])) {echo '<br/>gmtend = '.$gmtend.' in string '.$icstzid ; }
+			if (isset ($_REQUEST['tzdebug'])) {echo '<br/>Check for a bracketed gmt? = '.$gmtend.' in string '.$icstzid ; }
 			if (!empty ($gmtend) ) {
 				$icstzid = str_replace(')','/',$icstzid);
 				$icstzcities = explode ('/',$icstzid); /* could be commas, could be slashes */
@@ -397,12 +397,12 @@ Africa/Asmara
 					}
 				}
 			foreach ($icstzcities as $i=>$icscity) $icstzcities[$i] = trim($icscity,' ');
-			if (isset ($_REQUEST['tzdebug'])) { echo '<br />Cities? <br />';print_r($icstzcities);}
+			if (isset ($_REQUEST['tzdebug'])) { echo '<br />Do we have a City? <br />';print_r($icstzcities);}
 			$globalcontcity = explode ('/',$globaltzstring);
 			if (isset ($globalcontcity[1]) ) $globalcity = $globalcontcity[1];
 			else $globalcity = $globalcontcity[0];
 			if (isset ($_REQUEST['tzdebug'])) {
-				echo '<hr> text = '.$text.'<br/>icstzid = '.$icstzid.'<br /> wordpress tz = '.$globalcity.' <br >'; print_r($icstzcities);
+				echo '<hr> text = '.$text.'<br/>icstzid = '.$icstzid.' and wp tz = '.$globalcity.' <br >'; print_r($icstzcities);
 			}
 			if (in_array($globalcity, $icstzcities)) { /* if one of the cities in the tzid matches ours, again we can use the matched one */
 				$tzname = $globaltzstring;
@@ -652,25 +652,45 @@ function amr_parseRDATE ($string, $tzobj ) {
 function amr_parse_property ($parts) {
 /* would receive something like array ('DTSTART; VALUE=DATE', '20060315')) */
 /*  NOTE: parts[0]    has the long tag eg: RDATE;TZID=US-EASTERN
+or could be DTEND;TZID=America/New_York;VALUE=DATE-TIME:     and the date 20110724T100000 in parts 1  (see forum note from dusty - he is generating the DATETIME
 		parts[1]  the bit after the :  19960403T020000Z/19960403T040000Z, 19960404T010000Z/PT3H
 		IF 'Z' then must be in UTC
 		If no Z
 */
 global $amr_globaltz;
-	$p0 = explode (';', $parts[0], 2);  /* Looking for ; VALUE = something...;   or TZID=... or both???*/
-	if (isset($p0[1])) { /* ie if we have some modifiers like TZID, or maybe just VALUE=DATE , note parse_str s dangerous */
-//		if (ICAL_EVENTS_DEBUG) {echo '<br/>*** p0[1]'.$p0[1];}
-		if (stristr($p0[1], 'TZID')) {
-		    /* Normal TZ, not the one with the path eg:  DTSTART;TZID=US-Eastern:19980119T020000 or  zimbras TZID="GMT+01.00/+02.00 */
-			$TZID = substr($p0[1], 4 );
-			$tzobj = amr_parseTZID($TZID);
-		}  /* should create datetime object with it's own TZ, datetime maths works correctly with TZ's */
-		else {/* might be just a value=date, in which case we use the global tz?  no may still have TZid */
-			$tzobj = $amr_globaltz;
-		;}
+
+	$tzobj = $amr_globaltz;  /* Because if there is no timezone specified in any way for the date time then it must a floating value, and so should be created in the global timezone.*/
+	if (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) {echo '<br /> Property : '.$parts[0];}
+	$p0 = explode (';', $parts[0]);  /* Looking for ; VALUE = something...;   or TZID=... or both, or more than one anyway ???*/
+	// the first bit will be the property like PRODID, or X_WR_TIMEZONE
+	// the next will be the modifiers
+	$prop = array_shift($p0);
+	if (!empty($p0)) {  // if we have some modifiers
+		foreach ($p0 as $p) {  // handle each modifier , could be  VALUE=DATE, TZID=
+//		if (isset($p0[1])) { /* ie if we have some modifiers like TZID, or maybe just VALUE=DATE , note parse_str s dangerous */
+//			if (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) {echo '<br/>*** p0[1]'.$p0[1]. ' $p0[2]'. $p0[2];}
+			if (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) {echo '<br /> modifer = '.$p;}
+//			if (stristr($p0[1], 'TZID')) {
+			if (stristr($p, 'TZID')) {		
+			    /* Normal TZ, not the one with the path eg:  DTSTART;TZID=US-Eastern:19980119T020000 or  zimbras TZID="GMT+01.00/+02.00 */
+//				$TZID = substr($p0[1], 4 );
+				$TZID = substr($p, 4 );
+				$tzobj = amr_parseTZID($TZID);
+			}  /* should create datetime object with it's own TZ, datetime maths works correctly with TZ's */
+			else {/* might be just a value=date, in which case we use the global tz?  no may still have TZid */
+				$tzobj = $amr_globaltz;
+				if (stristr($p, 'VALUE')) {  // we have a possibly redundant modified
+						$VALUE = substr($p,6);  // take everything after the '='
+				}
+				else {// unknown maybe custom modifier
+					if (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) {echo '<br />Ignoring Unknown or custom modifer = '.$p;}
+				}				
+			}
+		}
 	}
-	else $tzobj = $amr_globaltz;  /* Because if there is no timezone specified in any way for the date time then it must a floating value, and so should be created in the global timezone.*/
-	switch ($p0[0]) {
+//	else $tzobj = $amr_globaltz;  /* Because if there is no timezone specified in any way for the date time then it must a floating value, and so should be created in the global timezone.*/
+//	switch ($p0[0]) {
+	switch ($prop) {
 		case 'CREATED':
 		case 'COMPLETED':
 		case 'LAST-MODIFIED':
@@ -684,7 +704,7 @@ global $amr_globaltz;
 			else {
 				$date = amr_parseSingleDate('DATE-TIME', $parts[1], $tzobj);
 			}
-			if (($p0[0] === 'LAST-MODIFIED') or ($p0[0] === 'CREATED')) amr_track_last_mod($date);
+			if (($prop === 'LAST-MODIFIED') or ($prop === 'CREATED')) amr_track_last_mod($date);
 			return ($date);
 		case 'ALARM':
 		case 'RECURRENCE-ID':  /* could also have range ?*/

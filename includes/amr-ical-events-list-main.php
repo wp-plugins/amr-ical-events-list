@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.0.12');
+define('AMR_ICAL_LIST_VERSION', '4.0.14');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -410,10 +410,9 @@ global $amr_globaltz;
 }
 /* -------------------------------------------------------------------------*/
 function amr_get_googletime($time)   {
+	if (!(is_object($time))) return;
 	$t = clone ($time);  /* if you get a parse error, then you are not on PHP 5! */
-
     $t->setTimezone(new DateTimeZone("UTC"));
-
     return ($t->format("Ymd\THis\Z"));
 
    }
