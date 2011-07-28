@@ -4,7 +4,7 @@ Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, i
 
 Requires at least: 2.8
 Tested up to: 3.2.1
-Version: 4.0.14
+Version: 4.0.15
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.  
@@ -43,6 +43,10 @@ Many thanks to the following people for the translations.  Note that I am unable
 If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me both the .mo and .po files for your language.
 
 == Changelog ==
+= Version 4.0.15 =
+* Fix: categories in imported ics files were not handled properly - effected the css classes. they are now.  Thanks to chicagoave for flagging it.
+* Add: you can now do in the shortcode, add ignore_query=all to make a totally static widget or list, will not event respond any query parameters - use carefully.
+
 = Version 4.0.14 =
 * Fix: If your ics file is imported okay, no update required.  This fix is for dusty's ruby rails method of listing DATETIME with timezones and also to accomodate custom x-modifications to a property (ie: ignore them more cleanly!) 
 

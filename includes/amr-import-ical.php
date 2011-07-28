@@ -531,13 +531,13 @@ Africa/Asmara
 	we want to convert so can use like this +1 week 2 days 4 hours 2 seconds ether for calc with modify or output.  Could be neg (eg: for trigger)
 	*/
 
-	if (isset($_GET['debugdur'])) {echo '<br />Entering Pregmatch.. ';}
+	if (isset($_GET['debugdur'])) {echo '<br />Entering Pregmatch.. '.$text;}
 	
         if (preg_match('/([+]?|[-])P(([0-9]+W)|([0-9]+D)|)(T(([0-9]+H)|([0-9]+M)|([0-9]+S))+)?/',
 			trim($text), $durvalue)) {
 
 			/* 0 is the full string, 1 is the sign, 2 is the , 3 is the week , 6 is th T*/
-			if (isset($_GET['debugdur'])) {echo 'Pregmatch gives '; var_dump($durvalue);}
+			if (isset($_GET['debugdur'])) {echo '<br />Pregmatch gives '; var_dump($durvalue);}
 
 			if ($durvalue[1] == "-") {  // Sign.
                 $dur['sign'] = '-';
@@ -558,6 +558,11 @@ Africa/Asmara
 					$dur['secs'] = rtrim($durvalue[9],"S");
                 }
             }
+			if (!empty ($dur)) return $dur;
+			else { // possibly error in input data 
+				if (isset($_GET['debugdur'])) {echo '<br />Possibly error in input data that pregmatch did not deal with .. '.$text;}
+				return false;
+			}
             return $dur;
 
         } else {
@@ -567,7 +572,7 @@ Africa/Asmara
 
 /* ---------------------------------------------------------------------- */
 function amr_parse_CATEGORIES ($text ) {
-	$cats = explode(',',$text);
+	$cats = explode(',',$text);   // will return an array, but since we can have multiple CATEGORIES lines, will get an array of arrays .. confusing
 	return($cats);
 }
 /* ---------------------------------------------------------------------- */
@@ -864,14 +869,15 @@ function amr_parse_component($type)	{	/* so we know we have a vcalendar at lines
 						if ($parts[0] === 'X-WR-TIMEZONE;VALUE=TEXT') $parts[0] === 'X-WR-TIMEZONE';
 						$basepart = explode (';', $parts[0], 2);  /* Looking for RRULE; something...*/
 						if (in_array ($basepart[0], $amr_validrepeatableproperties)) {
-								$subarray[$basepart[0]][] = amr_parse_property ($parts);
-//								if (isset($_REQUEST['debugexc'])) {
-//									echo '<br />'.$basepart[0].'<br />';
-//									var_dump ($subarray[$basepart[0]]);
-//								}
+							$temp = amr_parse_property ($parts);  // now this might return an array (eg categories), which can be multiple lines too
+							if (is_array($temp)) {
+								if (!empty($subarray[$basepart[0]]) and is_array($subarray[$basepart[0]]))  // ie we got an array already, must be multiple lines
+									$subarray[$basepart[0]] = array_merge($subarray[$basepart[0]], $temp);
+								else $subarray[$basepart[0]] = $temp;
+							}	
+							else $subarray[$basepart[0]][] = $temp;		// was not an array, make it an array					
 						}
 						else {
-//							if (ICAL_EVENTS_DEBUG) {echo '<br/>*** Parts ';var_dump($parts);			}
 							$subarray [$basepart[0]] = amr_parse_property($parts);
 							if (($basepart[0] === 'DTSTART') and (isset($basepart[1]))) {
 								if (amr_is_untimed($basepart[1])) { /* ie has VALUE=DATE */

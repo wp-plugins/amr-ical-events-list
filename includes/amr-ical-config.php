@@ -405,7 +405,7 @@ function amr_set_defaults() {
 			'PERCENT-COMPLETE'=> $dfalse,
 			'PRIORITY'=> 		array('Column' => 2, 'Order' => 220, 'Before' => '', 'After' => ''),
 			'RESOURCES'=> 		$dfalse,
-			'STATUS'=> 			array('Column' => 2, 'Order' => 230, 'Before' => '', 'After' => ''),
+			'STATUS'=> 			array('Column' => 0, 'Order' => 230, 'Before' => '', 'After' => ''),
 			),
 			$eventtaxonomiesprop),
 			'Date and Time' => array (

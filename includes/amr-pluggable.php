@@ -932,7 +932,8 @@ if (!function_exists('amr_format_grouping') ) {
 /* --------------------------------------------------  */
 if (!function_exists('amr_list_events') ) {
 function amr_list_events($events,  $tid, $class, $show_views=true) {
-	global $wp_locale,$locale,
+	global $wp_locale,
+		$locale,
 		$amr_options,
 		$amr_limits,
 		$amr_listtype,

@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.0.14');
+define('AMR_ICAL_LIST_VERSION', '4.0.15');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -1163,8 +1163,12 @@ function amr_derive_info_for_list_only (&$e) {
 	}
 	if (isset($e['name']))  $e['Classes'] .= ' '.$e['name'];
 	if (isset($e['type']))  $e['Classes'] .= ' '.$e['type'];  /* so we can style events, todo's differently */
-	if (isset($e['CATEGORIES']))
-		$e['Classes'] .= ' '.str_replace(',',' ',amr_just_flatten_array($e['CATEGORIES']));  //is not always an array, this function allows non array
+	if (isset($e['CATEGORIES'])) {
+		if (is_array($e['CATEGORIES'])) 
+			$e['Classes'] .= ' '.implode(' ',$e['CATEGORIES']);  
+		else
+			$e['Classes'] .= ' '.$e['CATEGORIES'];  
+	}	
 	if (isset($e['tag_ids']) and is_array($e['tag_ids']))
 		$e['Classes'] .= ' t'.implode(' t',$e['tag_ids']);
 //	if (isset($e['UID'])) {
@@ -2118,6 +2122,7 @@ function amr_get_params ($attributes=array()) {
 //---------------------------------------------------------------------------------------------------------------------------------------------- now check for query or post
 	
 	$allow_query = (!isset($shortcode_params['ignore_query']) or !($shortcode_params['ignore_query']) );
+	$ignore_query_all = (isset($shortcode_params['ignore_query']) and ($shortcode_params['ignore_query'] == 'all') );
 	unset ($shortcode_params['ignore_query']);
 
 	if ($allow_query) { 
@@ -2146,7 +2151,7 @@ function amr_get_params ($attributes=array()) {
 		if (ICAL_EVENTS_DEBUG) {echo '<hr>After merge with query args<br />'; var_dump($shortcode_params); }
 		//unset($queryargs['listtype']);
 	}
-	else if (ICAL_EVENTS_DEBUG) {echo '<hr>Ignoring query parameters except for essentials for navigation ';}
+	else if (ICAL_EVENTS_DEBUG) {echo '<hr>Ignoring most query parameters ';}
 //
 	// save the global list type first
 	if (!empty($shortcode_params['listtype'])) {
@@ -2181,18 +2186,22 @@ function amr_get_params ($attributes=array()) {
 // always respond to start 
 //	if (in_array ($amr_liststyle, array('smallcalendar','largecalendar', 'weekscalendar'))) {
 		// then query args overeride even if we have ignore query
-	if (isset($_REQUEST['start'])) $queryargs['start'] = $_REQUEST['start'];	//need here too
-	if (isset($_REQUEST['start'])) $queryargs['start'] = $_REQUEST['start'];	//need here too
-	if (!empty($queryargs['start']))  {
-			$shortcode_params['start'] = abs ((int) $queryargs['start']);
-			if (ICAL_EVENTS_DEBUG) {echo '<br />START = '.$shortcode_params['start'];}
-			
+	if (!$ignore_query_all) {	
+		
+		
+		if (isset($_REQUEST['start'])) $queryargs['start'] = $_REQUEST['start'];	//need here too
+		if (isset($_REQUEST['start'])) $queryargs['start'] = $_REQUEST['start'];	//need here too
+		if (!empty($queryargs['start']))  {
+				$shortcode_params['start'] = abs ((int) $queryargs['start']);
+				if (ICAL_EVENTS_DEBUG) {echo '<br />START = '.$shortcode_params['start'];}
+				
 //			$shortcode_params['start'] = (substr((string) $shortcode_params['start'],0,6).'01'); //set to month start - done in month shortcdoe?
-		}
-	if (!empty($queryargs['months'])) $shortcode_params['months'] = abs( (int) $queryargs['months']);
-	if (!empty($queryargs['tz']))
-			$shortcode_params['tz'] = filter_var($queryargs['tz'],FILTER_SANITIZE_STRING);
-//	}
+			}
+		if (!empty($queryargs['months'])) $shortcode_params['months'] = abs( (int) $queryargs['months']);
+		if (!empty($queryargs['tz']))
+				$shortcode_params['tz'] = filter_var($queryargs['tz'],FILTER_SANITIZE_STRING);
+	}
+	else if (ICAL_EVENTS_DEBUG) echo '<br/>** Ignoring all query parameters';
 
 //----------------------------------------------------------------------------------------------------------------- now do thelimits array
 	// then get the limits for that list type
