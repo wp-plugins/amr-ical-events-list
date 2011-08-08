@@ -256,9 +256,11 @@ function amr_set_defaults() {
 	global $ical_timezone;
 	global $eventtaxonomies;
 	global $amr_options,$locale;
+	
 
-	If (ICAL_EVENTS_DEBUG) {
-			echo '<br />Note:'.AMR_ICAL_LIST_VERSION.'-'.PHP_VERSION.'-'.get_bloginfo('version');
+	If (ICAL_EVENTS_DEBUG) {  
+			echo '<br />Note:'.AMR_ICAL_LIST_VERSION.' '.AMR_ICAL_VERSION.' p:'.PHP_VERSION.'-'
+			.get_bloginfo('version').' chset:'.get_option( 'blog_charset' ).' enc:'.mb_internal_encoding();
 	}
 	
 	$amr_options = array (
@@ -400,10 +402,10 @@ function amr_set_defaults() {
 								'Before' => __('More info: ','amr-ical-events-list'),
 								'After' => '<br />'),
 			'CATEGORIES'=> 		array('Column' => 2, 'Order' => 200, 'Before' => '', 'After' => ''),
-			'CLASS'=> 			array('Column' => 2, 'Order' => 210, 'Before' => '', 'After' => ''),
+			'CLASS'=> 			array('Column' => 0, 'Order' => 210, 'Before' => '', 'After' => ''),
 			'COMMENT'=> 		$dfalse,
 			'PERCENT-COMPLETE'=> $dfalse,
-			'PRIORITY'=> 		array('Column' => 2, 'Order' => 220, 'Before' => '', 'After' => ''),
+			'PRIORITY'=> 		array('Column' => 0, 'Order' => 220, 'Before' => '', 'After' => ''),
 			'RESOURCES'=> 		$dfalse,
 			'STATUS'=> 			array('Column' => 0, 'Order' => 230, 'Before' => '', 'After' => ''),
 			),

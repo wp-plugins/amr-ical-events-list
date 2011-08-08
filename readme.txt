@@ -1,13 +1,13 @@
-﻿=== amr events calendar or list with ical files (aka amr-ical-events-list) ===
+﻿=== amr events lists and calendars (aka amr-ical-events-list) ===
 Contributors: anmari
-Tags: event, events, event calendar, events calendar, ical, ics, ics calendar, ical feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, agenda, happenings, shows, concerts, conferences, courses, timetable
+Tags: event, events, event calendar, events calendar, event manager, diary, schedule, ical, ics, ics calendar, ical feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, agenda, happenings, shows, concerts, conferences, courses, timetable
 
 Requires at least: 2.8
 Tested up to: 3.2.1
-Version: 4.0.15
+Version: 4.0.16
 Stable tag: trunk
 
-Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec.  
+Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec. Very customisable listings or box calendars.  This version uses ics as input. Upgrade option for ics feed generation, taxonomies etc  
 
 == Description ==
 
@@ -43,6 +43,11 @@ Many thanks to the following people for the translations.  Note that I am unable
 If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me both the .mo and .po files for your language.
 
 == Changelog ==
+= Version 4.0.16 =
+* Fix: categories with spaces in the name are not liked by css classes.  Need the names not the slugs for wordpress queries, so names are now 'sluggified' when used as a css class. Note: you can also use t## where ## is the categrory or taxonomy id (css classes do not like numbers either).
+* Update: French translation from fxbenard
+* Please also see amr-events upgrade to 3.0.6 
+
 = Version 4.0.15 =
 * Fix: categories in imported ics files were not handled properly - effected the css classes. they are now.  Thanks to chicagoave for flagging it.
 * Add: you can now do in the shortcode, add ignore_query=all to make a totally static widget or list, will not event respond any query parameters - use carefully.

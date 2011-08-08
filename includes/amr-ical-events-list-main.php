@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.0.15');
+define('AMR_ICAL_LIST_VERSION', '4.0.16');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -1040,9 +1040,6 @@ function amr_derive_dates (&$e) {
 		$e['DTEND'] = new DateTime();
 		$e['DTEND'] = clone ($e['DTSTART']);
 		$e['DTEND'] = amr_add_duration_to_date ($e['DTEND'], $e['DURATION']);
-
-		If (ICAL_EVENTS_DEBUG) {echo '<br>Technical DTEND set to = '.$e['DTEND']->format('c');}
-
 	}
 	else {
 		if ((isset ($e['DTEND'])) and (empty ($e['DURATION']))) { /* we don't have a duration */
@@ -1055,7 +1052,6 @@ function amr_derive_dates (&$e) {
 		$e['EndDate'] = new DateTime();
 		$e['EndDate'] = clone ($e['DTEND']);
 		if ((isset($e['allday']) and ($e['allday'] == 'allday'))) date_modify($e['EndDate'],'-1 day'); // for human view
-		If (ICAL_EVENTS_DEBUG) {echo '<br>Human Enddate set to = '.$e['EndDate']->format('c');}		
 	}
 
 	return($e);
@@ -1163,11 +1159,13 @@ function amr_derive_info_for_list_only (&$e) {
 	}
 	if (isset($e['name']))  $e['Classes'] .= ' '.$e['name'];
 	if (isset($e['type']))  $e['Classes'] .= ' '.$e['type'];  /* so we can style events, todo's differently */
-	if (isset($e['CATEGORIES'])) {
-		if (is_array($e['CATEGORIES'])) 
-			$e['Classes'] .= ' '.implode(' ',$e['CATEGORIES']);  
+	if (!empty($e['CATEGORIES'])) {
+		if (is_array($e['CATEGORIES'])) { // v4.1.16 need category_name for wp queries, but classes do not like spaces
+			foreach ($e['CATEGORIES'] as $i=>$c) {$sluggish[$i] = sanitize_title($c);}
+			$e['Classes'] .= ' '.implode(' ',$sluggish);  
+		}
 		else
-			$e['Classes'] .= ' '.$e['CATEGORIES'];  
+			$e['Classes'] .= ' '.sanitize_title($e['CATEGORIES']);  
 	}	
 	if (isset($e['tag_ids']) and is_array($e['tag_ids']))
 		$e['Classes'] .= ' t'.implode(' t',$e['tag_ids']);
@@ -1655,7 +1653,7 @@ function amr_generate_repeats(&$event, $astart, $aend, $limit) { /* takes an eve
 							$newevents[$repkey] = $event;  // copy the event data over - note objects will point to same object unless we clone   Use duration or new /clone Enddate
 							$newevents[$repkey]['EventDate'] = new DateTime();
 							$newevents[$repkey]['EventDate'] = clone ($r);
-							if (ICAL_EVENTS_DEBUG) {echo '<br>Created '.$newevents[$repkey]['EventDate']->format('YmdHis l');	}
+//							if (ICAL_EVENTS_DEBUG) {echo '<br>Created '.$newevents[$repkey]['EventDate']->format('YmdHis l');	}
 							if (!amr_create_enddate($newevents[$repkey])) {
 								if (ICAL_EVENTS_DEBUG) echo ' ** No end date created, maybe just a start? ';
 								};
@@ -1679,7 +1677,7 @@ function amr_generate_repeats(&$event, $astart, $aend, $limit) { /* takes an eve
 				$newevents[$key]['EventDate'] = '';
 				}
 		}
-		if (ICAL_EVENTS_DEBUG) echo '<br /><hr />Returning '.count($newevents).' events';
+
 		return ($newevents);
 	}
 /* ------------------------------------------------------------------------------------*/
@@ -1783,6 +1781,7 @@ global $amr_limits;
 		'show_views',
 		'calendar_properties',
 		'show_month_nav',
+		'day_links',
 		'eventpoststoo') ))) {
 			$label = __($i,'amr-ical-events-list').' = ';
 			if (is_object($v)) $t[] = $label.$v->format('j M i:s');
@@ -2104,9 +2103,7 @@ function amr_get_params ($attributes=array()) {
 		} // end foreach
 	} //end if
 //
-	If (ICAL_EVENTS_DEBUG) {
-		echo '<hr>Attributes after any missing defaults added <br />'; var_dump($shortcode_params);
-	}
+//	If (ICAL_EVENTS_DEBUG) {echo '<hr>Attributes after any missing defaults added <br />'; var_dump($shortcode_params);}
 	
 // -------------------------------------------------------------------------------------------------- handle taxonomies we do not event know about yet
 	/*  get the parameters we want out of the attributes, supplying defaults for anything missing  */
@@ -2115,10 +2112,7 @@ function amr_get_params ($attributes=array()) {
 	// if we had some taxos, marge them into shortcode selection
 	if (!empty($taxo_selection)) 	$shortcode_params = array_merge ($shortcode_params,$taxo_selection );
 
-	If (ICAL_EVENTS_DEBUG) {
-	echo '<hr>Any other selections in the attributes (taxonomies? <br />'; if (!empty($taxo_selection)) var_dump($taxo_selection);
-
-	}
+//	If (ICAL_EVENTS_DEBUG) {echo '<hr>Any other selections in the attributes (taxonomies? <br />'; if (!empty($taxo_selection)) var_dump($taxo_selection);}
 //---------------------------------------------------------------------------------------------------------------------------------------------- now check for query or post
 	
 	$allow_query = (!isset($shortcode_params['ignore_query']) or !($shortcode_params['ignore_query']) );
@@ -2148,7 +2142,7 @@ function amr_get_params ($attributes=array()) {
 	/* If the input arrays have the same string keys, then the later value for that key will overwrite the previous one.
 	If, however, the arrays contain numeric keys, the later value will not overwrite the original value, but will be appended.
 	*/
-		if (ICAL_EVENTS_DEBUG) {echo '<hr>After merge with query args<br />'; var_dump($shortcode_params); }
+//		if (ICAL_EVENTS_DEBUG) {echo '<hr>After merge with query args<br />'; var_dump($shortcode_params); }
 		//unset($queryargs['listtype']);
 	}
 	else if (ICAL_EVENTS_DEBUG) {echo '<hr>Ignoring most query parameters ';}

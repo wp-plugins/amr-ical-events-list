@@ -241,8 +241,6 @@ if (!function_exists('amr_weeks_caption')) {
 		return($calendar_caption);	
 	}
 }
-
-
 // ----------------------------------------------------------------------------------------
 if (!function_exists('amr_calendar_navigation')) {
 function amr_calendar_navigation($start, $months, $weeks, $liststyle, $views='') {
@@ -282,7 +280,6 @@ if (!function_exists('amr_weeks_caption')) {
 		return($calendar_caption);	
 	}
 }
-
 /* --------------------------------------------------  */
 if (!function_exists('amr_semi_paginate')) {
 function amr_semi_paginate() {
@@ -392,7 +389,6 @@ function amr_semi_paginate() {
 		);
 	}
 }
-
 /* -------------------------------------------------------------------------------------------*/
 if (!function_exists('amr_format_CID'))  {
 	function amr_format_CID ($cid, $event) {
@@ -588,16 +584,13 @@ if (!function_exists('amr_format_taxonomy_link') ) {  //problem ics file categor
 	return ($html);
 	}
 }
-
 /* ------------------------------------------------------------------------------------*/
-
 if (!function_exists('amr_format_taxonomies') ) {  //problem ics file categories are string not array ? so skip?
 	function amr_format_taxonomies ($tax_name, $tax_array, $link='' ) {
 
 	if (!is_array($tax_array) and (stristr($tax_array,',')))  // if it is a string like in the icsfile, convert to an array 
 		$tax_array = explode(',',$tax_array);
 	
-
 	foreach ($tax_array as $i => $t) {
 		if (is_array($t)) {
 			foreach ($t as $i2 => $t2) {
@@ -608,14 +601,9 @@ if (!function_exists('amr_format_taxonomies') ) {  //problem ics file categories
 			$links[] = amr_format_taxonomy_link ($tax_name, $t);
 		}
 	$html = implode(',',$links);
-
-
 	return( $html);
-
-	}
-	
+	}	
 }
-
 
 /* --------------------------------------------------  */
 if (!function_exists('amr_derive_calprop_further')) {
@@ -679,7 +667,6 @@ if (!function_exists('amr_derive_summary')) {
 	/* If there is a event url, use that as href, else use icsurl, use description as title */
 		if (in_array($amr_liststyle, array('smallcalendar', 'largecalendar','weekscalendar'))) $hoverdesc = false;
 		else {
-
 			if (empty($amrW)) $hoverdesc = false;
 			else if ($amrW == 'w_no_url') $hoverdesc = false;
 			else $hoverdesc ='maybe';

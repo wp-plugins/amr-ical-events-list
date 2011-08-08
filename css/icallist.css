@@ -99,14 +99,7 @@ padding: 0 3px;
 #events_wrap table td.pad {
 	/* background: #fefefe; */  /* if you wanted the padding cells to show - else let background come through */
 }
-#events_wrap .smallcalendar td.hasevents:hover,
-#events_wrap table.largecalendar td.today ,
-#multismallcalendar td.today,
-table.smallcalendar td.selected,
-table.smallcalendar td.today {
-	background: #777;
-	color: #fff;
-}
+
 /* highlight which day we are hovering over */
 #events_wrap .smallcalendar td.hasevents a:hover {
 color: #fff;
@@ -156,11 +149,24 @@ table.smallcalendar,
 #events_wrap  table tbody td .lastday { /* Multi day styling */
       background: #eee;
      }	
-/* to override Multi day styling - But no,not useful ? */	 
-#events_wrap  table tbody td.selected .firstday,	  
-#events_wrap  table tbody td.selected .middleday,  
-#events_wrap  table tbody td.selected .lastday { 
-   /* background: #777; */
+/* must be after multiday */
+#events_wrap .smallcalendar td.hasevents:hover,
+#events_wrap table.largecalendar td.today ,
+#multismallcalendar td.today,
+table.smallcalendar td.selected,
+table.smallcalendar td.today {
+	background: #777;
+	color: #fff;
+}	 
+	 
+/* to override Multi day styling  */	
+#events_wrap  table tbody td.today .firstday,	  
+#events_wrap  table tbody td.today  .middleday,  
+#events_wrap  table tbody td.today  .lastday 
+#events_wrap  table tbody td.today  .firstday,	  
+#events_wrap  table tbody td.today  .middleday,  
+#events_wrap  table tbody td.today  .lastday { 
+    background: #777; 
      }
 	 
 /* unfortunately we need to use divs to hide the details if we want to allow html in details and keep html valid */
