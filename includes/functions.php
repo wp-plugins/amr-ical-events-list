@@ -151,12 +151,25 @@ function amr_trim_url(&$ret) { /* trim urls longer than 30 chars, but not if the
 /* ---------------------------------------------------------------------*/
 
 function amr_request_acknowledgement () {
-?><div class="postbox" style="padding:1em 2em; width: 600px;">
-	<p style="border-width: 1px;"><?php _e('I try to make these plugins work <strong>"out of the box"</strong> with minimal effort; that they be easy to use but <strong>very configurable</strong>; <strong>well tested</strong>; with <strong>valid html and css</strong> both at the front and admin area.','amr-ical-events-list');?> <?php
-_e('If you have a feature request, please do let me know. ','amr-ical-events-list');
-?></p><p><b><?php _e('To edit events in wordpress:','amr-ical-events-list'); ?> <a href="http://icalevents.com" >icalevents.com</a></b></p>
-</div>
-<?php
+	echo '<div class="postbox" style="padding:1em 2em; width: 600px;">
+	<p style="border-width: 1px;">';
+	_e('I try to make these plugins work <strong>"out of the box"</strong> with minimal effort; that they be easy to use but <strong>very configurable</strong>; <strong>well tested</strong>; with <strong>valid html and css</strong> both at the front and admin area.','amr-ical-events-list');
+	_e('If you have a feature request, please do let me know. ','amr-ical-events-list');
+	echo '</p><p><b>';
+	_e('To edit events in wordpress:','amr-ical-events-list'); 
+	echo ' <span style="color: green;">';
+	_e('Upgrade to amr-events at ','amr-ical-events-list'); 
+
+	echo ' <a title="home of both plugins" href="http://icalevents.com" >icalevents.com</a></b>';
+	echo '</span>';
+	echo '<ul><li>&#10004; ';
+	_e('Keep all these settings and lists');
+	echo '</li><li>&#10004; ';
+	_e('Offers many additional benefits.','amr-ical-events-list');
+	echo '<a title="description of benefits and differences" href="http://icalevents.com/amr-events/">'.__('Find out more','amr-ical-events-list').'</a>';
+	echo '</li></ul>';
+	echo '</p></div>';
+
 }
 /* -------------------------------------------------------------------------------------------------------------*/
 if (!function_exists('amr_simpledropdown')) { 

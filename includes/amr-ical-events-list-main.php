@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.0.16');
+define('AMR_ICAL_LIST_VERSION', '4.0.17');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -350,7 +350,7 @@ global $ical_timezone, $amr_formats;
 
 	$rule['UNTIL-TIME'] = '';
 
-	// if (isset($_GET['rdebug'])) {echo '<hr> inprep pretty';var_dump($rule);}
+	if (isset($_GET['wpmldebug'])) {echo '<hr> inprep pretty';var_dump($rule);}
 
 	foreach ($rule as $i=>$r) { $rule[strtoupper($i)] = $r;}
 
@@ -708,22 +708,19 @@ function amr_calc_duration ( $start, $end) { /* assume in same timezone , ics dt
 	return ($duarray);
 }
 /* ---------------------------------------------------------------------- */
-		/*
-		 * Return true iff the two times span exactly 24 hours, from
-		 * midnight one day to midnight the next.
-		 */
+/*  Return true iff the two times span exactly a multiple of 24 hours, from midnight one day to midnight the next.   But what if multi day ??
+ */
 function amr_is_all_day($d1, $d2) {
-   if (!(is_object($d1) and (is_object($d2)))) return(false);
+	if (!(is_object($d1) and (is_object($d2)))) return(false);
 
-	if (($d1->format('His') === '000000') and
-				($d2->format('His') === '000000')) {
-				//$d1a = new DateTime();
-				$d1a = clone ($d1);
-				date_modify ($d1a,'next day');
-				if ($d1a == $d2) return (true); //ie DTEND spec
-			}
-			return (false);
+	$dur = amr_calc_duration ( $d1, $d2);
+	if (empty ($dur['hours']) and empty ($dur['minutes']) and empty ($dur['seconds'] )) {
+		return true;
 		}
+	else {
+		return (false);
+	}
+}
 /* ---------------------------------------------------------------------- */
 /* return true if the event is untimed and the end is one day after the start */
 function amr_is_an_ical_single_day($d1, $d2) {
@@ -1017,7 +1014,7 @@ function amr_add_duration_to_date (&$e, $d) {
   dur-day    = 1*DIGIT "D"
   */
 	if (empty($d)) return ($e);
-	if (!is_array($d)) $d = unserialize($d);
+	if (!is_array($d)) $d = maybe_unserialize($d);
 
 	if ((isset($d['sign'] )) and ($d['sign'] === '-')) $dmod = '-';  /* then apply it to get our current end time */
 	else $dmod = '+';
@@ -1047,11 +1044,13 @@ function amr_derive_dates (&$e) {
 		}
 	}
 	if (isset ($e['DTEND']) ) {
-		if (amr_is_all_day($e['DTSTART'], $e['DTEND'])) $e['allday'] = 'allday';	
+		if (!isset($e['allday']) and amr_is_all_day($e['DTSTART'], $e['DTEND'])) // only chcek if not done 
+			$e['allday'] = 'allday';	
 	/* set EndDate as human version instead of technical DTEND */
 		$e['EndDate'] = new DateTime();
 		$e['EndDate'] = clone ($e['DTEND']);
-		if ((isset($e['allday']) and ($e['allday'] == 'allday'))) date_modify($e['EndDate'],'-1 day'); // for human view
+		if ((isset($e['allday']) and ($e['allday'] == 'allday'))) 
+			date_modify($e['EndDate'],'-1 day'); // for human view
 	}
 
 	return($e);
@@ -1260,7 +1259,7 @@ global 	$amr_options,
 }
 /* -------------------------------------------------------------------------------------------*/
 function amr_wp_format_date( $format, $datestamp, $gmttf) { /* want a  integer timestamp or a date object  */
-global $amr_options;
+global $amr_options, $wp_locale;
 /* Need to get rid the unnecessary dat logic - should only be using date objects for now */
 
 	if (is_object($datestamp))	{
@@ -1278,7 +1277,8 @@ global $amr_options;
 	else {
 		$text = date_i18n($format, $dateInt, $gmttf); /*  should  be false, otherwise we get the utc/gmt time.   */
 		If (isset ($_REQUEST['tzdebug']))
-			{	echo '<br />Localised with gmt=false: '.$text.'<br />';
+			{	
+				echo '<br />Localised with gmt=false: '.$text.'<br />';
 				$text2 = date_i18n($format, $dateInt, false);
 				echo 'Localised with gmt=true:  '.$text2.'<br />';
 				$text3 = amr_date_i18n ('D, F j, Y g:i a', $datestamp);
@@ -2173,7 +2173,7 @@ function amr_get_params ($attributes=array()) {
 			: $amr_liststyle = 'table';//; 'list'
 			
 	if (!empty ($shortcode_params['more_url']) ) {
-		$amr_calendar_url =  $shortcode_params['more_url'];
+		$amr_calendar_url =  esc_url($shortcode_params['more_url']);
 		unset($shortcode_params['more_url']);
 	}
 	
@@ -2633,9 +2633,6 @@ function amr_notice_listtypes_converted () {  // from version < 4.0 to version 4
 		echo ('<div class="updated fade">'
 		.__('Your existing saved list types have been converted.  If you wish to return to the earlier version of the plugin, you will have to reset the list types and reapply your changes. Or use your DB backup to set the amr-ical-events-list option back to previous version. You do have regular backups right? ','amr-ical-events-list').'<br />');
 		echo '</div>';
-
-
-
  }
  /* ------------------------------------------------------------------------------------------------------ */
 	/**
@@ -2647,7 +2644,7 @@ function amr_plugin_links($links, $file) {
 			. __('General listing Settings', 'amr-ical-events-list')
 			.' href="admin.php?page=manage_amr_ical" >'
 			. __('Settings', 'amr-ical-events-list') . "</a>";
-			$links[] = "<a href='admin.php?page=manage_event_listings'>" . __('List Type Settings', 'amr-ical-events-list') . "</a>";
+			$links[] = "<a href='admin.php?page=manage_event_listing'>" . __('List Type Settings', 'amr-ical-events-list') . "</a>";
 			$links[] = "<a href='http://icalevents.com/documentation/'><b>" . __('Documentation', 'amr-ical-events-list') . "</b></a>";
 		}
 		return $links;

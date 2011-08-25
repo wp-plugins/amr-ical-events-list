@@ -273,7 +273,6 @@ NOT USING FOR NOW - INTERNAL ATTENDEES ONLY
 			return false;
 			}
 
-
 		if ((substr($d, strlen($d)-1, 1) === 'Z')) {  /*datetime is specifed in UTC */
 			$tzobj = $utczobj;
 			$d = substr($d, 0, strlen($d)-1);
@@ -289,9 +288,10 @@ NOT USING FOR NOW - INTERNAL ATTENDEES ONLY
 		}
 		else $time .= ':00';
 		/* Now create our date with the timezone in which it was defined , or if local, then in the plugin glovbal timezone */
+		
 		try {	$dt = new DateTime($date.' '.$time,	$tzobj); }
 		catch(Exception $e) {
-			echo '<br />Unable to create DateTime object from '.$d.' <br />'.$e->getMessage();
+			echo '<br />Unable to create DateTime object from '.$date.' <br />'.$e->getMessage();
 			return (false);
 		}
 
@@ -832,7 +832,7 @@ function amr_format_ical_text($value) {
 /* ---------------------------------------------------------------------- */
 function amr_is_untimed($text) {
 /*  checks for VALUE=DATE */
-if (stristr ($text, 'VALUE=DATE')) return (true);
+if (stristr ($text, 'VALUE=DATE') and (!stristr($text, 'VALUE=DATE-TIME'))) return (true);
 else return (false);
 }
 /* ---------------------------------------------------------------------- */
@@ -866,7 +866,8 @@ function amr_parse_component($type)	{	/* so we know we have a vcalendar at lines
 					}
 					/* now grab the value - just in case there may have been ";" in the value we will take all the rest of the string */
 					else {
-						if ($parts[0] === 'X-WR-TIMEZONE;VALUE=TEXT') $parts[0] === 'X-WR-TIMEZONE';
+						if ($parts[0] === 'X-WR-TIMEZONE;VALUE=TEXT') 
+							$parts[0] === 'X-WR-TIMEZONE';
 						$basepart = explode (';', $parts[0], 2);  /* Looking for RRULE; something...*/
 						if (in_array ($basepart[0], $amr_validrepeatableproperties)) {
 							$temp = amr_parse_property ($parts);  // now this might return an array (eg categories), which can be multiple lines too
@@ -881,10 +882,12 @@ function amr_parse_component($type)	{	/* so we know we have a vcalendar at lines
 							$subarray [$basepart[0]] = amr_parse_property($parts);
 							if (($basepart[0] === 'DTSTART') and (isset($basepart[1]))) {
 								if (amr_is_untimed($basepart[1])) { /* ie has VALUE=DATE */
-									$subarray ['Untimed'] = TRUE;
+									$subarray ['Untimed'] = true;
+									$subarray ['allday'] = true;  // v4.0.17
 								}
 							}
-							if (($basepart[0] === 'X-MOZ-GENERATION') and (!isset( $subarray ['SEQUENCE']))) $subarray ['SEQUENCE'] = $subarray ['X-MOZ-GENERATION'] ;
+							if (($basepart[0] === 'X-MOZ-GENERATION') and (!isset( $subarray ['SEQUENCE']))) 
+								$subarray ['SEQUENCE'] = $subarray ['X-MOZ-GENERATION'] ;
 							/* If we have an mozilla funny thing, convert it to the sequence if there is no sequence */
 						}
 					}

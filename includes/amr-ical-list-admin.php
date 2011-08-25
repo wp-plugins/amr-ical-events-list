@@ -542,9 +542,9 @@ function amrical_col_headings($i) {
 function amr_ical_support_links () {
 ?><div class="postbox" style="padding:1em 2em; width: 600px;">
 	<p>
-	<a href="http://icalevents.com" title="Sign up or monitor the feed for regular updates"><?php _e('Documentation', 'amr-ical-events-list');?></a>
+	<a href="http://icalevents.com/amr-events/amr-ical-events-list/" title="documentation for amr-ical-events-list and amr-events"><?php _e('Documentation', 'amr-ical-events-list');?></a>
 	&nbsp;&nbsp;
-	<a href="http://forum.anmari.com" title="Support Forum"><?php _e('Support', 'amr-ical-events-list');?></a>
+	<a href="http://icalevents.com/support/" title="Support Forum"><?php _e('Support', 'amr-ical-events-list');?></a>
 	&nbsp;&nbsp;
 	<a href="http://icalevents.com/videos" title="Events plugin videos"><?php _e('Videos', 'amr-ical-events-list');?></a>
 	&nbsp;&nbsp;
@@ -555,7 +555,10 @@ function amr_ical_support_links () {
 	&nbsp;&nbsp;
 	<a href="http://forum.anmari.com/rss.php?id=1"><?php _e('Forum feed', 'amr-ical-events-list');?></a>
 	<img src="<?php echo includes_url(); ?>images/rss.png" alt="Rss icon" style="vertical-align:middle;" />
-	</p></div><?php
+	</p><?php
+
+	echo '</div>';
+
 
 	}
 /* ---------------------------------------------------------------------*/
@@ -585,7 +588,20 @@ function amr_check_edit_file() {
 			}
 		}
 	}
+/* -------------------------------------------------------------------------------------------------------------*/
+function amr_getting_started () {
 
+	echo '<div class="postbox" style="padding:1em 2em; width: 600px;"><h2 style="color: green;">';
+	_e('Get started:','amr-ical-events-list');	
+	echo '</h2><p>';
+	_e('Create a calendar page and enter: [iCal http://youricsurl.ics]');
+	echo '&nbsp;&nbsp;<b><a style="color: green;" title="'
+	.__('Create a calendar page','amr-ical-events-list')
+	.'"  href="'.admin_url('post-new.php?post_type=page&content=[iCal http://youricsurl.ics]&post_title='
+	.__('Calendar','amr-ical-events-list')).'">';
+	_e('Add new');
+	echo '</a></b></p></div>';
+}
 /* -------------------------------------------------------------------------------------------------------------*/
 function amr_check_timezonesettings () {
 
@@ -598,25 +614,26 @@ function amr_check_timezonesettings () {
 		.'</a>';?></li>
 		<li>
 		<?php _e('The timezone database defines the daylight saving changes amongst other things.  If correct daylight saving switchover is important to you, please check for the latest updates. ', 'amr-ical-events-list');  _e('You may need to talk to your webhost.' , 'amr-ical-events-list');
-		?></li><li><a href="http://pecl.php.net/package/timezonedb"><?php _e('Php timezonedb versions', 'amr-ical-events-list');?></a></li>
-		<li><a href="http://pecl.php.net/package/timezonedb"><?php _e('Info on what changes are in which timezonedb version', 'amr-ical-events-list');?></a></li>
+		?></li><li><a href="http://pecl.php.net/package/timezonedb"><?php _e('Php timezonedb versions', 'amr-ical-events-list');?></a> &nbsp; <a href="http://pecl.php.net/package/timezonedb"><?php _e('Info on what changes are in which timezonedb version', 'amr-ical-events-list');?></a></li>
 		<?php
 
 		if (!(isset($amr_globaltz))) {
 			echo '<b>'.__('No global timezone - is there a problem here? ','amr-ical-events-list').'</b>'; return;
 		}
 		$tz = get_option('timezone_string');
+		$settingslink = '<a href="'.get_option('siteurl').'/wp-admin/options-general.php">'.__('Go to settings','amr-ical-events-list').'</a>';
 		if ($tz == '') {
 			$gmtoffset = get_option('gmt_offset');
 			if (!empty($gmtoffset ) ) {
-				printf('<li>'.__('You are using the "old" gmt_offset setting ','amr-ical-events-list').'</li><li>', $gmtoffset );
+				printf('<li style="color: red;"><b>'.__('You are using the "old" gmt_offset setting ','amr-ical-events-list').'</b></li><li>', $gmtoffset );
 				_e('Consider changing to the more accurate timezone setting','amr-ical-events-list');
-				echo '&nbsp;<a href="'.get_option('siteurl').'/wp-admin/options-general.php">'.__('Go to settings','amr-ical-events-list').'</a></li>';
+				echo '</li>';
 				}
 		}
 		$now = date_create('now', $amr_globaltz);
 		echo '<li>'.__('The plugin thinks your timezone is: ','amr-ical-events-list')
 		. timezone_name_get($amr_globaltz)
+		.'&nbsp;'.$settingslink
 		.'</li>'
 		.'<li>'.__('The current UTC offset for that timezone is: ','amr-ical-events-list').$now->getoffset()/(60*60).'</li>';
 
@@ -660,12 +677,27 @@ function amr_ical_general_form() {
 		else
 			$imagesize = (int) ($amr_ical_image_settings['images_size']);
 
-		?><div>
-		<fieldset id="amrglobal"><h3><?php _e('General Options', 'amr-ical-events-list'); ?></h3>
-		<div class="postbox" style="padding:1em 2em; width: 600px;">
+		$gentext = __('General Options', 'amr-ical-events-list'); 
+		$styletext = __('Styling and Images', 'amr-ical-events-list');
+		$advtext = __('Advanced','amr-ical-events-list');
+		$managetext = __('Manage Event List Types','amr-ical-events-list');
+		echo '<div>
+		<a title="'.$gentext .'" href="#amrglobal">'
+		.$gentext.'</a> | '
+		.'<a title="'.$styletext .'" href="#amrstyle">'
+		.$styletext.'</a> | '
+		.'<a title="'.$advtext .'" href="#amradvanced">'
+		.$advtext
+		.'</a> | '
+		.'<a title="'.$managetext.'" href="'.admin_url('admin.php?page=manage_event_listing').'">'
+		.$managetext
+		.'</a>
+		
+		<fieldset id="amrglobal"><h3>'.$gentext.'</h3>';
+		echo '<div class="postbox" style="padding:1em 2em; width: 600px;">
 
-			<label for="noeventsmessage">
-			<?php _e('Message if no events found: ', 'amr-ical-events-list');
+			<label for="noeventsmessage">';
+		_e('Message if no events found: ', 'amr-ical-events-list');
 			?></label><br />
 			<input class="wide regular-text" type="text" id="noeventsmessage" name="noeventsmessage"
 			<?php if (isset($amr_options['noeventsmessage']) and ($amr_options['noeventsmessage']))
@@ -685,7 +717,7 @@ function amr_ical_general_form() {
 
 			</div>
 			</fieldset>
-			<fieldset id="amrstyle"><h3><?php _e('Styling and Images', 'amr-ical-events-list'); ?></h3>
+			<fieldset id="amrstyle"><h3><?php echo $styletext; ?></h3>
 			<div class="postbox" style="padding:1em 2em; width: 600px;">
 
 				<label for="own_css">
@@ -739,7 +771,10 @@ function amr_ical_general_form() {
 ?></h3><div class="postbox" style="padding:1em 2em; width: 600px;">
 <?php printf(__('Your php version is: %s','amr-ical-events-list'),  phpversion());	?><br /><?php
 if (version_compare('5.3', PHP_VERSION, '>')) {
-	echo( '<b>'.__('Minimum Php version 5.3 required for events cacheing. ','amr-ical-events-list').	'</b><br /><br />');
+	echo( '<b>'.__('Minimum Php version 5.3 required for events cacheing. ','amr-ical-events-list').	'</b>');
+	_e('Cacheing of generated events for re-use on same page (eg: widget plus list) will not be attempted. ','amr-ical-events-list') ;
+	_e('Apparently objects do not serialise correctly in php < 5.3.','amr-ical-events-list') ;
+	echo '<br /><br />';
 	}
 		amr_check_timezonesettings();
 		$now = date_create('now', $amr_globaltz);
@@ -788,6 +823,7 @@ function amrical_option_page()  {
 
 	amr_request_acknowledgement();
 	amr_ical_support_links ();
+	if (!(is_plugin_active('amr-events/amr-events.php'))) {amr_getting_started();}
 	amr_ical_submit_buttons ();
 	amr_ical_general_form();
 	echo '</form></div>';
