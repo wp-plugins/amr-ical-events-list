@@ -31,8 +31,8 @@ Test with your calendar's ics file at the demo site:
 
 Many thanks to the following people for the translations.  Note that I am unable to verify these and they may be out of date with the current version.:
 
-*   Italian by Andrea [http://wordpress.org/support/profile/sciamannikoo](sciamannikoo)
-*   Lithuanian by Nata Strazda from [http://www.webhostinghub.com/](Web Hub)
+*   Italian by Andrea [sciamannikoo](http://wordpress.org/support/profile/sciamannikoo)
+*   Lithuanian by Nata Strazda from [Web Hub](http://www.webhostinghub.com)
 *   Polish by Kasia from [http://onlinecasinobluebook.com/](http://www.onlinecasinobluebook.com/)
 *   French by fxbenard aka 3emeOeil (no link available)
 *   Danish by [Georg](http://wordpress.blogos.dk/s%C3%B8g-efter-downloads/?did=264)
