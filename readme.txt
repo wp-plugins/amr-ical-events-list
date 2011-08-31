@@ -4,7 +4,7 @@ Tags: event, events, event calendar, events calendar, event manager, diary, sche
 
 Requires at least: 2.8
 Tested up to: 3.2.1
-Version: 4.0.17
+Version: 4.0.18
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec. Very customisable listings or box calendars.  This version uses ics as input. Upgrade option for ics feed generation, taxonomies etc  
@@ -44,6 +44,11 @@ Many thanks to the following people for the translations.  Note that I am unable
 If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me both the .mo and .po files for your language.
 
 == Changelog ==
+= Version 4.0.18 =
+* Fix: own css got lost somewhere due to change in options loading - sorry, back now
+* Add: Lithuanina translation now available.
+* Add: ics files can now use excerpts like internal events.  Plugin will now check for empty excerpts and apply the filter: excerpt length.    So ics excerpts will look similar as internal events excerpts.  Cannot do the "excerpt more" filter as that often generates a link which would be incoirrect for an ics file event.
+
 = Version 4.0.17 =
 * Fix: 'allday' was not detected quite correctly for multi days in ics files - fixed
 * Fix: when months were used, pagination had the same increment for more and much more - fixed. 

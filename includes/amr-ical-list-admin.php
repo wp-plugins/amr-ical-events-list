@@ -62,7 +62,7 @@ function amr_ical_validate_general_options(){
 			else 	$amr_options['ngiyabonga'] =  false;
 			if (isset($_POST['noeventsmessage'])) 	
 				$amr_options['noeventsmessage'] =  $_POST['noeventsmessage'];
-			if (isset($_POST['lookmoremessage'])) 	{ echo 'YESY!';
+			if (isset($_POST['lookmoremessage'])) 	{ 
 				$amr_options['lookmoremessage'] =  $_POST['lookmoremessage'];
 				}
 			if (isset($_POST["own_css"])) $amr_options['own_css'] =  true;
@@ -73,7 +73,6 @@ function amr_ical_validate_general_options(){
 			else $amr_options['cssfile'] =  '';
 			if (isset($_POST["no_images"]))  $amr_options['no_images'] =  true;		/* from dropdown */
 			else $amr_options['no_images'] =  false;
-
 
 			if (isset($_POST['images_size']))  {
 				$amr_ical_image_settings['images_size'] =  (int) ($_POST['images_size']) ;		/* from dropdown */

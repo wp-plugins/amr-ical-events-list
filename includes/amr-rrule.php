@@ -523,7 +523,7 @@ function amr_limit_by_day_of_week (&$datearray, $pby, $tz) {
 }
 /* --------------------------------------------------------------------------------------------------- */
 function amr_create_date_from_parts ($d, $tz) { /* create a date object from the parts array, with the TZ passed */
-	new DateTime();
+	// wtf? new DateTime();
 	$datestring = $d['year'].'-'.$d['month'].'-'.$d['day'].' '.$d['hour'].':'.$d['minute'].':'.$d['second'];
 	try { $possdate =  new DateTime($datestring, $tz);
 		}

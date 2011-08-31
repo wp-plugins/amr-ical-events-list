@@ -4,6 +4,14 @@ function amr_memory_convert($size)
     $unit=array('b','kb','mb','gb','tb','pb');
     return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
  }
+ function amrical_mem_debug($text) {
+	if (isset($_GET['memdebug'])) {
+		$mem = memory_get_usage (true);
+		$peak = memory_get_peak_usage (true);
+		//echo '<br />memory: '.amr_memory_convert($mem).' peak:'.amr_memory_convert($peak).' '.$text;
+		echo '<br />memory: '.$mem.' peak:'.$peak.' '.$text;
+	}
+ }
 // ----------------------------------------------------------------------------------------
 
 if (!function_exists('esc_textarea') ) {

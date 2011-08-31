@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.0.17');
+define('AMR_ICAL_LIST_VERSION', '4.0.18');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -487,7 +487,7 @@ global $amr_listtype;
 	$icalstyledir = amr_get_css_path(); // create the custom css path if it exists ICALSTYLEURL;
 	$icalstyleurl = ICALSTYLEURL;
 
-	if ((isset($amr_options)) or ($amr_options = get_option ('amr-ical-events-list'))) {
+	if ($amr_options = get_option ('amr-ical-events-list')) {  //if we have stored options
 
 		if ((isset ($amr_options['own_css'])) and !($amr_options['own_css'])) {
 			if (empty($amr_options['cssfile'])) $icalstyleurl = ICALSTYLEURL;
@@ -500,6 +500,7 @@ global $amr_listtype;
 			wp_register_style('amr-ical-events-list_print', ICALSTYLEPRINTURL, array(), 1.0 , 'print');
 		    wp_enqueue_style('amr-ical-events-list_print');
 		}
+		// else do NOT load css
 	}
 	else {
 		wp_register_style('amr-ical-events-list', $icalstyleurl, array( ), 1.0 , 'all' );
@@ -1173,7 +1174,26 @@ function amr_derive_info_for_list_only (&$e) {
 //		$e['Bookmark'] = 'a'.htmlentities(str_replace('http://','',$e['Bookmark'] ).$bookm);
 //	}
 	$e['SUMMARY'] = amr_derive_summary ($e);  // do not hover the description
+	$e['excerpt'] = amr_make_excerpt_from_description($e);
 	return ($e);
+}
+/* --------------------------------------------------  */
+function amr_make_excerpt_from_description ($e) {
+	if (empty($e['excerpt'])) {
+		if (!empty($e['DESCRIPTION'])) {  // must be abn ics file
+			$desc = amr_just_flatten_array ($e['DESCRIPTION']);  
+		}	
+		else if (!empty($e['CONTENT'])) {  // must be abn ics file
+			$desc = strip_shortcodes(amr_just_flatten_array ($e['CONTENT']));  
+		}	
+	
+		$excerpt = substr( $desc,0, // start
+				apply_filters('excerpt_length', 55))
+				.'...'; //length
+	
+		return ($excerpt);
+	}
+	else return($e['excerpt']);	
 }
 /* --------------------------------------------------  */
 function amr_just_flatten_array ($arr) {
@@ -1740,9 +1760,12 @@ global $amr_limits;
 function amr_process_icalevents($events, $astart, $aend, $limit) {
 		$dates = array();
 		foreach ($events as $i=> $event) {
-			amr_derive_dates ($event); /* basic clean up only - removing unnecessary arrays etc */
+			amr_derive_dates ($event); /* basic clean up only - removing unnecessary arrays etc */			
 			$more = amr_generate_repeats($event, $astart, $aend, $limit);
 			if (is_array($more)) $dates = array_merge ($dates,$more) ;
+			//amrical_mem_debug('before unset '.$i);
+			//unset($more);
+			//amrical_mem_debug('After event '.$i);
 		}
 		if (ICAL_EVENTS_DEBUG) {echo '<hr>No.Dates= '.count($dates);  } //
 		if ((is_array($dates)) and (count($dates) > 1)) { /* must be > 1 for tere to be a duplicate! */
@@ -1970,8 +1993,10 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 				}
 			}
 			If (isset($_REQUEST['debug'])) echo '<br />Got x events '.count($components);
+			amrical_mem_debug('Before process');
 			$components = amr_process_icalevents($components, $start, $end, $no_events);
 			If (isset($_REQUEST['debug'])) echo '<br />After proces ical -Got x events '.count($components);
+			amrical_mem_debug('Before constrain');
 			$amrtotalevents = count($components);
 			$components = amr_constrain_components($components, $start, $end, $no_events);
 			$amr_last_date_time = amr_save_last_event_date($components);
@@ -1982,6 +2007,7 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 				$amr_one_page_events_cache[$key]['components'] = $components;
 				$amr_one_page_events_cache[$key]['icals'] = $icals;
 		}
+		amrical_mem_debug('Before listing');
 		if (isset ($icals) and is_array($icals)) {
 /* amr here is the main html  code  *** */
 			if (isset($amr_limits['calendar_properties']) )
