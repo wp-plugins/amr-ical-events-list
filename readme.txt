@@ -48,7 +48,9 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 * Fix: switching views and then doing month navigation did not keep final view, will now.
 * Fix: to German translation file for the goto titles on month year navigation.
 * Add: can now specify own text for 'reset' message on the 'look for more events' and a new option 'look for previous'.  Blanking out the text will hide that link options for previous and reset.  'Previous' and 'Reset' show when one has done at least 1 look more.  
-* Add: 'human time' ie the midday, midnight is now controllable via the Listing settings.  
+* Add: 'human time' ie the midday, midnight is now controllable via the Listing settings.
+* Add: word-wrap to default css to stop very long words breaking out of boxes.
+* Change: Default large calendar - moved start date time etc to details hover box.
 
 = Version 4.0.18 =
 * Fix: own css got lost somewhere due to change in options loading - sorry, back now
