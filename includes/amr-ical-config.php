@@ -270,7 +270,9 @@ function amr_set_defaults() {
 			'cssfile' => ICALSTYLEURL,//'icallist.css',
 			'date_localise' => 'amr',
 			'noeventsmessage' => __('No events found within criteria','amr-ical-events-list'),
-			'lookmoremessage' => __('Look for more','amr-ical-events-list')
+			'lookmoremessage' => __('Look for more','amr-ical-events-list'),
+			'lookprevmessage' => __('Look for previous','amr-ical-events-list'),
+			'resetmessage' => __('Reset','amr-ical-events-list')
 			);
 
 
@@ -721,11 +723,14 @@ function customise_listtype($i)	{ /* sets up some variations of the default list
 //				{$amr_options['listtypes'][$i]['calprop'][$g]['Column'] = 0;}
 			foreach ($amr_options['listtypes'][$i]['compprop'] as $g => $v)
 				foreach ($v as $g2 => $v2) {$amr_options['listtypes'][$i]['compprop'][$g][$g2]['Column'] = 0;}
-			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EventDate']['Column'] = 0;
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EventDate']=
+				array('Column' => 2, 'Order' => 10, 'Before' => '', 'After' => '');
 			$amr_options['listtypes'][$i]['compprop']['Date and Time']['StartTime']
-				= array('Column' => 1, 'Order' => 5, 'Before' => '<br />', 'After' => '');
-			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EndDate']['Column'] = 0;
-			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EndTime'] = array('Column' => 1, 'Order' => 6, 'Before' => ' to ', 'After' => '');
+				= array('Column' => 2, 'Order' => 15, 'Before' => '&nbsp;', 'After' => '');
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EndDate'] = 
+				array('Column' => 2, 'Order' => 20, 'Before' => ' to ', 'After' => '');
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EndTime'] = 
+				array('Column' => 2, 'Order' => 25, 'Before' => '&nbsp;', 'After' => '');
 			$amr_options['listtypes'][$i]['compprop']['Descriptive']['SUMMARY'] = array('Column' => 1, 'Order' => 1, 'Before' => '', 'After' => '');
 			$amr_options['listtypes'][$i]['compprop']['Descriptive']['DESCRIPTION']
 			= array('Column' => 2, 'Order' => 1, 'Before' => '<div class="details">', 'After' => '</div>');
@@ -1041,10 +1046,26 @@ function amr_getset_options ($reset=false) {
 
 		}
 	if (!(isset($alreadyhave)) or (!$alreadyhave) ) amr_set_defaults(); 
-
-
+	else amr_ical_apply_any_version_changes ();
+	
+	if (!empty($amr_options['usehumantime'])) { 
+		add_filter ('amr_human_time','amr_human_time');
+	}
 	return ($amr_options);
 	}
+//----------------------------------------------	
+function amr_ical_apply_any_version_changes () {
+global $amr_options;
+
+	if (!isset($amr_options['lookprevmessage']) ) { // can be empty later
+
+			$amr_options['lookprevmessage'] = __('Look for Previous','amr-ical-events-list'); // for compatibility
+			$amr_options['resetmessage'] = __('Reset','amr-ical-events-list'); 
+	}
+	if (!isset($amr_options['usehumantime'])) // can be false after admin has set the options
+		$amr_options['usehumantime'] = true;
+
+}	
 //----------------------------------------------  temp adjust
 function amr_remove_array_level ($compprop) {
 	$newcompprop = array();

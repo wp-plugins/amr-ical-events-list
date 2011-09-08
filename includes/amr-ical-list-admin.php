@@ -60,11 +60,20 @@ function amr_ical_validate_general_options(){
 
 			if (isset($_POST['ngiyabonga'])) 	$amr_options['ngiyabonga'] =  true;
 			else 	$amr_options['ngiyabonga'] =  false;
-			if (isset($_POST['noeventsmessage'])) 	
-				$amr_options['noeventsmessage'] =  $_POST['noeventsmessage'];
-			if (isset($_POST['lookmoremessage'])) 	{ 
-				$amr_options['lookmoremessage'] =  $_POST['lookmoremessage'];
-				}
+			foreach (array(
+				'noeventsmessage',
+				'lookmoremessage',
+				'lookprevmessage',
+				'resetmessage'
+				) as $message) {
+				if (isset($_POST[$message])) 	
+					$amr_options[$message] =  $_POST[$message];
+				else 
+					$amr_options[$message] =  '';
+
+			}
+			if (isset($_POST["usehumantime"])) $amr_options['usehumantime'] =  true;
+			else $amr_options['usehumantime'] =  false;
 			if (isset($_POST["own_css"])) $amr_options['own_css'] =  true;
 			else $amr_options['own_css'] =  false;
 			if ((isset($_POST["date_localise"])) and (in_array($_POST["date_localise"], array('none', 'wp', 'wpgmt', 'amr')) )) $amr_options['date_localise'] =  $_POST["date_localise"];		/* from dropdown */
@@ -709,6 +718,26 @@ function amr_ical_general_form() {
 			<?php if (isset($amr_options['lookmoremessage']) and ($amr_options['lookmoremessage']))
 				{echo 'value="'.$amr_options['lookmoremessage'].'"';}?>/>
 			<br />
+			<label for="lookprevmessage">
+			<?php _e('Look for previous events message: ', 'amr-ical-events-list');
+			?></label><br />
+			<input class="wide regular-text" type="text" id="lookprevmessage" name="lookprevmessage"
+			<?php if (isset($amr_options['lookprevmessage']) and ($amr_options['lookprevmessage']))
+				{echo 'value="'.$amr_options['lookprevmessage'].'"';}?>/>
+			<br />
+			<label for="resetmessage">
+			<?php _e('Reset events message: ', 'amr-ical-events-list');
+			?></label><br />
+			<input class="wide regular-text" type="text" id="resetmessage" name="resetmessage"
+			<?php if (isset($amr_options['resetmessage']) and ($amr_options['resetmessage']))
+				{echo 'value="'.$amr_options['resetmessage'].'"';}?>/>
+			<br />
+
+			<label for="usehumantime">
+			<input type="checkbox" id="usehumantime" name="usehumantime" value="usehumantime"
+			<?php if (isset($amr_options['usehumantime']) and ($amr_options['usehumantime']))  {echo 'checked="checked"';}
+			?>/> <?php _e('Use human time like midday, midnight', 'amr-ical-events-list'); ?></label>			
+			
 			<label for="ngiyabonga">
 			<input type="checkbox" id="ngiyabonga" name="ngiyabonga" value="ngiyabonga"
 			<?php if (isset($amr_options['ngiyabonga']) and ($amr_options['ngiyabonga']))  {echo 'checked="checked"';}

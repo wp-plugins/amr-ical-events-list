@@ -10,7 +10,9 @@ You can always refer back to the default css in the plugin folder for the latest
 	}
 
 /*----------------------------------------------- */
-
+#events_wrap {  
+	word-wrap: break-word; /* make sure that any very long words do not cause overflow*/
+}
 #events_wrap abbr {  
 /* do not show the hcalendar abbr underline - the abbr is confusing  especially since the format of the date is ISO8601, not human friendly 
 However is required if we want hcal functionality */
@@ -205,11 +207,13 @@ table.smallcalendar td.today {
 	padding: 0;
 	border: hidden;
 }
+#icallookmore a#icalalookmore,
 .calendar_navigation .nextweek,
 .calendar_navigation .nextmonth {
 	text-align: right;
 	float:right;
 }
+#icallookmore a#icalalookprev,
 .calendar_navigation .prevweek,
 .calendar_navigation .prevmonth {
 	text-align: left;

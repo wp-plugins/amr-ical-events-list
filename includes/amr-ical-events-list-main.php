@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.0.18');
+define('AMR_ICAL_LIST_VERSION', '4.0.19');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -1185,7 +1185,8 @@ function amr_make_excerpt_from_description ($e) {
 		}	
 		else if (!empty($e['CONTENT'])) {  // must be abn ics file
 			$desc = strip_shortcodes(amr_just_flatten_array ($e['CONTENT']));  
-		}	
+		}
+		else $desc = '';		
 	
 		$excerpt = substr( $desc,0, // start
 				apply_filters('excerpt_length', 55))

@@ -4,7 +4,7 @@ Tags: event, events, event calendar, events calendar, event manager, diary, sche
 
 Requires at least: 2.8
 Tested up to: 3.2.1
-Version: 4.0.18
+Version: 4.0.19
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec. Very customisable listings or box calendars.  This version uses ics as input. Upgrade option for ics feed generation, taxonomies etc  
@@ -44,6 +44,12 @@ Many thanks to the following people for the translations.  Note that I am unable
 If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me both the .mo and .po files for your language.
 
 == Changelog ==
+= Version 4.0.19 =
+* Fix: switching views and then doing month navigation did not keep final view, will now.
+* Fix: to German translation file for the goto titles on month year navigation.
+* Add: can now specify own text for 'reset' message on the 'look for more events' and a new option 'look for previous'.  Blanking out the text will hide that link options for previous and reset.  'Previous' and 'Reset' show when one has done at least 1 look more.  
+* Add: 'human time' ie the midday, midnight is now controllable via the Listing settings.  
+
 = Version 4.0.18 =
 * Fix: own css got lost somewhere due to change in options loading - sorry, back now
 * Add: Lithuanina translation now available.

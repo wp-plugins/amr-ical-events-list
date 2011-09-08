@@ -30,7 +30,7 @@ if (!function_exists( 'amr_human_time')) {
 		else return ($time);
 	}
 }
-add_filter ('amr_human_time','amr_human_time');
+
 // ----------------------------------------------------------------------------------------
 
 if (!function_exists('amrical_calendar_views')) {
@@ -39,12 +39,13 @@ function amrical_calendar_views () {
 	
 	if (ICAL_EVENTS_DEBUG) echo '<br />Preparing views<br />';
 
-	$link = amr_clean_link();
+//	$link = amr_clean_link();  // // NOT clean link - must remember context.
+
 	$link = remove_query_arg(array(
 		'calendar',
 		'agenda',
 		'listtype',
-		'eventmap'), $link);
+		'eventmap'));
 
 	if (!empty ($amr_limits['agenda'])) $agenda = $amr_limits['agenda'];
 	else $agenda = 1;
@@ -157,6 +158,10 @@ function amr_month_year_links ($start,$months) { // returns array ($nextlink, $p
 	//---------------------------  get navigation links ---------------------------------------
 
 	$link = amr_clean_link();
+	if (!empty ($_REQUEST['agenda']) ) 
+		$link = add_query_arg('agenda',$_REQUEST['agenda'], $link);
+	elseif (!empty ($_REQUEST['calendar']) ) 
+		$link = add_query_arg('calendar',$_REQUEST['calendar'], $link);
 
 	if ( $previous ) { $prevlink =
 		'<a class="prevmonth" href="'
@@ -190,7 +195,7 @@ global $wp_locale, $amr_globaltz;
 //	$m  = (int) substr($start, 4, 2);
 	$html = '';
 	$options=array();
-	date_modify($startobj, '-3 months');
+//	date_modify($startobj, '-1 months');  // v4.0.19
 	for ($i=1; $i<=18; $i=$i+1) {
 		$startstring = $startobj->format('Ymd');
 		$m = (int) substr($startstring, 4, 2);
@@ -327,10 +332,10 @@ function amr_semi_paginate() {
 				)));
 		$showmuchmore = htmlentities (add_query_arg (array(
 			
-				'months' => $amr_limits['months']*2
+				'months' => $amr_limits['months']*4
 				)));
 		$showmuchless = htmlentities (add_query_arg (array(
-				'months' => round($amr_limits['months']/2)
+				'months' => round($amr_limits['months']/4)
 				)));	
 		$explaint =  ' '.__('months','amr-events');				
 		}
@@ -662,7 +667,8 @@ if (!function_exists('amr_derive_summary')) {
 		global $amr_options;
 		global $amr_listtype;
 		global $amrW;
-		global $amrwidget_options;
+		//global $amrwidget_options;
+		global $amr_calendar_url;
 		global $amr_liststyle;
 	/* If there is a event url, use that as href, else use icsurl, use description as title */
 		if (in_array($amr_liststyle, array('smallcalendar', 'largecalendar','weekscalendar'))) $hoverdesc = false;
@@ -684,8 +690,9 @@ if (!function_exists('amr_derive_summary')) {
 		/* Correction - we want a link to the bookmark anchor on the calendar page***/
 		if (empty($e_url))  {
 			if (!($amrW == 'w_no_url'))  {
-				if (!empty($amrwidget_options['moreurl'])) {
-					$e_url = ' href="'.clean_url($amrwidget_options['moreurl'])
+//				if (!empty($amrwidget_options['moreurl'])) {
+				if (!empty($amr_calendar_url)) {
+					$e_url = ' href="'.($amr_calendar_url)
 	//				.'#'.$e['Bookmark']
 					.'" ';
 				}
@@ -1358,6 +1365,15 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 }
 
 /* --------------------------------------------------  */
+if (!function_exists('amr_show_more_prev')) {  
+// coming later maybe, or will mods to look more be adequate?
+// - show 'more' on page 2 onwards
+// - on page 2 onwards, show see previous (like a back button?)
+// - do not show more on last page - have to check DB for 'last event date' ? may slow things down
+	function amr_show_more_prev() {
+	 }
+}
+/* --------------------------------------------------  */
 if (!function_exists('amr_show_look_more')) {  // does a google style next
 function amr_show_look_more() {
  	global $amr_limits,
@@ -1366,14 +1382,18 @@ function amr_show_look_more() {
 	$amr_last_date_time;
 	
 	$next = new datetime();
-	if (!empty($amr_last_date_time)) $next = clone $amr_last_date_time; // get  last used event date
+	if (!empty($amr_last_date_time)) {
+		$next = clone $amr_last_date_time; // get  last used event date
+	}
 	else {
 		$amr_last_date_time = $amr_limits['end'] ;
-		$next = $amr_limits['end'] ;
+		$next 				= $amr_limits['end'] ;
 	}
 	date_time_set($next,0,0,0); // set to the beginning of the day
-	$nextd = $next->format("Ymd");
-	$nexturl = (add_query_arg (array ('start'=>$nextd )));
+	$prev = $amr_limits['start'] ;
+	
+	$nexturl = add_query_arg ('events', $amr_limits['events']*2);	
+	$prevurl = remove_query_arg ('events');	
 	
 	// if no events, then this makes no sense  $explaint = sprintf (__('Displaying %s events.'),$amr_limits['events']) ;
 	$explaint = '';
@@ -1383,28 +1403,56 @@ function amr_show_look_more() {
 	foreach ($amr_limits as $i=>$value) {
 		if (in_array ($i, array('days','hours','months','weeks'))) {
 			$nexturl = add_query_arg ($i, $value, $nexturl);
+			$prevurl = add_query_arg ($i, $value, $prevurl);
+			date_modify($prev, '-'.$value.' '.$i);  // work back to the previous event
 		}
 	}
-	// NB MUST increase the number of events otherwise one can get caught in a situation where if num of evemnts less than events in a day, one can never get past that day.
-	$nexturl = add_query_arg ('events', $amr_limits['events']*2, $nexturl);
+	$nextd = $next->format("Ymd");
+	$prevd = $prev->format("Ymd");
+	$nexturl = (add_query_arg (array ('start'=>$nextd ), $nexturl));
+	$prevurl = (add_query_arg (array ('start'=>$prevd ), $prevurl));
+	// NB MUST increase the number of events otherwise one can get caught in a situation where if num of events less than events in a day, one can never get past that day.
 	
-	if (empty($amr_options['lookmoremessage'])) $moret    =  __('Look for more', 'amr-events');
-	else $moret    = $amr_options['lookmoremessage'];
+	if (empty($amr_options['lookmoremessage'])) 
+		$moret    =  __('Look for more', 'amr-events');
+	else 
+		$moret    = $amr_options['lookmoremessage'];
+		
 	$morett    = sprintf( __('Look for more from %s' ,'amr-events'),$amr_last_date_time->format($amr_formats['Day']));
 	
-	if (!empty($_GET['start'])) {
-		$reset = __('Reset','amr-events' );
+	
+	if (!empty($_REQUEST['start'])) {
+		if (empty($amr_options['lookprevmessage'])) 
+			$prevt    =  '';
+		else 
+			$prevt    = $amr_options['lookprevmessage'];
+			
+		if (empty($amr_options['resetmessage'])) 
+			$reset = '';  // allow it to be blanked out
+		else 
+			$reset = $amr_options['resetmessage'];	
+	}
+	else {  // if we on first page, do not show
+		$reset = '';
+		$prevt = '';
+	}
+	
+	if (!empty ($reset) ) {
 		$reseturl = remove_query_arg(array('start','startoffset','events','days','months','hours','weeks'));
-		$reset ='&nbsp;<a id="icalareset"  title="'
+		$reset ='<a id="icalareset"  title="'
 		.__('Go back to initial view' ,'amr-events')
 		.'" href="'.esc_attr($reseturl).'">'.$reset.'</a>';
 	}
-	else $reset = '';
+	if (!empty ($prevt) ) {
+		$prevt ='<a id="icalaprev"  title="'
+		.__('Go back to previous events' ,'amr-events')
+		.'" href="'.esc_attr($prevurl).'">'.$prevt.'</a>';
+	}
 	return (
-		'<div id="icallookmore" class="icalnext" >'
-		
+		'<div id="icallookmore" class="icalnext" >&nbsp;'
+		.$prevt.'&nbsp;'
+		.$reset.'&nbsp;'
 		.'<a id="icalalookmore"  title="'.$explaint.' '.$morett.'" href="'.esc_attr($nexturl).'">'.$moret.'</a>'
-		.$reset
 		.'</div>'
 		);
 	}
