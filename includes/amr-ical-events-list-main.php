@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.0.19');
+define('AMR_ICAL_LIST_VERSION', '4.0.20');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -27,7 +27,8 @@ if (!(class_exists('DateTime'))) {
  
 /*----------------------------------------------------------------------------------------*/	
 //add_action ('after_setup_theme','amr_load_pluggables');	
-add_action ('wp','amr_load_pluggables', 10);	//move it later
+//add_action ('wp','amr_load_pluggables', 10);	//move it later, No not good , plugins that apply the filters will nothave it then, so will fail
+add_action ('plugins_loaded','amr_load_pluggables', 99);	//move it later, No not good , plugins that apply the filters will nothave it then
 
 function amr_load_pluggables() {
 	require_once('amr-pluggable.php');
@@ -451,16 +452,23 @@ function amr_get_css_path() { /** Attempt to create  a css directory if it doesn
 	 * Return the path if successful.*/
 		$css_path = ICAL_EVENTS_CSS_DIR;
 		$css_file = ($css_path.'custom_icallist.css');
-		if (!file_exists($css_path)) { /* if there is no folder */
+		if (!file_exists($css_path)) { /* if there is no folder  or safe mode enabled */
+			if (ini_get('safe_mode')) {  // safe mode must be enabled , give up
+				return false;
+			}
 			if (wp_mkdir_p($css_path, 0777)) {
 				// printf('<br />'.__('A css directory %s has been created','amr-ical-events-list'),'<code>'.$css_path.'</code>');
 			}
 			else {
 				echo( '<br />'.sprintf(__('Error creating custom css directory %s. Please check permissions','amr-ical-events-list'),$css_path));
+				return false;
 			}
 		}
 		if (!file_exists($css_file)) { /* if there is no starting css file, then copy the plugin version over  */
-			amr_copy_file(ICALLISTPLUGINDIR.'css/icallist.css',$css_file );
+			if (ini_get('safe_mode')) {  // safe mode must be enabled , give up
+				return false;
+			}
+			else amr_copy_file(ICALLISTPLUGINDIR.'css/icallist.css',$css_file );
 		}
 		return $css_path;
 	}
@@ -713,8 +721,10 @@ function amr_calc_duration ( $start, $end) { /* assume in same timezone , ics dt
  */
 function amr_is_all_day($d1, $d2) {
 	if (!(is_object($d1) and (is_object($d2)))) return(false);
-
-	$dur = amr_calc_duration ( $d1, $d2);
+	
+	if ($d1==$d2) return false; // if exact match then assume strict RC 5545 adherence, so cannot be all day, must be zero duration
+	
+	$dur = amr_calc_duration ( $d1, $d2);  // duration could be zero if no end time or DTEND exact same as DTSTART (not all day)
 	if (empty ($dur['hours']) and empty ($dur['minutes']) and empty ($dur['seconds'] )) {
 		return true;
 		}
@@ -1073,7 +1083,7 @@ global $amr_globaltz;
 	else $e['Classes'] .= ' inprogress';
 	if (amr_is_same_day ($e['EventDate'],  $now)) $e['Classes'] .= ' today';
 
-	if (isset ($e['Untimed'])) { /* if it is untimed, the ical spec says that the end date is the "next day" */
+	if (isset ($e['Untimed'])) { /* if it is untimed, the ical spec says that the end date is the "next day" */  
 		$e['Classes'] .= ' untimed';
 		if (isset ($e['EndDate']) ) {
 			if (	(amr_is_an_ical_single_day ($e['EventDate'], $e['EndDate'])) OR
@@ -1585,7 +1595,6 @@ function amr_create_enddate (&$e) {
 			//check here whether all day or not  - human expects 1 day less, DTEND expects next day - keep it so
 			if (!empty ($e['allday']) and ($e['allday'] == 'allday')) {
 				date_modify($e['EndDate'],'-1 day');
-				if (ICAL_EVENTS_DEBUG) echo '<hr> All day End Date set  '.$e['EndDate']->format ('c').'<hr>';
 			}
 			return (true);
 		}
