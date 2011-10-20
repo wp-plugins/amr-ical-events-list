@@ -35,7 +35,7 @@ Many thanks to the following people for the translations.  Note that I am unable
 *   French by fxbenard aka 3emeOeil (no link available)
 *   Danish by [Georg](http://wordpress.blogos.dk/s%C3%B8g-efter-downloads/?did=264)
 *   German by Simon Betschmann
-*   Belorussian  by iam from [www.fatcow.com](http://www.fatcow.com)
+*   Belorussian 
 *   Russian (partial) by ghost from http://antsar.info/
 *   Hindi translation  by Ashish J. of Outshine solutions
 
