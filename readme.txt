@@ -23,7 +23,7 @@ List upcoming recurring or single events, notes, journal, freebusy information f
 
 Group events by month/week/day or many other for presentation and styling. Offers your viewers the option to subscribe or add the events or the whole calendar to their calendars (google or other).
 
-If you also want a complete "inhouse" solution where you can create events in wordpress with multiple event classification options, and produce your own ics feeds from those, please see [amr-events](http://icalevents.com). amr-events is an extension of this plugin and will use any configuration from it.
+If you also want a complete "inhouse" solution where you can create events in wordpress with multiple event classification options, and produce your own ics feeds from those, please see [events plugin home page](http://icalevents.com). amr-events is an extension of this plugin and will use any configuration from it.
 
 Test with your calendar's ics file at the demo site:
 
@@ -31,14 +31,14 @@ Test with your calendar's ics file at the demo site:
 
 Many thanks to the following people for the translations.  Note that I am unable to verify these and they may be out of date with the current version.:
 
-*   Italian by Andrea [sciamannikoo](http://wordpress.org/support/profile/sciamannikoo)
-*   Lithuanian by Nata Strazda from [Web Hub](http://www.webhostinghub.com)
-*   Polish by Kasia from [http://onlinecasinobluebook.com/](http://www.onlinecasinobluebook.com/)
-*   French by fxbenard aka 3emeOeil (no link available)
-*   Danish by [Georg](http://wordpress.blogos.dk/s%C3%B8g-efter-downloads/?did=264)
+*   Italian by Andrea aka sciamannikoo
+*   Lithuanian by Nata Strazda from Web Hub
+*   Polish by Kasia 
+*   French by fxbenard aka 3emeOeil 
+*   Danish by Georg feom blogso.dk
 *   German by Simon Betschmann
-*   Belorussian  (attribution removed)
-*   Russian (partial) by ghost from http://antsar.info/
+*   Belorussian  
+*   Russian (partial) by ghost (antsar.info)
 *   Hindi translation  by Ashish J. of Outshine solutions
 
 If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me both the .mo and .po files for your language.
