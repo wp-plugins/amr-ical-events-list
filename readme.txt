@@ -4,7 +4,7 @@ Tags: event, events, event calendar, events calendar, event manager, diary, sche
 
 Requires at least: 2.8
 Tested up to: 3.3.1
-Version: 4.0.21
+Version: 4.0.20
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec. Very customisable listings or box calendars.  This version uses ics as input. Upgrade option for ics feed generation, taxonomies etc
