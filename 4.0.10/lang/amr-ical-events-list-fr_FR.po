@@ -1,0 +1,1889 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: amr events calendar or lists with ical files 3.10\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-04-14 14:26+0100\n"
+"PO-Revision-Date: 2011-04-14 21:59+0100\n"
+"Last-Translator: fx <webdingue@gmail.com>\n"
+"Language-Team: fxbenard <fxbenard@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-Language: French\n"
+"X-Poedit-Country: FRANCE\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2\n"
+"X-Poedit-Basepath: .\n"
+"X-Textdomain-Support: yes\n"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/amr-ical-events-list.php:47
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:3263
+msgid "Settings"
+msgstr "Paramètres"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-calendar.php:94
+msgid "Go to agenda or list view"
+msgstr "Aller à l'agenda ou à la vue par liste"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-calendar.php:94
+msgid "Agenda"
+msgstr "Agenda"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-calendar.php:102
+msgid "Go to calendar view"
+msgstr "Aller au format calendrier"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-calendar.php:102
+msgid "Calendar"
+msgstr "Calendrier"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-calendar.php:110
+msgid "Go to map view"
+msgstr "Voir sur la carte"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-calendar.php:110
+msgid "Map"
+msgstr "Carte"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-calendar.php:123
+msgid "Go to date"
+msgstr "Aller à la date"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-calendar.php:161
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-calendar.php:170
+#, php-format
+msgid "Go to %1$s %2$s"
+msgstr "Aller à %1$s %2$s"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:121
+msgid "Column"
+msgstr "Colonne"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:122
+msgid "Order"
+msgstr "Ordre"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:123
+msgid "Before"
+msgstr "Avant"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:124
+msgid "After"
+msgstr "Après"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:214
+msgid "Default"
+msgstr "Valeur par défaut"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:215
+msgid "A default calendar list. This one set to tables with lists in the cells.  Usually needs the css file enabled. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. "
+msgstr "Une liste du calendrier par défaut. Celle-ci utilise des tableaux avec des listes dans les cellules. A besoin normalement que le fichier css soit activé. Si vous le configurez, je suggère de changer cette description comme aide mémoire de comment/pourquoi il est configuré de la façon dont il l'est."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:234
+msgid "Year"
+msgstr "Année"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:235
+msgid "Quarter"
+msgstr "Trimestre"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:236
+msgid "Astronomical Season"
+msgstr "Saison astrale"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:237
+msgid "Traditional Season"
+msgstr "Saison traditionnelle"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:238
+msgid "Western Zodiac"
+msgstr "Zodiaque occidentale"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:239
+msgid "Month"
+msgstr "Mois"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:240
+msgid "Week"
+msgstr "Semaine"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:241
+msgid "Day"
+msgstr "Jour"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:255
+msgid "When"
+msgstr "Quand"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:256
+msgid "What"
+msgstr "Quoi"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:257
+msgid "Where"
+msgstr "Où"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:312
+msgid "More info: "
+msgstr "Plus d'info:"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:357
+msgid "Event Link"
+msgstr "Lien de l'Événement"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:383
+msgid "Show in Google map"
+msgstr "Voir sur la carte Google"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:390
+msgid "Show location in Google Maps"
+msgstr "Montrer emplacement dans Google Maps"
+
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:400
+msgid "On Tour"
+msgstr "En Tournée"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:401
+msgid "Default setting uses the original table with lists in the cells. It is grouped by month. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. "
+msgstr "Le réglage par défaut utilise la table d'origine avec des listes dans les cellules. Il est regroupé par mois. Si vous le configurez, je suggère de changer cette description comme aide mémoire de comment/pourquoi il est configuré de la façon dont il l'est."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:409
+msgid "Venue"
+msgstr "Lieu"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:410
+msgid "Description"
+msgstr "Description"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:413
+msgid "Timetable"
+msgstr "Calendrier"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:414
+msgid "Default setting uses the original table with lists in the cells. It is grouped by day. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. "
+msgstr "Le réglage par défaut utilise la table d'origine avec des listes dans les cellules. Il est regroupé par jours. Si vous le configurez, je suggère de changer cette description comme aide mémoire de comment/pourquoi il est configuré de la façon dont il l'est."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:426
+msgid "Date"
+msgstr "Date"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:427
+msgid "Class"
+msgstr "Classe"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:428
+msgid "Room"
+msgstr "Endroit"
+
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:432
+msgid "Widget"
+msgstr "Widget"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:433
+msgid "The new default setting for widgets uses lists for the table rows. Good for themes that cannot cope with tables in the sidebar. No grouping. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. "
+msgstr "Le réglage par défaut utilise pour un widget la table d'origine avec des listes dans les cellules. Parfait pour les thèmes qui ne peuvent pas utiliser des tableaux dans la barre latérale. Pas de regroupement. Si vous le configurez, je suggère de changer cette description comme aide mémoire de comment/pourquoi il est configuré de la façon dont il l'est."
+
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:453
+msgid "HTML5 Exp 1"
+msgstr "HTML5 Exp 1"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:454
+msgid "Experimental new table style aiming to use html5 tags, but still within a table structure to allow columns. One cannot have two levels of grouping with this option as <tbody> cannot be nested. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. "
+msgstr "Expérimentale nouveau style de tableau pour objectif d'utiliser les balises HTML5, mais toujours au sein d'une structure qui permettre les colonnes. On ne peut pas avoir deux niveaux de regroupement avec cette option car <tbody> peut pas être imbriqué.Si vous le configurez, je suggère de changer cette description comme aide mémoire de comment/pourquoi il est configuré de la façon dont il l'est."
+
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:484
+msgid "HTML5 Exp 2"
+msgstr "HTML5 Exp 2"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:485
+msgid "An HTML5 test option that tries to be leaner. You can have two level of grouping with this option. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. "
+msgstr "Une option de test HTML5 qui essaye d'être plus légère. Vous pouvez avoir deux niveaux de regroupement avec cette option. Si vous le configurez, je suggère de changer cette description comme aide mémoire de comment/pourquoi il est configuré de la façon dont il l'est."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:527
+msgid "EventInfo"
+msgstr "EventInfo"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:528
+msgid "For displaying additional event info on posts created as events. The summary and description are switched off as these are the post title and the post content. Calendar properties and groupings are also not relevant. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. "
+msgstr "Pour afficher les informations sur l'événement supplémentaires dans les articles créés comme des événements. Le résumé et une description sont désactivées car elles sont le titre et le contenu de l'article. Les propriétés du calendrier et les groupements ne sont pas pertinentes. Si vous le configurez, je suggère de changer cette description comme aide mémoire de comment/pourquoi il est configuré de la façon dont il l'est."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:557
+msgid "Small-Calendar"
+msgstr "Petit-Calendrier"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:558
+msgid "The new default setting for calendar widgets. No grouping, No headings. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. "
+msgstr "Le nouveau paramètre par défaut pour les widgets calendrier. Pas de regroupement, pas de titres. Si vous le configurez, je suggère de changer cette description comme aide mémoire de comment/pourquoi il est configuré de la façon dont il l'est."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:583
+msgid "Large-Calendar"
+msgstr "Grand-Calendrier"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:584
+msgid "The new default setting for a large monthly calendar. No grouping, No headings. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is."
+msgstr "Le nouveau paramètre par défaut pour un grand calendrier par mois. Pas de regroupement, pas de rubriques. Si vous le configurez, je suggère de changer cette description comme aide mémoire de comment/pourquoi il est configuré de la façon dont il est."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:610
+msgid "Testing"
+msgstr "Test"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:611
+msgid "A test option with lots of fields switched on. It has 2 levels of grouping - this is fine so long as the html in use can be nested. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. "
+msgstr "Une option de test avec plein de champs allumé. Il dispose de 2 niveaux de regroupement - c'est très bien tant que le html en cours d'utilisation peuvent être imbriquées. Si vous le configurez, je suggère de changer cette description comme aide mémoire de comment/pourquoi il est configuré de la façon dont il est."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:874
+msgid "Events plugin by anmari"
+msgstr "Extension d'Événements par anmari"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:895
+msgid "No events found within criteria"
+msgstr "Aucun événement trouvé avec ces critères"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:910
+msgid "Resetting options..."
+msgstr "Réinitialisation options..."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:913
+msgid "Options Deleted..."
+msgstr "Options éffacées..."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:914
+msgid "Option was not saved before or error deleting option..."
+msgstr "L'option n'a pas été enregistrée avant ou erreur de suppression d'option..."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-config.php:924
+msgid " Converting option key to lowercase"
+msgstr "Touche option conversion en minuscules"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:9
+msgid "Minimum Php version "
+msgstr "Version Php Minimale"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:13
+msgid "The <a href=\"http://au.php.net/manual/en/class.datetime.php\"> DateTime Class </a> must be enabled on your system for this plugin to work. They may need to be enabled at compile time.  The class should exist by default in PHP version 5.2."
+msgstr "Le <a href=\"http://au.php.net/manual/en/class.datetime.php\"> DateTime classe </ a> doit être activé sur votre système pour que ce plugin fonctionne. Ils peuvent avoir besoin d'être activé à la compilation. La classe qui existe par défaut dans la version PHP 5.2."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:35
+#, php-format
+msgctxt " the 11, 12 or 13th "
+msgid "%s th"
+msgstr "%s ème"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:42
+#, php-format
+msgctxt " the twenty first etc "
+msgid "%s st"
+msgstr "%s er"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:45
+#, php-format
+msgctxt " the second "
+msgid "%s nd"
+msgstr "%s ème"
+
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:48
+#, php-format
+msgctxt " the third "
+msgid "%s rd"
+msgstr "%s ème"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:51
+#, php-format
+msgctxt " the nth "
+msgid "%s th"
+msgstr "%s ème"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:59
+msgid "the first"
+msgstr "le premier"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:61
+msgid "every"
+msgstr "tous les"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:63
+msgid "the last"
+msgstr "le dernier"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:65
+#, php-format
+msgid "the %s last"
+msgstr "le %s dernier"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:67
+#, php-format
+msgid "the %s"
+msgstr "le %s"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:170
+#, php-format
+msgid "Weeks start on %s"
+msgstr "Semaines démarrent le %s"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:200
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:208
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:224
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:300
+msgid " and "
+msgstr "et"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:210
+msgid "every "
+msgstr "tous les"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:239
+msgid " or "
+msgstr "ou"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:252
+#, php-format
+msgid "%s "
+msgid_plural "%s "
+msgstr[0] "%s "
+msgstr[1] "%s"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:271
+#, php-format
+msgid "Every %s %s"
+msgstr "Tous les %s %s"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:279
+#, php-format
+msgid "On %s instance within %s"
+msgstr "Le %s par exemple au sein de %s"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:282
+#, php-format
+msgid "%s times"
+msgstr "%s fois"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:287
+#, php-format
+msgid "until %s %s"
+msgstr "jusqu'à ce que %s %s"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:289
+#, php-format
+msgid " if month is %s"
+msgstr "si le mois est %s"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:291
+#, php-format
+msgid " in %s weeks of the year"
+msgstr "en %s semaines de l'année"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:293
+#, php-format
+msgid "on %s day of the year"
+msgstr "en %s jours de l'année"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:294
+#, php-format
+msgid "on %s day of each month"
+msgstr "en %s jours de chaque mois"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:295
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:296
+#, php-format
+msgid "on %s "
+msgstr "en %s"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:299
+#, php-format
+msgctxt " eg: last day of the year/month "
+msgid " of the %s"
+msgstr "du %s"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:304
+#, php-format
+msgid "at the %s hour"
+msgstr "à la %s heure"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:305
+#, php-format
+msgid "at the %s minute"
+msgstr "à la %s minute"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:306
+#, php-format
+msgid "at the %s second"
+msgstr "à l'%s secondes"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:424
+msgid "Add to google calendar"
+msgstr "Ajouter à l'agenda  google"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:426
+msgid "Add to google"
+msgstr "Ajouter à l'agenda  google"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:440
+msgid "Add event to google"
+msgstr "Ajouter un événement à google"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:479
+#, php-format
+msgid "Error creating custom css directory %s. Please check permissions"
+msgstr "Erreur de création du répertoire personnalisée css %s. S'il vous plaît vérifier les autorisations"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:497
+msgid "Could not copy file."
+msgstr "Impossible de copier le fichier."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:565
+msgid "Last Refresh time unexpectedly not available"
+msgstr "Dernière actualisation du temps indisponible de façon inattendue"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:569
+msgid "Refresh calendars"
+msgstr "Actualiser calendriers"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:570
+#, php-format
+msgid "Last refresh was at %s. "
+msgstr "Dernier raffraichissement à %s."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:572
+msgid "Remote file had no modifications. "
+msgstr "Le fichier distant n'a pas eu de modifications."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:576
+#, php-format
+msgid "The remote file was last modified on %s."
+msgstr "Le fichier distant a été modifiée le %s"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:581
+msgid "Click to refresh"
+msgstr "Cliquez pour rafraîchir"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:749
+#, php-format
+msgid "%u year"
+msgid_plural "%u years"
+msgstr[0] "%u année"
+msgstr[1] "%u années"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:754
+#, php-format
+msgid "%u month "
+msgid_plural "%u months "
+msgstr[0] "%u mois"
+msgstr[1] "%u mois"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:759
+#, php-format
+msgid "%u week "
+msgid_plural "%u weeks"
+msgstr[0] "%u semaine"
+msgstr[1] "%u semaines"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:764
+#, php-format
+msgid "%u day"
+msgid_plural "%u days"
+msgstr[0] "%u jour "
+msgstr[1] "%u jours "
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:770
+#, php-format
+msgid "%u hour"
+msgid_plural "%u hours"
+msgstr[0] "%u heure "
+msgstr[1] "%u heures "
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:775
+#, php-format
+msgid "%u minute"
+msgid_plural "%u minutes"
+msgstr[0] "%u minute"
+msgstr[1] "%u minutes"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:780
+#, php-format
+msgid "%u second"
+msgid_plural "%u seconds"
+msgstr[0] "%u seconde"
+msgstr[1] "%u secondes"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:793
+msgid "Change Timezone"
+msgstr "Changer Fuseau Horaire"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:794
+#, php-format
+msgid "Timezone: %s, Click for %s"
+msgstr "Fuseau Horaire: %s, Cliquez pour %s"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:847
+msgid "Sent by "
+msgstr "Envoyé par"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:918
+msgid "all day"
+msgstr "Toute la journée"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:1303
+msgid "Total events: "
+msgstr "Total des événements:"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:1309
+msgid "No description available"
+msgstr "Aucune description disponible."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:1317
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:1327
+#, php-format
+msgid "Subscribe to %s Calendar"
+msgstr "Abonnez-vous au %s Calendrier"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:1334
+msgid "Subscribe to calendar in your calendar application."
+msgstr "Abonnez-vous à l'agenda dans votre application de calendrier."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:1336
+msgid "Subscribe to calendar"
+msgstr "Abonnez-vous à l'agenda"
+
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:1994
+msgid "Event attachment"
+msgstr "L'attachement de l'événement"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2014
+#, php-format
+msgid "Week  %u"
+msgstr "Semaine %u"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2501
+#, php-format
+msgid "Unable to load or cache ical calendar %s"
+msgstr "Impossible de charger ou de mettre en cache le calendrier iCal %s"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2506
+#, php-format
+msgid "Error finding or parsing ical calendar %s"
+msgstr "Erreur d'analyse ou de pour trouver le calendrier iCal %s"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2533
+msgid "This feature requires the plugin amr-events"
+msgstr "Cette fonctionnalité nécessite l'extension amr-events"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2534
+msgid "Get it here"
+msgstr "Obtenez-le ici"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2659
+msgid "No url entered - did you want events from posts ?"
+msgstr "Aucune url entrée - voulez-vous les événements de articles?"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2687
+msgid "No ical components requested for display"
+msgstr "Aucun composant ical demandé pour l'affichage"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2771
+msgid "Daily"
+msgstr "Quotidien"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2772
+msgid "Weekly"
+msgstr "Hebdomadaire"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2773
+msgid "Monthly"
+msgstr "Mensuel"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2774
+msgid "Yearly"
+msgstr "Annuel"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2775
+msgid "Hourly"
+msgstr "Horaire"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2776
+msgid "on certain dates"
+msgstr "à certaines dates"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2777
+msgid "day"
+msgstr "jour"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2778
+msgid "week"
+msgstr "semaine"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2779
+msgid "month"
+msgstr "mois"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2780
+msgid "year"
+msgstr "année"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2781
+msgid "hour"
+msgstr "heure"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2837
+#, php-format
+msgid "Invalid Ical URL %s"
+msgstr "Ical URL invalide %s"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2982
+msgid "Invalid Start Date"
+msgstr "Date de début invalide"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:3185
+msgid "iCal Events List"
+msgstr "iCal Liste d'Événements"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:3193
+msgid "Listing Events"
+msgstr "Liste des Événements"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:3210
+msgid "iCal Events Lists"
+msgstr "iCal Events Lists"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:3211
+msgid "List types"
+msgstr "Listes des types"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:3250
+msgid "Uncaught exception: "
+msgstr "Exception non saisie:"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:3251
+msgid "<br /><br />An error in the input data may prevent correct display of this page.  Please advise the administrator as soon as possible."
+msgstr "<br /> <br /> Une érreur dans les données d'entrée peut empêcher l'affichage correct de cette page. S'il vous plaît informer l'administrateur le plus tôt possible."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:3261
+msgid "General listing Settings"
+msgstr "Les préférences générales des listes"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:3264
+msgid "List Type Settings"
+msgstr "Paramètres de type de liste"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:3265
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:451
+msgid "Documentation"
+msgstr "Documentation"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:63
+msgid "Invalid Number of Lists"
+msgstr "Nombre de listes invalide"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:198
+msgid "Error in form - calprop array not found"
+msgstr "Érreur dans le formulaire - tableau calprop non trouvé"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:249
+msgid "General:"
+msgstr "Général:"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:257
+msgid "Name"
+msgstr "Nom"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:260
+msgid "Internal Description"
+msgstr "Description interne"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:263
+msgid "List HTML Style"
+msgstr "Style de la liste HTML"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:265
+msgid "Table"
+msgstr "Tableau"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:266
+msgid "Lists for rows"
+msgstr "Listes des lignes"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:267
+msgid "HTML5 in table"
+msgstr "HTML5 dans les tableaux"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:268
+msgid "HTML5 clean and lean"
+msgstr "HTML5 propre et efficace"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:269
+msgid "Custom - file required"
+msgstr "Personnalisé - fichier requis"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:270
+msgid "Breaks for rows!"
+msgstr "Espaces pour les lignes"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:271
+msgid "Small box calendar"
+msgstr "Calendrier petite boite "
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:272
+msgid "Large box calendar"
+msgstr "Calendrier grande boite "
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:273
+msgid "Table with lists in cells (original)"
+msgstr "Tableau avec des listes dans des cellules (d'origine)"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:279
+#, php-format
+msgid "Custom HTML style file at %s..."
+msgstr "Fichier personnalisé de style HTML à %s..."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:280
+msgid " (Html and some php knowledge required)"
+msgstr "(Html et quelques connaissances en PHP requises)"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:291
+msgid "Default Event URL"
+msgstr "URL de l'événement par défaut"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:293
+msgid " (For ics files in widget. External, or calendar page.)"
+msgstr "(Pour les fichiers ICS dans le widget. Externe ou une page de calendrier)."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:295
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:394
+msgid "More information"
+msgstr "Plus d'informations"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:310
+msgid "Define maximums:"
+msgstr "Définir maximales:"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:312
+msgid "Note cache times are in hours"
+msgstr "Note cache times sont en heures"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:329
+msgid "Select components to show:"
+msgstr "Sélectionnez les composants à montrer:"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:330
+msgid "Wikipedia entry describing components"
+msgstr "entrée Wikipedia décrivant les composants"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:351
+msgid "Define grouping:"
+msgstr "Définir groupement:"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:367
+msgid "Calendar properties"
+msgstr "Propriétés du Calendrier"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:389
+msgid "Specify fields to show:"
+msgstr "Spécifiez les champs à voir:"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:393
+msgid "Note: a 0 (zero) in column = do not show that field."
+msgstr "Note: un 0 (zéro) dans la colonne = ne pas montrer ce champ."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:394
+msgid "Link to more information"
+msgstr "Lien vers plus d'informations"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:396
+msgid "Uppercase fields are those defined in the iCal specification."
+msgstr "Champs en majuscules sont ceux définis dans le cahier des charges iCal."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:398
+msgid "Lowercase fields are additional fields added by this plugin and derived from the iCal fields for your convenience."
+msgstr "Les champs minuscules sont des champs supplémentaires ajoutées par ce plugin et provenant des champs iCal pour votre commodité."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:399
+msgid "Fields show if \"column\" > 0 and if there is data available in your event or ics file."
+msgstr "Afficher les champs si \"colonne\"> 0 et s'il n'y a pas des donnée disponible dans votre événement ou dans le fichier ics."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:427
+msgid "Column Headings:"
+msgstr "Têtes de colonne:"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:453
+msgid "Support"
+msgstr "Aide"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:455
+msgid "Videos"
+msgstr "Vidéos"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:457
+msgid "Rate it at WP"
+msgstr "Notez-le sur WP"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:459
+msgid "Plugin feed"
+msgstr "Fil du Plugin"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:461
+msgid "Forum feed"
+msgstr "Flux du forum"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:483
+msgid "Unable to create Custom css file for you to edit if you wish - not essential."
+msgstr "Impossible de créer le fichier css personnalisé que vous pouvez modifier si vous le souhaitez - Non indispensable."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:487
+#, php-format
+msgid "Copied %s1 to %s2 to allow custom css"
+msgstr "Copier %s1 à %s2 pour permettre du css personnalisé"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:499
+#, php-format
+msgid "Your timezone db version is: %s"
+msgstr "Votre version de db de fuseau horaire est la suivante: %s"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:501
+msgid "Plugin cannot determine timezonedb version in php &lt; 5.3."
+msgstr "Le plugin ne peut pas déterminer la version timezonedb en php &lt; 5.3."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:504
+msgid "The timezone database defines the daylight saving changes amongst other things.  If correct daylight saving switchover is important to you, please check for the latest updates. "
+msgstr "La base de données du fuseau horaire définit l'heure d'été, entre autre chose. Si le passage en heure d'été est important pour vous, s'il vous plaît consulter les dernières mises à jour."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:504
+msgid "You may need to talk to your webhost."
+msgstr "Vous pouvez avoir besoin de parler à votre hébergeur."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:505
+msgid "Php timezonedb versions"
+msgstr "Php timezonedb versions"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:506
+msgid "Info on what changes are in which timezonedb version"
+msgstr "Info sur les changements en fonction de la version de la timezonedb"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:510
+msgid "No global timezone - is there a problem here? "
+msgstr "Aucun fuseau horaire globale - y a t-il un problème ?"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:516
+msgid "You are using the \"old\" gmt_offset setting "
+msgstr "Vous utilisez l'\"ancien \" paramêtre gmt_offset"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:517
+msgid "Consider changing to the more accurate timezone setting"
+msgstr "Pensez à changer plus précisement le reglage du fuseau horaire"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:518
+msgid "Go to settings"
+msgstr "Accédez aux paramètres"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:522
+msgid "The plugin thinks your timezone is: "
+msgstr "Le plugin pense que votre fuseau horaire est le suivant:"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:525
+msgid "The current UTC offset for that timezone is: "
+msgstr "L'actuel décalage horaire pour ce fuseau horaire est le suivant:"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:535
+#, php-format
+msgid "Switches to %s on %s. GMT offset: %d"
+msgstr "Passe de %s à %s. Décalage GMT: %d"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:541
+msgid "Current time (unlocalised): "
+msgstr "Heure actuelle (non localisée):"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:565
+msgid "General Options"
+msgstr "Options Générales"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:567
+msgid "Number of Ical Lists:"
+msgstr "Nombre de listes d'Ical"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:571
+msgid "Message if no events found: "
+msgstr "Message si aucun événement trouvé:"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:580
+msgid "Do not give credit to the author"
+msgstr "Ne pas créditer l'auteur"
+
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:584
+msgid "Stying and Images"
+msgstr "Style et Images"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:590
+msgid "Use my theme css, not plugin css"
+msgstr "Utiliser mon thème css, pas le css du plugin"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:597
+msgid " No images (tick for text only)"
+msgstr "Aucune image (cocher pour le texte uniquement)"
+
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:603
+msgid "Image icon size:"
+msgstr "Taille de l'icône:"
+
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:606
+msgid "16"
+msgstr "16"
+
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:609
+msgid "32"
+msgstr "32"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:612
+msgid "The css provided works with the default twenty-ten theme and similar themes.  Your theme may be different."
+msgstr "Le css fourni fonctionne avec le thème par défaut twenty-ten et des thèmes similaires. Votre thème peut être différent."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:614
+msgid "To edit the file, download the custom one added to your uploads folder: uploads/css."
+msgstr "Pour modifier le fichier, téléchargez celui personnalisé ajouté à votre dossier de téléchargements: uploads/css."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:615
+msgid "Edit it and then re-upload to that same folder. Then select it in the box below."
+msgstr "Éditez-le et re-télécharger dans le même dossier. Ensuite, sélectionnez-le dans la case ci-dessous."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:617
+msgid "This file will not be overwritten when the plugin is upgraded or when your theme is upgraded. "
+msgstr "Ce fichier ne sera pas écrasé lorsque l'extension est mise à jour ou si votre thème est mis à jour."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:618
+msgid "More info"
+msgstr "Plus d'info"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:619
+msgid "Download the latest provided css file for editing"
+msgstr "Téléchargez le dernier fichier css prévu pour l'éditer"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:619
+msgid "(optional)"
+msgstr "(optionnel)"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:620
+msgid "Choose plugin default css or choose a custom css and edit it."
+msgstr "Choisissez le css du plugin par défaut ou choisissez un css personnalisé et modifier le."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:622
+msgid "No css files found in css directory "
+msgstr "Aucun fichiers css trouvé dans le répertoire css"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:631
+msgid "Advanced:"
+msgstr "Avancé:"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:633
+#, php-format
+msgid "Your php version is: %s"
+msgstr "Votre version php est: %s"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:635
+msgid "Minimum Php version 5.3 required for events cacheing. "
+msgstr "version Php 5.3 minimale requise pour la mise en cache des événements."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:640
+msgid "Choose date localisation method:"
+msgstr "Choisissez la méthode de localisation de la date:"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:643
+msgid "none"
+msgstr "aucun"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:645
+msgid "amr"
+msgstr "amr"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:647
+msgid "wp"
+msgstr "wp"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:649
+msgid "wpgmt"
+msgstr "wpgmt"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:668
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:703
+msgid "Saving...."
+msgstr "Sauvegarde..."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:672
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:705
+msgid "List saved"
+msgstr "Liste sauvegardée"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:679
+msgid "iCal Events List "
+msgstr "Liste d'Événements iCal"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:706
+msgid "No change to options or unexpected error in saving"
+msgstr "Aucun changement aux options ou erreur inattendue lors de la sauvegarde"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:713
+msgid "Configure event list type: "
+msgstr "Configurer la liste d'événement type:"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:720
+msgid "Go to list type:"
+msgstr "Aller au type de liste:"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:744
+msgid " Define date and time formats:"
+msgstr "Définir les formats de date et heure:"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:746
+msgid "Define the formats for the day (eg: Event date, End Date) and time (eg: Start time, End Time) fields. You can actually use any of these to display a full Date time string too. Use the Event date for event instances - the DTSTART field is the first startdate of a recurring event sequence."
+msgstr "Définir les formats pour la journée (par exemple: Date de l&#39;événement, à la clôture) et le temps (par exemple: Heure de début, Heure de fin) des champs. Vous pouvez aussi utiliser tous ces formats pour afficher une chaîne de temps plein. Utilisez la date de l'événement pour les instances de l'événement - le champs DTSTART est la date de début pour une séquence d'événements récurrents."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:747
+msgid "These are also used for the date related grouping headings (ie: will show the date in that format as a heading for that group of dates if relevant.)"
+msgstr "Ils sont également utilisés pour les titres des groupement des dates rubriques connexes (à savoir: affiche la date dans ce format comme un titre pour ce groupe de dates si nécessaire.)"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:748
+msgid "Use the standard PHP format strings: "
+msgstr "Utilisez les chaînes standard de format de PHP:"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:749
+msgid "Php manual - date datetime formats"
+msgstr "Manuel PHP - formats de date et heure -"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:752
+msgid "See php date function format strings"
+msgstr "Voir les formats des chaînes php de la fonction des dates"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:753
+msgid " (will localise) "
+msgstr "(Se localiser)"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:784
+msgid "Save the settings"
+msgstr "Enregistrer les paramètres"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:785
+msgid "Update"
+msgstr "Mettre à jour"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:787
+msgid "Uninstall the plugin and delete the options from the database."
+msgstr "Désinstaller le plugin et supprimer les options de la base de données."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:788
+msgid "Uninstall"
+msgstr "Désinstaller"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:790
+msgid "Warning: This will reset ALL the listing options immediately."
+msgstr "Attention: Ceci réinitialisera TOUTES les options immédiatement."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:791
+msgid "Reset all listing options"
+msgstr "Réinitialiser toutes les options."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:801
+msgid "Expand/Contract all"
+msgstr "Étendre/Tout contracter"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-uninstall.php:6
+msgid "AmR iCal Options deleted from Database"
+msgstr "Options Amr iCal supprimées de la base de données"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-uninstall.php:9
+msgid "AmR iCal Widget Options deleted from Database"
+msgstr "Options Amr iCal Widget supprimées de la base de données"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-uninstall.php:24
+msgid "Uninstall AmR iCal Events List Options"
+msgstr "Désinstaller les options AmR iCal Liste d'Événements"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-uninstall.php:25
+msgid "Note this function removes the options from the database.  To completely uninstall, one should continue on to use the standard wordpress functions to deactivate the plugin and delete the files.  It is not necessary to run this separately as the uninstall will also run as part of the wordpress delete plug-in files."
+msgstr "Notez que cette fonction supprime les options de la base de données. Pour désinstaller complètement, utiliser les fonctions classiques de WordPress pour désactiver le plugin et supprimer les fichiers. Il n'est pas nécessaire de le faire séparément le processus de desinstallation étant incorporer à celui de wordpress."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-uninstall.php:26
+msgid "The function is provided here as an aid to someone who has perhaps got their wordpress install in a knot and wishes to temporarily remove the options from the database as part of their debugging or cleanup.  Consider also the use of the RESET."
+msgstr "La fonction est fournie ici comme une aide à quelqu'un qui a peut-être obtenu son installation de wordpress dans un nœud et souhaite supprimer temporairement les options de la base de données dans le cadre de leur mise au point ou de nettoyage. Considérez aussi l'utilisation de la touche RESET."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-uninstall.php:34
+msgid "Note: Navigating to \"Manage AmR ICal Settings\" will RELOAD default options - negating the uninstall."
+msgstr "Note: Naviguer vers \"Gérer Amr ICal Parametres\" RECHARGERA les options par défaut - Annulant la désinstallation."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-uninstall.php:36
+msgid "Continue to Plugin list to delete files as well"
+msgstr "Retourner vers la liste des extensions pour supprimer les fichiers"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-uninstall.php:45
+msgid "Cancel"
+msgstr "Annuler"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-ical-uninstall.php:46
+msgid "Really Uninstall Options?"
+msgstr "Vraiment désinstaller les options ?"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-import-ical.php:84
+#, php-format
+msgid "Your cache directory %s has been created"
+msgstr "Votre cache du répertoire %s  a été créé"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-import-ical.php:87
+#, php-format
+msgid "Error creating cache directory %s. Please check permissions"
+msgstr "Erreur de création du répertoire cache %s. S'il vous plaît vérifier les autorisations"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-import-ical.php:191
+msgid "Invalid URL"
+msgstr "URL invalide"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-import-ical.php:222
+msgid "Unexpected data contents. Please tell administrator."
+msgstr "Contenu des données inattendue. Contacter votre administrateur."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-import-ical.php:223
+msgid "See comments in source for response received from ics server."
+msgstr "Voir les commentaires dans la source pour la réponse reçue du serveur ics."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-import-ical.php:227
+#, php-format
+msgid "Error getting calendar file with htpp or curl, or custom fn: %s"
+msgstr "Erreur d'obtention du fichier de calendrier par http ou curl, ou fn personnalisé: %s"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-import-ical.php:230
+#, php-format
+msgid "Using File last cached at %s"
+msgstr "Utiliser le dernier fichier mis en cache à %s"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-import-ical.php:232
+msgid "Warning: Events may be out of date. "
+msgstr "Avertissement: Les événements peuvent être passés."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-import-ical.php:239
+msgid "No cached ical file for events"
+msgstr "Aucun fichier mis en cache pour les événements iCal"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-rrule.php:533
+msgid "Unexpected error creating date with string: "
+msgstr "Une erreur inattendue de création date:"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:11
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:93
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:163
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:219
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:247
+msgid "Upcoming Events"
+msgstr "Événements à venir"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:11
+msgid "events"
+msgstr "événements"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:13
+msgid "Upcoming Events List"
+msgstr "Liste des Événements à venir"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:114
+msgid "See plugin website for more details"
+msgstr "Voir le site du plugin pour plus de détails"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:117
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:258
+msgid "Title"
+msgstr "Titre"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:123
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:264
+msgid "Calendar page url"
+msgstr "URL de la page Calendrier"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:124
+msgid "Calendar page url in this website, for event title links"
+msgstr "URL de la page du calendrier dans ce site, pour les liens du titre de l'événement"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:130
+msgid "Hover description on Title"
+msgstr "Description \"par dessus\" sur le titre"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:131
+msgid "Do an event summary hyperlink with event description as title text "
+msgstr "Faites un lien hypertexte résumé de l'événement avec description de l'événement comme texte de titre"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:138
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:271
+msgid "External events only"
+msgstr "Événements exterieurs uniquement"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:139
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:272
+msgid "Show events from external ics only, do NOT pickup any internal events."
+msgstr "Montrer uniquement les événements de l'ics externe, ne collecte AUCUN événement interne."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:140
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:273
+msgid "Else include events created internally too"
+msgstr "Sinon inclure les événements créés à l'interne aussi"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:146
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:279
+msgid "External ics urls and advanced options"
+msgstr "Urls ics externes et options avancées"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:147
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:280
+msgid "External ics urls and/or optional shortcode parameters separated by spaces.)"
+msgstr "Urls ics externes et/ou paramètres des raccourcis optionnels séparés par des espaces.)"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:148
+msgid " Examples: listtype=4 events=10 days=60 start=yyyymmdd startoffset=-2... )"
+msgstr "Exemples: listtype=4 events=10 days=60 start=yyyymmdd startoffset=-2... )"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:150
+msgid "See more parameters"
+msgstr "Voir plus de paramètres"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:164
+msgid "icalendar"
+msgstr "icalendar"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:166
+msgid "Upcoming Events Calendar"
+msgstr "Calendrier d'Événements à venir "
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:256
+msgid "See more"
+msgstr "Voir plus"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:265
+msgid "Calendar page url in this website, for links from widget"
+msgstr "URL de la page du calendrier dans ce site, pour les liens du widget"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:281
+msgid " Examples: listtype=8 events=10 days=60 start=yymmdd startoffset=-2... )"
+msgstr " Examples: listtype=8 events=10 days=60 start=yymmdd startoffset=-2... )"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/functions.php:90
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/functions.php:94
+msgid "Invalid Url"
+msgstr "URL invalide"
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/functions.php:136
+msgid "I try to make these plugins work <strong>\"out of the box\"</strong> with minimal effort; that they be easy to use but <strong>very configurable</strong>; <strong>well tested</strong>; with <strong>valid html and css</strong> both at the front and admin area."
+msgstr "J'essaie de faire fonctionner ce plugin <strong>\"hors de la boîte \"</strong> avec un minimum d'effort, qu'il soit facile à utiliser mais aussi<strong> très configurable </ strong>; <strong> bien testé </ strong>, avec <strong>du code html et css validés</strong> à la fois à l'avant et dans la zone d'administration."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/functions.php:137
+msgid "If you have a feature request, please do let me know. "
+msgstr "Si vous avez une demande de fonctionnalité, s'il vous plaît faites le moi savoir."
+
+# @ amr-ical-events-list
+#: D:\Mes
+#: documents\wamp\www\instinctweb\wp-content\plugins\amr-ical-events-list/includes/functions.php:138
+msgid "To edit events in wordpress:"
+msgstr "Pour modifier un événement dans WordPress:"
+
+# @ amr-ical-events-list
+#~ msgid "th"
+#~ msgstr "ème"
+# @ amr-ical-events-list
+#~ msgid "st"
+#~ msgstr "er"
+# @ amr-ical-events-list
+#~ msgid "nd"
+#~ msgstr "ème"
+# @ amr-ical-events-list
+#~ msgid "rd"
+#~ msgstr "ème"
+# @ amr-ical-events-list
+#, fuzzy
+#~ msgid "amr events calendar or lists with ical files"
+#~ msgstr ""
+#~ "Evénements avec des fichiers iCal, par liste ou d&#39;un calendrier (aka "
+#~ "amr-ical-événements-list)"
+
+# @ amr-ical-events-list
+#~ msgid "http://icalevents.anmari.com"
+#~ msgstr "http://icalevents.anmari.com"
+# @ amr-ical-events-list
+#~ msgid "anmari"
+#~ msgstr "anmari"
+# @ amr-ical-events-list
+#~ msgid "http://anmari.com/"
+#~ msgstr "http://anmari.com/"
+# @ amr-ical-events-list
+#~ msgid "3.9.6"
+#~ msgstr "3.9.6"
+# @ amr-ical-events-list
+#~ msgid "X-WR-CALDESC"
+#~ msgstr "X-WR-CALDESC"
+# @ amr-ical-events-list
+#~ msgid "X-WR-CALNAME"
+#~ msgstr "X-WR-CALNAME"
+# @ amr-ical-events-list
+#, fuzzy
+#~ msgid "heading"
+#~ msgstr "Titre 1"
