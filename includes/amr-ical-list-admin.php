@@ -1,8 +1,675 @@
 <?php
 /* This is the amr ical wordpress admin section file */
-	/**
-	 * Create a Dropdown input field
-	 */
+
+	$amricaladmin = new amrical_plugin_admin();
+/* ---------------------------------------------------------------------*/
+function amr_ical_support_links () {
+
+	echo '<div class="postbox" style="padding:1em 2em; width: 600px;">
+	<p>
+	<a href="http://icalevents.com/amr-events/amr-ical-events-list/" title="documentation for amr-ical-events-list and amr-events">';
+	_e('Documentation', 'amr-ical-events-list');
+	echo '</a>&nbsp;&nbsp;
+	<a href="http://icalevents.com/support/" title="Support Forum">';
+	_e('Support', 'amr-ical-events-list');
+	echo '</a>&nbsp;&nbsp;
+	<a href="http://icalevents.com/videos" title="Events plugin videos">';
+	_e('Videos', 'amr-ical-events-list');
+	echo '</a>&nbsp;&nbsp;
+	<a href="http://wordpress.org/tags/amr-ical-events-list" title="If you like it rate it...">';
+	_e('Rate it at WP', 'amr-ical-events-list');
+	echo '</a>&nbsp;&nbsp;<a href="http://icalevents.com/feed/">';
+	_e('Plugin feed', 'amr-ical-events-list');
+	echo '</a><img src="';
+	echo includes_url(); 
+	echo 'images/rss.png" alt="Rss icon" style="vertical-align:middle;" />&nbsp;&nbsp;
+	<a href="http://forum.anmari.com/rss.php?id=1">';
+	_e('Forum feed', 'amr-ical-events-list');
+	echo '</a><img src="';
+	echo includes_url(); 
+	echo 'images/rss.png" alt="Rss icon" style="vertical-align:middle;" /></p>';
+	echo '</div>';
+
+	}
+/* ---------------------------------------------------------------------*/	
+function amr_get_files ($dir, $string) {
+	$dh  = opendir($dir);
+	while (false !== ($filename = readdir($dh))) {
+		if (stristr ($filename, $string))
+		$files[] = $filename;
+		}
+	if (isset ($files)) return ($files);
+	else return (false);
+	}
+/* ---------------------------------------------------------------------*/
+function amr_check_timezonesettings () {
+
+	global $amr_globaltz;
+	echo '<ul>';
+	
+	if (function_exists('timezone_version_get'))
+		printf('<li>'.__('Your timezone db version is: %s','amr-ical-events-list').'</li>',  timezone_version_get());
+	else echo '<li>'.'<a href="http://en.wikipedia.org/wiki/Tz_database">'
+		.__('Plugin cannot determine timezonedb version in php &lt; 5.3.' ,'amr-ical-events-list')
+		.'</a>';
+	echo '</li></li><li><a href="http://pecl.php.net/package/timezonedb">';
+	_e('Php timezonedb versions', 'amr-ical-events-list');
+	echo '</a> &nbsp; <a href="http://pecl.php.net/package/timezonedb">';
+	_e('Info on what changes are in which timezonedb version', 'amr-ical-events-list');
+	echo '</a></li>';
+	if (!(isset($amr_globaltz))) {
+			echo '<b>'.__('No global timezone - is there a problem here? ','amr-ical-events-list').'</b>'; 			return;
+		}
+		$tz = get_option('timezone_string');
+		$settingslink = '<a href="'.get_option('siteurl').'/wp-admin/options-general.php">'.__('Go to settings','amr-ical-events-list').'</a>';
+		if ($tz == '') {
+			$gmtoffset = get_option('gmt_offset');
+			if (!empty($gmtoffset ) ) {
+				printf('<li style="color: red;"><b>'.__('You are using the "old" gmt_offset setting ','amr-ical-events-list').'</b></li><li>', $gmtoffset );
+				_e('Consider changing to the more accurate timezone setting','amr-ical-events-list');
+				echo '</li>';
+				}
+		}
+		$now = date_create('now', $amr_globaltz);
+		echo '<li>'.__('The plugin thinks your timezone is: ','amr-ical-events-list')
+		. timezone_name_get($amr_globaltz)
+		.'&nbsp;'.$settingslink
+		.'</li>'
+		.'<li>'.__('The current UTC offset for that timezone is: ','amr-ical-events-list').$now->getoffset()/(60*60).'</li>';
+
+		if (function_exists('timezone_transitions_get') ) foreach (timezone_transitions_get($amr_globaltz) as $tr)
+			if ($tr['ts'] > time())
+			break;
+		$utctz= new DateTimeZone('UTC');
+		if (isset ($tr['ts']) ) {
+			try {$d = new DateTime( "@{$tr['ts']}",$utctz );}
+			catch(Exception $e) { break;}
+			date_timezone_set ($d,$amr_globaltz );
+			printf('<li>'.__('Switches to %s on %s. GMT offset: %d', 'amr-ical-events-list').'</li>',
+				 $tr['isdst'] ? "DST" : "standard time",
+				$d->format('d M Y @ H:i'), $tr['offset']/(60*60)
+			);
+		}
+		echo '<li>';
+		_e('Current time (unlocalised): ','amr-ical-events-list');
+		echo $now->format('r');
+		echo '</li></ul>';
+	}
+/* -------------------------------------------------------------------------------------------------------------*/
+function amr_ical_submit_buttons () {
+
+	echo '<fieldset id="submit" style="float: right; margin: 0 2em;">
+				<input type="hidden" name="action" value="save" />
+				<input type="submit" class="button-primary" title="';
+	_e('Save the settings','amr-ical-events-list') ;
+	echo '" value="';
+	_e('Update', 'amr-ical-events-list') ;
+	echo '" />';
+	if (isset($_GET['page'])	and ($_GET['page'] === 'manage_amr_ical')
+	and current_user_can('install_plugins')) {				
+					echo '<input type="submit" class="button" name="uninstall" title="';
+					_e('Uninstall the plugin and delete the options from the database.','amr-ical-events-list') ;
+					echo '" value="';
+					_e('Uninstall', 'amr-ical-events-list'); 
+					echo '" />';
+				}
+				
+				echo '<input type="submit" class="button" name="reset" title="';
+				_e('Warning: This will reset ALL the listing options immediately.','amr-ical-events-list') ;
+					
+				echo '" value="';
+				_e('Reset all listing options', 'amr-ical-events-list');
+				echo '" />
+				</fieldset>';
+				
+}
+/* ---------------------------------------------------------------------*/
+function amrical_listing_options_page()  {
+	global $amr_options;
+	
+	if (isset ($_POST['reset']))
+		$amr_options = amr_getset_options (true);
+	else
+		$amr_options = amr_getset_options(false);	/* options will be set to defaults here if not already existing */
+	
+	if (!isset($_REQUEST["list"]) ) {
+		amrical_admin_heading(__('Manage Event List Types', 'amr-ical-events-list') ) ;
+
+		if (!empty($_POST['delete']) ) /* Validate the input and save */
+			amrical_delete_listings();
+		elseif ((isset ($_POST['action']) and ($_POST['action'] == "save")) and !isset($_POST['reset'])) /* Validate the input and save */
+			amrical_validate_manage_listings();
+		
+		amr_ical_submit_buttons ();
+		amrical_manage_listings();
+		amrical_admin_footer();
+		return;
+		}
+	else {
+		$listtype = intval( $_REQUEST["list"]);
+
+		amrical_admin_heading(__('Configure event list type: ', 'amr-ical-events-list'). $listtype ) ;
+		amrical_admin_navigation();
+
+		$calendar_preview_url = get_option('amr-ical-calendar_preview_url' );
+		if ($calendar_preview_url) {
+			echo '<a target="wp-preview"  href="'
+			.htmlspecialchars(add_query_arg(array('listtype'=>$listtype, 'preview'=>'true'),$calendar_preview_url)).'" '
+			.' title="'.__('Preview the list using a calendar page.','amr-ical-events-list').'" >'
+			.__('Preview','amr-ical-events-list').'</a>';
+		}
+
+
+		if ((isset ($_POST['action']) and ($_POST['action'] == "save")) and !isset($_POST['reset'])) {/* Validate the input and save */
+				echo '<div class="updated"><p>';
+				_e('Saving....','amr-ical-events-list');
+				$result = amr_ical_validate_list_options($listtype); /* messages are in the function */
+				if ($result) _e('Lists saved','amr-ical-events-list');
+					else _e('No change to options or unexpected error in saving','amr-ical-events-list');
+				echo '</p></div>';
+
+		}
+		amr_ical_submit_buttons ();
+		amr_configure_list($listtype);
+		amrical_admin_footer();
+	}
+}	//end amrical_option_page
+/* ---------------------------------------------------------------------*/
+function amrical_delete_listings () {
+global $amr_options;
+
+	$nonce = $_REQUEST['_wpnonce'];
+	if (! wp_verify_nonce($nonce, 'amr-ical-events-list')) die ("Cancelled due to failed security check");
+
+	echo '<h3>'.__('Check for lists to delete','amr-ical-events-list').'</h3>';
+// ------------------- deleted lists
+	if (!empty($_POST['deletelist']))  {
+		foreach ($_POST['deletelist'] as $i=>$del) {
+			$d = (int) $del;
+			unset ($amr_options['listtypes'][$d]);
+			echo '<div class="updated"><p>'
+			.sprintf(__('List %s will be deleted','amr-ical-events-list'),$d)
+			.'</p></div>';
+		}
+	}
+	update_option('amr-ical-events-list', $amr_options);
+
+}
+/* ---------------------------------------------------------------------*/
+function amrical_col_headings($i) {
+	/* for component properties only */
+	global $amr_options;
+	global $amr_csize;
+		$listtype = $amr_options['listtypes'][$i];
+		echo '<fieldset class="section">
+		<h4 class="trigger"><a href="#" >';
+		_e('Column Headings:','amr-ical-events-list');
+		echo '</a></h4>
+		<div class="toggle_container">';
+		$j = 0;
+		while ($j < 8) {
+			$j = $j + 1;
+			if (isset ( $listtype['heading'][$j] )) {
+				$h = $listtype['heading'][$j];
+			}
+			else $h = '';
+
+			echo '<label class="colhead" for="h'.$i.'-'.$j.'" >'
+				.'<input type="text" size="'.$amr_csize['ColHeading'].'"  class="colhead"  id="h'.$i.'-'.$j
+				.'"  name="ColH['.$i.']['.$j.']"  value= "'.htmlspecialchars($h).'"  />'
+				.$j.'</label>';
+		}
+		echo "\n\t".'</div></fieldset>';
+		return;
+}
+/* ---------------------------------------------------------------------*/
+function amrical_calpropsoption($i) {
+	global $amr_options;
+	global $amr_csize;
+		$listtype = $amr_options['listtypes'][$i];
+		echo '<fieldset id="calprop" class="props">
+		<h4 class="trigger"><a href="#">';
+		_e('Calendar properties' , 'amr-ical-events-list');
+		echo '</a></h4>
+		<div class="toggle_container">';
+
+		foreach ( $listtype['calprop'] as $c => $v )
+		{
+			echo "\n\t\t".'<fieldset class="layout"><legend>'.$c.'</legend>';
+			foreach ( $v as $si => $sv )  /* for each specification */
+			{	echo '<label class="'.$si.'" for="CalP'.$si.$i.$c.'" >'.$si.'</label>'
+					.'<input type="text" size="'.$amr_csize[$si].'"  class="'.$si.'"  id="CalP'.$si.$i.$c
+					.'"  name="'.'CalP['.$i.']['.$c.']['.$si.']"  value= "'.htmlspecialchars($sv).'"  />';
+			}
+			echo "\n\t\t".'</fieldset>';
+		}
+		echo "\n\t".'</div></fieldset>';
+		return;
+	}
+/* ---------------------------------------------------------------------*/
+function amrical_compropsoption($i) {
+	global $amr_options;
+	global $amr_csize;
+
+		$listtype = $amr_options['listtypes'][$i];
+
+		echo '<fieldset id="comprop" class="props" >
+		<h4 class="trigger"><a href="#">';
+		_e('Specify fields to show:' , 'amr-ical-events-list');
+		echo '</a></h4>
+		<div class="toggle_container"><p><em>';
+		_e('Note: a 0 (zero) in column = do not show that field.', 'amr-ical-events-list');
+	echo '</em></p><p><em>';
+	_e('Uppercase fields are those defined in the iCal specification.', 'amr-ical-events-list');
+	echo '</em>
+		<a title="RFC5545" href="http://tools.ietf.org/html/rfc5545">RFC 5545</a></p>
+		<p><em>';
+		_e('Lowercase fields are additional fields added by this plugin and derived from the iCal fields for your convenience.' , 'amr-ical-events-list');
+		_e('Fields show if "column" > 0 and if there is data available in your event or ics file.', 'amr-ical-events-list');
+		echo '</em></p>';
+
+		echo '<table  class="widefat layout">';
+		$thead = '<tr>'
+		.'<th>'.__('Field','amr-ical-events-list').'</th>'
+		.'<th>'.__('Column','amr-ical-events-list').'<br /><em>'
+		.__('(0 to hide)', 'amr-ical-events-list')
+		.'</em></th>'
+		.'<th>'.__('Order','amr-ical-events-list').'</th>'
+		.'<th>'.__('Before','amr-ical-events-list').'</th>'
+		.'<th>'.__('After','amr-ical-events-list').'</th>'
+		.'</tr>';
+		echo '<thead>'.$thead.'</thead>';
+		echo '<tfoot>'.$thead.'</tfoot>';
+		echo '<tbody>';
+		$desc = amr_set_helpful_descriptions();
+		foreach ( $listtype['compprop']  as $p => $pv )  {/* for each specification, eg: p= SUMMARY  */
+				$text = '<em class="desc">'.(!empty($desc[$p])? $desc[$p] : '').'</em>';
+				echo "\n\t\t".'<tr style="border-bottom: 0; "><td style="border-bottom: 0; "><b>'.$p.'</b></th>';
+
+
+				foreach ( $pv as $s => $sv )  {/* for each specification eg  $s = column*/
+
+					echo '<td style="border-bottom: 0; ">'
+						.'<input type="text" size="'.$amr_csize[$s].'"  class="'.$s.'"  id="'.$p.$s
+						.'"  name="'.'ComP['.$p.']['.$s.']"  value= "'
+// v 4.0.12	- want to be able to see &nbsp;					.(esc_attr(wp_kses_stripslashes($sv)))
+						.htmlspecialchars ($sv)
+						.'"  />'
+						.'</td>';
+				}
+				echo '</tr><tr ><td colspan="5" style="padding: 0 20px 20px; 0" >'.$text.'</td></tr>';
+				echo "\n\t\t".'</fieldset> <!-- end of layout -->';
+			}
+
+		echo "\n".'</tbody></table></div></fieldset>  <!-- end of compprop -->';
+		return;
+	}
+/* ---------------------------------------------------------------------*/
+function amrical_groupingsoption($i) {
+	global $amr_options;
+	$listtype = $amr_options['listtypes'][$i];
+	
+	$groupings = amr_define_possible_groupings ();
+	$taxonomies = amr_define_possible_taxonomies ();
+	
+	echo '<fieldset class="icalgroupings">
+		<h4 class="trigger"><a href="#" >';
+	 _e('Define grouping:', 'amr-ical-events-list');
+	 echo '</a></h4><div class="toggle_container">';
+	
+
+	echo '<table><tr><th>'.__('Possible Groupings').'</th><th align=center>'.__('Level').' 1</th><th align=center> '.__('Level').' 2</th></tr>';
+	$nolevel1 = false;
+	$nolevel2 = false;	
+	if (empty($listtype['grouping'])) { echo 'No groupings ?';
+		$nolevel1 = true;
+		$nolevel2 = true;
+		}
+	else { 
+		if (count($listtype['grouping'])  < 2)	$nolevel2 = true;
+		}
+
+
+	echo '<tr><td>'.__('No grouping').'</td>';
+	$sel = checked($nolevel1,true, false);
+	echo "<td align=center><input type='radio' name='level[1]' value='none' "
+			. $sel."/></td>";
+	$sel = checked($nolevel2,true, false);
+	echo "<td align=center><input type='radio' name='level[2]' value='none' "
+			. $sel."/></td>";
+	echo '</tr>';	
+	
+	echo '<tr><th>'.__('Taxonomies').'</th><td colspan="2"><em>'.__('(Requires amr-events)').'</em></td></tr>';
+	foreach ( $taxonomies as $i => $taxonomy ) {
+		$taxo = get_taxonomy($taxonomy);
+		$c = $taxo->label; 
+		if (!empty($listtype['grouping'][$taxonomy])) 
+			$v= $listtype['grouping'][$taxonomy];
+		else 
+			$v = false;
+	
+		echo '<tr><td>'.$c.'</td>';
+		$sel = checked($v,1, false);
+		echo "<td align=center><input type='radio' name='level[1]' value='".$taxonomy."' "
+			. $sel."/></td>";
+		$sel = checked($v,2, false);
+		echo "<td align=center><input type='radio' name='level[2]' value='".$taxonomy."' "
+			. $sel."/></td>";
+		echo '</tr>';
+		
+	}
+	echo '<tr><th>'.__('Date based').'</th><td colspan="2"><em>'.__('(See also date and time formats)').'</em></td></tr>';
+	foreach ( $groupings as $c => $tmp ) {
+		if (in_array($c,$taxonomies )) continue;  // don't repeat
+		if (!empty($listtype['grouping'][$c])) 
+			$v= $listtype['grouping'][$c];
+		else 
+			$v = false;
+		echo '<tr><td>'.$c.'</td>';
+		$sel = checked($v,1, false);
+		echo "<td align=center><input type='radio' name='level[1]' value='".$c."' "
+			. $sel."/></td>";
+		$sel = checked($v,2, false);
+		echo "<td align=center><input type='radio' name='level[2]' value='".$c."' "
+			. $sel."/></td>";
+		echo '</tr>';
+	}
+	echo "\n\t".'</table></div></fieldset> <!-- end of grouping -->';
+	return;
+	}
+/* ---------------------------------------------------------------------*/
+function amrical_componentsoption($i) {
+	global $amr_options;
+
+
+	$listtype = $amr_options['listtypes'][$i];
+	echo '<fieldset id="components" class="components" >
+	<h4 class="trigger"><a href="#" >';
+	_e('Select components to show:', 'amr-ical-events-list');
+	echo '</a>&nbsp;<a title="';
+	_e('Wikipedia entry describing components', 'amr-ical-events-list');
+	echo '"	href="http://en.wikipedia.org/wiki/ICalendar#Events_.28VEVENT.29">?</a></h4>
+	<div class="toggle_container">';
+
+	$desc = amr_set_helpful_descriptions ();
+	if (! isset($listtype['component'])) echo 'No default components set';
+		else {
+			foreach ( $listtype['component'] as $c => $v ) {
+				echo '<br /><label for="C'.$i.$c.'" > &nbsp;';
+				echo '<input type="checkbox" id="C'.$i.$c.'" name="component['.$i.']['.$c.']"';
+				echo ($v ? ' checked="checked" />' : '/>');
+				echo $c.'</label> <em>'.$desc[$c].'</em>';
+			}
+		}
+		echo "\n\t".'</div></fieldset>';
+	return ;
+	}
+/* ---------------------------------------------------------------------*/
+function amrical_limits($i) {
+	global $amr_options;
+	$listtype = $amr_options['listtypes'][$i];
+	echo	'<fieldset class="limits" ><h4 class="trigger"><a href="#" >'
+	. __('Define maximums:', 'amr-ical-events-list')
+	.'</a></h4>	<div class="toggle_container">
+		<p><em>'.
+		__('Note cache times are in hours','amr-ical-events-list')
+		.'</em></p>';
+		if (! isset($listtype['limit'])) echo 'No default limits set';
+		else {
+			foreach ( $listtype['limit'] as $c => $v )
+			{
+				echo '<label for="L'.$i.$c.'" >'.__($c,'amr-ical-events-list').'</label>';
+				echo '<input type="text" size="2" id="L'.$i.$c.'"  name="limit['.$i.']['.$c.']"';
+				echo ' value="'.$v.'" />';
+			}
+		}
+		echo "\n\t".'</div></fieldset>';
+	return ;
+	}
+/* ---------------------------------------------------------------------*/
+function amrical_admin_heading($title)  {
+	echo '<div class="wrap" id="amrical">
+		<div id="icon-options-general" class="icon32"><br />
+		</div>
+		<h2>'.$title.' '.AMR_ICAL_LIST_VERSION.'</h2>
+		<form method="post" action="'
+//		.esc_url($_SERVER['PHP_SELF'])
+		.'">';
+		wp_nonce_field('amr-ical-events-list'); /* outputs hidden field */
+		;
+}
+/* ---------------------------------------------------------------------*/
+function amrical_admin_footer()  {
+	echo '</form>
+		</div>';
+}
+/* ---------------------------------------------------------------------*/
+function amrical_admin_navigation()  {
+	global $amr_options;
+	echo '<div id="listnav"  style="clear:both;">';
+	if (!isset($_REQUEST["list"]) ) { $list = '';}
+	else $list = intval( $_REQUEST["list"]);
+	$url = remove_query_arg('list');
+	
+	_e('Configure another list type: ','amr-ical-events-list');
+
+	foreach ($amr_options['listtypes'] as $i => $listtype) {
+		if ($i > 1) echo '&nbsp;';
+		$text = ' <a title="'.$listtype['general']['name']
+		.'" href="'.$url.'&amp;list='.$i.'">'.$i
+//		.$listtype['general']['name']
+		.'</a>';
+		if ($list==$i) 	echo '<b>'.$text.'</b>';
+		else echo $text;
+	}
+
+	if (isset($_GET["list"]) ) {
+		echo '<a style=" padding-left: 20px;" href="'.$url.'" >'.__('Return to manage list types','amr-ical-events-list' ).'</a>';
+	}
+	echo '</div>';
+}
+/* ---------------------------------------------------------------------*/
+function amrical_validate_manage_listings()  {
+	global	$amr_options;
+
+	$nonce = $_REQUEST['_wpnonce'];
+	if (! wp_verify_nonce($nonce, 'amr-ical-events-list')) die ("Cancelled due to failed security check");
+
+	if (!empty($_POST['calendar_preview_url'])) 	{
+		if	(!filter_var($_POST['calendar_preview_url'],FILTER_VALIDATE_URL)) {
+			 amr_invalid_url();
+		}
+		else {
+			$url = filter_var($_POST['calendar_preview_url'],FILTER_SANITIZE_URL);
+			$sticky_url = amr_make_sticky_url($url);
+			if (!$sticky_url)
+				$calendar_preview_url  = $url ; //might be external
+			else
+				$calendar_preview_url  = $sticky_url ;
+			update_option('amr-ical-calendar_preview_url', $calendar_preview_url);
+		}
+	}
+
+//----- list numbers
+	$dupcheck = array(); // clear it out
+	if (!empty($_POST['listnumber']))  {
+		foreach ($_POST['listnumber'] as $i=> $n) {
+			if ($n === '') break;
+			$nn =  abs (intval ( $n));
+
+			if ($nn === 0){
+				echo '<div class="error">'.__('Please use numbers > 1','amr-ical-events-list').'</div>';
+				return;
+			}
+
+			if (in_array($nn, $dupcheck))
+				echo '<b>Duplicate List Number was entered - please ensure all list numbers are unique.</b>';
+			else {
+				$listnumber[$i] = $nn;
+				$dupcheck[$nn] = $nn;  // keep a record of the numbers
+
+				if (empty ($_POST['prevnumber'][$i]) or ($_POST['prevnumber'][$i] === '')) { // if we have no listtype for the  existing number, then must be new
+					$amr_options['listtypes'][$nn] = new_listtype();
+					$amr_options['listtypes'][$nn]['Id'] = $nn;
+					$amr_options['listtypes'][$nn]['general']['name'] .= $nn;
+					echo '<br />Create new '.$nn;
+				}
+				else  {// we are changing a list number, copy the list type to the new number
+					$prev = $_POST['prevnumber'][$i];
+					if (!($prev == $nn)) {
+
+						$amr_options['listtypes'][$nn] = $amr_options['listtypes'][$prev];
+						$amr_options['listtypes'][$nn]['Id'] = $nn;
+						unset($amr_options['listtypes'][$prev]);
+					}
+				}
+			}
+		}
+
+		ksort ($amr_options['listtypes']);
+	}
+// ---------------------- imported lists
+	if (isset($_POST['import'])) 	{
+		$import = $_POST['import'];
+		foreach ($import as $i=>$il) {
+
+			if (!empty($il)) {
+				//var_dump($il);
+				$importedlist = unserialize(base64_decode($il));
+				$importedlist['Id'] = $i;  // use the id just pasted into
+
+				if ((!is_array($importedlist)) or empty($importedlist['general']))
+					echo '<div class="error"><p>'
+					.sprintf(__('Imported settings for list %s invalid - not saved','amr-ical-events-list'),$i)
+					.'</p></div';
+				else {
+					$amr_options['listtypes'][$i] = $importedlist;
+					//update_option ('amr-ical-listtype'.$il);
+					echo '<div class="updated"><p>'
+					.sprintf(__('List %s will be saved with imported data','amr-ical-events-list'),$i)
+					.'</p></div';
+				}
+			}
+		}
+	}
+	
+	update_option('amr-ical-events-list', $amr_options);
+
+
+}
+/* ---------------------------------------------------------------------*/
+function amr_manage_listtypes_row ($listtype, $i) {
+global $calendar_preview_url;
+
+		if (!isset ($listtype['Id']) ) {
+			$id = '0';
+			$num = '';
+		}
+		else {
+			$id = $listtype['Id'];
+			$num = $id;
+		}
+
+		echo '<tbody><tr>';
+		echo '<td>';
+		echo '<label for="delete'.$id.'"><input type="checkbox" id="delete'.$id.'" value="'.$id.'" name="deletelist['.$id.']" />';
+		echo '</label>';
+		echo '</td>';
+		echo '<td>';
+
+
+		echo '<input type="text" size="1" id="listnumber'.$id.'" name="listnumber['.$id.']" value="'
+			.$num.'" style="margin:0;" />';
+		echo '<input type="hidden"  id="prevnumber'.$id.'" name="prevnumber['.$id.']" value="'
+			.$num.'" />';
+
+		echo '</td>';
+
+		if (!empty($listtype['general']) ) {
+			echo '<td>';
+			echo '<a href="'.esc_attr(add_query_arg('list',$id)).'" '
+			.' title="'.__('Configure: ','amr-ical-events-list').$listtype['general']['Description'].'" >'
+			.$listtype['general']['name'].'</a>'
+			.'<div class="row_action">';
+			echo '<a href="'.esc_attr(add_query_arg('list',$id)).'" '
+			.' title="'.__('Click to choose the fields, the columns and set other parameters.','amr-ical-events-list').'" >'
+			.__('Configure', 'amr-ical-events-list').'</a>&nbsp;|&nbsp;';
+			if ($calendar_preview_url) {
+				echo '<a target="wp-preview" href="'
+				.esc_attr(add_query_arg(array('listtype'=>$id, 'preview'=>'true'),$calendar_preview_url)).'" '
+				.' title="'.__('Preview the list using a calendar page.','amr-ical-events-list').'" >'
+				.__('Preview','amr-ical-events-list').'</a>';
+			}
+			else {
+				echo '<a href="" title ="'
+				.__('Calendar Page URL for previews must be entered above','amr-ical-events-list').' ">'
+				.__('n/a','amr-ical-events-list').'</a>';
+			}
+
+			echo '</div>';
+			echo '</td>';
+			echo '<td>'.$listtype['general']['ListHTMLStyle'];
+			echo '</td>';
+			echo '<td><textarea id="export'
+			.$i.'" rows="2" cols="50" readonly="readonly"  '
+			.' style="margin: 0;" '
+//		.'onClick="select_all(\'export'.$id.'\');"'
+			.'name="export['.$id.']" >';
+			if (!empty($listtype) ) {
+				echo base64_encode(serialize($listtype));  // too many problems when not encoded
+			}
+			echo '</textarea></td>';
+			echo '<td><textarea id="import'.$id.'" rows="2" cols="50" '
+			.' style="margin: 0;" '
+//		.'onClick="select_all(\'import'.$id.'\');"'
+			.'name="import['.$id.']" >'
+			.'</textarea></td>';
+		}
+		else {
+			echo '<td colspan="2">';
+			_e('Enter a list number to start a list type with new default settings.','amr-ical-events-list');
+			echo '</td><td>'
+			.__('After that, cut and paste from the list type closest to what you want to get you started','amr-ical-events-list')
+			.'</td><td></td>';
+		}
+		
+		echo '</tr></tbody>';
+}
+/* ---------------------------------------------------------------------*/
+function amrical_option_page()  {
+	global $amr_options;
+	//$nonce = wp_create_nonce('amr-ical-events-list'); /* used for security to verify that any action request comes from this plugin's forms */	
+	amrical_admin_heading(__('iCal Events List ', 'amr-ical-events-list'));
+	
+	if (isset($_REQUEST['uninstall'])  OR isset($_REQUEST['reallyuninstall']))  { /*  */
+		amr_ical_check_uninstall();
+		return;
+	}
+	if (isset ($_POST['reset']))
+		$amr_options = amr_getset_options (true);
+	else
+		$amr_options = amr_getset_options(false);	/* options will be set to defaults here if not already existing */
+
+	if (!(isset ($_POST['reset'])) and (isset ($_POST['action']) and ($_POST['action'] == "save"))) {/* Validate the input and save */
+		echo '<div class="updated"><p>';
+		_e('Saving....','amr-ical-events-list');
+		if (!isset($_REQUEST['list'])) {
+				if (! amr_ical_validate_general_options() )
+					{echo '<h2>Error validating general options</h2>';}
+				else _e('List saved','amr-ical-events-list');
+			}
+		echo '</p></div>';	
+	}
+
+	amr_request_acknowledgement();
+	amr_ical_support_links ();
+	//amrical_mimic_meta_box('acknowledge', 'About', 'amr_request_acknowledgement' , true);
+
+	//if (!(is_plugin_active('amr-events/amr-events.php'))) {amr_getting_started();}
+	amr_ical_submit_buttons ();
+	amr_ical_general_form();
+	echo '</form></div>';
+}	//end amrical_option_page
 /* ----------------------------------------------------------------------------------- */
 function amrical_add_options_panel() {
 
@@ -44,7 +711,6 @@ function amrical_add_options_panel() {
 		add_submenu_page( $parent_slug, $page_title, $menu_title,$capability, $menu_slug, $function);
 
 }
-
 //build admin interface =======================================================
 function amr_ical_validate_general_options(){
 		global
@@ -95,7 +761,6 @@ function amr_ical_validate_general_options(){
 
 			return(true);
 	}
-
 /* ---------------------------------------------------------------------- */
 function amr_ical_validate_list_options($i)	{
 global $amr_options;
@@ -177,14 +842,18 @@ global $amr_options;
 						$amr_options['listtypes'][$i]['component'][$k] =  false;
 					}
 				}
-	foreach ($amr_options['listtypes'][$i]['grouping'] as $k => $c) {
-					if (isset($_POST['grouping'][$i][$k])) {
-						$amr_options['listtypes'][$i]['grouping'][$k] =  true;
-					}
-					else {
-						$amr_options['listtypes'][$i]['grouping'][$k] =  false;
-					}
-				}
+	unset ($amr_options['listtypes'][$i]['grouping']);
+	
+	if (isset($_POST['level'][1])) { 
+		$k = esc_attr($_POST['level']['1']); 
+		if (!($k === 'none')) $amr_options['listtypes'][$i]['grouping'][$k] =  '1';
+	}
+	if (isset($_POST['level'][2])) { 
+		$k = esc_attr($_POST['level']['2']); 
+		if (!($k === 'none')) $amr_options['listtypes'][$i]['grouping'][$k] =  '2';
+	}
+				
+				
 	if (isset($_POST['ColH']))
 				{	if (is_array($_POST['ColH'][$i])) {
 						foreach ($_POST['ColH'][$i] as $c => $v) {
@@ -261,10 +930,10 @@ global $amr_options;
 						case 'Before':
 							$bef = wp_kses($pv, amr_allowed_html());
 							$bef = wp_kses_stripslashes($bef);
-							if (stripos($bef, '\\"')) echo 'YES still there';
+							//if (stripos($bef, '\\"')) echo 'YES still there';
 							$bef = str_replace('\\"', '"', $bef);
 							$amr_options['listtypes'][$i]['compprop'][$c][$p] = $bef;
-							if ($c == 'URL') echo 'TEST:'. $bef.' else '.$amr_options['listtypes'][$i]['compprop'][$c][$p];
+							//if ($c == 'URL') echo 'TEST:'. $bef.' else '.$amr_options['listtypes'][$i]['compprop'][$c][$p];
 							
 							
 							break;
@@ -367,301 +1036,6 @@ function amrical_other_form ($i) {
 </div></fieldset>
 <?php
 	return ;
-	}
-/* ---------------------------------------------------------------------*/
-function amrical_limits($i) {
-	global $amr_options;
-	$listtype = $amr_options['listtypes'][$i];
-	echo	'<fieldset class="limits" ><h4 class="trigger"><a href="#" >'
-	. __('Define maximums:', 'amr-ical-events-list')
-	.'</a></h4>	<div class="toggle_container">
-		<p><em>'.
-		__('Note cache times are in hours','amr-ical-events-list')
-		.'</em></p>';
-		if (! isset($listtype['limit'])) echo 'No default limits set';
-		else {
-			foreach ( $listtype['limit'] as $c => $v )
-			{
-				echo '<label for="L'.$i.$c.'" >'.__($c,'amr-ical-events-list').'</label>';
-				echo '<input type="text" size="2" id="L'.$i.$c.'"  name="limit['.$i.']['.$c.']"';
-				echo ' value="'.$v.'" />';
-			}
-		}
-		echo "\n\t".'</div></fieldset>';
-	return ;
-	}
-
-/* ---------------------------------------------------------------------*/
-function amrical_componentsoption($i) {
-	global $amr_options;
-
-
-	$listtype = $amr_options['listtypes'][$i];
-	echo '<fieldset id="components" class="components" >
-	<h4 class="trigger"><a href="#" >';
-	_e('Select components to show:', 'amr-ical-events-list');
-	echo '</a>&nbsp;<a title="';
-	_e('Wikipedia entry describing components', 'amr-ical-events-list');
-	echo '"	href="http://en.wikipedia.org/wiki/ICalendar#Events_.28VEVENT.29">?</a></h4>
-	<div class="toggle_container">';
-
-	if (! isset($listtype['component'])) echo 'No default components set';
-		else {
-			foreach ( $listtype['component'] as $c => $v ) {
-				echo '<label for="C'.$i.$c.'" >';
-				echo '<input type="checkbox" id="C'.$i.$c.'" name="component['.$i.']['.$c.']"';
-				echo ($v ? ' checked="checked" />' : '/>');
-				echo $c.'</label>';
-			}
-		}
-		echo "\n\t".'</div></fieldset>';
-	return ;
-	}
-/* ---------------------------------------------------------------------*/
-function amrical_groupingsoption($i) {
-	global $amr_options;
-	$listtype = $amr_options['listtypes'][$i];
-	echo '<fieldset class="icalgroupings">
-		<h4 class="trigger"><a href="#" >';
-	 _e('Define grouping:', 'amr-ical-events-list');
-	 echo '</a></h4>
-		<div class="toggle_container">';
-	foreach ( $listtype['grouping'] as $c => $v )
-			{	$l = 'G'.$i.str_replace(' ','', $c);
-				echo '<label for="'.$l.'"  >';
-				echo '<input type="checkbox" id="'.$l.'" name="grouping['.$i.']['.$c.']"'. ($v ? ' checked="checked"' : '').' />';
-				echo $c.' </label><br />';
-			}
-		echo "\n\t".'</div></fieldset> <!-- end of grouping -->';
-	return;
-	}
-/* ---------------------------------------------------------------------*/
-function amrical_calpropsoption($i) {
-	global $amr_options;
-	global $amr_csize;
-		$listtype = $amr_options['listtypes'][$i];
-		echo '<fieldset id="calprop" class="props">
-		<h4 class="trigger"><a href="#">';
-		_e('Calendar properties' , 'amr-ical-events-list');
-		echo '</a></h4>
-		<div class="toggle_container">';
-
-		foreach ( $listtype['calprop'] as $c => $v )
-		{
-			echo "\n\t\t".'<fieldset class="layout"><legend>'.$c.'</legend>';
-			foreach ( $v as $si => $sv )  /* for each specification */
-			{	echo '<label class="'.$si.'" for="CalP'.$si.$i.$c.'" >'.$si.'</label>'
-					.'<input type="text" size="'.$amr_csize[$si].'"  class="'.$si.'"  id="CalP'.$si.$i.$c
-					.'"  name="'.'CalP['.$i.']['.$c.']['.$si.']"  value= "'.htmlspecialchars($sv).'"  />';
-			}
-			echo "\n\t\t".'</fieldset>';
-		}
-		echo "\n\t".'</div></fieldset>';
-		return;
-	}
-/* ---------------------------------------------------------------------*/
-function amrical_compropsoption($i) {
-	global $amr_options;
-	global $amr_csize;
-
-		$listtype = $amr_options['listtypes'][$i];
-
-		echo '<fieldset id="comprop" class="props" >
-		<h4 class="trigger"><a href="#">';
-		_e('Specify fields to show:' , 'amr-ical-events-list');
-		echo '</a></h4>
-		<div class="toggle_container"><p><em>';
-		_e('Note: a 0 (zero) in column = do not show that field.', 'amr-ical-events-list');
-	echo '</em></p><p><em>';
-	_e('Uppercase fields are those defined in the iCal specification.', 'amr-ical-events-list');
-	echo '</em>
-		<a title="RFC5545" href="http://tools.ietf.org/html/rfc5545">RFC 5545</a></p>
-		<p><em>';
-		_e('Lowercase fields are additional fields added by this plugin and derived from the iCal fields for your convenience.' , 'amr-ical-events-list');
-		_e('Fields show if "column" > 0 and if there is data available in your event or ics file.', 'amr-ical-events-list');
-		echo '</em></p>';
-
-		echo '<table  class="widefat layout">';
-		$thead = '<tr>'
-		.'<th>'.__('Field','amr-ical-events-list').'</th>'
-		.'<th>'.__('Column','amr-ical-events-list').'<br /><em>'
-		.__('(0 to hide)', 'amr-ical-events-list')
-		.'</em></th>'
-		.'<th>'.__('Order','amr-ical-events-list').'</th>'
-		.'<th>'.__('Before','amr-ical-events-list').'</th>'
-		.'<th>'.__('After','amr-ical-events-list').'</th>'
-		.'</tr>';
-		echo '<thead>'.$thead.'</thead>';
-		echo '<tfoot>'.$thead.'</tfoot>';
-		echo '<tbody>';
-		$desc = amr_set_helpful_descriptions();
-		foreach ( $listtype['compprop']  as $p => $pv )  {/* for each specification, eg: p= SUMMARY  */
-				$text = '<em class="desc">'.(!empty($desc[$p])? $desc[$p] : '').'</em>';
-				echo "\n\t\t".'<tr style="border-bottom: 0; "><td style="border-bottom: 0; "><b>'.$p.'</b></th>';
-
-
-				foreach ( $pv as $s => $sv )  {/* for each specification eg  $s = column*/
-
-					echo '<td style="border-bottom: 0; ">'
-						.'<input type="text" size="'.$amr_csize[$s].'"  class="'.$s.'"  id="'.$p.$s
-						.'"  name="'.'ComP['.$p.']['.$s.']"  value= "'
-// v 4.0.12	- want to be able to see &nbsp;					.(esc_attr(wp_kses_stripslashes($sv)))
-						.htmlspecialchars ($sv)
-						.'"  />'
-						.'</td>';
-				}
-				echo '</tr><tr ><td colspan="5" style="padding: 0 20px 20px; 0" >'.$text.'</td></tr>';
-				echo "\n\t\t".'</fieldset> <!-- end of layout -->';
-			}
-
-		echo "\n".'</tbody></table></div></fieldset>  <!-- end of compprop -->';
-		return;
-	}
-
-/* ---------------------------------------------------------------------*/
-
-function amrical_col_headings($i) {
-	/* for component properties only */
-	global $amr_options;
-	global $amr_csize;
-		$listtype = $amr_options['listtypes'][$i];
-		?><fieldset class="section">
-		<h4 class="trigger"><a href="#" ><?php _e('Column Headings:','amr-ical-events-list');?></a></h4>
-		<div class="toggle_container"><?php
-		$j = 0;
-		while ($j < 8) {
-			$j = $j + 1;
-			if (isset ( $listtype['heading'][$j] )) {
-				$h = $listtype['heading'][$j];
-			}
-			else $h = '';
-
-			echo '<label class="colhead" for="h'.$i.'-'.$j.'" >'
-				.'<input type="text" size="'.$amr_csize['ColHeading'].'"  class="colhead"  id="h'.$i.'-'.$j
-				.'"  name="ColH['.$i.']['.$j.']"  value= "'.htmlspecialchars($h).'"  />'
-				.$j.'</label>';
-		}
-		echo "\n\t".'</div></fieldset>';
-		return;
-	}
-
-/* ---------------------------------------------------------------------*/
-
-function amr_ical_support_links () {
-?><div class="postbox" style="padding:1em 2em; width: 600px;">
-	<p>
-	<a href="http://icalevents.com/amr-events/amr-ical-events-list/" title="documentation for amr-ical-events-list and amr-events"><?php _e('Documentation', 'amr-ical-events-list');?></a>
-	&nbsp;&nbsp;
-	<a href="http://icalevents.com/support/" title="Support Forum"><?php _e('Support', 'amr-ical-events-list');?></a>
-	&nbsp;&nbsp;
-	<a href="http://icalevents.com/videos" title="Events plugin videos"><?php _e('Videos', 'amr-ical-events-list');?></a>
-	&nbsp;&nbsp;
-	<a href='http://wordpress.org/tags/amr-ical-events-list' title="If you like it rate it..."><?php _e('Rate it at WP', 'amr-ical-events-list');?></a>
-	&nbsp;&nbsp;
-	<a href="http://icalevents.com/feed/"><?php _e('Plugin feed', 'amr-ical-events-list');?></a>
-	<img src="<?php echo includes_url(); ?>images/rss.png" alt="Rss icon" style="vertical-align:middle;" />
-	&nbsp;&nbsp;
-	<a href="http://forum.anmari.com/rss.php?id=1"><?php _e('Forum feed', 'amr-ical-events-list');?></a>
-	<img src="<?php echo includes_url(); ?>images/rss.png" alt="Rss icon" style="vertical-align:middle;" />
-	</p><?php
-
-	echo '</div>';
-
-
-	}
-/* ---------------------------------------------------------------------*/
-function amr_get_files ($dir, $string) {
-	$dh  = opendir($dir);
-	while ($filename = readdir($dh)) {
-		if (stristr ($filename, $string))
-		$files[] = $filename;
-		}
-	if (isset ($files)) return ($files);
-	else return (false);
-	}
-	/* -------------------------------------------------------------------------------------------------------------*/
-function amr_check_edit_file() {
-	/* check if there is an own style file, if not, then copy it over */
-	/***  getting permisssions errors - probably not the best place to put this  - comment out for now */
-
-	  if (file_exists(ICAL_EDITSTYLEFILE)) return (true);
-	  else {
-		if (!(copy (ICALSTYLEFILE, ICAL_EDITSTYLEFILE))) {
-			echo '</ br><h3>'.__('Unable to create Custom css file for you to edit if you wish - not essential.', 'amr-ical-events-list').'</h3></ br>';
-			return (false);
-			}
-		else {
-			echo '</ br>'.sprintf(__('Copied %s1 to %s2 to allow custom css', 'amr-ical-events-list'),ICALSTYLEFILE,ICAL_EDITSTYLEFILE).'</ br>';
-			return ($c);
-			}
-		}
-	}
-/* -------------------------------------------------------------------------------------------------------------*/
-function amr_getting_started () {
-
-	echo '<div class="postbox" style="padding:1em 2em; width: 600px;"><h2 style="color: green;">';
-	_e('Get started:','amr-ical-events-list');	
-	echo '</h2><p>';
-	_e('Create a calendar page and enter: [iCal http://youricsurl.ics]');
-	echo '&nbsp;&nbsp;<b><a style="color: green;" title="'
-	.__('Create a calendar page','amr-ical-events-list')
-	.'"  href="'.admin_url('post-new.php?post_type=page&content=[iCal http://youricsurl.ics]&post_title='
-	.__('Calendar','amr-ical-events-list')).'">';
-	_e('Add new');
-	echo '</a></b></p></div>';
-}
-/* -------------------------------------------------------------------------------------------------------------*/
-function amr_check_timezonesettings () {
-
-	global $amr_globaltz;
-	?><ul><?php
-	if (function_exists('timezone_version_get'))
-		printf('<li>'.__('Your timezone db version is: %s','amr-ical-events-list').'</li>',  timezone_version_get());
-	else echo '<li>'.'<a href="http://en.wikipedia.org/wiki/Tz_database">'
-		.__('Plugin cannot determine timezonedb version in php &lt; 5.3.' ,'amr-ical-events-list')
-		.'</a>';?></li>
-		<li>
-		<?php _e('The timezone database defines the daylight saving changes amongst other things.  If correct daylight saving switchover is important to you, please check for the latest updates. ', 'amr-ical-events-list');  _e('You may need to talk to your webhost.' , 'amr-ical-events-list');
-		?></li><li><a href="http://pecl.php.net/package/timezonedb"><?php _e('Php timezonedb versions', 'amr-ical-events-list');?></a> &nbsp; <a href="http://pecl.php.net/package/timezonedb"><?php _e('Info on what changes are in which timezonedb version', 'amr-ical-events-list');?></a></li>
-		<?php
-
-		if (!(isset($amr_globaltz))) {
-			echo '<b>'.__('No global timezone - is there a problem here? ','amr-ical-events-list').'</b>'; return;
-		}
-		$tz = get_option('timezone_string');
-		$settingslink = '<a href="'.get_option('siteurl').'/wp-admin/options-general.php">'.__('Go to settings','amr-ical-events-list').'</a>';
-		if ($tz == '') {
-			$gmtoffset = get_option('gmt_offset');
-			if (!empty($gmtoffset ) ) {
-				printf('<li style="color: red;"><b>'.__('You are using the "old" gmt_offset setting ','amr-ical-events-list').'</b></li><li>', $gmtoffset );
-				_e('Consider changing to the more accurate timezone setting','amr-ical-events-list');
-				echo '</li>';
-				}
-		}
-		$now = date_create('now', $amr_globaltz);
-		echo '<li>'.__('The plugin thinks your timezone is: ','amr-ical-events-list')
-		. timezone_name_get($amr_globaltz)
-		.'&nbsp;'.$settingslink
-		.'</li>'
-		.'<li>'.__('The current UTC offset for that timezone is: ','amr-ical-events-list').$now->getoffset()/(60*60).'</li>';
-
-		if (function_exists('timezone_transitions_get') ) foreach (timezone_transitions_get($amr_globaltz) as $tr)
-			if ($tr['ts'] > time())
-			break;
-		$utctz= new DateTimeZone('UTC');
-		if (isset ($tr['ts']) ) {
-			try {$d = new DateTime( "@{$tr['ts']}",$utctz );}
-			catch(Exception $e) { break;}
-			date_timezone_set ($d,$amr_globaltz );
-			printf('<li>'.__('Switches to %s on %s. GMT offset: %d', 'amr-ical-events-list').'</li>',
-				 $tr['isdst'] ? "DST" : "standard time",
-				$d->format('d M Y @ H:i'), $tr['offset']/(60*60)
-			);
-		}
-		?>
-		<li><?php _e('Current time (unlocalised): ','amr-ical-events-list');
-		echo $now->format('r');?>
-		</li></ul><?php
 	}
 
 /* ---------------------------------------------------------------------*/
@@ -823,250 +1197,6 @@ if (version_compare('5.3', PHP_VERSION, '>')) {
 <?php
 	}
 
-/* ---------------------------------------------------------------------*/
-function amrical_option_page()  {
-	global $amr_options;
-	//$nonce = wp_create_nonce('amr-ical-events-list'); /* used for security to verify that any action request comes from this plugin's forms */	
-	amrical_admin_heading(__('iCal Events List ', 'amr-ical-events-list'));
-	
-	if (isset($_REQUEST['uninstall'])  OR isset($_REQUEST['reallyuninstall']))  { /*  */
-		amr_ical_check_uninstall();
-		return;
-	}
-	if (isset ($_POST['reset']))
-		$amr_options = amr_getset_options (true);
-	else
-		$amr_options = amr_getset_options(false);	/* options will be set to defaults here if not already existing */
-
-	if (!(isset ($_POST['reset'])) and (isset ($_POST['action']) and ($_POST['action'] == "save"))) {/* Validate the input and save */
-		echo '<div class="updated"><p>';
-		_e('Saving....','amr-ical-events-list');
-		if (!isset($_REQUEST['list'])) {
-				if (! amr_ical_validate_general_options() )
-					{echo '<h2>Error validating general options</h2>';}
-				else _e('List saved','amr-ical-events-list');
-			}
-		echo '</p></div>';	
-	}
-
-	amr_request_acknowledgement();
-	amr_ical_support_links ();
-	if (!(is_plugin_active('amr-events/amr-events.php'))) {amr_getting_started();}
-	amr_ical_submit_buttons ();
-	amr_ical_general_form();
-	echo '</form></div>';
-}	//end amrical_option_page
-/* ---------------------------------------------------------------------*/
-function amrical_admin_heading($title)  {
-	echo '<div class="wrap" id="amrical">
-		<div id="icon-options-general" class="icon32"><br />
-		</div>
-		<h2>'.$title.' '.AMR_ICAL_LIST_VERSION.'</h2>
-		<form method="post" action="'
-//		.esc_url($_SERVER['PHP_SELF'])
-		.'">';
-		wp_nonce_field('amr-ical-events-list'); /* outputs hidden field */
-		;
-}
-/* ---------------------------------------------------------------------*/
-function amrical_admin_footer()  {
-	echo '</form>
-		</div>';
-}
-/* ---------------------------------------------------------------------*/
-function amrical_admin_navigation()  {
-	global $amr_options;
-	echo '<div id="listnav"  style="clear:both;">';
-	if (!isset($_REQUEST["list"]) ) { $list = '';}
-	else $list = intval( $_REQUEST["list"]);
-	$url = remove_query_arg('list');
-	
-	_e('Configure another list type: ','amr-ical-events-list');
-
-	foreach ($amr_options['listtypes'] as $i => $listtype) {
-		if ($i > 1) echo '&nbsp;';
-		$text = ' <a title="'.$listtype['general']['name']
-		.'" href="'.$url.'&amp;list='.$i.'">'.$i
-//		.$listtype['general']['name']
-		.'</a>';
-		if ($list==$i) 	echo '<b>'.$text.'</b>';
-		else echo $text;
-	}
-
-	if (isset($_GET["list"]) ) {
-		echo '<a style=" padding-left: 20px;" href="'.$url.'" >'.__('Return to manage list types','amr-ical-events-list' ).'</a>';
-	}
-	echo '</div>';
-}
-/* ---------------------------------------------------------------------*/
-function amrical_validate_manage_listings()  {
-	global	$amr_options;
-
-	$nonce = $_REQUEST['_wpnonce'];
-	if (! wp_verify_nonce($nonce, 'amr-ical-events-list')) die ("Cancelled due to failed security check");
-
-	if (!empty($_POST['calendar_preview_url'])) 	{
-		if	(!filter_var($_POST['calendar_preview_url'],FILTER_VALIDATE_URL)) {
-			 amr_invalid_url();
-		}
-		else {
-			$url = filter_var($_POST['calendar_preview_url'],FILTER_SANITIZE_URL);
-			$sticky_url = amr_make_sticky_url($url);
-			if (!$sticky_url)
-				$calendar_preview_url  = $url ; //might be external
-			else
-				$calendar_preview_url  = $sticky_url ;
-			update_option('amr-ical-calendar_preview_url', $calendar_preview_url);
-		}
-	}
-
-//----- list numbers
-	$dupcheck = array(); // clear it out
-	if (!empty($_POST['listnumber']))  {
-		foreach ($_POST['listnumber'] as $i=> $n) {
-			if ($n === '') break;
-			$nn =  abs (intval ( $n));
-
-			if ($nn === 0){
-				echo '<div class="error">'.__('Please use numbers > 1','amr-ical-events-list').'</div>';
-				return;
-			}
-
-			if (in_array($nn, $dupcheck))
-				echo '<b>Duplicate List Number was entered - please ensure all list numbers are unique.</b>';
-			else {
-				$listnumber[$i] = $nn;
-				$dupcheck[$nn] = $nn;  // keep a record of the numbers
-
-				if (empty ($_POST['prevnumber'][$i]) or ($_POST['prevnumber'][$i] === '')) { // if we have no listtype for the  existing number, then must be new
-					$amr_options['listtypes'][$nn] = new_listtype();
-					$amr_options['listtypes'][$nn]['Id'] = $nn;
-					$amr_options['listtypes'][$nn]['general']['name'] .= $nn;
-					echo '<br />Create new '.$nn;
-				}
-				else  {// we are changing a list number, copy the list type to the new number
-					$prev = $_POST['prevnumber'][$i];
-					if (!($prev == $nn)) {
-
-						$amr_options['listtypes'][$nn] = $amr_options['listtypes'][$prev];
-						$amr_options['listtypes'][$nn]['Id'] = $nn;
-						unset($amr_options['listtypes'][$prev]);
-					}
-				}
-			}
-		}
-
-		ksort ($amr_options['listtypes']);
-	}
-// ---------------------- imported lists
-	if (isset($_POST['import'])) 	{
-		$import = $_POST['import'];
-		foreach ($import as $i=>$il) {
-
-			if (!empty($il)) {
-				//var_dump($il);
-				$importedlist = unserialize(base64_decode($il));
-				$importedlist['Id'] = $i;  // use the id just pasted into
-
-				if ((!is_array($importedlist)) or empty($importedlist['general']))
-					echo '<div class="error"><p>'
-					.sprintf(__('Imported settings for list %s invalid - not saved','amr-ical-events-list'),$i)
-					.'</p></div';
-				else {
-					$amr_options['listtypes'][$i] = $importedlist;
-					//update_option ('amr-ical-listtype'.$il);
-					echo '<div class="updated"><p>'
-					.sprintf(__('List %s will be saved with imported data','amr-ical-events-list'),$i)
-					.'</p></div';
-				}
-			}
-		}
-	}
-	
-	update_option('amr-ical-events-list', $amr_options);
-
-
-}
-
-/* ---------------------------------------------------------------------*/
-
-function amr_manage_listtypes_row ($listtype, $i) {
-global $calendar_preview_url;
-
-		if (!isset ($listtype['Id']) ) {
-			$id = '0';
-			$num = '';
-		}
-		else {
-			$id = $listtype['Id'];
-			$num = $id;
-		}
-
-		echo '<tbody><tr>';
-		echo '<td>';
-		echo '<label for="delete'.$id.'"><input type="checkbox" id="delete'.$id.'" value="'.$id.'" name="deletelist['.$id.']" />';
-		echo '</label>';
-		echo '</td>';
-		echo '<td>';
-
-
-		echo '<input type="text" size="1" id="listnumber'.$id.'" name="listnumber['.$id.']" value="'
-			.$num.'" style="margin:0;" />';
-		echo '<input type="hidden"  id="prevnumber'.$id.'" name="prevnumber['.$id.']" value="'
-			.$num.'" />';
-
-		echo '</td>';
-
-		if (!empty($listtype['general']) ) {
-			echo '<td>';
-			echo '<a href="'.esc_attr(add_query_arg('list',$id)).'" '
-			.' title="'.__('Configure: ','amr-ical-events-list').$listtype['general']['Description'].'" >'
-			.$listtype['general']['name'].'</a>'
-			.'<div class="row_action">';
-			echo '<a href="'.esc_attr(add_query_arg('list',$id)).'" '
-			.' title="'.__('Click to choose the fields, the columns and set other parameters.','amr-ical-events-list').'" >'
-			.__('Configure', 'amr-ical-events-list').'</a>&nbsp;|&nbsp;';
-			if ($calendar_preview_url) {
-				echo '<a target="wp-preview" href="'
-				.esc_attr(add_query_arg(array('listtype'=>$id, 'preview'=>'true'),$calendar_preview_url)).'" '
-				.' title="'.__('Preview the list using a calendar page.','amr-ical-events-list').'" >'
-				.__('Preview','amr-ical-events-list').'</a>';
-			}
-			else {
-				echo '<a href="" title ="'
-				.__('Calendar Page URL for previews must be entered above','amr-ical-events-list').' ">'
-				.__('n/a','amr-ical-events-list').'</a>';
-			}
-
-			echo '</div>';
-			echo '</td>';
-			echo '<td>'.$listtype['general']['ListHTMLStyle'];
-			echo '</td>';
-			echo '<td><textarea id="export'
-			.$i.'" rows="2" cols="50" readonly="readonly"  '
-			.' style="margin: 0;" '
-//		.'onClick="select_all(\'export'.$id.'\');"'
-			.'name="export['.$id.']" >';
-			if (!empty($listtype) ) {
-				echo base64_encode(serialize($listtype));  // too many problems when not encoded
-			}
-			echo '</textarea></td>';
-			echo '<td><textarea id="import'.$id.'" rows="2" cols="50" '
-			.' style="margin: 0;" '
-//		.'onClick="select_all(\'import'.$id.'\');"'
-			.'name="import['.$id.']" >'
-			.'</textarea></td>';
-		}
-		else {
-			echo '<td colspan="2">';
-			_e('Enter a list number to start a list type with new default settings.','amr-ical-events-list');
-			echo '</td><td>'
-			.__('After that, cut and paste from the list type closest to what you want to get you started','amr-ical-events-list')
-			.'</td><td></td>';
-		}
-		
-		echo '</tr></tbody>';
-}
 
 /* ---------------------------------------------------------------------*/
 function amrical_manage_listings()  {
@@ -1150,78 +1280,6 @@ function() {
 <?php
 	}
 
-/* ---------------------------------------------------------------------*/
-function amrical_delete_listings () {
-global $amr_options;
-
-	$nonce = $_REQUEST['_wpnonce'];
-	if (! wp_verify_nonce($nonce, 'amr-ical-events-list')) die ("Cancelled due to failed security check");
-
-	echo '<h3>'.__('Check for lists to delete','amr-ical-events-list').'</h3>';
-// ------------------- deleted lists
-	if (!empty($_POST['deletelist']))  {
-		foreach ($_POST['deletelist'] as $i=>$del) {
-			$d = (int) $del;
-			unset ($amr_options['listtypes'][$d]);
-			echo '<div class="updated"><p>'
-			.sprintf(__('List %s will be deleted','amr-ical-events-list'),$d)
-			.'</p></div>';
-		}
-	}
-	update_option('amr-ical-events-list', $amr_options);
-
-}
-/* ---------------------------------------------------------------------*/
-function amrical_listing_options_page()  {
-	global $amr_options;
-	
-	if (isset ($_POST['reset']))
-		$amr_options = amr_getset_options (true);
-	else
-		$amr_options = amr_getset_options(false);	/* options will be set to defaults here if not already existing */
-	
-	if (!isset($_REQUEST["list"]) ) {
-		amrical_admin_heading(__('Manage Event List Types', 'amr-ical-events-list') ) ;
-
-		if (!empty($_POST['delete']) ) /* Validate the input and save */
-			amrical_delete_listings();
-		elseif ((isset ($_POST['action']) and ($_POST['action'] == "save")) and !isset($_POST['reset'])) /* Validate the input and save */
-			amrical_validate_manage_listings();
-		
-		amr_ical_submit_buttons ();
-		amrical_manage_listings();
-		amrical_admin_footer();
-		return;
-		}
-	else {
-		$listtype = intval( $_REQUEST["list"]);
-
-		amrical_admin_heading(__('Configure event list type: ', 'amr-ical-events-list'). $listtype ) ;
-		amrical_admin_navigation();
-
-		$calendar_preview_url = get_option('amr-ical-calendar_preview_url' );
-		if ($calendar_preview_url) {
-			echo '<a target="wp-preview"  href="'
-			.htmlspecialchars(add_query_arg(array('listtype'=>$listtype, 'preview'=>'true'),$calendar_preview_url)).'" '
-			.' title="'.__('Preview the list using a calendar page.','amr-ical-events-list').'" >'
-			.__('Preview','amr-ical-events-list').'</a>';
-		}
-
-
-		if ((isset ($_POST['action']) and ($_POST['action'] == "save")) and !isset($_POST['reset'])) {/* Validate the input and save */
-				echo '<div class="updated"><p>';
-				_e('Saving....','amr-ical-events-list');
-				$result = amr_ical_validate_list_options($listtype); /* messages are in the function */
-				if ($result) _e('Lists saved','amr-ical-events-list');
-					else _e('No change to options or unexpected error in saving','amr-ical-events-list');
-				echo '</p></div>';
-
-		}
-		amr_ical_submit_buttons ();
-		amr_configure_list($listtype);
-		amrical_admin_footer();
-	}
-}	//end amrical_option_page
 
 /* -------------------------------------------------------------------------------------------------*/
 function amrical_formats ($i) {
@@ -1261,32 +1319,7 @@ function amrical_formats ($i) {
 		</fieldset><?php
 	return ;
 	}
-/* -------------------------------------------------------------------------------------------------------------*/
-function amr_ical_submit_buttons () {
-?>
-				<fieldset id="submit" style="float: right; margin: 0 2em;">
-				<input type="hidden" name="action" value="save" />
-				<input type="submit" class="button-primary" title="<?php
-					_e('Save the settings','amr-ical-events-list') ;
-					?>" value="<?php _e('Update', 'amr-ical-events-list') ?>" />
-<?php 			if (isset($_GET['page'])	and ($_GET['page'] === 'manage_amr_ical')
-and current_user_can('install_plugins')) {				
-					echo '<input type="submit" class="button" name="uninstall" title="';
-					_e('Uninstall the plugin and delete the options from the database.','amr-ical-events-list') ;
-					echo '" value="';
-					_e('Uninstall', 'amr-ical-events-list'); 
-					echo '" />';
-				}
-				
-				echo '<input type="submit" class="button" name="reset" title="';
-				_e('Warning: This will reset ALL the listing options immediately.','amr-ical-events-list') ;
-					
-				echo '" value="';
-				_e('Reset all listing options', 'amr-ical-events-list');
-				echo '" />
-				</fieldset>';
-				
-}
+
 /* -------------------------------------------------------------------------------------------------------------*/
 function amr_configure_list($i) {
 global $amr_options;
@@ -1319,6 +1352,7 @@ global $amr_options;
 		echo "\n\t".'</fieldset>  <!-- end of list type -->';
 		?>
 		<script type="text/javascript">
+		//<![CDATA[
 jQuery(document).ready(function(){//Hide (Collapse) the toggle containers on load
 	jQuery("div.toggle_container").hide();
 
@@ -1345,6 +1379,7 @@ jQuery(document).ready(function(){//Hide (Collapse) the toggle containers on loa
 
 
 	});
+	//]]>
 </script><?php
 	}
 ?>

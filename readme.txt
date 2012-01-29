@@ -1,13 +1,13 @@
-﻿=== amr events lists and calendars (aka amr-ical-events-list) ===
+=== amr events lists and calendars (aka amr-ical-events-list) ===
 Contributors: anmari
 Tags: event, events, event calendar, events calendar, event manager, diary, schedule, ical, ics, ics calendar, ical feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, agenda, happenings, shows, concerts, conferences, courses, timetable
 
 Requires at least: 2.8
-Tested up to: 3.2.1
-Version: 4.0.20
+Tested up to: 3.3.1
+Version: 4.0.21
 Stable tag: trunk
 
-Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec. Very customisable listings or box calendars.  This version uses ics as input. Upgrade option for ics feed generation, taxonomies etc  
+Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec. Very customisable listings or box calendars.  This version uses ics as input. Upgrade option for ics feed generation, taxonomies etc
 
 == Description ==
 
@@ -27,31 +27,74 @@ If you also want a complete "inhouse" solution where you can create events in wo
 
 Test with your calendar's ics file at the demo site:
 
-[Demo site](http://test.icalevents.com) 
+[Demo site](http://test.icalevents.com)
 
 Many thanks to the following people for the translations.  Note that I am unable to verify these and they may be out of date with the current version.:
 
 *   Italian by Andrea aka sciamannikoo
 *   Lithuanian by Nata Strazda from Web Hub
-*   Polish by Kasia 
-*   French by fxbenard aka 3emeOeil 
+*   Polish by Kasia
+*   French by fxbenard aka 3emeOeil
 *   Danish by Georg feom blogso.dk
 *   German by Simon Betschmann
-*   Belorussian  
+*   Belorussian
 *   Russian (partial) by ghost (antsar.info)
 *   Hindi translation  by Ashish J. of Outshine solutions
 
 If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me both the .mo and .po files for your language.
 
+Requirements:
+
+PHP 5 > 5.20
+php datetime class must be enabled (standard in php 5.2)
+
+== Installation ==
+
+1. Download and activate as per usual in wordpress
+2. Create some events in your calendar application in a public calendar (eg: google calendar, facebook, ical.me.com ).  Find the public ics url for the calendar.  NB The url MUST be publicly accessible when lot logged in - check by pasting the url into another browsers url field. If you cannot access it in a browser without being logged in, then the plugin will not be able to access it either.
+2. Create a page for your calendar or agenda and enter one of the  shortcakes (preferably using the html view of the wp editor) .  EG:
+
+
+[iCal yoururl.ics]
+
+[largecalendar yoururl.ics]  
+
+ NB (Ics url NOT As a hyperlink, must be plain text)
+
+That's it!
+
+For the widgets (calendar and list)
+
+1.  Drag one of the events widgets to the chosen sidebar
+2.  Enter http://yoururl.ics in the widgets input area, Save
+
+
+Some calendar applications delay a bit before updating the ics file.  If you think the plugin is 'missing' a new event,  please open your ics link in a text editor like notepad.  Check that the event is actually in the ics  file.
+
+There are many shortcode parameters and some highly configurable list types.  Please read:
+
+http://icalevents.com/documentation/getting-started/
+http://icalevents.com/documentation/shortcodes/
+http://icalevents.com/documentation/list-types/
+
+Note that some information may apply to the paid version amr-events - this is usually indicated.
+
+
+
+
 == Changelog ==
+= Version 4.0.21 =
+* Fix: Decode entities (like &nbsp;) in content
+* Change: If Event urls in ics files are external to the site, they will have rel="external" and target="_blank" added via a pluggable function amr_format_url($url).
+
 = Version 4.0.20 =
 * Fix: if DTEND matches DTSTART, it is not necessarily an error, or an all day.
-* Fix: Pluggables loaded too late for other plugins that want to apply filters to content.  Pluggable file will now load with priority 99 on 'plugins_loaded'.  So please load any pluggable functions with earlier priority. 
+* Fix: Pluggables loaded too late for other plugins that want to apply filters to content.  Pluggable file will now load with priority 99 on 'plugins_loaded'.  So please load any pluggable functions with earlier priority.
 
 = Version 4.0.19 =
 * Fix: switching views and then doing month navigation did not keep final view, will now.
 * Fix: to German translation file for the goto titles on month year navigation.
-* Add: can now specify own text for 'reset' message on the 'look for more events' and a new option 'look for previous'.  Blanking out the text will hide that link options for previous and reset.  'Previous' and 'Reset' show when one has done at least 1 look more.  
+* Add: can now specify own text for 'reset' message on the 'look for more events' and a new option 'look for previous'.  Blanking out the text will hide that link options for previous and reset.  'Previous' and 'Reset' show when one has done at least 1 look more.
 * Add: 'human time' ie the midday, midnight is now controllable via the Listing settings.
 * Add: word-wrap to default css to stop very long words breaking out of boxes.
 * Change: Default large calendar - moved start date time etc to details hover box.
@@ -63,28 +106,28 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 
 = Version 4.0.17 =
 * Fix: 'allday' was not detected quite correctly for multi days in ics files - fixed
-* Fix: when months were used, pagination had the same increment for more and much more - fixed. 
+* Fix: when months were used, pagination had the same increment for more and much more - fixed.
 * Changes: some minor tweaks to admin screens.
 
 
 = Version 4.0.16 =
 * Fix: categories with spaces in the name are not liked by css classes.  Need the names not the slugs for wordpress queries, so names are now 'sluggified' when used as a css class. Note: you can also use t## where ## is the categrory or taxonomy id (css classes do not like numbers either).
 * Update: French translation from fxbenard
-* Please also see amr-events upgrade to 3.0.6 
+* Please also see amr-events upgrade to 3.0.6
 
 = Version 4.0.15 =
 * Fix: categories in imported ics files were not handled properly - effected the css classes. they are now.  Thanks to chicagoave for flagging it.
 * Add: you can now do in the shortcode, add ignore_query=all to make a totally static widget or list, will not event respond any query parameters - use carefully.
 
 = Version 4.0.14 =
-* Fix: If your ics file is imported okay, no update required.  This fix is for dusty's ruby rails method of listing DATETIME with timezones and also to accomodate custom x-modifications to a property (ie: ignore them more cleanly!) 
+* Fix: If your ics file is imported okay, no update required.  This fix is for dusty's ruby rails method of listing DATETIME with timezones and also to accomodate custom x-modifications to a property (ie: ignore them more cleanly!)
 
 = Version 4.0.13 =
-* Fixed: it was possible to generate a fatal error when there was no end date / time on an event.  
+* Fixed: it was possible to generate a fatal error when there was no end date / time on an event.
 
 = Version 4.0.12 =
-* Fixed: when there are no events, the old pagination was showing and ignoring what had been specified in the shortcode.  Also an error due to no 'last event date' being available.  
-* Fix: adding new list type and pasting a predefined list type at same time caused a minor glitch. Now add, then paste in the list type code.  
+* Fixed: when there are no events, the old pagination was showing and ignoring what had been specified in the shortcode.  Also an error due to no 'last event date' being available.
+* Fix: adding new list type and pasting a predefined list type at same time caused a minor glitch. Now add, then paste in the list type code.
 * Change: for people using amr-events.  It was possible to use DTEND (the technical 'ics' end date).in the display of event information single view.  For all day events, this looks like one day more.  Humans need the end of the previous day (not the start of the next). The template now offers the human friend end date rather to use.   THis facilitates this, however you will need soon to be released amr-events 3.0.4.
 * Add: for advanced users - more of the functions are now pluggable, especially the ones with icons. see [pluggables](http://icalevents.com/documentation/filters-and-pluggable-functions/)
 * Change: move pluggable functions definition later in the wordpress actions so can be more easily overwritten
@@ -94,9 +137,9 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 = Version 4.0.11 =
 * Change: A cleanup of the import ics url code - .ics urls that had ampersands in their urls were being handled well when the import function was called.  On older php versions they were being encoded with esc_url and not decoded.  Now using esc_url_raw which is not supposed to encode html entities.  Somehow a decode still seems to be required!
 * It has also come to my attention that the php filter_var with FILTER_VALIDATE_URL will not handle internationalised domain names. If this affects anyone, please contact me.
-* Fix: A filter function that cleared the large calendar caption was left in when it should not have been.  The ability to use the filter  'amr_events_table_caption' is still there should you want to do your own caption text, or not have the caption html.  
-* Reversal: the month dropdown navigation default got temporarily changed.  All was fine either way if you were using show_month_nav in your shortcode.  But if you weren't the dropdown as a default for the large calendar got lost between versions. Apologies.  
- 
+* Fix: A filter function that cleared the large calendar caption was left in when it should not have been.  The ability to use the filter  'amr_events_table_caption' is still there should you want to do your own caption text, or not have the caption html.
+* Reversal: the month dropdown navigation default got temporarily changed.  All was fine either way if you were using show_month_nav in your shortcode.  But if you weren't the dropdown as a default for the large calendar got lost between versions. Apologies.
+
 
 = Version 4.0.10 =
 * Fix: In some date time output, the date time localisation calls were not called so some months/day of weeks were not translating.
@@ -123,7 +166,7 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 
 = Version 4.0.5 =
 * Add: Italian translation.
-* Fix: some translations strings and function calls.  
+* Fix: some translations strings and function calls.
 * Add: added filters for 'row html' ie html per event  and 'column html' - html per group of event.  This allows you to add own fields to all 'columns' - previously could add to content or excerpt using wordpress filters
 * Add: added filter 'amr_events_table_caption' for box calendar table caption
 * Add: added logic for box calendar caption - if month year drop down navigation shown, then clear the caption as it is redundant (uses the filter mentioned above).
@@ -134,8 +177,8 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 * Change: to boxcalendar - if no content for pseudo 2nd column, the hover details, then the wrap html is not generated - no empty hover box.
 
 = Version 4.0.4 =
-* Fix: large calendar sorting within a day (supposed to be fixed in 4.0.2) was not properly uploaded before. 
-* Change: only admin can run uninstall, and only from listing screen 
+* Fix: large calendar sorting within a day (supposed to be fixed in 4.0.2) was not properly uploaded before.
+* Change: only admin can run uninstall, and only from listing screen
 * Fix: non-english installs can now also delete list types
 
 = Version 4.0.3 =
@@ -151,11 +194,11 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 = Version 4 =
 * Add: can now have multi-month calendar listings - like a year view.  use months=n in the calendar shortcodes
 * Add: better support for multi day in box calendar. Multiday (ie where duration is > 1 day) will now appear on each day box. Css tags are offered so that you can style them creatively (firstday, middledays, lastday).  The default css in 2010 based themes shows a solid bar of the events.  Please check your theme for padding if you wish a similar effect.
-* Add: Import and Export of List types, delete, copy 
+* Add: Import and Export of List types, delete, copy
 * Change: NB: some html tweaks and a major css cleanup - PLEASE check all your output after updating, especially if you were using your own css.
-* Change: NB: Default settings have also changed.  If you did not have your settings saved and were just using defaults, the listings will be a bit different. 
+* Change: NB: Default settings have also changed.  If you did not have your settings saved and were just using defaults, the listings will be a bit different.
 * Change: change to way fields are listed for including in the listing templates - they will now be sorted by the column and  the order.
-* Change: categories from a ics file in an event listing now have links to query the page with the events for just those categories of events 
+* Change: categories from a ics file in an event listing now have links to query the page with the events for just those categories of events
 * Fix: Bigger images option will work now
 * Fix: if you want your main calendar on the home page, the linking will now use the pageid to tell wordpress to stay on the home page and just pass the other query parameters on so the plugin can use them - else wordpress starts trying to figure out what kind of archive you want!
 
@@ -170,7 +213,7 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 * Fix: Plugin was catering for multiple EXDATES or RDATES where these occurred on same declaration. It was not catering for multiple EXDATE declarations. It does both now.  Thank you to Wilmington  Guitars for having the data that helped flush this out and for taking the time to report it well enough for me to fix it quickly.
 
 = Version 3.10.1 =
-* Change: If NOT in a widget, then href title on event summary hyperlink will now have excerpt if using amr-events and if excerpt is availble else the word "more info".  It used to hover the whole post content. 
+* Change: If NOT in a widget, then href title on event summary hyperlink will now have excerpt if using amr-events and if excerpt is availble else the word "more info".  It used to hover the whole post content.
 * Fix:  remove htmlspecial chars from output of event summary - mucks up special chars now in latest wp
 * Update: French translation files update from fxbenard for both amr-events and amr-ical-events-list
 
@@ -178,7 +221,7 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 * Add:  A choice of icon sizes 16x16 or 32x32 and many useful additional icons courest of famfam and fatcow.  Css sprites and suggested css code is provided for css experts who wish to make their site more efficient and include the css in their theme css.  At a later stage thsi will be integrated for less expert users.
 * Add: Attachments in ics files are now parsed a bit better. If a url is found, it will be made "clickable".  A pluggable function added to allow you to override html produced for your partcular files. Note there can be multiple ATTACH in an ics file.
 * Add: made more of the admin text translateable
-* Add: allowed for translation of ics file name and description so that you can change them, not just trnslate them 
+* Add: allowed for translation of ics file name and description so that you can change them, not just trnslate them
 * Add: Added css classes to the box calendar events as per the list events
 * Change: exchange WP_SITEURL for get_option('siteurl') - better
 * Change: changed translation text domain to plugin name to avoid confusion.  Tried to clean up language files, had some problems and do hope I have not lost any translations.  With every upgrade there are usually some new strings.
@@ -193,9 +236,9 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 * Add: html list style options for html5 on process of being added - more changes to come.
 * Change: grouped events will now NEST within a group - they used to just be a kind of heading.  HTML and css tweaked so it looks the same.
 * Add: aded some html5 styles as a experiment and especially for one of you - ability to have your listHTMLstyle - please be careful. See the example included in the plugin.
-* Add: a check for no saved settings.  If defaults change from one upgrade to the next and the settingshad not been saved, this could be confusing - people should save their settings. 
+* Add: a check for no saved settings.  If defaults change from one upgrade to the next and the settingshad not been saved, this could be confusing - people should save their settings.
 * Add: added filters to the code to allow folks with very advanced requirements to do very advanced things.  New filters so far are:
- amr_events_after_sort (after sorting but before limits applied) Passes array of events and must receive one back, 
+ amr_events_after_sort (after sorting but before limits applied) Passes array of events and must receive one back,
  amr_events_after_sort_and_constrain (after sorting but before limits applied) Passes array of events and must receive one back,
  amr_event_repeats ( can be used to only generate 'x' number of repeats for an event despite what is in the VEVENT COUNT field) - passes the current count value, must receive an integer back.
   amr-ical-feed-events (after extracting events for ics feed, but before producing feed).  Note a wp-query pre-getposts-filter could also be used. Passes array of events and must receive one back.
@@ -206,9 +249,9 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 = Version 3.9.3 =
 *  Change: per barikso's request, messages output when there is a problem with the external ics file have changed.  They are more subtle now (!) with the message on hover, and have a class of error.  The class is so that you may choose to hide the messages if you wish.  The plugin will deliver cached content if possible so your site will not just look bad should the ics file fail. (I elected to go with a fake hyperlink as depending on the problem with your ics file there may be one or more messages.)
 *  Change: defaults have been slightly tweaked, so if you had NOT saved your settings, you may see small changes (eg: timezone and refresh now do NOT show by default)
-*  Change: settings pages restructured and some changes to make it look more like standard wordpress, not a separate look.  I dislike plugins that have their own adminlook and style different from wp. 
+*  Change: settings pages restructured and some changes to make it look more like standard wordpress, not a separate look.  I dislike plugins that have their own adminlook and style different from wp.
 *  Fix: replaced some functions deprecated in wp 3.1.
-*  Fix: grouping logic had an error introduced in last version where last event of a group went into next group rather than previous - fixed. 
+*  Fix: grouping logic had an error introduced in last version where last event of a group went into next group rather than previous - fixed.
 
 = Version 3.9.2 =
 *  Fix: the shortcut of just entering urls without having to say "ics=your url" was lost in a recent update. Sorry!  It's back.
@@ -219,10 +262,10 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 *  Fix: for list type using "lists" not table, and when useses a grouping, the html validation failed due to a missing html tag.  This highlighted some minor things in the html that could be cleaned up - and so they have been.
 
 = Version 3.9 =
-*  Change: Table body and row html slightly re-organised to more sensible structure 
+*  Change: Table body and row html slightly re-organised to more sensible structure
 *  Fix: Cleaned up some hcalendar markup to make it totally valid microformat markup
 *  Fix: Fixed spacing on new ++ -- pagination options
-*  Fix: Fixed very specific bug when using numeric bydays (eg: last sunday ) and wanting the small calendar to link to the calendar page, with the 1 day listing.  The logic was cutting off the dates generated before the "contract" to the last x. 
+*  Fix: Fixed very specific bug when using numeric bydays (eg: last sunday ) and wanting the small calendar to link to the calendar page, with the 1 day listing.  The logic was cutting off the dates generated before the "contract" to the last x.
 *  Fix: Fixed the ignore_query logic so it ignores what it should and responds to what it should (eg: for calendars, it must still respond to 'start' at least.
 
 = Version 3.8.1 =
@@ -231,7 +274,7 @@ If anyone would like to offer some translations, please do.  The Code Styling Lo
 = Version 3.8 =
 * Added shortcode parameter "pagination".  By default the pagination at the bottom of the calendar list is on.  If you add "pagination=0", the pseudo pagination at the bottom of the calendar/list will be switched off.
 * Removed unnecessary "pretty print" of the recurring rule.  It will not say "Daily every day", it will say Daily.  Also it will not say "Daily every 2nd day", it will say "Every second day" - translateable.
-* The COUNT limit was being applied too early, most of the time okay, but could give incorrect result in certain circumstances. 
+* The COUNT limit was being applied too early, most of the time okay, but could give incorrect result in certain circumstances.
 * DTSTART (hardly ever displayed - the original start of a recurring series) was being updated by most recent event date.  It should always stay as the original DTSTART, distinct from the event date.
 * The ical spec oddity where DTEND is one day more than the human thinks it should, cropped up again - fixed.
 * Slight change to pagination so that if one has clicked through from a single day in a box calendar, it is easier to "show more days".  Please note that using basic html it is entirely possible for you to add  your own pagination before or after the calendar or agenda shortcode.
@@ -637,28 +680,6 @@ can also see events that might have just started.
 *  Listed events without repeats into a table with nested lists. It allowed for a monthly break, a config file and had a default css file
 
 = Version 0 =
-
-== Installation ==
-
-Pre-installation: check that you have a version of PHP 5 > 5.20.  This is required for the timezone and datetime functionality.
-The php DATETIME Class must be enabled (this is standard in php 5.2).  You may get a parse error,something like
-"syntax error, unexpected T_VARIABLE in...." if you are not on a version of PHP that has the "clone" function.
-
-1. Download and activate as per usual in wordpress
-2. Copy your calendars ics url (google, facebook, ical.me.com etc) - The ics file feed must be PUBLIC - if you cannot access it in a browser without being logged in, then the plugin will not be able to access it either.
-2. Create a page (or post) 
-3. add one or more shortcodes [largecalendar yoururl.ics] [iCal yoururl.ics] to your page.  NB (Ics url NOT As a hyperlink, must be plain text)
-
-That's it!
-
-For the widgets (calendar and list)
-
-1.  Drag to the chosen sidebar
-2.  Enter http://yoururl.ics in the large text area, Save
-
-Note:
-The ics file feed must be PUBLIC - if you cannot access it in a browser without being logged in, then the plugin will not be able to access it either.
-
 
 == Frequently Asked Questions ==
  see the plugin website (http://icalevents.com)

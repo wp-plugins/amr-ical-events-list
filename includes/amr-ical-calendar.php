@@ -57,7 +57,8 @@ function amr_prepare_day_titles ($titles, $liststyle) {
 // if small calendar
 		if ( $titles ) {
 			foreach ( $titles as $day => $daywithtitles_array ) {
-				if ($liststyle == 'largecalendar') $daytitles[$day] = $daylinktext;
+				if ($liststyle == 'largecalendar') 
+					$daytitles[$day] = $daylinktext;
 				else {
 					if (is_array($daywithtitles_array) ) 
 						//$string = implode(',',$daywithtitles_array);
@@ -295,10 +296,14 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 						//$day = $event['dummyYMD']->format('j');	
 						$day = ltrim(substr($event['dummyYMD'],6,2),'0'); // quicker?							
 						$dayswithevents[] = $day;	
+						// replace with listtype format
 						$title = '';
-						if (isset ($event['SUMMARY']) ) $title = $event['SUMMARY'];
-						if (is_array($title)) $title = implode($title);
+						if (isset ($event['SUMMARY']) ) 
+							$title = $event['SUMMARY'];
+						if (is_array($title)) 
+							$title = implode($title);
 						$titles[$day][] = $title;
+						//
 						$eventsfortheday[$day][] = $event;
 						}
 				}
@@ -306,8 +311,12 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 		}
 
 
-		if (isset($dayswithevents)) $dayswithevents = array_unique ($dayswithevents);
-		$daytitles = amr_prepare_day_titles ($titles, $liststyle);
+		if (isset($dayswithevents)) 
+			$dayswithevents = array_unique ($dayswithevents);
+			
+		if (!($liststyle === 'smallcalendar') or !function_exists('amr_events_customisable_small_calendar_daytitles') ) 
+			$daytitles = amr_prepare_day_titles ($titles, $liststyle);   // for large hover?
+		
 		unset ($titles);
 
 		//-----------------------------------------------------------------------------------
@@ -317,6 +326,8 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 			foreach ( $eventsfortheday as $day => $devents ) {
 				if (ICAL_EVENTS_DEBUG) echo '<br />Day ='.$day. ' with '.count($devents).' events ';
 				$dayhtml[$day] = amr_list_one_days_events($devents, $columns);
+				if (function_exists('amr_events_customisable_small_calendar_daytitles') and ($liststyle === 'smallcalendar') )
+					$daytitles[$day] = amr_events_customisable_small_calendar_daytitles($devents, $columns);
 				//if (ICAL_EVENTS_DEBUG) echo '<br />Day: '.$day.' '.$dayhtml[$day];
 			}
 		}
@@ -441,7 +452,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 	$html .= $multi_output;
 	return($html);
 }
-/* --------------------------------------------------  */
+
 function amr_list_one_days_events($events, $columns) { /* for the large calendar */
 	global $amr_options,
 		$amr_limits,

@@ -18,12 +18,12 @@ if (!function_exists('esc_textarea') ) {
 	function esc_textarea( $text ) {
 	$safe_text = htmlspecialchars( $text, ENT_QUOTES );
 	}
-}	
+}
 // ----------------------------------------------------------------------------------------
  function amr_check_for_wpml_lang_parameter ($link) {
  	if (isset($_REQUEST['lang'])) {
 		$lang = $_REQUEST['lang'];
-		$link = remove_query_arg( 'lang', $link );  //is there a wpml bug ? or wp bug, we are getting lang twice 
+		$link = remove_query_arg( 'lang', $link );  //is there a wpml bug ? or wp bug, we are getting lang twice
 		$link = add_query_arg( 'lang', $lang, $link );
 		}
 	return ($link);
@@ -43,7 +43,6 @@ function array_merge_recursive_distinct ( array &$array1, array &$array2 ) { /* 
   }
   return $merged;
 }
-
 /* ---------------------------------------------------------------------*/
 function amr_clean_link() { /* get cleaned up version of current url  remove other parameters */
 global $post;
@@ -59,7 +58,7 @@ global $post;
 	'calendar',
 	'agenda',
 	'eventmap'));
-	
+
 	if (is_front_page() and (isset($post->ID))) {
 		$pageid = $post->ID;
 		$link = add_query_arg(array('page_id'=>$pageid),$link);
@@ -103,26 +102,25 @@ global $post;
 		));
 	}
 	/* ---------------------------------------------------------------------- */
-function  amr_make_sticky_url($url) { 
+function  amr_make_sticky_url($url) {
 	$page_id = url_to_postid($url);
-	
+
 	if (!$page_id) return false ;
 	else {
 		$sticky_url  = add_query_arg('page_id',$page_id, get_bloginfo('url'));
 		return( $sticky_url) ;
-	}	
-}	
+	}
+}
 /* ---------------------------------------------------------------------- */
-function  amr_invalid_url() { 
+function  amr_invalid_url() {
 ?><div class="error fade"><?php	_e('Invalid Url','amr-ical-events-list');?></div><?php
 }
 /* ---------------------------------------------------------------------- */
-function  amr_invalid_file() { 
+function  amr_invalid_file() {
 ?><div class="error fade"><?php	_e('Invalid Url','amr-ical-events-list');?></div><?php
 }
 /* --------------------------------------------------  */
-function amr_click_and_trim($text) { /* Copy code from make_clickable so we can trimthe text */
-
+function amr_click_and_trim($text) { /* Copy code from make_clickable so we can trim the text */
 	$text = make_clickable($text);
 	amr_trim_url($text);
 	return $text;
@@ -133,20 +131,20 @@ function amr_trim_url(&$ret) { /* trim urls longer than 30 chars, but not if the
     $countlinks = count($links);
 
 	for ($i = 0; $i < $countlinks; $i++) {
-		$link    = $links[$i]; 
+		$link    = $links[$i];
 		$link    = (preg_match('#(.*)(href=")#is', $link)) ? '<a' . $link : $link;
 		$begin   = strpos($link, '>');
-		
+
 		if ($begin) {
-		
+
 			$begin   = $begin + 1;
 
 			$end     = strpos($link, '<', $begin);
 
 			$length  = $end - $begin;
 
-			$urlname = substr($link, $begin, $length); 
-			
+			$urlname = substr($link, $begin, $length);
+
 			$trimmed = (strlen($urlname) > 50 && preg_match('#^(http://|ftp://|www\.)#is', $urlname)) ? substr_replace($urlname, '.....', 30, -5) : $urlname;
 			$trimmed = str_replace('http://','',$trimmed);
 
@@ -159,14 +157,14 @@ function amr_trim_url(&$ret) { /* trim urls longer than 30 chars, but not if the
 /* ---------------------------------------------------------------------*/
 
 function amr_request_acknowledgement () {
-	echo '<div class="postbox" style="padding:1em 2em; width: 600px;">
-	<p style="border-width: 1px;">';
+
+	echo '<div class="postbox" style="padding:1em 2em; width: 600px;">	<p style="border-width: 1px;">';
 	_e('I try to make these plugins work <strong>"out of the box"</strong> with minimal effort; that they be easy to use but <strong>very configurable</strong>; <strong>well tested</strong>; with <strong>valid html and css</strong> both at the front and admin area.','amr-ical-events-list');
 	_e('If you have a feature request, please do let me know. ','amr-ical-events-list');
 	echo '</p><p><b>';
-	_e('To edit events in wordpress:','amr-ical-events-list'); 
+	_e('To edit events in wordpress:','amr-ical-events-list');
 	echo ' <span style="color: green;">';
-	_e('Upgrade to amr-events at ','amr-ical-events-list'); 
+	_e('Upgrade to amr-events at ','amr-ical-events-list');
 
 	echo ' <a title="home of both plugins" href="http://icalevents.com" >icalevents.com</a></b>';
 	echo '</span>';
@@ -180,13 +178,13 @@ function amr_request_acknowledgement () {
 
 }
 /* -------------------------------------------------------------------------------------------------------------*/
-if (!function_exists('amr_simpledropdown')) { 
+if (!function_exists('amr_simpledropdown')) {
 	function amr_simpledropdown($name, $options, $selected) {
-//			
+//
 		$html = '<select name=\''.$name.'\'>';
 		foreach ($options as $i => $option) {
-//				
-			$sel = selected($i, $selected, false); //wordpress function returns with single quotes, not double 
+//
+			$sel = selected($i, $selected, false); //wordpress function returns with single quotes, not double
 			$html .= '<OPTION '.$sel.' label=\''.$option.'\' value=\''.$i.'\'>'.$option.'</OPTION>';
 		}
 		$html .= '</select>';
@@ -199,7 +197,7 @@ function amr_ngiyabonga() {
 		/* You may however style it more gently, and/or subtly to fit in within your theme.  It is good manners to donate if you remove it */
 
 global $amr_options;
-	if (empty($amr_options['ngiyabonga']))		
+	if (empty($amr_options['ngiyabonga']))
 	return (
 		'<span class="amrical_credit" style="float:right;font-size:x-small;font-weight:lighter;font-style:italic;" >'
 		.'<a title="Ical Upcoming Events List version '.AMR_ICAL_LIST_VERSION.'" '
@@ -210,4 +208,23 @@ global $amr_options;
 		.'</a></span>'
 		);
 }
+function amrical_mimic_meta_box($id, $title, $callback , $toggleable = true) {
+	global $screen_layout_columns;
+
+	//	$style = 'style="display:none;"';
+		$h = (2 == $screen_layout_columns) ? ' has-right-sidebar' : '';
+		echo '<div style="clear:both;" class="metabox-holder'.$h.'">';
+		echo '<div class="postbox-container" style="width: 49%;">';
+		echo '<div class="meta-box-sortables" style="min-height: 10px;">';
+		echo '<div id="' . $id . '" class="postbox ' ;
+		if ($toggleable) { echo 'if-js-closed' ;}
+		echo '">' . "\n";
+		echo '<div class="handlediv" title="' . __('Click to toggle') . '"><br /></div>';
+
+		echo "<h3 class='hndle'><span>".$title."</span></h3>\n";
+		echo '<div class="inside">' . "\n";
+		call_user_func($callback);
+		echo "</div></div></div></div></div>";
+
+	}
 ?>

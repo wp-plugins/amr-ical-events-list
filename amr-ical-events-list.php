@@ -4,7 +4,7 @@ Plugin Name: amr events calendar or lists with ical files
 Author: anmari
 Author URI: http://anmari.com/
 Plugin URI: http://icalevents.com
-Version: 4.0.20
+Version: 4.0.21
 Text Domain: amr-ical-events-list
 Domain Path:  /lang
 
@@ -22,7 +22,7 @@ Description: Display simple or highly customisable and styleable list of events.
     for more details.
 */
 //  NB Change version in list main tooo define('AMR_ICAL_LIST_VERSION', '3.0.1');
-//if (!defined ('ICAL_EVENTS_DEBUG')) define('ICAL_EVENTS_DEBUG', false); 
+//if (!defined ('ICAL_EVENTS_DEBUG')) define('ICAL_EVENTS_DEBUG', false);
 define( 'AMR_BASENAME', plugin_basename( __FILE__ ) );
 
 	require_once('includes/amr-ical-events-list-main.php');
@@ -32,7 +32,10 @@ define( 'AMR_BASENAME', plugin_basename( __FILE__ ) );
 	require_once('includes/amr-upcoming-events-widget.php');
 	require_once('includes/amr_date_i18n.php');
 	require_once('includes/amr-ical-calendar.php');
+	require_once('includes/amr-ical-pretty-print.php');
 	require_once('includes/functions.php');
+	require_once('includes/amr-ical-plugin-form-html.php');
+	require_once('includes/amr-ical-groupings.php');
 
 if (is_admin()	) {  // are we in admin territory
 	require_once('includes/amr-ical-list-admin.php');
@@ -42,16 +45,18 @@ if (is_admin()	) {  // are we in admin territory
 }
 
 function amr_plugin_action($links, $file) {
-	static $this_plugin; 
+	static $this_plugin;
+
 	if( ! $this_plugin ) $this_plugin = plugin_basename(__FILE__);
 
-	if( stristr($this_plugin,$file )) { 
+
+	if( stristr($this_plugin,$file )) {
 	/* create link */
 		array_unshift($links,'<a href="admin.php?page=manage_amr_ical">'. __('Settings','amr-ical-events-list').'</a>' );
 	}
 
 	return $links;
 	} // end plugin_action()
-	
+
 
 ?>

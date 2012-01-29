@@ -213,10 +213,12 @@ function amr_set_helpful_descriptions () { // used in the admin screen
 	'allday' => 	__('Says "all day" (translated) if the event has full days.','amr-ical-events-list'),
 	'COMPLETED'=> 	__('If a task is completed.','amr-ical-events-list'),
 	'FREEBUSY'=> 	__('Show busy (translated) if the freebusy component is in use.','amr-ical-events-list'),
+
 //	'TRANSP'=> 		'',
 //	'declined' => 		__('Users who have declined.','amr-ical-events-list'),
 	'rsvp' => 			__('Users who have accepted.','amr-ical-events-list'),
 //	'rsvpwithcomment' => __('Form to rsvp with comment.','amr-ical-events-list'),
+	'register' => __('Add register button. Registration settings can be set as global defaults or per event.','amr-ical-events-list'),
 	'going_ornot_ormaybe' => __('Links to indicate if attending.','amr-ical-events-list'),
 	'CONTACT'=> 		__('The contact person if available.','amr-ical-events-list'),
 	'ORGANIZER'=> 		__('The author of the event.','amr-ical-events-list'),
@@ -235,12 +237,46 @@ function amr_set_helpful_descriptions () { // used in the admin screen
 	'CREATED'=> __('Date event created.','amr-ical-events-list'),
 	'DTSTAMP'=> __('Date event published.','amr-ical-events-list'),
 	'SEQUENCE'=> __('Modification level of event.','amr-ical-events-list'),
-	'LAST-MODIFIED' => __('Date event last modified.','amr-ical-events-list')
+	'LAST-MODIFIED' => __('Date event last modified.','amr-ical-events-list'),
+	'VEVENT'=> 	__('Events in an ics file','amr-ical-events-list'),
+	'VFREEBUSY'=> __('Items in an ics file that indicate busy or available time slots','amr-ical-events-list'),
+	'VTODO'=> __('Todo Task Items in an ics file','amr-ical-events-list'),
+	'VJOURNAL'=> __('Journal notes in an ics file - no date or time','amr-ical-events-list'),
 
 );
 
 
 	return ($descriptions);
+}
+/* ---------------------------------------------------------------------------*/
+function amr_define_possible_groupings () {
+	$taxonomies = amr_define_possible_taxonomies ();
+	
+	foreach ($taxonomies as $i=>$taxo) { 
+		$amr_groupings[$taxo] = false;
+	}	
+	
+	$amr_groupings = array_merge ($amr_groupings, array (
+			"Year" => false,
+			"Quarter" => false,
+			"Astronomical Season" => false,
+			"Traditional Season" => false,
+			"Western Zodiac" => false,
+			"Month" => false,
+			"Week" => false,
+			"Day"=> false
+			));
+	return ($amr_groupings);		
+}
+/* ---------------------------------------------------------------------------*/
+function amr_define_possible_taxonomies () {
+	// check if we have any taxonomies that we may wish to assign an event to
+	$taxonomies = get_taxonomies();
+	$excluded = array ('nav_menu','link_category', 'post_format') ;
+	foreach ($taxonomies as $i=>$tax) {
+		  if (!(in_array($tax, $excluded))) $eventtaxonomies[] = $tax;
+		}
+	return ($eventtaxonomies);	
 }
 /* ---------------------------------------------------------------------------*/
 function amr_set_defaults() {
@@ -336,16 +372,9 @@ function amr_set_defaults() {
 			__("Week",'amr-ical-events-list') ,
 			__("Day",'amr-ical-events-list')
 			);
-	$amr_groupings = array (
-			"Year" => false,
-			"Quarter" => false,
-			"Astronomical Season" => false,
-			"Traditional Season" => false,
-			"Western Zodiac" => false,
-			"Month" => true,
-			"Week" => false,
-			"Day"=> false
-			);
+			
+			
+	$amr_groupings = amr_define_possible_groupings();
 
 	$amr_colheading = array (
 		'1' => __('When','amr-ical-events-list'),
@@ -359,15 +388,11 @@ function amr_set_defaults() {
 
 
 	// check if we have any taxonomies that we may wish to assign an event to
-	$taxonomies=get_taxonomies();
-	$excluded = array ('category','nav_menu','link_category', 'post_format') ;
-	foreach ($taxonomies as $i=>$tax) {
-		  if (!(in_array($tax, $excluded))) $eventtaxonomies[] = $tax;
-		}
-	
+	$eventtaxonomies = amr_define_possible_taxonomies ();
 	foreach ($eventtaxonomies as $i=>$tax) {
 		 $eventtaxonomiesprop[$tax] = array('Column' => 2, 'Order' => 200, 'Before' => '', 'After' => '');
 		}
+		
 	$amr_calprop = array (
 			'X-WR-CALNAME'	=> array('Column' => 1, 'Order' => 1, 'Before' => '', 'After' => ''),
 			'X-WR-CALDESC'	=> $dfalse,
@@ -482,7 +507,7 @@ function amr_set_defaults() {
 		}
 //		
 		
-		for ($i = 1; $i <= 12; $i++)  { /* setup some list type defaults if we have empty list type arrays */
+		for ($i = 1; $i <= 13; $i++)  { /* setup some list type defaults if we have empty list type arrays */
 				$amr_options['listtypes'][$i] = new_listtype(); // set up basic
 				$amr_options['listtypes'][$i] = customise_listtype( $i);  /* then tweak */
 			}
@@ -695,12 +720,13 @@ function customise_listtype($i)	{ /* sets up some variations of the default list
 				{$amr_options['listtypes'][$i]['calprop'][$g]['Column'] = 0;}
 			foreach ($amr_options['listtypes'][$i]['compprop'] as $g => $v)
 				foreach ($v as $g2 => $v2) {$amr_options['listtypes'][$i]['compprop'][$g][$g2]['Column'] = 0;}
-			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EventDate']['Column'] = 0;
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EventDate']
+			= array('Column' => 0, 'Order' => 25, 'Before' => '&nbsp;', 'After' => '');
 			$amr_options['listtypes'][$i]['compprop']['Date and Time']['StartTime']
-			= array('Column' => 1, 'Order' => 10, 'Before' => '', 'After' => '');
+			= array('Column' => 1, 'Order' => 26, 'Before' => '&nbsp;', 'After' => '');
 			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EndDate']['Column'] = 0;
 			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EndTime']
-			= array('Column' => 1, 'Order' => 10, 'Before' => '', 'After' => '');
+			= array('Column' => 0, 'Order' => 30, 'Before' => '', 'After' => '');
 			$amr_options['listtypes'][$i]['compprop']['Descriptive']['SUMMARY']
 			= array('Column' => 1, 'Order' => 20, 'Before' => '', 'After' => '');
 			$amr_options['listtypes'][$i]['compprop']['Descriptive']['DESCRIPTION']['Column'] = 0;
@@ -856,7 +882,45 @@ function customise_listtype($i)	{ /* sets up some variations of the default list
 
 			break;
 			}	
+			case 13: {
+			foreach ($amr_options['listtypes'][$i]['calprop'] as $g => $v)
+				{$amr_options['listtypes'][$i]['calprop'][$g]['Column'] = 0;}
+			foreach ($amr_options['listtypes'][$i]['compprop'] as $g => $v) {
+				foreach ($v as $g2 => $v2) {
+					$amr_options['listtypes'][$i]['compprop'][$g][$g2]['Column'] = 0;
+				}
+			}
+			$amr_options['listtypes'][$i]['general']['name']=__('Event Master','amr-ical-events-list');
+			$amr_options['listtypes'][$i]['general']['Description']=
+			__('Grouped by category, intended to be used with no recurrences','amr-ical-events-list')
+			.__(' If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
+			$amr_options['listtypes'][$i]['general']['ListHTMLStyle']='HTML5table';
+			$amr_options['listtypes'][$i]['limit'] = array (	"events" => 200,	"days" 	=> 365,"cache" 	=> 24 );  /* hours */
+			$amr_options['listtypes'][$i]['format']['Time']='g:i'.'\&\n\b\s\p\;'.'a';
+			$amr_options['listtypes'][$i]['format']['Day']=
+			'D,j'.'\&\n\b\s\p\;'.'M'; //  to avoid tabel cell wrap
+			foreach ($amr_options['listtypes'][$i]['grouping'] as $g=>$v) {$amr_options['listtypes'][$i]['grouping'][$g] = false;}
+			$amr_options['listtypes'][$i]['grouping']['category'] = 1;
+			$amr_options['listtypes'][$i]['compprop']['Descriptive']['SUMMARY']
+			= array('Column' => 1, 'Order' => 10, 'Before' => '', 'After' => '');
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['EventDate']
+			= array('Column' => 2, 'Order' => 10, 'Before' => 'Next: ', 'After' => '');
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['StartTime']
+			= array('Column' => 3, 'Order' => 20, 'Before' => '', 'After' => '');
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['DURATION']
+			= array('Column' => 4, 'Order' => 30, 'Before' => '', 'After' => '');
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['subscribeseries'] 
+			= array('Column' => 5, 'Order' => 20, 'Before' => '', 'After' => '');
+			$amr_options['listtypes'][$i]['compprop']['Date and Time']['register'] 
+			= array('Column' => 5, 'Order' => 10, 'Before' => '', 'After' => '');
+			$amr_options['listtypes'][$i]['heading']['1'] 
+			= $amr_options['listtypes'][$i]['heading']['2'] 
+			= $amr_options['listtypes'][$i]['heading']['3'] 
+			= '';
 
+
+			break;
+			}
 
 	}
 			//--- temp fix before re editing all above
