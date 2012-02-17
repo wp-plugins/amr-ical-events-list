@@ -1,8 +1,10 @@
 <?php
+
+
 /* -------------------------------------------------------------------------------------------------------------*/
-function amr_expand_all () {
-	$html = '<a href="#" id="expandall" >'.__('Show all').'</a>'
-	.' <a href="#" id="hideall" class="inactive" >'.__('Hide all').'</a>';
+function amr_expand_all ($atts) {
+	$html = '<div id="calendar_toggle"><a href="#" id="expandall" >'.__('Show all', 'amr-ical-events-list').'</a>' 
+	.' <a href="#" id="hideall" class="inactive" >'.__('Hide all', 'amr-ical-events-list').'</a></div>';
 	return($html);
 }
 /* --------------------------------------------------  */
@@ -93,7 +95,7 @@ function amr_list_event_subset ($htm, $columns, $subset, $events) { // now a fla
 }
 /* --------------------------------------------------  */
 function amr_list_events_in_groupings ($htm, $id='', $columns, $groupedevents, $events) {  // 2 levels of grouping only at moment
-/*** herere */
+
 	if (empty($events)) return;
 	$html = '';
 	if (empty($groupedevents)) {
@@ -395,37 +397,3 @@ function amr_do_a_grouping($htm, $gi, $ghtml) {
 	return $html;
 }
 /* -------------------------------------------------------------------------------------------*/
-function amr_do_js_for_grouping_toggle() {
-?>
-<script type="text/javascript">
-//<![CDATA[
-jQuery(document).ready(function(){// Hide (Collapse) the toggle containers on load
-	
-	jQuery("#content h1").hide();
-	jQuery("tbody.toggle_container tr.event").addClass("hide");
-
-	//Switch the "Open" and "Close" state per click
-	jQuery(".trigger").toggle(function(){
-		jQuery(this).addClass("active");
-		}, function () {
-		jQuery(this).removeClass("active");
-	});
-	//Slide up and down on click
-	jQuery(".trigger").click(function(){
-		jQuery(this).("tbody.toggle_container .event").slideToggle("slow");
-	});
-		//Switch the "Open" and "Close" state per click
-	jQuery(".expandall").toggle(function(){
-		jQuery(this).addClass("active");
-		}, function () {
-		jQuery(this).removeClass("active");
-	});
-		//Slide up and down on click
-	jQuery(".expandall").click(function(){
-		jQuery("tbody.toggle_container .event").slideToggle("slow");
-	});
-	});
-	
-//]]>
-</script><?php
-}

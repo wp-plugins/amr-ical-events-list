@@ -1,4 +1,13 @@
 <?php //comonly useful functions
+/* -------------------------------------------------------------------------------------------*/
+function amr_external_url ($url) {
+	// if it is an external url, then open in new window
+		if (stristr( $url, get_bloginfo('url'))) {
+			return false;
+		}
+		else	return(true);
+	}
+/* -------------------------------------------------------------------------------------------*/
 function amr_memory_convert($size)
  {
     $unit=array('b','kb','mb','gb','tb','pb');

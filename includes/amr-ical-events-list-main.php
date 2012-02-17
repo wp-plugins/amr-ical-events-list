@@ -1534,6 +1534,11 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 		}
 		else $thecal = '';	/* the urls were not valid or some other error ocurred, for this spec, we have nothing to print */
 /* amr  end of core calling code --- */
+
+	if (!empty($amr_options['do_grouping_js']) ) {
+		$thecal .=	amr_ical_load_frontend_scripts();
+	}
+
 	return ($thecal);
 
 	}
@@ -1722,6 +1727,12 @@ function amr_get_params ($attributes=array()) {
 	// then get the limits for that list type
 
 	$amr_limits = $amr_options['listtypes'][$amr_listtype]['limit']; /* get the default limits */
+	if ($amr_liststyle === 'weekscalendar') {
+		$amr_limits['weeks'] = 2; // default for horizontal calendar
+	}  
+	if (($amr_liststyle === 'largecalendar') or $amr_liststyle === 'smallcalendar')  {
+		if (empty($amr_limits['months'])) $amr_limits['months'] = 1; // default for horizontal calendar
+	}  
 
 
 	If (ICAL_EVENTS_DEBUG) {echo '<hr>Defaults limits before we change them<br />'; var_dump($amr_limits ); }
@@ -1765,7 +1776,8 @@ function amr_get_params ($attributes=array()) {
 		else {
 			if  (in_array($i, array('days','events','months','listtype','hours', 'weeks'
 				,'daysoffset', 'startoffset', 'hoursoffset','monthsoffset'))) {
-				if (!empty($v)) $amr_limits[$i] = (int)$v ;  // can be negative, so no abs
+				if (!empty($v)) 
+					$amr_limits[$i] = (int)$v ;  // can be negative, so no abs
 				unset($shortcode_params[$i]);
 				}
 			}
@@ -1816,8 +1828,6 @@ function amr_get_params ($attributes=array()) {
 		}
 	}
 
-
-
 	If (ICAL_EVENTS_DEBUG) {echo '<hr> Check limits for listtype:'.$amr_listtype.' <br />'; var_dump($amr_limits); }
 
 	if (!empty( $shortcode_params['daysoffset'])) { /* keeping startoffset for old version compatibility, but allowing for daysoffset for compatibility with other offsets */
@@ -1825,7 +1835,6 @@ function amr_get_params ($attributes=array()) {
 		$amr_limits['startoffset'] = (int) $shortcode_params['daysoffset']; // can be negative
 	}
 /* ---- check for urls that are either passed by query or form, or are in the shortcode with a number or not ie: not ics =  */
-
 
 	//set up global for easier access
 	$amr_formats = $amr_options['listtypes'][$amr_listtype]['format'];
@@ -1866,9 +1875,11 @@ function amr_get_params ($attributes=array()) {
 	if (empty($amr_limits['hours'])) {/* else use the days and  then set the time to the beginning of the day */
 		date_time_set ($amr_limits['start'],0,0,0);
 	}
+	
+	$wkst = ical_get_weekstart(); // get the wp start of week
+	if (isset($_GET['debugwks'])) echo '<br/>wkst = '.$wkst;
 	if (!empty($amr_limits['weeks'])) { // weeks overrides all else
-		$wkst = ical_get_weekstart(); // get the wp start of week
-		if (isset($_GET['debugwks'])) echo '<br/>wkst = '.$wkst;
+				
 		$amr_limits['start'] = amr_get_human_start_of_week ($amr_limits['start'], $wkst); /* set to start of week */
 		$amr_limits['days'] = $amr_limits['weeks'] * 7;
 		unset ($amr_limits['hours']);
@@ -2158,14 +2169,21 @@ function amr_notice_listtypes_converted () {  // from version < 4.0 to version 4
  }
  /* ------------------------------------------------------------------------------------------------ */
 
- function amr_ical_load_frontend_scripts() {
-	$url =  plugins_url().'/amr-ical-events-list/js/';
- 	wp_register_script( 'amr-ical', $url.'amr-ical.js', array( 'jquery'), false, false);
+ function amr_ical_include_scripts() {  // only load js if requested
+ global $amr_listtype,$amr_options,$amr_doing_icallist;
+ // csss required for widgets etc, so allow general load
+	
+	if (empty($amr_doing_icallist)) return;
+	if (empty($amr_options['do_grouping_js'])) return;
+	$url =  plugins_url().'/amr-ical-events-list/js/amr-ical.js';
+ //	wp_register_script( 'amr-ical', $url.'amr-ical.js', array( 'jquery'), false, false);
+	wp_enqueue_script( 'amr-ical', $url, array( 'jquery'), false, true);  // true for in footer
 
+ }
+ 
+ function amr_ical_load_frontend_scripts() {  // only load js if requested
+ // csss required for widgets etc, so allow general load
 	wp_enqueue_script('jquery');
-	wp_enqueue_script('amr-ical');
-
-
 
  }
  /* ------------------------------------------------------------------------------------------------------ */
@@ -2194,7 +2212,8 @@ function amr_plugin_links($links, $file) {
 	}
 	else {// add_action('wp_head'        ,  'amr_ical_events_style');
 		add_action('wp_print_styles'    , 'amr_ical_events_style');
-		add_action('wp_enqueue_scripts' , 'amr_ical_load_frontend_scripts' );
+		add_action('wp_enqueue_scripts' , 'amr_ical_load_frontend_scripts' ); //enque jquery
+		add_action('wp_footer' 			, 'amr_ical_include_scripts' ); // add js to footer
 	}
 // add_action('plugins_loaded'          , 'amr_ical_widget_init');
 	add_action('widgets_init'           , 'amr_ical_widget_init');
@@ -2207,7 +2226,7 @@ function amr_plugin_links($links, $file) {
 	add_shortcode('smallcalendar'       , 'amr_do_smallcal_shortcode');
 	add_shortcode('largecalendar'       , 'amr_do_largecal_shortcode');
 	add_shortcode('weekscalendar'       , 'amr_do_weekscal_shortcode');
-
+	add_shortcode('expandall'       	, 'amr_expand_all');
 
 	register_activation_hook(__FILE__, 'amr_ical_events_list_record_version');
 	add_filter('plugin_row_meta', 'amr_plugin_links', 10, 2);

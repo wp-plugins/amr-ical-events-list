@@ -4,7 +4,7 @@ Tags: event, events, event calendar, events calendar, event manager, diary, sche
 
 Requires at least: 2.8
 Tested up to: 3.3.1
-Version: 4.0.20
+Version: 4.0.21
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec. Very customisable listings or box calendars.  This version uses ics as input. Upgrade option for ics feed generation, taxonomies etc
@@ -85,7 +85,11 @@ Note that some information may apply to the paid version amr-events - this is us
 == Changelog ==
 = Version 4.0.21 =
 * Fix: Decode entities (like &nbsp;) in content
+* Fix: Weekly horizontal calendar was not working correctly
 * Change: If Event urls in ics files are external to the site, they will have rel="external" and target="_blank" added via a pluggable function amr_format_url($url).
+* Change: updated danish files from Team Blogos  (GeorgWP)
+* Add: can now choose to add js to collapse and expand groupings.
+* Add: Two level of groupings of events possible and can group by categories and tags etc if using amr-events
 
 = Version 4.0.20 =
 * Fix: if DTEND matches DTSTART, it is not necessarily an error, or an all day.

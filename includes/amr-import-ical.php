@@ -665,7 +665,7 @@ or could be DTEND;TZID=America/New_York;VALUE=DATE-TIME:     and the date 201107
 global $amr_globaltz;
 
 	$tzobj = $amr_globaltz;  /* Because if there is no timezone specified in any way for the date time then it must a floating value, and so should be created in the global timezone.*/
-	if (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) {echo '<br /> Property : '.$parts[0];}
+//	if (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) {echo '<br /> Property : '.$parts[0];}
 	$p0 = explode (';', $parts[0]);  /* Looking for ; VALUE = something...;   or TZID=... or both, or more than one anyway ???*/
 	// the first bit will be the property like PRODID, or X_WR_TIMEZONE
 	// the next will be the modifiers

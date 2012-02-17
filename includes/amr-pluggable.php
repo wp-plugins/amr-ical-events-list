@@ -558,7 +558,7 @@ if (!function_exists('amr_format_url'))  {
 	// to be used to format the ics file event url - assumed to be valid
 		$text = str_replace('http://','', $url);
 	// if it is an external url, then open in new window
-		if (stristr( $url, get_bloginfo('url'))) {
+		if (amr_external_url($url)) {
 			$url = '<a href="'.$url.'" >'.$text.'</a>';
 		}
 		else
@@ -748,8 +748,10 @@ if (!function_exists('amr_derive_summary')) {
 			else
 				$e_desc = ' title="'.$e['SUMMARY'].' - '.__('More information', 'amr-ical-events-list').'" ';
 			}
-		if (!empty ($e_url))
+		if (!empty ($e_url)) {
+			if (amr_external_url($e_url)) $e_url .= ' target="_blank" '; 
 			$e_summ = '<a '.$e_url.$e_desc.'>'. $e['SUMMARY'].'</a>';
+		}
 		else $e_summ = $e['SUMMARY'];
 		return( $e_summ );
 	}

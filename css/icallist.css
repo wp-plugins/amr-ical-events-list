@@ -8,7 +8,16 @@ You can always refer back to the default css in the plugin folder for the latest
 	/* for browsers  that are not up to html5 yet, except will not work on IE  */
 		display: block;
 	}
+/* Optional - for grouping collapseability  */
+ .master th.level0  { font-weight: bold; background-color: #ddd; }
+ .master th.group .termdesc  {  font-weight: normal; text-transform: none; }
 
+ #calendar_toggle {
+	float: right;
+	}
+tr.level0 {
+	background: #ccc;
+}	
 /*----------------------------------------------- */
 #events_wrap {  
 	word-wrap: break-word; /* make sure that any very long words do not cause overflow*/

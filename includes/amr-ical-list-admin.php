@@ -738,10 +738,28 @@ function amr_ical_validate_general_options(){
 					$amr_options[$message] =  '';
 
 			}
-			if (isset($_POST["usehumantime"])) $amr_options['usehumantime'] =  true;
-			else $amr_options['usehumantime'] =  false;
-			if (isset($_POST["own_css"])) $amr_options['own_css'] =  true;
-			else $amr_options['own_css'] =  false;
+			if (isset($_POST["usehumantime"])) 
+				$amr_options['usehumantime'] =  true;
+			else 
+				$amr_options['usehumantime'] =  false;
+				
+			if (isset($_POST["do_grouping_js"])) 
+				$amr_options['do_grouping_js'] =  true;
+			else 
+				$amr_options['do_grouping_js'] =  false;
+				
+			if (isset($_POST["js_only_these_pages"])) {
+				$tmp = explode (',',$_POST["js_only_these_pages"]);
+				foreach ($tmp  as $i) {$i = (int) $i;}
+				$amr_options['js_only_these_pages'] =  $tmp;
+				}
+			else 
+				$amr_options['js_only_these_pages'] =  false;	
+				
+			if (isset($_POST["own_css"])) 
+				$amr_options['own_css'] =  true;
+			else 
+				$amr_options['own_css'] =  false;
 			if ((isset($_POST["date_localise"])) and (in_array($_POST["date_localise"], array('none', 'wp', 'wpgmt', 'amr')) )) $amr_options['date_localise'] =  $_POST["date_localise"];		/* from dropdown */
 			else $amr_options['date_localise'] =  'none';
 			if (isset($_POST["cssfile"])) $amr_options['cssfile'] =  $_POST["cssfile"];		/* from dropdown */
@@ -981,10 +999,15 @@ function amrical_other_form ($i) {
 	global $amr_options;
 
 	$listtype = $amr_options['listtypes'][$i];
+	
+	
+	
 	if (isset($listtype['general']['ListHTMLStyle']))
 			$style = $listtype['general']['ListHTMLStyle'];
 	else
 			$style = '';
+			
+			
 	echo '<fieldset class="other" ><h4 class="trigger"><a href="#" >'
 	. __('Other:', 'amr-ical-events-list')
 	.'</a></h4>	<div class="toggle_container">';
@@ -996,7 +1019,7 @@ function amrical_other_form ($i) {
 		<select id="ListHTMLStyle" name="general[<?php echo $i; ?>][ListHTMLStyle]">
 			<option value="table" <?php if ($style==='table') echo 'selected="selected" '; ?>><?php _e('Table', 'amr-ical-events-list'); ?></option>
 			<option value="list" <?php if ($style==='list') echo 'selected="selected" '; ?>><?php _e('Lists for rows', 'amr-ical-events-list'); ?></option>
-			<option value="HTML5table" <?php if ($style==='HTML5Table') echo 'selected="selected" '; ?>><?php _e('HTML5 in table', 'amr-ical-events-list'); ?></option>
+			<option value="HTML5table" <?php if ($style=='HTML5table') echo 'selected="selected" '; ?>><?php _e('HTML5 in table', 'amr-ical-events-list'); ?></option>
 			<option value="HTML5" <?php if ($style==='HTML5') echo 'selected="selected" '; ?>><?php _e('HTML5 clean and lean', 'amr-ical-events-list'); ?></option>
 			<option value="custom" <?php if ($style==='custom') echo 'selected="selected" '; ?>><?php _e('Custom - file required', 'amr-ical-events-list'); ?></option>
 			<option value="breaks" <?php if ($style==='breaks') echo 'selected="selected" '; ?>><?php _e('Breaks for rows!', 'amr-ical-events-list'); ?></option>
@@ -1121,6 +1144,12 @@ function amr_ical_general_form() {
 			</fieldset>
 			<fieldset id="amrstyle"><h3><?php echo $styletext; ?></h3>
 			<div class="postbox" style="padding:1em 2em; width: 600px;">
+				<label for="do_groupingjs">
+				<input type="checkbox" id="do_grouping_js" name="do_grouping_js" value="do_grouping_js"
+				<?php if (!empty($amr_options['do_grouping_js']) and ($amr_options['do_grouping_js']))  {echo 'checked="checked"';}
+				?>/> <?php _e('Use javascript to collapse event groupings', 'amr-ical-events-list');
+				?></label>
+				<br />
 
 				<label for="own_css">
 				<input type="checkbox" id="own_css" name="own_css" value="own_css"

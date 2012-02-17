@@ -334,7 +334,7 @@ function amr_expand_by_day_of_week_for_weekly (&$datearray, $pbys, $tz, $wkst) {
 	foreach ($datearray as $i=> $datea) {
 		$day 	= amr_create_date_from_parts ($datea, $tz);
 		if (is_object($day)) {
-			$day1 	= amr_get_start_of_week($day, $wkst);
+			$day1 	= amr_get_start_of_week($day, $wkst); // in ics terms not human
 			if (isset($_GET['rdebug'])) echo '<br />Got start of week'.$day1->format('Ymd l');
 			foreach ($pbyday as $byday => $bool ) {
 				if (isset($_GET['rdebug'])) echo '<br />BYDAY='.$byday.' ';
@@ -911,16 +911,19 @@ global $amr_globaltz;
 	}
 	/* ---------------------------------------------------------------------------- */
 function amr_get_human_start_of_week (&$dateobj, $wkst) { // WORKS !
-/* get the start of the week in ics terms, not ours neessarily according to the wkst parameter (Sat/Sun/Mon), returns new dat object  */
+/* get the start of the week in human terms */
 	global  $amr_day_of_week_no;
 	$wkst_no = $amr_day_of_week_no[$wkst];	/* from 1=Mo to 7=SU */
+	
 	$php_wkstno = $wkst_no % 7; /* php uses 0=SU , so convert to that */
 	
 	$dayofweek = $dateobj->format('w'); /* 0=SU, 6 = SA */
 	$adj = ($dayofweek - $php_wkstno + 7) % 7;
 	$string = '-'.$adj.' days';
-	date_modify ($dateobj,$string);
 
+	date_modify ($dateobj,$string);
+	//if (isset($_GET['debugwks'])) { echo '<br />wkstno='.$wkst_no.' phpwstno='.$php_wkstno.' dow='.$dayofweek.' adj='.$adj.
+	//' get start of week using '.$string.' to'.$dateobj->format('c');}
 	return ($dateobj);
 }
 /* ---------------------------------------------------------------------------- */
@@ -931,7 +934,7 @@ function amr_get_start_of_week (&$dateobj, $wkst) { // is it right - is it just 
 	
 	$dayofweek = $dateobj->format('w');
 	
-	if (isset($_GET['debugwks'])) echo '<br/>dayofweek= '.$dayofweek.' wkst '.$wkst_no;
+	//if (isset($_GET['debugwks'])) echo '<br/>dayofweek= '.$dayofweek.' wkst '.$wkst_no;
 	
 	if ($dayofweek == '-1') $dayofweek = get_oldweekdays($dateobj); /* php seems to break around year 1760   */
 	if ($dayofweek < $wkst_no)

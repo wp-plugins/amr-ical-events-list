@@ -77,20 +77,24 @@ function amr_prepare_day_titles ($titles, $liststyle) {
 // ----------------------------------------------------------------------------------------
 function amr_get_events_in_weeks_format ($events, $weeks, $start) {  // should be using dummmyYMD?
 
-	if (isset($_GET['debugwks'])) { echo '<br />Separate '.count($events).' events into weeks for '.$weeks.' weeks';}
+	$wkst = ical_get_weekstart(); // get the wp start of week 
+	
+	if (isset($_GET['debugwks'])) { echo '<br />Separate '.count($events).' events into weeks for '.$weeks.' weeks using wkst: '.$wkst;}
+		
 	$weeksofevents= array();
 // prepare the months array so we show a calendar even if no events 
 	$dummydate = new Datetime();
 	$dummydate = clone $start ;
+	$dummydate = amr_get_human_start_of_week($dummydate,$wkst);
 	for ($i = 0; $i < $weeks; $i++) {
 		$weekbeginning = $dummydate->format('Ymj'); //numerical so do not need amr_date_format
-		if (empty ($firstweekbeginning) ) $firstweekbeginning = $weekbeginning;
+		if (empty ($firstweekbeginning) ) 
+			$firstweekbeginning = $weekbeginning;
 		if (isset($_GET['debugwks'])) {echo '<br />weekbeginning'.$weekbeginning; }
 		$weeksofevents[$weekbeginning] = array();
 		date_modify($dummydate, '+7 days');
 	}
-	
-	$wkst = ical_get_weekstart(); // get the wp start of week 
+
 // assign events to the box of their year and month	
 	if (!empty ($events)) {
 		foreach ($events as $event) {
@@ -100,13 +104,19 @@ function amr_get_events_in_weeks_format ($events, $weeks, $start) {  // should b
 					substr($event['dummyYMD'],4,2),
 					substr($event['dummyYMD'],6,2)
 					);
+				if (isset($_GET['debugwks'])) {echo '<br />date:'.$event['dummyYMD'];}
 				$dummydate = amr_get_human_start_of_week ($dummydate , $wkst);
 				$weekbeginning = $dummydate->format('Ymj');
-				if (isset($weeksofevents[$weekbeginning])) 
+				if (isset($_GET['debugwks'])) {echo '<br />start of week:'.$weekbeginning;}
+				if (isset($weeksofevents[$weekbeginning])) {
 					$weeksofevents[$weekbeginning][] = $event;
+				}
 				else 	{  // the week beginning is not in our current set - might be a multi day that started the previous week or even earlier 
-					if (isset($_GET['debugwks'])) echo '<br />No week begin for ? '.$dummydate->format('c').' '.$event['SUMMARY'];
+					if (isset($_GET['debugwks'])) {
+						echo '<br />No week begin of '.$weekbeginning.' for ? '.$dummydate->format('c').' '.$event['SUMMARY'];
 					//$weeksofevents[$weekbeginning][] = $event;  // assign our multi day to first week
+						//var_dump($event);
+					}
 				}
 
 			}
@@ -143,7 +153,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 
 
 	$months = 1;
-	$weeks = 1;
+	$weeks = 2;  // as default
 	if (isset ($amr_limits['months'])) {
 		$months = $amr_limits['months'];  //may need later on if we are going to show multiple boxes on one page
 		$weeks = 0;
@@ -154,7 +164,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 		}
 
 	// testing 
-	//$weeks = 2;		
+	//$weeks = 2;		// need weeks =2 else miss early ones
 	// Let's figure out when we are
 
 	$start    		= new Datetime();
@@ -213,8 +223,10 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 
 	if (($liststyle == 'smallcalendar') )   // for compatibility with wordpress default 
 		$class = ' widget_calendar ';
-	if (empty($class)) $class = $liststyle;
-	else $class = $class.' '.$liststyle.' ';
+	if (empty($class)) 
+		$class = $liststyle;
+	else 
+		$class = $class.' '.$liststyle.' ';
 			
 	if (!empty($amr_limits['show_views']) and $change_view_allowed) 
 		$views = amrical_calendar_views();
@@ -245,7 +257,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 	// now do for each month or week-------------------------------------------------------------------------------------------------------
 	if (isset ($weeksofevents)) $monthsofevents = $weeksofevents; //temp
 	if (isset($_GET['debugwks'])) echo '<br />Bunches of events = '.count($monthsofevents).'<br />';
-	foreach ($monthsofevents as $ym => $monthevents) {
+	foreach ($monthsofevents as $ym => $monthevents) {  //also for weeks
 		$thismonth= substr($ym,4,2);
 		$thisyear = substr($ym,0,4);
 		if (!($liststyle === 'weekscalendar'))
@@ -290,8 +302,10 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 				if (isset($event['dummyYMD']) ) {
 
 					//$month = $event['EventDate']->format('m');
-					$month = substr($event['dummyYMD'],4,2); // quicker?
-					if ($month == $thismonth) {  
+					//$month = substr($event['dummyYMD'],4,2); // quicker?
+					//if (isset($_GET['debugwks'])) {echo '<br />Do we need monts=thismonth check?'.$month.' '.$thismonth;}
+										
+					//if ($month == $thismonth) {  
 					// this allows to have agenda with more months and events cached
 						//$day = $event['dummyYMD']->format('j');	
 						$day = ltrim(substr($event['dummyYMD'],6,2),'0'); // quicker?							
@@ -305,7 +319,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 						$titles[$day][] = $title;
 						//
 						$eventsfortheday[$day][] = $event;
-						}
+					//	}
 				}
 			}
 		}
