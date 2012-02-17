@@ -1,0 +1,1465 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: AMR\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-07-12 16:06+0100\n"
+"PO-Revision-Date: 2011-08-21 12:37+0200\n"
+"Last-Translator: \n"
+"Language-Team: Nata Strazda <nata@epastas.lt>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-Language: Lithuanian\n"
+"X-Poedit-Country: LITHUANIA\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2\n"
+"X-Poedit-Basepath: .\n"
+"X-Textdomain-Support: yes\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:716
+msgid " Define date and time formats:"
+msgstr "Nustatykite datos ir laiko formatus:"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:235
+msgid " or "
+msgstr "arba"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:453
+msgid "Add event to google"
+msgstr "Pridėti renginį \"Google\""
+
+#@ amr-ical-events-list
+#: includes/amr-ical-uninstall.php:6
+msgid "AmR iCal Options deleted from Database"
+msgstr "Amr iCal Funkcijos ištrinta iš duomenų bazės"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-uninstall.php:9
+msgid "AmR iCal Widget Options deleted from Database"
+msgstr "AMR iCal \"widget Funkcijos ištrinta iš duomenų bazės"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:361
+msgid "Calendar properties"
+msgstr "kalendorius savybės"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-uninstall.php:45
+msgid "Cancel"
+msgstr "atšaukti"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:408
+msgid "Class"
+msgstr "klasė"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-uninstall.php:36
+msgid "Continue to Plugin list to delete files as well"
+msgstr "Toliau Įskiepis sąrašas ištrinti failus, taip pat"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:407
+msgid "Date"
+msgstr "data"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:345
+msgid "Define grouping:"
+msgstr "Nustatykite grupės:"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:304
+msgid "Define maximums:"
+msgstr "Apibrėžti maksimalūs:"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:392
+msgid "Description"
+msgstr "aprašymas"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:1004
+msgid "Event Link"
+msgstr "renginys nuoroda"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-uninstall.php:25
+msgid "Note this function removes the options from the database.  To completely uninstall, one should continue on to use the standard wordpress functions to deactivate the plugin and delete the files.  It is not necessary to run this separately as the uninstall will also run as part of the wordpress delete plug-in files."
+msgstr "Pastaba: ši funkcija pašalina iš duomenų bazės galimybių. Visiškai pašalinti, reikia toliau naudoti standartinę WordPress funkcijas išjungti Įskiepiai ir ištrinti failus. Nėra būtina paleisti šią atskirai, kaip pašalinti, taip pat paleisti, kaip WordPress ištrinti plug-failuose."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-uninstall.php:34
+msgid "Note: Navigating to \"Manage AmR ICal Settings\" will RELOAD default options - negating the uninstall."
+msgstr "Pastaba: Navigacija su \ \"Tvarkyti Amr iCal\" Nustatymai \ \"Perkrauti numatytąsias parinktis - sumenkinamos pašalinimo."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:555
+msgid "Number of Ical Lists:"
+msgstr "ICal sąrašai skaičius:"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-uninstall.php:46
+msgid "Really Uninstall Options?"
+msgstr "Tikrai Pašalinti parinktys?"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:574
+msgid "Refresh calendars"
+msgstr "atnaujinti kalendorius"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:409
+msgid "Room"
+msgstr "kambarys"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:323
+msgid "Select components to show:"
+msgstr "Pasirinkite komponentai parodyti:"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:367
+msgid "Show in Google map"
+msgstr "Rodyti Google žemėlapis"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:374
+msgid "Show location in Google Maps"
+msgstr "Rodyti vietą \"Google Maps\""
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:1281
+msgid "Subscribe to calendar"
+msgstr "Prenumeruoti į kalendorių"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-uninstall.php:26
+msgid "The function is provided here as an aid to someone who has perhaps got their wordpress install in a knot and wishes to temporarily remove the options from the database as part of their debugging or cleanup.  Consider also the use of the RESET."
+msgstr "Funkcija čia kaip pagalbos į žmogų, kuris galbūt gavo savo WordPress įdiegti mazgas ir nori laikinai pašalinti iš duomenų bazės galimybes, kaip dalis jų derinimo arba išvalymas. Taip pat atsižvelkite RESET."
+
+#@ amr-ical-events-list
+#: includes/amr-upcoming-events-widget.php:117
+#: includes/amr-upcoming-events-widget.php:256
+msgid "Title"
+msgstr "pavadinimas"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:760
+msgid "Uninstall"
+msgstr "pašalinti"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-uninstall.php:24
+msgid "Uninstall AmR iCal Events List Options"
+msgstr "Pašalinti Amr iCal įvykių sąrašas parinktys"
+
+#@ amr-ical-events-list
+#: includes/amr-upcoming-events-widget.php:11
+#: includes/amr-upcoming-events-widget.php:93
+#: includes/amr-upcoming-events-widget.php:163
+#: includes/amr-upcoming-events-widget.php:217
+#: includes/amr-upcoming-events-widget.php:245
+msgid "Upcoming Events"
+msgstr "Artimiausi renginiai"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:757
+msgid "Update"
+msgstr "atnaujinti"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:391
+msgid "Venue"
+msgstr "Renginio vieta"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:1908
+#, php-format
+msgid "Week  %u"
+msgstr "Savaitė% u"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:244
+msgid "What"
+msgstr "ką"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:243
+msgid "When"
+msgstr "kai"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:245
+msgid "Where"
+msgstr "kur"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:3067
+msgid "iCal Events List"
+msgstr "iCal Renginiai sąrašas"
+
+#@ amr-ical-events-list
+#. translators: plugin header field 'Name'
+#: amr-ical-events-list.php:0
+msgid "amr events calendar or lists with ical files"
+msgstr "amr Renginių kalendorius arba sąrašus su iCal failai"
+
+#@ amr-ical-events-list
+#. translators: plugin header field 'PluginURI'
+#: amr-ical-events-list.php:0
+msgid "http://icalevents.anmari.com"
+msgstr "http://icalevents.anmari.com"
+
+#@ amr-ical-events-list
+#. translators: plugin header field 'Description'
+#: amr-ical-events-list.php:0
+msgid "Display simple or highly customisable and styleable list of events.  Handles all types of recurring events, notes, journals, freebusy etc. Offers links to add events to viewers calendar or subscribe to whole calendar.  Write Calendar Page</a>  and put [iCal http://yoururl.ics ] where you want the list of events of an ics file and [events] to get internal events.      To tweak: <a href=\"admin.php?page=manage_amr_ical\">Manage Settings Page</a>,  <a href=\"widgets.php\">Manage Widget</a>."
+msgstr "Rodyti paprasta arba labai pritaikyti ir styleable renginių sąrašą. Rankenos visų pasikartojančių įvykių, pažymi, žurnalai, laisvalaikiui ir užimtas ir tt siūlo ryšius pridėti renginių kalendorių žiūrovų arba užsisakyti visą kalendorių. Rašyti Kalendorius Puslapis </ a> ir įdėti [iCal http://yoururl.ics], jei norite įvykių nika failą ir [renginiai] sąrašą, gauti vidaus įvykius. Įgnybti: <a href=\"admin.php?page=manage_amr_ical\"> Valdymas nustatymų puslapyje </ a>, <a href=\"widgets.php\"> Valdymas widget </ a>."
+
+#@ amr-ical-events-list
+#. translators: plugin header field 'Author'
+#: amr-ical-events-list.php:0
+msgid "anmari"
+msgstr "anmari"
+
+#@ amr-ical-events-list
+#. translators: plugin header field 'AuthorURI'
+#: amr-ical-events-list.php:0
+msgid "http://anmari.com/"
+msgstr "http://anmari.com/"
+
+#@ amr-ical-events-list
+#. translators: plugin header field 'Version'
+#: amr-ical-events-list.php:0
+msgid "3.9.6"
+msgstr "3.9.6"
+
+#@ amr-ical-events-list
+#: amr-ical-events-list.php:55
+msgid "Settings"
+msgstr "Nustatymai"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-calendar.php:78
+msgid "Go to agenda or list view"
+msgstr "Grįžti į darbotvarkę, ar sąrašo rodinį"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-calendar.php:78
+msgid "Agenda"
+msgstr "darbotvarkė"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-calendar.php:86
+msgid "Go to calendar view"
+msgstr "Eiti į kalendoriaus rodinį"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-calendar.php:86
+msgid "Calendar"
+msgstr "kalendorius"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-calendar.php:94
+msgid "Go to map view"
+msgstr "Eiti į žemėlapio vaizdą"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-calendar.php:94
+msgid "Map"
+msgstr "žemėlapis"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-calendar.php:105
+msgid "Go to date"
+msgstr "Rodyti datą"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-calendar.php:142
+#: includes/amr-ical-calendar.php:151
+#, php-format
+msgid "Go to %1$s %2$s"
+msgstr "Eiti į %1$s %2$s"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:108
+msgid "Column"
+msgstr "skiltis"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:109
+msgid "Order"
+msgstr "tvarka"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:110
+msgid "Before"
+msgstr "prieš"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:111
+msgid "After"
+msgstr "po"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:202
+msgid "Default"
+msgstr "numatytasis"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:203
+msgid "A default calendar list. This one set to tables with lists in the cells.  Usually needs the css file enabled. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. "
+msgstr "Numatytąjį kalendorių sąrašas. Tai vienas lentelių sąrašus ląstelėse. Paprastai reikia CSS failo įjungtas. Jei konfigūruoti, aš siūlau pakeisti šį aprašymą pagalbos savo atminties kaip / kodėl ji yra sukonfigūruota taip, kad ji yra."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:222
+msgid "Year"
+msgstr "metai"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:223
+msgid "Quarter"
+msgstr "ketvirtis"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:224
+msgid "Astronomical Season"
+msgstr "astronomijos sezonas"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:225
+msgid "Traditional Season"
+msgstr "tradiciniai sezonas"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:226
+msgid "Western Zodiac"
+msgstr "Vakarų Zodiako ženklai"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:227
+msgid "Month"
+msgstr "mėnuo"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:228
+msgid "Week"
+msgstr "savaitė"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:229
+msgid "Day"
+msgstr "diena"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:563
+msgid "The new default setting for a large monthly calendar. No grouping, No headings. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is."
+msgstr "Naujas numatytasis parametras didelis mėnesio kalendorius. Nr grupėje Nr pozicijose. Jei konfigūruoti, aš siūlau pakeisti šį aprašymą pagalbos savo atminties kaip / kodėl ji yra sukonfigūruota taip, kad ji yra."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:853
+msgid "Events plugin by anmari"
+msgstr "Renginiai įskiepiai anmarients plugin pagal anmari"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:874
+msgid "No events found within criteria"
+msgstr "Renginių nerasta per kriterijus"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:889
+msgid "Resetting options..."
+msgstr "Atstatyti parinkčių ..."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:892
+msgid "Options Deleted..."
+msgstr "Parinktys Ištrinta ..."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:893
+msgid "Option was not saved before or error deleting option..."
+msgstr "Variantas nebuvo išsaugoti prieš arba klaida išbraukiant variantas ..."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-config.php:903
+msgid " Converting option key to lowercase"
+msgstr "Option klavišą, konvertavimas į mažąsias"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:13
+msgid "The <a href=\"http://au.php.net/manual/en/class.datetime.php\"> DateTime Class </a> must be enabled on your system for this plugin to work. They may need to be enabled at compile time.  The class should exist by default in PHP version 5.2."
+msgstr "<a Href=\"http://au.php.net/manual/en/class.datetime.php\"> Datetime klasės </ a>, turi būti įjungta jūsų sistema šiuo įskiepiai į darbą. Joms gali prireikti, turi būti įjungtas kompiliavimo metu.Klasė turėtų egzistuoti 5.2 versija PHP pagal nutylėjimą."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:35
+#: includes/amr-ical-events-list-main.php:47
+msgid "th"
+msgstr "th"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:41
+msgid "st"
+msgstr "st"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:43
+msgid "nd"
+msgstr "nd"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:45
+msgid "rd"
+msgstr "rd"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:55
+msgid "the first"
+msgstr "pirmasis"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:57
+msgid "every"
+msgstr "kiekvienas"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:59
+msgid "the last"
+msgstr "paskutinis"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:61
+#, php-format
+msgid "the %s last"
+msgstr "paskutinio %s"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:63
+#, php-format
+msgid "the %s"
+msgstr "%s"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:166
+#, php-format
+msgid "Weeks start on %s"
+msgstr "Savaites pradėti %s"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:196
+#: includes/amr-ical-events-list-main.php:204
+#: includes/amr-ical-events-list-main.php:220
+#: includes/amr-ical-events-list-main.php:296
+msgid " and "
+msgstr "ir"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:206
+msgid "every "
+msgstr "kiekvienas"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:267
+#, php-format
+msgid "Every %s %s"
+msgstr "kiekvienas %s %s"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:275
+#, php-format
+msgid "On %s instance within %s"
+msgstr "Pavyzdžiui, per %s %s"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:278
+#, php-format
+msgid "%s times"
+msgstr "% s laikas"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:283
+#, php-format
+msgid "until %s %s"
+msgstr "iki %s %s"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:285
+#, php-format
+msgid " if month is %s"
+msgstr "jei mėnesio yra% s"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:287
+#, php-format
+msgid " in %s weeks of the year"
+msgstr "% s metų savaites"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:289
+#, php-format
+msgid "on %s day of the year"
+msgstr "% s metų dieną"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:290
+#, php-format
+msgid "on %s day of each month"
+msgstr "% s kiekvieno mėnesio dieną"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:291
+#: includes/amr-ical-events-list-main.php:292
+#, php-format
+msgid "on %s "
+msgstr "% s"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:295
+#, php-format
+msgctxt " eg: last day of the year/month "
+msgid " of the %s"
+msgstr "% s"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:300
+#, php-format
+msgid "at the %s hour"
+msgstr "%-ai val."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:301
+#, php-format
+msgid "at the %s minute"
+msgstr "%-ai minučių"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:302
+#, php-format
+msgid "at the %s second"
+msgstr "% s antrasis"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:437
+msgid "Add to google calendar"
+msgstr "Pridėti į \"Google\" kalendoriaus"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:439
+msgid "Add to google"
+msgstr "Pridėti į \"Google\""
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:492
+#, php-format
+msgid "Error creating custom css directory %s. Please check permissions"
+msgstr "Klaida kuriant užsakymą CSS katalogo% s. Prašome patikrinti leidimus"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:510
+msgid "Could not copy file."
+msgstr "Nepavyksta kopijuoti failo."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:570
+msgid "Last Refresh time unexpectedly not available"
+msgstr "Paskutinį kartą atnaujinta LAIKAS netikėtai nėra"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:575
+#, php-format
+msgid "Last refresh was at %s. "
+msgstr "Paskutinį kartą atnaujinti buvo bent% s"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:577
+msgid "Remote file had no modifications. "
+msgstr "Paskutinį karta atnaujinti was smilga% s"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:581
+#, php-format
+msgid "The remote file was last modified on %s."
+msgstr "Nuotolinio failo paskutinį kartą keistas% s."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:586
+msgid "Click to refresh"
+msgstr "Spustelėkite atnaujinti"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:754
+#, php-format
+msgid "%u year"
+msgid_plural "%u years"
+msgstr[0] "% U metai"
+msgstr[1] "% U metai"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:759
+#, php-format
+msgid "%u month "
+msgid_plural "%u months "
+msgstr[0] "% U mėnesį"
+msgstr[1] "% U mėnesį"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:764
+#, php-format
+msgid "%u week "
+msgid_plural "%u weeks"
+msgstr[0] "% U savaitės"
+msgstr[1] "% U savaitės"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:769
+#, php-format
+msgid "%u day"
+msgid_plural "%u days"
+msgstr[0] "% U dieną"
+msgstr[1] "% U dieną"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:775
+#, php-format
+msgid "%u hour"
+msgid_plural "%u hours"
+msgstr[0] "% u val."
+msgstr[1] "% u val."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:780
+#, php-format
+msgid "%u minute"
+msgid_plural "%u minutes"
+msgstr[0] "% U minutę"
+msgstr[1] "% U minutę"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:785
+#, php-format
+msgid "%u second"
+msgid_plural "%u seconds"
+msgstr[0] "% ir antra"
+msgstr[1] "% ir antra"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:798
+msgid "Change Timezone"
+msgstr "keisti laiko juostą"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:799
+#, php-format
+msgid "Timezone: %s, Click for %s"
+msgstr "Laiko juosta:% s,% s Spauskite"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:852
+msgid "Sent by "
+msgstr "siunčiami"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:923
+msgid "all day"
+msgstr "visą dieną"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:1248
+msgid "Total events: "
+msgstr "Viso renginių:"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:1251
+msgid "X-WR-CALDESC"
+msgstr "X-WR-CALDESC"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:1254
+msgid "No description available"
+msgstr "Nėra aprašymo"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:1257
+msgid "X-WR-CALNAME"
+msgstr "X-WR-CALNAME"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:1262
+#: includes/amr-ical-events-list-main.php:1272
+#, php-format
+msgid "Subscribe to %s Calendar"
+msgstr "Prenumeruoti į% s Kalendorius"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:1279
+msgid "Subscribe to calendar in your calendar application."
+msgstr "Prenumeruoti į kalendorių savo kalendoriaus programoje."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:1700
+msgid "heading"
+msgstr "antraštė"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:2395
+#, php-format
+msgid "Unable to load or cache ical calendar %s"
+msgstr "Nepavyko įkelti arba talpyklos iCal kalendorių% s"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:2400
+#, php-format
+msgid "Error finding or parsing ical calendar %s"
+msgstr "Klaidos ieškant ar apdorojant iCal kalendorių% s"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:2427
+msgid "This feature requires the plugin amr-events"
+msgstr "Ši funkcija reikalauja įskiepiai AMR-renginiai"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:2428
+msgid "Get it here"
+msgstr "Jį gauti čia"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:2553
+msgid "No url entered - did you want events from posts ?"
+msgstr "Nr URL įrašytas norite renginiai iš žinutes?"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:2579
+msgid "No ical components requested for display"
+msgstr "Nėra iCal komponentai prašoma rodyti"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:2659
+msgid "Daily"
+msgstr "kasdien"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:2660
+msgid "Weekly"
+msgstr "kas savaitę"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:2661
+msgid "Monthly"
+msgstr "kas mėnesį"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:2662
+msgid "Yearly"
+msgstr "kasmet"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:2663
+msgid "Hourly"
+msgstr "valandinis"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:2664
+msgid "on certain dates"
+msgstr "dėl tam tikrų datų"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:2665
+msgid "day"
+msgstr "diena"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:2666
+msgid "week"
+msgstr "savaitė"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:2667
+msgid "month"
+msgstr "mėnuo"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:2668
+msgid "year"
+msgstr "metai"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:2669
+msgid "hour"
+msgstr "valanda"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:2725
+#, php-format
+msgid "Invalid Ical URL %s"
+msgstr "Neteisingas iCal URL% s"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:2870
+msgid "Invalid Start Date"
+msgstr "Neteisinga pradžios data"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:3075
+msgid "Listing Events"
+msgstr "sąrašu Renginiai"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:3092
+msgid "iCal Events Lists"
+msgstr "iCal Renginiai sąrašai"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:3093
+msgid "List types"
+msgstr "tipų sąrašo"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:3132
+msgid "Uncaught exception: "
+msgstr "Uncaught, išskyrus:"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-events-list-main.php:3133
+msgid "<br /><br />An error in the input data may prevent correct display of this page.  Please advise the administrator as soon as possible."
+msgstr "<br /> <br /> duomenų įvesties klaida gali trukdyti teisingai rodyti šio puslapio. Prašome informuoti administratorius kuo greičiau."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:59
+msgid "Invalid Number of Lists"
+msgstr "Negaliojantis Sąrašų skaičius"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:193
+msgid "Error in form - calprop array not found"
+msgstr "Klaida forma - calprop masyvo nerastas"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:244
+msgid "General:"
+msgstr "Bendra:"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:252
+msgid "Name"
+msgstr "pavadinimas"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:255
+msgid "Internal Description"
+msgstr "vidaus aprašymas"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:258
+msgid "List HTML Style"
+msgstr "Sąrašas HTML Stilius"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:260
+msgid "Table"
+msgstr "lentelė"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:261
+msgid "Lists for rows"
+msgstr "Sąrašus eilutėse"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:262
+msgid "HTML5 in table"
+msgstr "Lentelėje HTML5,"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:263
+msgid "HTML5 clean and lean"
+msgstr "HTML5 švarus ir Lean"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:264
+msgid "Custom - file required"
+msgstr "Pasirinktinis - failas reikalingas"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:265
+msgid "Breaks for rows!"
+msgstr "Pertraukas eilutėse!"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:266
+msgid "Small box calendar"
+msgstr "Nedidelį langelį kalendorius"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:267
+msgid "Large box calendar"
+msgstr "Didelis langas kalendorius"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:268
+msgid "Table with lists in cells (original)"
+msgstr "Lentelė su ląstelių sąrašus (originalas)"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:274
+#, php-format
+msgid "Custom HTML style file at %s..."
+msgstr "Individualizuotos HTML stiliaus failą% s. .."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:275
+msgid " (Html and some php knowledge required)"
+msgstr "(HTML ir PHP žinias, reikalingas)"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:285
+msgid "Default Event URL"
+msgstr "Įsipareigojimų nevykdymo atveju URL"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:287
+msgid " (For ics files in widget. External, or calendar page.)"
+msgstr "(ICS failus valdikliui. Išorės arba kalendoriaus puslapį.)"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:289
+#: includes/amr-ical-list-admin.php:388
+msgid "More information"
+msgstr "daugiau informacijos"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:306
+msgid "Note cache times are in hours"
+msgstr "Pastaba talpyklos laikas valandomis"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:324
+msgid "Wikipedia entry describing components"
+msgstr "Wikipedia įrašas aprašyti komponentai"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:383
+msgid "Specify fields to show:"
+msgstr "Nurodykite laukus parodyti:"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:387
+msgid "Note: a 0 (zero) in column = do not show that field."
+msgstr "Pastaba: skiltyje = 0 (nulis) nerodo, kad srityje."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:388
+msgid "Link to more information"
+msgstr "Nuoroda į daugiau informacijos"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:390
+msgid "Uppercase fields are those defined in the iCal specification."
+msgstr "Didžiąsias yra tos sritys, iCal specifikacijoje apibrėžta."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:392
+msgid "Lowercase fields are additional fields added by this plugin and derived from the iCal fields for your convenience."
+msgstr "Mažosiomis laukai yra papildomi laukai pridėti šį įskiepiai ir išplaukiančios iš iCal srityse, Jūsų patogumui."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:393
+msgid "Fields show if \"column\" > 0 and if there is data available in your event or ics file."
+msgstr "Laukuose rodoma, jei \ \"skiltyje \"> 0 ir, jei yra duomenų savo renginį arba ICS failą."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:421
+msgid "Column Headings:"
+msgstr "Stulpelių antraštes:"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:445
+msgid "Documentation"
+msgstr "dokumentacija"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:447
+msgid "Support"
+msgstr "parama"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:449
+msgid "Videos"
+msgstr "Vaizdo klipai"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:451
+msgid "Rate it at WP"
+msgstr "Normą, kurią ji ne DG"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:453
+msgid "Plugin feed"
+msgstr "Įskiepis pašarų"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:455
+msgid "Forum feed"
+msgstr "Forumas pašarų"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:477
+msgid "Unable to create Custom css file for you to edit if you wish - not essential."
+msgstr "Nepavyko sukurti savo CSS failą galite redaguoti, jei norite - ne esminis."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:481
+#, php-format
+msgid "Copied %s1 to %s2 to allow custom css"
+msgstr "Nukopijuota%% S1, S2 leisti užsakymą CSS"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:493
+#, php-format
+msgid "Your timezone db version is: %s"
+msgstr "Savo laiko juostą dB versija:% s"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:495
+msgid "Plugin cannot determine timezonedb version in php &lt; 5.3."
+msgstr "Įjungti negalima nustatyti timezonedb versija PHP <5.3."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:498
+msgid "The timezone database defines the daylight saving changes amongst other things.  If correct daylight saving switchover is important to you, please check for the latest updates. "
+msgstr "Laiko juosta duomenų bazė apibrėžia vasaros pakeitimų, be kita ko. Jei teisinga vasaros perėjimas yra svarbu jums, prašome patikrinti atnaujinimus."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:498
+msgid "You may need to talk to your webhost."
+msgstr "Jums gali tekti pasikalbėti su jūsų tinklo serveriu."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:499
+msgid "Php timezonedb versions"
+msgstr "PHP timezonedb versijas"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:500
+msgid "Info on what changes are in which timezonedb version"
+msgstr "Informacija apie tai, kokie pakeitimai yra timezonedb versija"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:504
+msgid "No global timezone - is there a problem here? "
+msgstr "Nr pasaulio Laiko juosta - yra problema?"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:510
+msgid "You are using the \"old\" gmt_offset setting "
+msgstr "Jūs naudojate \ \"senas \" gmt_offset nustatymas"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:511
+msgid "Consider changing to the more accurate timezone setting"
+msgstr "Apsvarstyti galimybę pakeisti tiksliau laiko juostą"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:512
+msgid "Go to settings"
+msgstr "Eikite į Nustatymai"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:516
+msgid "The plugin thinks your timezone is: "
+msgstr "Įskiepiai galvoja savo laiko juostą:"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:519
+msgid "The current UTC offset for that timezone is: "
+msgstr "Esamą UTC kompensuoti, kad laiko juostą:"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:529
+#, php-format
+msgid "Switches to %s on %s. GMT offset: %d"
+msgstr "Perjungia į% s% s. GMT offset:% d"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:535
+msgid "Current time (unlocalised): "
+msgstr "Dabartinis laikas (unlocalised):"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:553
+msgid "General Options"
+msgstr "Bendros parinktys"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:559
+msgid "Message if no events found: "
+msgstr "Renginių nerasta pranešimą, jeigu:"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:568
+msgid "Do not give credit to the author"
+msgstr "Nesuteikia kredito autoriui"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:573
+msgid "Use my theme css, not plugin css"
+msgstr "Naudokite mano tema CSS, o ne plugin CSS"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:580
+msgid " No images (tick for text only)"
+msgstr "Nr vaizdus (tik pažymėti, tekstas)"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:584
+msgid "The css provided works with the default twenty-ten theme and similar themes.  Your theme may be different."
+msgstr "CSS darbų numatytąjį dvidešimt dešimt tema ir panašiomis temomis. Jūsų tema gali būti skirtingi."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:586
+msgid "To edit the file, download the custom one added to your uploads folder: uploads/css."
+msgstr "Norėdami redaguoti failą, atsisiųsti užsakymą pridėta į jūsų įkelti aplanką: paveiksliukai / CSS."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:587
+msgid "Edit it and then re-upload to that same folder. Then select it in the box below."
+msgstr "Redaguokite ją ir tada iš naujo įkelti į tą patį aplanką. Tada pasirinkite jį į žemiau esantį laukelį."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:589
+msgid "This file will not be overwritten when the plugin is upgraded or when your theme is upgraded. "
+msgstr "Šis failas negali būti perrašyti kai įskiepiai, modernizuotose arba kai jūsų tema yra tobulinama."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:590
+msgid "More info"
+msgstr "daugiau informacijos"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:591
+msgid "Download the latest provided css file for editing"
+msgstr "Atsisiųskite naujausią CSS failą redagavimui"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:591
+msgid "(optional)"
+msgstr "(pasirinktinai)"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:592
+msgid "Choose plugin default css or choose a custom css and edit it."
+msgstr "Pasirinkite įjungti numatytąją CSS arba pasirinkti pasirinktinį css ir jį redaguoti."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:594
+msgid "No css files found in css directory "
+msgstr "Nėra failų CSS CSS katalogas rasti"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:603
+msgid "Advanced:"
+msgstr "Detali:"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:605
+#, php-format
+msgid "Your php version is: %s"
+msgstr "Jūsų PHP versija yra:% s"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:607
+msgid "Minimum Php version 5.3 required for events cacheing. "
+msgstr "Minimalus PHP versija 5,3 renginių cacheing."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:612
+msgid "Choose date localisation method:"
+msgstr "Pasirinkite data lokalizacijos metodas:"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:615
+msgid "none"
+msgstr "nė vienas"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:617
+msgid "amr"
+msgstr "amr"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:619
+msgid "wp"
+msgstr "wp"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:621
+msgid "wpgmt"
+msgstr "wpgmt"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:640
+#: includes/amr-ical-list-admin.php:675
+msgid "Saving...."
+msgstr "Taupymo ...."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:644
+#: includes/amr-ical-list-admin.php:677
+msgid "List saved"
+msgstr "sąrašas išsaugotas"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:651
+msgid "iCal Events List "
+msgstr "iCal Renginiai sąrašas"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:678
+msgid "No change to options or unexpected error in saving"
+msgstr "Jokių pokyčių, pasirinkimo sandoriai ar netikėta klaida, taupymo"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:685
+msgid "Configure event list type: "
+msgstr "Konfigūruoti įvykių sąrašą tipas:"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:692
+msgid "Go to list type:"
+msgstr "Grįžti į sąrašą tipo:"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:718
+msgid "Define the formats for the day (eg: Event date, End Date) and time (eg: Start time, End Time) fields. You can actually use any of these to display a full Date time string too. Use the Event date for event instances - the DTSTART field is the first startdate of a recurring event sequence."
+msgstr "Nustatykite dieną (pvz.: Įvykio data, pabaigos data) formatus ir laikas (pvz.: Pradžios laikas, Pabaigos laikas) srityse. Jūs iš tikrųjų galite naudoti bet kurį iš šių, rodyti visą data laiko eilutę per. Naudokite Renginio data įvykių atvejais - DTSTART srityje yra pirmoji startdate pasikartojantį įvykį seka."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:719
+msgid "These are also used for the date related grouping headings (ie: will show the date in that format as a heading for that group of dates if relevant.)"
+msgstr "Tai yra taip pat naudojamas datos, susijusios grupės pozicijos (ty: rodys datą tokio formato kad datas prireikus grupės pozicijoje.)"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:720
+msgid "Use the standard PHP format strings: "
+msgstr "Naudokite standartinius PHP formato eilutės:"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:721
+msgid "Php manual - date datetime formats"
+msgstr "PHP Manual - data datetime formatus"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:724
+msgid "See php date function format strings"
+msgstr "PHP datos funkcija formato eilutės"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:725
+msgid " (will localise) "
+msgstr "(bus lokalizuoti)"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:756
+msgid "Save the settings"
+msgstr "Išsaugoti nustatymus"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:759
+msgid "Uninstall the plugin and delete the options from the database."
+msgstr "Pašalinti įskiepiai ir ištrinti iš duomenų bazės galimybes."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:762
+msgid "Warning: This will reset ALL the listing options immediately."
+msgstr "Įspėjimas: Tai bus iš naujo visus biuletenius galimybių nedelsiant."
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:763
+msgid "Reset all listing options"
+msgstr "Atstatyti visų Skelbimo parinktys"
+
+#@ amr-ical-events-list
+#: includes/amr-ical-list-admin.php:773
+msgid "Expand/Contract all"
+msgstr "Išplėsti / Sutartis visus"
+
+#@ amr-ical-events-list
+#: includes/amr-import-ical.php:84
+#, php-format
+msgid "Your cache directory %s has been created"
+msgstr "Jūsų talpyklos kataloge% s buvo sukurta"
+
+#@ amr-ical-events-list
+#: includes/amr-import-ical.php:87
+#, php-format
+msgid "Error creating cache directory %s. Please check permissions"
+msgstr "Klaida kuriant talpyklos aplanko% s. Prašome patikrinti leidimus"
+
+#@ amr-ical-events-list
+#: includes/amr-import-ical.php:191
+msgid "Invalid URL"
+msgstr "Neleistinas URL"
+
+#@ amr-ical-events-list
+#: includes/amr-import-ical.php:218
+msgid "Unexpected data contents. Please tell administrator."
+msgstr "Netikėta duomenų turinys. Prašome pasakyti administratorius."
+
+#@ amr-ical-events-list
+#: includes/amr-import-ical.php:219
+msgid "See comments in source for response received from ics server."
+msgstr "Žr. pastabas šaltinis Gavęs atsakymą iš serverio nika."
+
+#@ amr-ical-events-list
+#: includes/amr-import-ical.php:223
+#, php-format
+msgid "Error getting calendar file with htpp or curl, or custom fn: %s"
+msgstr "Klaida bandant gauti kalendoriaus failą su htpp ar curl, arba pagal užsakymą FN:% s"
+
+#@ amr-ical-events-list
+#: includes/amr-import-ical.php:226
+#, php-format
+msgid "Using File last cached at %s"
+msgstr "Naudojant Failas paskutinis išsaugotas% s"
+
+#@ amr-ical-events-list
+#: includes/amr-import-ical.php:228
+msgid "Warning: Events may be out of date. "
+msgstr "Įspėjimas: Renginiai gali būti pasenusi."
+
+#@ amr-ical-events-list
+#: includes/amr-import-ical.php:235
+msgid "No cached ical file for events"
+msgstr "Nr talpyklą failą iCal Renginiai"
+
+#@ amr-ical-events-list
+#: includes/amr-rrule.php:533
+msgid "Unexpected error creating date with string: "
+msgstr "Netikėta klaida virvele data:"
+
+#@ amr-ical-events-list
+#: includes/amr-upcoming-events-widget.php:11
+msgid "events"
+msgstr "įvykiai"
+
+#@ amr-ical-events-list
+#: includes/amr-upcoming-events-widget.php:13
+msgid "Upcoming Events List"
+msgstr "Būsimi renginiai sąrašas"
+
+#@ amr-ical-events-list
+#: includes/amr-upcoming-events-widget.php:114
+msgid "See plugin website for more details"
+msgstr "Daugiau informacijos žr. Įskiepiai svetainėje"
+
+#@ amr-ical-events-list
+#: includes/amr-upcoming-events-widget.php:123
+#: includes/amr-upcoming-events-widget.php:262
+msgid "Calendar page url"
+msgstr "Kalendorius puslapio URL"
+
+#@ amr-ical-events-list
+#: includes/amr-upcoming-events-widget.php:124
+msgid "Calendar page url in this website, for event title links"
+msgstr "Kalendorius puslapio url šią svetainę, renginio pavadinimo nuorodos"
+
+#@ amr-ical-events-list
+#: includes/amr-upcoming-events-widget.php:130
+msgid "Hover description on Title"
+msgstr "Dėl pavadinimo užveskite aprašymas"
+
+#@ amr-ical-events-list
+#: includes/amr-upcoming-events-widget.php:131
+msgid "Do an event summary hyperlink with event description as title text "
+msgstr "Ar įvykio santrauka hipersaitą su atveju aprašymas Pavadinimas Tekstas"
+
+#@ amr-ical-events-list
+#: includes/amr-upcoming-events-widget.php:138
+#: includes/amr-upcoming-events-widget.php:269
+msgid "External events only"
+msgstr "Tik išorės įvykių"
+
+#@ amr-ical-events-list
+#: includes/amr-upcoming-events-widget.php:139
+#: includes/amr-upcoming-events-widget.php:270
+msgid "Show events from external ics only, do NOT pickup any internal events."
+msgstr "Rodyti įvykius iš išorės nika tik ne pikapas bet vidaus įvykių."
+
+#@ amr-ical-events-list
+#: includes/amr-upcoming-events-widget.php:140
+#: includes/amr-upcoming-events-widget.php:271
+msgid "Else include events created internally too"
+msgstr "Kita apima įvykius sukurtas viduje per"
+
+#@ amr-ical-events-list
+#: includes/amr-upcoming-events-widget.php:146
+#: includes/amr-upcoming-events-widget.php:277
+msgid "External ics urls and advanced options"
+msgstr "Išorės ICS URL ir išplėstines parinktis"
+
+#@ amr-ical-events-list
+#: includes/amr-upcoming-events-widget.php:147
+#: includes/amr-upcoming-events-widget.php:278
+msgid "External ics urls and/or optional shortcode parameters separated by spaces.)"
+msgstr "Išorės nika URL ir / arba pasirinktinai Trumpa parametrai atskiriami tarpais)."
+
+#@ amr-ical-events-list
+#: includes/amr-upcoming-events-widget.php:148
+msgid " Examples: listtype=4 events=10 days=60 start=yyyymmdd startoffset=-2... )"
+msgstr "Pavyzdžiai: listtype = 4 įvykiai = 10 dienų = 60 pradžia = YYYYMMDD startoffset =- 2 ... )"
+
+#@ amr-ical-events-list
+#: includes/amr-upcoming-events-widget.php:150
+msgid "See more parameters"
+msgstr "Daugiau parametrų"
+
+#@ amr-ical-events-list
+#: includes/amr-upcoming-events-widget.php:164
+msgid "icalendar"
+msgstr "icalendar"
+
+#@ amr-ical-events-list
+#: includes/amr-upcoming-events-widget.php:166
+msgid "Upcoming Events Calendar"
+msgstr "Būsimi Renginių kalendorius"
+
+#@ amr-ical-events-list
+#: includes/amr-upcoming-events-widget.php:254
+msgid "See more"
+msgstr "Žiūrėti daugiau"
+
+#@ amr-ical-events-list
+#: includes/amr-upcoming-events-widget.php:263
+msgid "Calendar page url in this website, for links from widget"
+msgstr "Kalendorius puslapio URL šioje svetainėje, nuorodos iš valdikliui"
+
+#@ amr-ical-events-list
+#: includes/amr-upcoming-events-widget.php:279
+msgid " Examples: listtype=8 events=10 days=60 start=yymmdd startoffset=-2... )"
+msgstr "Pavyzdžiai: listtype = 8 įvykiai = 10 dienų = 60 pradžia = YYMMDD startoffset =- 2 ... )"
+
+#@ amr-ical-events-list
+#: includes/functions.php:90
+#: includes/functions.php:94
+msgid "Invalid Url"
+msgstr "Neleistinas URL"
+
+#@ amr-ical-events-list
+#: includes/functions.php:143
+msgid "I try to make these plugins work <strong>\"out of the box\"</strong> with minimal effort; that they be easy to use but <strong>very configurable</strong>; <strong>well tested</strong>; with <strong>valid html and css</strong> both at the front and admin area."
+msgstr "Aš stengiuosi, kad šių įskiepių darbo <strong> \ \"out of box \" </ strong> su minimaliomis pastangomis, kad jie būtų lengva naudoti, tačiau <strong> labai konfigūruojama </ strong>; <strong> gerai išbandyta </strong>; <strong> Valid HTML ir CSS </ strong>, tiek priekyje ir administratoriaus srityje."
+
+#@ amr-ical-events-list
+#: includes/functions.php:144
+msgid "If you have a feature request, please do let me know. "
+msgstr "Jei turite funkcija, prašome let me know."
+
+#@ amr-ical-events-list
+#: includes/functions.php:145
+msgid "To edit events in wordpress:"
+msgstr "Norėdami redaguoti renginiai WordPress:"
+
