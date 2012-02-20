@@ -14,14 +14,14 @@
 // ----------------------------------------------------------------------------------------
 function amr_get_events_in_months_format ($events, $months, $start) {
 
-	$monthsofevents= array();
+	$bunchesofevents= array();
 // prepare the months array so we show a calendar even if no events 
 	$dummydate = new Datetime();
 	$dummydate = clone $start ;
 // prepare the containers one per day 
 	for ($i = 1; $i <= $months; $i++) {
 		$yearmonth = $dummydate->format('Ym'); //numerical so do not need amr_date_format
-		$monthsofevents[$yearmonth] = array();
+		$bunchesofevents[$yearmonth] = array();
 		date_modify($dummydate, '+1 month');
 	}
 
@@ -36,11 +36,11 @@ function amr_get_events_in_months_format ($events, $months, $start) {
 				}				
 			}
 			else $yearmonth = substr($event['dummyYMD'],0,6); // quicker?
-			if (isset($monthsofevents[$yearmonth])) // then we have generated dummy events past our end date, so stop
-				$monthsofevents[$yearmonth][] = $event;
+			if (isset($bunchesofevents[$yearmonth])) // then we have generated dummy events past our end date, so stop
+				$bunchesofevents[$yearmonth][] = $event;
 		}
 	}
-	return ($monthsofevents);
+	return ($bunchesofevents);
 }
 // ----------------------------------------------------------------------------------------
 function amr_prepare_day_titles ($titles, $liststyle) {
@@ -125,9 +125,9 @@ function amr_get_events_in_weeks_format ($events, $weeks, $start) {  // should b
 	}
 	if (isset($_GET['debugwks'])) {
 		echo '<br />Have dates for:'.count($weeksofevents).' weeks';
-		foreach ($weeksofevents as $i => $monthevents) {
-			echo '<br />'.$i.' '.count($monthevents);
-			foreach($monthevents as $i => $e) {
+		foreach ($weeksofevents as $i => $bunchevents) {
+			echo '<br />'.$i.' '.count($bunchevents);
+			foreach($bunchevents as $i => $e) {
 				echo '<br />&nbsp;&nbsp;'.$e['EventDate']->format('Ymd');   //numerical so do not need amr_date_format
 			}
 		}
@@ -198,12 +198,9 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 	
 
 	if (!($liststyle === 'weekscalendar')) 
-		$monthsofevents = amr_get_events_in_months_format ($events, $months, $start);
+		$bunchesofevents = amr_get_events_in_months_format ($events, $months, $start);
 	else
-		$weeksofevents = amr_get_events_in_weeks_format ($events, $weeks, $start);
-	
-	
-//	var_dump($weeksofevents);
+		$bunchesofevents = amr_get_events_in_weeks_format ($events, $weeks, $start);
 
 	if ($liststyle === 'weekscalendar') {		
 		if (!empty($amr_options['listtypes'][$amr_listtype]['format']['Day']))
@@ -255,9 +252,9 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 	if (empty($columns)) return;
 
 	// now do for each month or week-------------------------------------------------------------------------------------------------------
-	if (isset ($weeksofevents)) $monthsofevents = $weeksofevents; //temp
-	if (isset($_GET['debugwks'])) echo '<br />Bunches of events = '.count($monthsofevents).'<br />';
-	foreach ($monthsofevents as $ym => $monthevents) {  //also for weeks
+
+	if (isset($_GET['debugwks'])) echo '<br />Bunches of events = '.count($bunchesofevents).'<br />';
+	foreach ($bunchesofevents as $ym => $bunchevents) {  //also for weeks
 		$thismonth= substr($ym,4,2);
 		$thisyear = substr($ym,0,4);
 		if (!($liststyle === 'weekscalendar'))
@@ -292,10 +289,10 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 		$titles = array();
 		$eventsfortheday = array();
 		$dayswithevents = array();
-		if (!empty ($monthevents)) { // NOTE SINGULAR month
+		if (!empty ($bunchevents)) { // NOTE SINGULAR month
 		// get the titles and events for each day
 			
-			foreach ($monthevents as $event) {
+			foreach ($bunchevents as $event) {
 			// convert eventdate to display timezone now for day of month assignment, other dates will be
 			// converted to display timezone at display time.
 				if (empty($event['EventDate'])) continue; // if no date, we cannot display anywhere 
@@ -336,13 +333,13 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 		//-----------------------------------------------------------------------------------
 		
 		if (!empty($eventsfortheday)) { 
-			if (ICAL_EVENTS_DEBUG) echo ' we have '.count($eventsfortheday);
+			if (ICAL_EVENTS_DEBUG) echo ' we have '.count($eventsfortheday).' days';
 			foreach ( $eventsfortheday as $day => $devents ) {
 				if (ICAL_EVENTS_DEBUG) echo '<br />Day ='.$day. ' with '.count($devents).' events ';
 				$dayhtml[$day] = amr_list_one_days_events($devents, $columns);
 				if (function_exists('amr_events_customisable_small_calendar_daytitles') and ($liststyle === 'smallcalendar') )
 					$daytitles[$day] = amr_events_customisable_small_calendar_daytitles($devents, $columns);
-				//if (ICAL_EVENTS_DEBUG) echo '<br />Day: '.$day.' '.$dayhtml[$day];
+				//if (isset($_GET['debugwks']))  echo '<br />Day: '.$day.' '.$dayhtml[$day];
 			}
 		}
 		unset($eventsfortheday);
@@ -351,27 +348,32 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 /* ------See how much we should pad in the beginning */
 			$week = 1;
 			$calendar_output .= "\n\t".'<tr class="week week1">';
-			$pad = calendar_week_mod($start->format('w')-$week_begins);
-			if ( 0 != $pad ) {
-				$calendar_output .=
-				"\n\t\t".'<td colspan="'. esc_attr($pad) .'" class="pad">&nbsp;</td>';			
-			}
 					
 //-----------------------------------------------------------------------------------		
 			if ($liststyle === 'weekscalendar') {
 			//if (isset ($weeks)) {
-				$day1 = $start->format('j'); // set to start of week 
-				$daysinmonth = $day1+6;
+				$day1 = $start->format('j'); // set to start of week //The day of the month without leading zeros (1 to 31)
+				//$daysinbunch = $day1+6;
+				$daysinbunch = 7;
 			}
 			else {
+				$pad = calendar_week_mod($start->format('w')-$week_begins);
+				if ( 0 != $pad ) {
+					$calendar_output .=
+					"\n\t\t".'<td colspan="'. esc_attr($pad) .'" class="pad">&nbsp;</td>';			
+				}
 				$day1 = 1;
-				$daysinmonth = $start->format('t');	
+				$daysinbunch = $start->format('t');	//The number of days in the given month
 			}
-			if (isset($_GET['debug'])) echo '<br />Day 1= '.$day1;
+			if (isset($_GET['debugwks'])) echo '<br />Day 1= '.$day1;
 		
 			$newrow = false;
+			$nextdate = new Datetime();
+			$nextdate = clone($start);
 		
-			for ( $day = $day1; $day <= $daysinmonth; ++$day ) {		
+//			for ( $day = $day1; $day <= $daysinbunch; ++$day ) {	
+			for ( $i = 1; $i <= $daysinbunch; $i+=1 ) {	
+				if (isset($_GET['debugwks'])) echo '<br />i = '.$i;		
 				
 //				$calendar_output .= amr_handle_each_day ($thisyear, $thismonth, $day, $daytitles, $dayswithevents,$dayhtml);
 				if ( isset($newrow) && $newrow ) {
@@ -384,17 +386,21 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 				
 				$newrow = false;
 				$lastinrow = '';
-				// check if after this we need a new row //
-				if ( 6 == calendar_week_mod(date('w', mktime(0, 0 , 0, $thismonth, $day, $thisyear))-$week_begins) ) {
+				// check if after this we need a new row eg if month calendar//
+//				if ( 6 == calendar_week_mod(date('w', mktime(0, 0 , 0, $thismonth, $day, $thisyear))-$week_begins) ) {
+				if ( 6 == calendar_week_mod($nextdate->format('w')-$week_begins) ) {
 					$newrow = true;
 					$lastinrow = ' endweek';
 					$week = $week+1; // helps to balance out the multi month view	
 				}
-				
-				
+							
 				/* wp code - can't we do better ? */
-				$datestring = $day.'-'.$thismonth.'-'.$thisyear; // must use hyphens for uk english dates, else it goes US
-				$dow = date('N',strtotime($datestring)); // does not like dates earlier than 1902
+				//$datestring = $day.'-'.$thismonth.'-'.$thisyear; // must use hyphens for uk english dates, else it goes US
+				//$dow = date('N',strtotime($datestring)); // does not like dates earlier than 1902
+				$dow = $nextdate->format('N');
+				$thisyear = $nextdate->format('Y');
+				$thismonth = $nextdate->format('m');
+				$day = $nextdate->format('j');
 				
 				$hasevents = '';
 				if ((!empty ($amr_limits['day_links'])) and ($amr_limits['day_links']) and
@@ -406,8 +412,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 					}
 				else {
 						$daylink = $day;
-					}
-				
+					}			
 					
 				if ( ($day == $today_day) && 
 					($thismonth == $today_month) && 
@@ -425,20 +430,22 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 				if (!($liststyle === 'weekscalendar') )
 					$calendar_output .= '<div class="day">'.$daylink.'</div>';
 				if ((!empty($dayswithevents) ) and ( in_array($day, $dayswithevents) )) {// any posts today?				
-				
+					if (isset($_GET['debugwks'])) {echo '<br />Day='.$day;}
 	//				if (($liststyle == 'largecalendar') 
 					if (in_array ($liststyle, array('largecalendar','weekscalendar')) 
 					and (!empty($dayhtml[$day])))
 						$calendar_output .= AMR_NL.$dayhtml[$day];
 				}
 				$calendar_output .= '</td>';
+				date_modify($nextdate, '+1 day');
 			}	
 				
 			// now check if we need to pad to the end of the week
 			$pad = 7 - calendar_week_mod(date('w', mktime(0, 0 , 0, $thismonth, $day, $thisyear))-$week_begins);
 			if ( $pad != 0 && $pad != 7 ) 
 				$calendar_output .= "\n\t\t".'<td class="pad" colspan="'. esc_attr($pad) .'">&nbsp;</td>';
-			else $week=$week-1;
+			else 
+				$week=$week-1;
 
 			if (($months > 1) and ($liststyle == 'smallcalendar')) { // pad so that they will all line up nicely in the multiview
 				for ($w=$week; $week <=5; ++$week) {
@@ -458,7 +465,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 			if (isset ($weeks)) date_modify($start, '+7 days');
 			else				date_modify($start, '+1 month');
 			
-	} // for each month
+	} // for each bunch (eg month?)
 	
 	if ($liststyle === 'weekscalendar') // if we are doing weekly, we want only one table so all will line up
 		$multi_output = '<table '.$id.' class="'.$class.'" >'.$multi_output.'</table><!-- end weekly table -->';

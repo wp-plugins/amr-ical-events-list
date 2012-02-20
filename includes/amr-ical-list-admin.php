@@ -724,8 +724,10 @@ function amr_ical_validate_general_options(){
 		$nonce = $_REQUEST['_wpnonce'];
 		if (! wp_verify_nonce($nonce, 'amr-ical-events-list')) die ("Cancelled due to failed security check");
 
-			if (isset($_POST['ngiyabonga'])) 	$amr_options['ngiyabonga'] =  true;
-			else 	$amr_options['ngiyabonga'] =  false;
+			if (isset($_POST['ngiyabonga'])) 	
+				$amr_options['ngiyabonga'] =  true;
+			else 	
+				$amr_options['ngiyabonga'] =  false;
 			foreach (array(
 				'noeventsmessage',
 				'lookmoremessage',
@@ -783,7 +785,7 @@ function amr_ical_validate_general_options(){
 function amr_ical_validate_list_options($i)	{
 global $amr_options;
 
-	if (isset($_POST['general']))  {
+	if (isset($_POST['general']))  { 
 		if (is_array($_POST['general'][$i])){
 			foreach ($_POST['general'][$i] as $c => $v)	{
 				if (!empty($_POST['general'][$i][$c])) {
@@ -819,7 +821,7 @@ global $amr_options;
 							break;
 						}
 
-					default: {
+					default: {   
 						$amr_options['listtypes'][$i]['general'][$c]
 						= filter_var($_POST['general'][$i][$c],FILTER_SANITIZE_STRING) ;
 					}
@@ -841,25 +843,25 @@ global $amr_options;
 				}
 				else echo 'Error in form - limit array not found';
 			}
-	if (isset($_POST['format']))
-			{	if (is_array($_POST['format'][$i]))
-				{	foreach ($_POST['format'][$i] as $c => $v)
-					{   /* amr - how should we validate this ?  accepting any input for now */
-						$amr_options['listtypes'][$i]['format'][$c] =
-							(isset($_POST['format'][$i][$c])) ? stripslashes_deep($_POST['format'][$i][$c]) :'';
-					}
+	if (isset($_POST['format'])){	
+		if (is_array($_POST['format'][$i]))
+			{	foreach ($_POST['format'][$i] as $c => $v)
+				{   /* amr - how should we validate this ?  accepting any input for now */
+					$amr_options['listtypes'][$i]['format'][$c] =
+						(isset($_POST['format'][$i][$c])) ? stripslashes_deep($_POST['format'][$i][$c]) :'';
 				}
-				else echo 'Error in form - format array not found';
 			}
+		else echo 'Error in form - format array not found';
+	}
 
 	foreach ($amr_options['listtypes'][$i]['component'] as $k => $c) {
-					if (isset($_POST['component'][$i][$k])) {
-						$amr_options['listtypes'][$i]['component'][$k] =  true;
-					}
-					else {
-						$amr_options['listtypes'][$i]['component'][$k] =  false;
-					}
-				}
+		if (isset($_POST['component'][$i][$k])) {
+			$amr_options['listtypes'][$i]['component'][$k] =  true;
+		}
+		else {
+			$amr_options['listtypes'][$i]['component'][$k] =  false;
+		}
+	}
 	unset ($amr_options['listtypes'][$i]['grouping']);
 	
 	if (isset($_POST['level'][1])) { 
@@ -891,8 +893,9 @@ global $amr_options;
 						if (function_exists( 'filter_var') )
 						{	if (filter_var($pv, FILTER_VALIDATE_INT,
 							array("options" => array("min_range"=>0, "max_range"=>20))))
-							$amr_options['listtypes'][$i]['calprop'][$c][$p]= $pv;
-							else 	$amr_options['listtypes'][$i]['calprop'][$c][$p]= 0;
+								$amr_options['listtypes'][$i]['calprop'][$c][$p]= $pv;
+							else 	
+								$amr_options['listtypes'][$i]['calprop'][$c][$p]= 0;
 						}
 						else $amr_options['listtypes'][$i]['calprop'][$c][$p]= $pv;
 						break;
@@ -903,7 +906,8 @@ global $amr_options;
 							array("options" => array("min_range"=>0, "max_range"=>99))))
 							$amr_options['listtypes'][$i]['calprop'][$c][$p] = $pv;break;
 						}
-						else $amr_options['listtypes'][$i]['calprop'][$c][$p] = $pv;break;
+						else 
+							$amr_options['listtypes'][$i]['calprop'][$c][$p] = $pv;break;
 					case 'Before': $amr_options['listtypes'][$i]['calprop'][$c][$p] = wp_kses($pv, amr_allowed_html());
 						break;
 					case 'After': $amr_options['listtypes'][$i]['calprop'][$c][$p] = wp_kses($pv, amr_allowed_html());
@@ -1025,7 +1029,7 @@ function amrical_other_form ($i) {
 			<option value="breaks" <?php if ($style==='breaks') echo 'selected="selected" '; ?>><?php _e('Breaks for rows!', 'amr-ical-events-list'); ?></option>
 			<option value="smallcalendar" <?php if ($style==='smallcalendar') echo 'selected="selected" '; ?>><?php _e('Small box calendar', 'amr-ical-events-list'); ?></option>
 			<option value="largecalendar" <?php if ($style==='largecalendar') echo 'selected="selected" '; ?>><?php _e('Large box calendar', 'amr-ical-events-list'); ?></option>
-			<option value="weekcalendar" <?php if ($style==='weekscalendar') echo 'selected="selected" '; ?>><?php _e('Weeks calendar', 'amr-ical-events-list'); ?></option>
+			<option value="weekscalendar" <?php if ($style==='weekscalendar') echo 'selected="selected" '; ?>><?php _e('Weeks calendar', 'amr-ical-events-list'); ?></option>
 			<option value="tableoriginal" <?php if ($style==='tableoriginal') echo 'selected="selected" '; ?>><?php _e('Table with lists in cells (original)', 'amr-ical-events-list'); ?></option>
 
 		</select><br />	<br />

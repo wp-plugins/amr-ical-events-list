@@ -4,7 +4,7 @@ Tags: event, events, event calendar, events calendar, event manager, diary, sche
 
 Requires at least: 2.8
 Tested up to: 3.3.1
-Version: 4.0.21
+Version: 4.0.22
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec. Very customisable listings or box calendars.  This version uses ics as input. Upgrade option for ics feed generation, taxonomies etc
@@ -37,7 +37,7 @@ Many thanks to the following people for the translations.  Note that I am unable
 *   French by fxbenard aka 3emeOeil
 *   Danish by Georg feom blogso.dk
 *   German by Simon Betschmann
-*   Belorussian
+*   Belorussian by Alexander Ovsov from webhostinggeeks.com/science
 *   Russian (partial) by ghost (antsar.info)
 *   Hindi translation  by Ashish J. of Outshine solutions
 
@@ -83,6 +83,12 @@ Note that some information may apply to the paid version amr-events - this is us
 
 
 == Changelog ==
+= Version 4.0.22 =
+* Fix: Weekly horizontal calendar was STILL not working correctly . around a month end it behaved like a monthly calendar instead of a weekly schedule.
+* Fix: If you saved the listype 11, it 'lost' the weeks calendar setting and you couldn't get it back without resetting. Could set to others, but not to weekscalendar - very weird one to debug and as is often the case it was a stupid typo.
+* Update: a belorussian translation update was added.
+
+
 = Version 4.0.21 =
 * Fix: Decode entities (like &nbsp;) in content
 * Fix: Weekly horizontal calendar was not working correctly

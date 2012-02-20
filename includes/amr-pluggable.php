@@ -631,50 +631,52 @@ if (!function_exists('amr_format_taxonomies') ) {  //problem ics file categories
 }
 /* --------------------------------------------------  */
 if (!function_exists('amr_derive_calprop_further')) {
-function amr_derive_calprop_further (&$p) {
-	global $amr_options;
-	if (isset ($p['totalevents'])) $title = __('Total events: ', 'amr-ical-events-list').$p['totalevents'];	/* in case we have noename? ***/
-	if (isset ($p['X-WR-CALDESC'])) {
-		$p['X-WR-CALDESC'] = nl2br2 ($p['X-WR-CALDESC']);
-		$desc = __($p['X-WR-CALDESC'],'amr-ical-events-list');  //allow translation of whatever value is in the ics file
+	function amr_derive_calprop_further (&$p) {
+		global $amr_options;
+		if (isset ($p['totalevents'])) 
+			$title = __('Total events: ', 'amr-ical-events-list').$p['totalevents'];	/* in case we have noename? ***/
+		if (isset ($p['X-WR-CALDESC'])) {
+			$p['X-WR-CALDESC'] = nl2br2 ($p['X-WR-CALDESC']);
+			$desc = __($p['X-WR-CALDESC'],'amr-ical-events-list');  //allow translation of whatever value is in the ics file
 
-	}
-	else $desc = __('No description available','amr-ical-events-list');
+		}
+		else $desc = __('No description available','amr-ical-events-list');
 
-	if (isset ($p['X-WR-CALNAME'])) {
-		$p['X-WR-CALNAME'] = __($p['X-WR-CALNAME'],'amr-ical-events-list');
-	}
-	if (isset ($p['icsurl']))  {/* must be!! */
-		$p['addtogoogle'] = add_cal_to_google ($p['icsurl']);
 		if (isset ($p['X-WR-CALNAME'])) {
-				$p['subscribe'] = sprintf(__('Subscribe to %s Calendar','amr-ical-events-list'),
-				htmlentities ($p['X-WR-CALNAME']));
-				$p['X-WR-CALNAME'] = '<a class="x-wr-calname" '
-				.' title="'.$p['subscribe'].'"'
-				.' href="'.htmlentities($p['icsurl']).'">'
-				.htmlspecialchars($p['X-WR-CALNAME'])
-				.'</a><!-- '.$desc.' -->';
+			$p['X-WR-CALNAME'] = __($p['X-WR-CALNAME'],'amr-ical-events-list');
 		}
-		else { // if we do not have a name, use the basename of the url
-				$f = basename($p['icsurl'], ".ics");
-				$p['subscribe'] = sprintf(__('Subscribe to %s Calendar','amr-ical-events-list'), $f);
-				$p['X-WR-CALNAME'] = '<a '
-				.' title="'.$p['subscribe'].'"'
-				.' href="'.htmlentities($p['icsurl']).'">'
-				.$f
-				.'</a>';
-		}
-		$t = __('Subscribe to calendar in your calendar application.', 'amr-ical-events-list');
-		if (isset ($amr_options['no_images']) and $amr_options['no_images'])
-			$t3 = $t = __('Subscribe to calendar', 'amr-ical-events-list');
-		else
-			$t3 = '<img class="subscribe amr-bling" src="'.IMAGES_LOCATION.CALENDARIMAGE.'" title= "'.$t.'" alt="'.$t.'" />';
+		if (isset ($p['icsurl']))  {/* must be!! */
+			$p['addtogoogle'] = add_cal_to_google ($p['icsurl']);
+			if (isset ($p['X-WR-CALNAME'])) {
+					$p['subscribe'] = sprintf(__('Subscribe to %s Calendar','amr-ical-events-list'),
+					htmlentities ($p['X-WR-CALNAME']));
+					$p['X-WR-CALNAME'] = '<a class="x-wr-calname" '
+					.' title="'.$p['subscribe'].'"'
+					.' href="'.htmlentities($p['icsurl']).'">'
+					.htmlspecialchars($p['X-WR-CALNAME'])
+					.'</a><!-- '.$desc.' -->';
+			}
+			else { // if we do not have a name, use the basename of the url
+					$f = basename($p['icsurl'], ".ics");
+					$p['subscribe'] = sprintf(__('Subscribe to %s Calendar','amr-ical-events-list'), $f);
+					$p['X-WR-CALNAME'] = '<a '
+					.' title="'.$p['subscribe'].'"'
+					.' href="'.htmlentities($p['icsurl']).'">'
+					.$f
+					.'</a>';
+			}
+			$t = __('Subscribe to calendar in your calendar application.', 'amr-ical-events-list');
+			if (isset ($amr_options['no_images']) and $amr_options['no_images'])
+				$t3 = $t = __('Subscribe to calendar', 'amr-ical-events-list');
+			else
+				$t3 = '<img class="subscribe amr-bling" src="'.IMAGES_LOCATION.CALENDARIMAGE.'" title= "'.$t.'" alt="'.$t.'" />';
 
-		$p['icsurl'] =
-			'<a class="amr-bling icalsubscribe" title="'.$p['subscribe']
-			.'" href="'.htmlentities($p['icsurl']).'">'
-			.$t3.'</a>';
+			$p['icsurl'] =
+				'<a class="amr-bling icalsubscribe" title="'.$p['subscribe']
+				.'" href="'.htmlentities($p['icsurl']).'">'
+				.$t3.'</a>';
 		}
+		
 		$p['icalrefresh'] = amr_show_refresh_option();
 		return ($p);
 	}
@@ -830,6 +832,7 @@ if (!function_exists('amr_list_properties')) {
 		$amr_liststyle,
 		$amr_listtype;
 /* --- setup the html tags ---------------------------------------------- */
+
 
 	if ($amr_liststyle === 'custom') {  // get the stored file uirl, if it does not exist, set to table
 		$custom_htmlstyle_file = amr_get_htmlstylefile();
