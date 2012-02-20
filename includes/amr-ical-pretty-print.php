@@ -253,15 +253,21 @@ function amr_format_duration ($arr) {
 /* --------------------------------------------------------- */
 function amr_format_tz ($tzstring) {
 global $amr_globaltz, $amr_options;
+
 	$url = esc_url_raw($_SERVER['REQUEST_URI']);
 	$tz = timezone_name_get($amr_globaltz);
-	if ($tz === $tzstring) $tz2 = date_default_timezone_get();
-	else $tz2 = $tzstring;
-	if ($tz2===$tz) $tz2 = 'UTC';
+	if ($tz === $tzstring) 
+		$tz2 = date_default_timezone_get();
+	else 
+		$tz2 = $tzstring;
+	if ($tz2===$tz) 
+		$tz2 = 'UTC';
 	$text1 = __('Change Timezone','amr-ical-events-list');
 	$text2 = sprintf( __('Timezone: %s, Click for %s','amr-ical-events-list'),$tz, $tz2);
-	if (isset ($amr_options['no_images']) and $amr_options['no_images']) $t3 = $text1;
-	else $t3 = '<img title = "'.$text2.'" src="'.IMAGES_LOCATION.TIMEZONEIMAGE.'" class="amr-bling" alt="'.$text1.'" />';
+	if (isset ($amr_options['no_images']) and $amr_options['no_images']) 
+		$t3 = $text1;
+	else 
+		$t3 = '<img title = "'.$text2.'" src="'.IMAGES_LOCATION.TIMEZONEIMAGE.'" class="amr-bling" alt="'.$text1.'" />';
 
 	return ('<a class="timezone amr-bling" href="'
 		.htmlentities(add_querystring_var($url,'tz',$tz2)).'" title="'
