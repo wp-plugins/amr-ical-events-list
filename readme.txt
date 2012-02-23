@@ -1,10 +1,10 @@
-=== amr events lists and calendars (aka amr-ical-events-list) ===
+=== amr ical events lists ===
 Contributors: anmari
-Tags: event, events, event calendar, events calendar, event manager, diary, schedule, ical, ics, ics calendar, ical feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, agenda, happenings, shows, concerts, conferences, courses, timetable
+Tags: event, events, event calendar, events calendar, event manager, diary, schedule, ical, ics, ics calendar, ical feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, agenda, happenings, shows, concerts, conferences, courses, timetable, schedule
 
 Requires at least: 2.8
 Tested up to: 3.3.1
-Version: 4.0.22
+Version: 4.0.23
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec. Very customisable listings or box calendars.  This version uses ics as input. Upgrade option for ics feed generation, taxonomies etc
@@ -51,15 +51,22 @@ php datetime class must be enabled (standard in php 5.2)
 == Installation ==
 
 1. Download and activate as per usual in wordpress
-2. Create some events in your calendar application in a public calendar (eg: google calendar, facebook, ical.me.com ).  Find the public ics url for the calendar.  NB The url MUST be publicly accessible when lot logged in - check by pasting the url into another browsers url field. If you cannot access it in a browser without being logged in, then the plugin will not be able to access it either.
-2. Create a page for your calendar or agenda and enter one of the  shortcakes (preferably using the html view of the wp editor) .  EG:
+2. Create some events in your calendar application in a public calendar (eg: google calendar, facebook, ical.me.com ).  Find the public ics url for the calendar.  NB The url MUST be publicly accessible when not logged in - check by pasting the url into another browsers url field. If you cannot access it in a browser without being logged in, then the plugin will not be able to access it either.
+2. Create a page for your calendar or agenda and enter one of the  shortcodes (preferably using the html view of the wp editor) .  EG:
 
 
 [iCal yoururl.ics]
-
 [largecalendar yoururl.ics]  
+[smallcalendar yoururl.ics]  
+[weekscalendar yoururl.ics]  
 
- NB (Ics url NOT As a hyperlink, must be plain text)
+
+Optional:
+
+[expandall] - if using collapsing groups
+
+
+ NB (Ics url NOT As a hyperlink, must be plain text.  Enter in the html view, not the visual view of the editor.)
 
 That's it!
 
@@ -78,11 +85,18 @@ http://icalevents.com/documentation/shortcodes/
 http://icalevents.com/documentation/list-types/
 
 Note that some information may apply to the paid version amr-events - this is usually indicated.
+amr-events has much additional functionality, including a taxonomy widget.
 
 
 
 
 == Changelog ==
+= Version 4.0.23 =
+* Fix: Widget title had a hyperlink to calendar url - latest wp does not like that - weird results.  Link removed.
+* Fix: with recent update for weekly horizontal, the boxcalendar padding at end of month got slightly broken - fixed.
+* Add: some debug options to measure any timing issues (already can check memory etc), so can tell if it this plugin or some other plugin/theme
+
+
 = Version 4.0.22 =
 * Fix: Weekly horizontal calendar was STILL not working correctly . around a month end it behaved like a monthly calendar instead of a weekly schedule.
 * Fix: If you saved the listype 11, it 'lost' the weeks calendar setting and you couldn't get it back without resetting. Could set to others, but not to weekscalendar - very weird one to debug and as is often the case it was a stupid typo.

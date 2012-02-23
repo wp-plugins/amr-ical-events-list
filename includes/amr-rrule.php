@@ -594,6 +594,7 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 	/* now we should have if they are there: $p[freq], $p[interval, $until, $wkst, $ count, $byweekno etc */
 	/* check  / set limits  NB don't forget the distinction between the two kinds of limits  */
 	$tz = date_timezone_get($start);
+	
 	if (isset($_GET['rdebug'])) {
 		echo '<br />&nbsp;start='.$start->format('c').' <br />astart='.$astart->format('c') .'<br /> parameter passed: ';
 		if (is_array($p))

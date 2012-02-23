@@ -333,7 +333,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 		//-----------------------------------------------------------------------------------
 		
 		if (!empty($eventsfortheday)) { 
-			if (ICAL_EVENTS_DEBUG) echo ' we have '.count($eventsfortheday).' days';
+			if (ICAL_EVENTS_DEBUG) echo ' we have '.count($eventsfortheday).' days of events';
 			foreach ( $eventsfortheday as $day => $devents ) {
 				if (ICAL_EVENTS_DEBUG) echo '<br />Day ='.$day. ' with '.count($devents).' events ';
 				$dayhtml[$day] = amr_list_one_days_events($devents, $columns);
@@ -360,7 +360,8 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 				$pad = calendar_week_mod($start->format('w')-$week_begins);
 				if ( 0 != $pad ) {
 					$calendar_output .=
-					"\n\t\t".'<td colspan="'. esc_attr($pad) .'" class="pad">&nbsp;</td>';			
+					"\n\t\t".'<td colspan="'. esc_attr($pad) .'" class="pad">&nbsp;'
+					.'</td>';			
 				}
 				$day1 = 1;
 				$daysinbunch = $start->format('t');	//The number of days in the given month
@@ -441,9 +442,12 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 			}	
 				
 			// now check if we need to pad to the end of the week
-			$pad = 7 - calendar_week_mod(date('w', mktime(0, 0 , 0, $thismonth, $day, $thisyear))-$week_begins);
-			if ( $pad != 0 && $pad != 7 ) 
-				$calendar_output .= "\n\t\t".'<td class="pad" colspan="'. esc_attr($pad) .'">&nbsp;</td>';
+//			$pad = 7 - calendar_week_mod(date('w', mktime(0, 0 , 0, $thismonth, $day, $thisyear))-$week_begins);
+			$pad = 6 - calendar_week_mod($dow - $week_begins) ;  
+			if ( $pad != 0 && $pad != 7 ) {
+				$calendar_output .= "\n\t\t".'<td class="pad" colspan="'. esc_attr($pad) .'">&nbsp;'
+				.$dow.' '.$week_begins.'</td>';
+				}
 			else 
 				$week=$week-1;
 

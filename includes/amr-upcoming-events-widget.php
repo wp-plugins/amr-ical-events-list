@@ -53,9 +53,10 @@ class amr_ical_widget extends WP_widget {
 	$moreurl = (empty($moreurl)) ? null : $moreurl ;
 	$amr_calendar_url = esc_url($moreurl);
 	if (ICAL_EVENTS_DEBUG) echo 'Calendar url = '.$amr_calendar_url;
-	if (isset($_REQUEST['lang'])) $moreurl = add_query_arg('lang',$_REQUEST['lang'],$moreurl);
-	if (!empty ($moreurl))
-	$title = '<a title="'.__('Look for more','amr-ical-events-list').'" href= "'.$moreurl.'">'.__($title,'amr-ical-events-list') .'</a>';
+	if (isset($_REQUEST['lang'])) 
+		$moreurl = add_query_arg('lang',$_REQUEST['lang'],$moreurl);
+//	if (!empty ($moreurl))
+//		$title = '<a title="'.__('Look for more','amr-ical-events-list').'" href= "'.$moreurl.'">'.__($title,'amr-ical-events-list') .'</a>';
 
 	if (!(isset($widget_icalno)))
 		$widget_icalno = 0;
