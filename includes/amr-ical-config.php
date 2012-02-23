@@ -1,5 +1,7 @@
 <?php
 /* This is the amr-ical config section file */
+
+function amr_ical_initialise () {
 global $amr_options;
 global $amr_general;
 global $amr_components;
@@ -19,20 +21,9 @@ global $amr_globaltz;
 global $utczobj;
 $utczobj = timezone_open('UTC');
 
-if (!defined ('ICAL_EVENTS_DEBUG')) {
-	if (isset($_REQUEST["debug"]) )  { /* for debug and support - calendar data is public anyway, so no danger*/
-		define('ICAL_EVENTS_DEBUG', true);
-		}
-	else
-		define('ICAL_EVENTS_DEBUG', false);
-}
-if (ICAL_EVENTS_DEBUG) {
-	echo '<h1>Debug mode</h1>';
-	echo 'Other debug parameters that can be used together or separately: ';
-	echo 'debugexc, rdebug, cdebug, tzdebug <br/>';
-}
 
-$amr_wkst = ical_get_weekstart();
+
+
 
 /* set to empty string for concise code */
 if (!defined('AMR_NL')) define('AMR_NL',"\n" );
@@ -86,6 +77,8 @@ define('ICAL_EVENTS_CACHE_LOCATION',$uploads['basedir']);
 define('ICAL_EVENTS_CSS_DIR',ICAL_EVENTS_CACHE_LOCATION.'/css/'); /* where to store custom css so does not get overwritten */
 define('ICAL_EVENTS_CSS_URL',$uploads['baseurl'].'/css/'); /* where to store custom css so does not get overwritten */
 define('ICAL_EVENTS_CACHE_DEFAULT_EXTENSION','ics');
+
+$amr_wkst = ical_get_weekstart();
 $amr_validrepeatablecomponents = array ('VEVENT', 'VTODO', 'VJOURNAL', 'VFREEBUSY', 'VTIMEZONE');
 $amr_validrepeatableproperties = array (   // properties that may have multiple entries either in the meta or the icsfile
 		'ATTACH', 'ATTENDEE',
@@ -98,9 +91,7 @@ $amr_validrepeatableproperties = array (   // properties that may have multiple 
 		'TZOFFSETTO','TZOFFSETFROM',
 		'URL',
 		'XPARAM', 'X-PROP');
-/* used for admin field sizes */
-$amr_csize = array('Column' => '2', 'Order' => '2', 'Before' => '40', 'After' => '40', 'ColHeading' => '10');
-/* the default setup shows what the default display option is */
+
 
 $dateformat = str_replace(' ','\&\n\b\s\p\;', get_option('date_format'));
 
@@ -117,7 +108,10 @@ $amr_formats = array (
 		'DateTime' => $dateformat.' '.get_option('time_format')
 //		'DateTime' => '%d-%b-%Y %I:%M %p'   /* use if displaying date and time together eg the original fields, */
 		);
-
+		
+/* used for admin field sizes */
+$amr_csize = array('Column' => '2', 'Order' => '2', 'Before' => '40', 'After' => '40', 'ColHeading' => '10');
+/* the default setup shows what the default display option is */
 $amr_admin_col_head = array (  // Dummy for translation
 	'Column' 	=> __('Column','amr-ical-events-list'),
 	'Order' 	=> __('Order','amr-ical-events-list'),
@@ -125,6 +119,8 @@ $amr_admin_col_head = array (  // Dummy for translation
 	'After' 	=> __('After','amr-ical-events-list'),
 	);
 
+}	
+	
 function amr_getTimeZone($offset) {
  $timezones = array(
   '-12'=>'Pacific/Kwajalein',
@@ -294,11 +290,6 @@ function amr_set_defaults() {
 	global $amr_options,$locale;
 	
 
-	If (ICAL_EVENTS_DEBUG) {  
-			echo '<br />Note:'.AMR_ICAL_LIST_VERSION.' '.AMR_ICAL_VERSION.' p:'.PHP_VERSION.'-'
-			.get_bloginfo('version').' chset:'.get_option( 'blog_charset' ).' enc:'.mb_internal_encoding();
-	}
-	
 	$amr_options = array (
 			'ngiyabonga' => false,
 			'own_css' => false,
@@ -324,7 +315,7 @@ function amr_set_defaults() {
 		if (($a_tz = get_option ('timezone_string') ) and (!empty($a_tz))) {
 				$amr_globaltz = timezone_open($a_tz);
 				date_default_timezone_set($a_tz);
-				If (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) {	echo '<br />Found tz string:'.$a_tz;}
+				If (isset($_REQUEST['tzdebug'])) {	echo '<br />Tz string:'.$a_tz;}
 			}
 		else {
 			If (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) {	echo '<h2>No timezone string found.</h2>';		}
@@ -341,7 +332,6 @@ function amr_set_defaults() {
 	}
 	else $amr_globaltz = timezone_open(date_default_timezone_get());
 	$ical_timezone = $amr_globaltz;
-	If (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) echo '<br />The default php timezone is set to:'.date_default_timezone_get().'<br />';
 	$amr_general = array (
 			'name' 				=> __('Default','amr-ical-events-list'),
 			'Description'		=> __('A default calendar list. This one set to tables with lists in the cells.  Usually needs the css file enabled. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list'),
@@ -1063,9 +1053,7 @@ function amr_getset_options ($reset=false) {
 	global $locale, $amr_options;  /* has the initial default configuration */
 			/* set up some global config initially */
 
-	if (ICAL_EVENTS_DEBUG) echo '<br /><b>get setting options </b>';
 	amr_set_defaults(); 
-
 
 	/* we are requested to reset the options, so delete and update with default */
 	if ($reset) {

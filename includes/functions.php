@@ -7,19 +7,47 @@ function amr_external_url ($url) {
 		}
 		else	return(true);
 	}
+	
+ /* ------------------------------------------------------------------------------------------------------ */
+function	amr_debug_time () {  // track php runtime if debugging
+	global $amr_start_time_track,$amr_last_time_track;
+	if (isset($_GET['debugtime'])) {
+		$amr_start_time_track = microtime();
+		$amr_last_time_track = $amr_start_time_track;
+		echo '<br />Starting tracking now after plugins loaded '.$amr_start_time_track;
+		echo '<br />Note: measuring runtime may affect the runtime too, as will debug messages.  if using ics file, check timing on refresh &refresh';
+	}
+}
+ /* ------------------------------------------------------------------------------------------------------ */
+function	amr_track_run_time ($text='') {  // track php runtime if debugging
+	global $amr_start_time_track;
+	global $amr_last_time_track;
+	if (isset($_GET['debugtime'])) {
+		$end = microtime();
+		$startt = (float) array_sum(explode(' ',$amr_start_time_track));
+		$endt = (float) array_sum(explode(' ',$end));
+		$lastt = (float) array_sum(explode(' ',$amr_last_time_track));
+		$amr_last_time_track = $end;
+		echo '<br />Since start '. sprintf("%.4f", ($endt-$startt))." seconds.  Since last:"
+		.sprintf("%.4f", ($endt-$lastt)).' seconds.  In "'.$text.'"';
+
+	}
+}	
 /* -------------------------------------------------------------------------------------------*/
 function amr_memory_convert($size)
  {
     $unit=array('b','kb','mb','gb','tb','pb');
     return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
  }
+ /* -------------------------------------------------------------------------------------------*/
  function amrical_mem_debug($text) {
 	if (isset($_GET['memdebug'])) {
 		$mem = memory_get_usage (true);
 		$peak = memory_get_peak_usage (true);
-		//echo '<br />memory: '.amr_memory_convert($mem).' peak:'.amr_memory_convert($peak).' '.$text;
-		echo '<br />memory: '.$mem.' peak:'.$peak.' '.$text;
+		echo '<br />memory: '.amr_memory_convert($mem).' peak:'.amr_memory_convert($peak).' '.$text;
+		//echo '<br />memory: '.$mem.' peak:'.$peak.' '.$text;
 	}
+	if (isset($_GET['debugtime'])) { amr_track_run_time($text);}	
  }
 // ----------------------------------------------------------------------------------------
 
@@ -236,4 +264,20 @@ function amrical_mimic_meta_box($id, $title, $callback , $toggleable = true) {
 		echo "</div></div></div></div></div>";
 
 	}
+	
+function amr_check_set_debug() {  // obfuscate a bit so only admin or developer can run debug
+	if (isset($_REQUEST["debug"]) )   /* for debug and support - calendar data is public anyway, so no danger*/
+			define('ICAL_EVENTS_DEBUG', true);
+	else 	
+			define('ICAL_EVENTS_DEBUG', false);
+	}
+
+function amr_is_trying_to_help() {  // obfuscate a bit so only admin or developer can run debug
+	$tz = timezone_open('Australia/Sydney');
+	$now = date_create('now',$tz );
+	
+	
+	if (isset($_REQUEST['isme']) and ($_REQUEST['isme']=== $now->format('md'))) return true;
+	else return false;
+}	
 ?>

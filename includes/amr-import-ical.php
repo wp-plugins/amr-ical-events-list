@@ -85,9 +85,9 @@ function amr_check_start_of_file ($data) {// check if the file looks like a icsf
 	global $amr_globaltz;
 	
 		$text = '';
-		If (ICAL_EVENTS_DEBUG) echo '<hr />url before decode: '.$url.'<br />';
+//		If (ICAL_EVENTS_DEBUG) echo '<hr />url before decode: '.$url.'<br />';
 		$url = html_entity_decode($url);
-		If (ICAL_EVENTS_DEBUG) echo '<br />url decoded: '.$url.'<hr />';
+//		If (ICAL_EVENTS_DEBUG) echo '<br />url decoded: '.$url.'<hr />';
 		$cachedfile = get_cache_file($url);
 		if ( file_exists($cachedfile) ) {
 			$c = filemtime($cachedfile);
@@ -102,6 +102,7 @@ function amr_check_start_of_file ($data) {// check if the file looks like a icsf
 		if ( isset($_REQUEST['nocache']) or isset($_REQUEST['refresh'])
 			or (!(file_exists($cachedfile))) or ((time() - ($c)) >= ($cache*60*60))) 	{
 			If (ICAL_EVENTS_DEBUG) echo '<br>Get ical file remotely, it is time to refresh or it is not cached: <br />';
+			amrical_mem_debug('We are going to refresh next');
 
 			//$url = urlencode($u);  - do NOT encode - that gives an invalid URL response
 			$check = wp_remote_get($url);
@@ -380,7 +381,7 @@ Africa/Asmara
 //			$strip = array ('(',' ');
 //			$icstzid = str_replace($strip,'',$icstzid);
 			$gmtend = stripos($icstzid,')'); /* do we have a brackedt GMT ? */
-			if (isset ($_REQUEST['tzdebug'])) {echo '<br/>Check for a bracketed gmt? = '.$gmtend.' in string '.$icstzid ; }
+			//if (isset ($_REQUEST['tzdebug'])) {echo '<br/>Check for a bracketed gmt? = '.$gmtend.' in string '.$icstzid ; }
 			if (!empty ($gmtend) ) {
 				$icstzid = str_replace(')','/',$icstzid);
 				$icstzcities = explode ('/',$icstzid); /* could be commas, could be slashes */
@@ -397,13 +398,11 @@ Africa/Asmara
 					}
 				}
 			foreach ($icstzcities as $i=>$icscity) $icstzcities[$i] = trim($icscity,' ');
-			if (isset ($_REQUEST['tzdebug'])) { echo '<br />Do we have a City? <br />';print_r($icstzcities);}
+			//if (isset ($_REQUEST['tzdebug'])) { echo '<br />Do we have a City? <br />';print_r($icstzcities);}
 			$globalcontcity = explode ('/',$globaltzstring);
 			if (isset ($globalcontcity[1]) ) $globalcity = $globalcontcity[1];
 			else $globalcity = $globalcontcity[0];
-			if (isset ($_REQUEST['tzdebug'])) {
-				echo '<hr> text = '.$text.'<br/>icstzid = '.$icstzid.' and wp tz = '.$globalcity.' <br >'; print_r($icstzcities);
-			}
+//			if (isset ($_REQUEST['tzdebug'])) {	echo '<hr> text = '.$text.'<br/>icstzid = '.$icstzid.' and wp tz = '.$globalcity.' <br >'; print_r($icstzcities);		}
 			if (in_array($globalcity, $icstzcities)) { /* if one of the cities in the tzid matches ours, again we can use the matched one */
 				$tzname = $globaltzstring;
 			}
@@ -672,10 +671,7 @@ global $amr_globaltz;
 	$prop = array_shift($p0);
 	if (!empty($p0)) {  // if we have some modifiers
 		foreach ($p0 as $p) {  // handle each modifier , could be  VALUE=DATE, TZID=
-//		if (isset($p0[1])) { /* ie if we have some modifiers like TZID, or maybe just VALUE=DATE , note parse_str s dangerous */
-//			if (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) {echo '<br/>*** p0[1]'.$p0[1]. ' $p0[2]'. $p0[2];}
-			if (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) {echo '<br /> modifer = '.$p;}
-//			if (stristr($p0[1], 'TZID')) {
+
 			if (stristr($p, 'TZID')) {		
 			    /* Normal TZ, not the one with the path eg:  DTSTART;TZID=US-Eastern:19980119T020000 or  zimbras TZID="GMT+01.00/+02.00 */
 //				$TZID = substr($p0[1], 4 );
@@ -688,7 +684,7 @@ global $amr_globaltz;
 						$VALUE = substr($p,6);  // take everything after the '='
 				}
 				else {// unknown maybe custom modifier
-					if (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) {echo '<br />Ignoring Unknown or custom modifer = '.$p;}
+					if (isset($_REQUEST['debugall'])) {echo '<br />Ignoring Unknown or custom modifer = '.$p;}
 				}				
 			}
 		}
@@ -914,7 +910,7 @@ function amr_parse_ical ( $cal_file ) {
 
     $line = 0;
     $event = '';
-	If (ICAL_EVENTS_DEBUG) { echo '<br />Calfile = '; var_dump($cal_file);echo '<br />';}
+	//If (ICAL_EVENTS_DEBUG) { echo '<br />Calfile = '; var_dump($cal_file);echo '<br />';}
 	$data = file_get_contents($cal_file);
 
 		// Now fix folding.  According to RFC, lines can fold by having
@@ -931,7 +927,7 @@ function amr_parse_ical ( $cal_file ) {
 	    $amr_lines = explode ( "\n", $data );
 		$amr_totallines = count ($amr_lines) - 1; /* because we start from 0 */
 		If (ICAL_EVENTS_DEBUG) {
-			echo '<br>data lines: '.$amr_totallines ;
+			echo '<br><b>Lines in ics file: '.$amr_totallines.'</b>' ;
 			//echo '<br />first line: ';	var_dump($amr_lines);
 			echo '<br />';
 			}

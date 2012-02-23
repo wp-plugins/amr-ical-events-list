@@ -477,14 +477,14 @@ global $amr_options, $wp_locale;
 	if (stristr($format, '%') ) return (strftime( $format, $dateInt ));  /* keep this for compatibility!  will not localise though */
 	else {
 		$text = date_i18n($format, $dateInt, $gmttf); /*  should  be false, otherwise we get the utc/gmt time.   */
-		If (isset ($_REQUEST['tzdebug']))
+/*		If (isset ($_REQUEST['tzdebug']))
 			{
 				echo '<br />Localised with gmt=false: '.$text.'<br />';
 				$text2 = date_i18n($format, $dateInt, false);
 				echo 'Localised with gmt=true:  '.$text2.'<br />';
 				$text3 = amr_date_i18n ('D, F j, Y g:i a', $datestamp);
 				echo 'Localised with amr date obj fn: '.$text3.'<br />';
-			}
+			} */
 		return ($text); //
 		}
 }

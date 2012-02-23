@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.0.22');
+define('AMR_ICAL_LIST_VERSION', '4.0.23');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -875,38 +875,38 @@ function amr_event_should_be_shown($event, $astart, $aend) {
 		 * event is an untimed event (eg: all day) and starts on the same day, but before the start datetime.  (Does it still have it's end date - we zap that at some point?)
 		 */
 		if (!isset ($event['DTSTART'] )) return (true);
-		if (ICAL_EVENTS_DEBUG) echo '<hr>dtstart='.$event['DTSTART']->format('c');
+		//if (ICAL_EVENTS_DEBUG) echo '<hr>dtstart='.$event['DTSTART']->format('c');
 		if ($event['DTSTART'] >= $astart) {
-			if (ICAL_EVENTS_DEBUG) echo '<br />date >= start' ;
+			//if (ICAL_EVENTS_DEBUG) echo '<br />date >= start' ;
 			if ($event['DTSTART'] <= $aend) {
-				if (ICAL_EVENTS_DEBUG) echo '<br />date <= end' ;
+				//if (ICAL_EVENTS_DEBUG) echo '<br />date <= end' ;
 				return (true);
 				}
 			else {
-				if (ICAL_EVENTS_DEBUG) echo '<br />date > start' ;
+				//if (ICAL_EVENTS_DEBUG) echo '<br />date > start' ;
 				if (isset($event['Untimed']) and amr_is_same_day($event['DTSTART'],$aend )) {
-					if (ICAL_EVENTS_DEBUG) echo '<br />date untimed and same day' ;
+					//if (ICAL_EVENTS_DEBUG) echo '<br />date untimed and same day' ;
 					return (true);
 				}
 				else {
-					if (ICAL_EVENTS_DEBUG) { echo '<br />date not untimed or not same day' ;  echo '<hr>';}
+					//if (ICAL_EVENTS_DEBUG) { echo '<br />date not untimed or not same day' ;  echo '<hr>';}
 					return (false);
 					}
 			}
 		}
 		else { /* ie DTSTART is < $astart, but may still be on same day, or not finished, ie continuing past */
-			if (ICAL_EVENTS_DEBUG) echo '<br />date < start' ;
+			//if (ICAL_EVENTS_DEBUG) echo '<br />date < start' ;
 			if (isset($event['DTEND'])	and ($event['DTEND'] >= $astart)) {
-				if (ICAL_EVENTS_DEBUG) echo '<br />date <= end' ;
+				//if (ICAL_EVENTS_DEBUG) echo '<br />date <= end' ;
 				return (true);
 			}
 			else {
-				if (ICAL_EVENTS_DEBUG) echo '<br /> No end....' ;
+				//if (ICAL_EVENTS_DEBUG) echo '<br /> No end....' ;
 				if (isset($event['Untimed']) and amr_is_same_day($event['DTSTART'],$astart )) {
-					if (ICAL_EVENTS_DEBUG) echo '..Is Untimed and same day' ;
+					//if (ICAL_EVENTS_DEBUG) echo '..Is Untimed and same day' ;
 					return (true);
 				}
-				else if (ICAL_EVENTS_DEBUG) echo '.. Is NOT Untimed or not same day' ;
+				else if (isset($_REQUEST['debugall'])) echo '.. Is NOT Untimed or not same day' ;
 			}
 
 		}
@@ -980,7 +980,7 @@ global $amr_globaltz;
 			}
 
 		if (!isset($event['RRULE'][0])) $event['RRULE'] = array($event['RRULE']); /* depending where we got our rrule from, we may or may not have multiple */
-		if (ICAL_EVENTS_DEBUG) { echo '<br><b>We have '.count($event['RRULE']).' rrules</b>';}
+		if (isset($_GET['rdebug'])) { echo '<br><b>We have '.count($event['RRULE']).' rrules</b>';}
 		foreach ($event['RRULE'] as $i => $rrule) {
 
 			$reps = amr_process_RRULE($rrule, $repeatstart, $astart, $aend, $limit);
@@ -988,7 +988,7 @@ global $amr_globaltz;
 				$repeats = array_merge ($repeats, $reps);
 			}
 		}
-		if (ICAL_EVENTS_DEBUG) { echo '<br>Got '.count($repeats). ' after RRULE';}
+		if (isset($_GET['rdebug'])) { echo '<br>Got '.count($repeats). ' after RRULE';}
 	}
 	if (!empty($event['RDATE']))	{
 		if (ICAL_EVENTS_DEBUG) { echo '<br>Processing RDATES...';}
@@ -1002,18 +1002,18 @@ global $amr_globaltz;
 		}
 
 	if (!empty($event['EXRULE']))	{
-			if (ICAL_EVENTS_DEBUG) { echo '<br><h3>Have EXRULE </h3>';var_dump($event['EXRULE']);}
+			if (isset($_REQUEST['debugexc'])) { echo '<br><h3>Have EXRULE </h3>';var_dump($event['EXRULE']);}
 			foreach ($event['EXRULE'] as $i => $exrule) {
 				$reps = amr_process_RRULE($exrule, $repeatstart, $astart, $aend, $limit);
 				if (is_array($reps) and count($reps) > 0) {
 					$exclusions  = $reps;
 				}
 			}
-			if (ICAL_EVENTS_DEBUG) { echo '<br><h3>Got '.count($exclusions). ' after EXRULE</h3>';}
+			if (isset($_REQUEST['debugexc'])) { echo '<br><h3>Got '.count($exclusions). ' after EXRULE</h3>';}
 		}
 
 	if (!empty($event['EXDATE']))	{
-			if (ICAL_EVENTS_DEBUG or isset($_GET['debugexc'])) {
+			if (isset($_GET['debugexc'])) {
 				echo '<br><h4>Have EXDATE to exclude </h4>';
 				foreach ($event['EXDATE'] as $exdate) {echo '<br />EXC:'.$exdate->format('c');};
 			}
@@ -1025,10 +1025,10 @@ global $amr_globaltz;
 				}
 
 			}
-			if (ICAL_EVENTS_DEBUG) { echo '<br />Got  '.count($exclusions). ' exclusions after checking EXDATE';}
+			if (isset($_GET['debugexc'])) { echo '<br />Got  '.count($exclusions). ' exclusions after checking EXDATE';}
 		}
 
-	if (ICAL_EVENTS_DEBUG) { echo '<br />Still have '.count($repeats). ' before exclusions<br />';}
+	if (isset($_GET['rdebug'])){ echo '<br />Still have '.count($repeats). ' before exclusions<br />';}
 			/* Now remove the exclusions from the repeat instances */
 		if (is_array($exclusions) and count ($exclusions) > 0) {
 
@@ -1036,7 +1036,7 @@ global $amr_globaltz;
 				date_timezone_set($excl, $amr_globaltz );
 			    foreach ($repeats as $j => $rep) {
 					date_timezone_set($rep, $amr_globaltz );
-					if (ICAL_EVENTS_DEBUG or (isset($_REQUEST['debugexc']) )) {
+					if ((isset($_REQUEST['debugexc']) )) {
 						echo '<br />Exc:'.$excl->format('c'). ' =? Rep:'.$rep->format('c');
 					}
 				    if ($excl->format('c') == $rep->format('c')) {
@@ -1050,7 +1050,7 @@ global $amr_globaltz;
 				}
 			}
 		}
-		if (ICAL_EVENTS_DEBUG) { echo '<br>Now have '.count($repeats). ' after  exclusions '; }
+		if (isset($_REQUEST['debugexc'])) { echo '<br>Now have '.count($repeats). ' after  exclusions '; }
 
 		return ($repeats);
 
@@ -1158,7 +1158,9 @@ function amr_generate_repeats(&$event, $astart, $aend, $limit) { /* takes an eve
 				if (isset($event['RRULE']) or (isset($event['RDATE']))) {
 							/* if have, must use dtstart in case we are dependent on it's characteristics,. We can exclude too early dates later on */
 					$repeats = amr_repeat_anevent($event, $astart, $aend, $limit );  /**** try for a more efficient start? */
-					if (ICAL_EVENTS_DEBUG) {echo '<br>Num of Repeats to be created: '.count($repeats).'<br>';}
+					if (isset($_REQUEST['rdebug']) or ICAL_EVENTS_DEBUG) {
+						if (count($repeats) > 0)	echo '<br>Create repeats: '.count($repeats);
+					}
 					/* now need to convert back to a full event by copying the event data for each repeat */
 					if (is_array($repeats) and (count($repeats) > 0)) {
 						foreach ($repeats as $i => $r) {
@@ -1230,7 +1232,7 @@ global $amr_limits;
 						(amr_falls_between($start, $event['EventDate'], $event['EndDate'])))) ) /* catch those that start before our start and end after our start */
 					{
 					$constrained[] = $event;
-					if (ICAL_EVENTS_DEBUG) {
+					if (isset($_REQUEST['debugall'])) {
 						echo '<br>Choosing no: '.$k.' '. $event['EventDate']->format('c').' ending '. (isset($event['EndDate'])? $event['EndDate']->format('c'): ' no end');		}
 					++$count;
 				}
@@ -1266,7 +1268,7 @@ function amr_process_icalevents($events, $astart, $aend, $limit) {
 		if (ICAL_EVENTS_DEBUG) {echo '<hr>No.Dates= '.count($dates);  } //
 		if ((is_array($dates)) and (count($dates) > 1)) { /* must be > 1 for tere to be a duplicate! */
 			amr_arrayobj_unique2($dates); /* remove any duplicate in the values , check UID and Seq.  This may arise if we have many VEVENTS relating to one event */
-			if (ICAL_EVENTS_DEBUG) { echo '<br>Now have '.count($dates). ' after duplicates check.';}
+			//if (ICAL_EVENTS_DEBUG) { echo '<br>Now have '.count($dates). ' after duplicates check.';}
 		}
 		return ($dates) ;
 	}
@@ -1274,11 +1276,14 @@ function amr_process_icalevents($events, $astart, $aend, $limit) {
 function process_icalurl($url) {
 global $amr_limits;
 /* cache the url if necessary, and then parse it into basic nested structure */
+	amrical_mem_debug('Before Process ical url');
 	$file = amr_cache_url(str_ireplace('webcal://', 'http://',$url),$amr_limits['cache']);
 	if (!($file)) {
 			echo '<br>'.sprintf(__('Unable to load or cache ical calendar %s','amr-ical-events-list'),$url);
 			return false;
 		}
+		
+	amrical_mem_debug('Before parse ical url');	
 	$ical = amr_parse_ical($file);
 
 	if (! (is_array($ical) )) {
@@ -1344,7 +1349,7 @@ function amr_get_events_cache_key ($criteria) {
 		}
 	}
 
-	if (isset($_REQUEST['debug'])) echo '<br /><b>string for key of cache = <br/>'.$string.'</b>';
+	if (isset($_REQUEST['debugcache'])) echo '<br /><b>string for key of cache = <br/>'.$string.'</b>';
 	$key = md5( $string );
 	return ($key);
 }
@@ -1353,12 +1358,12 @@ function amr_get_cached_events_from_db($criteria) {
 	global $amr_limits;
 
 	if (version_compare(5.3, PHP_VERSION, '>')) {
-		if (isset($_REQUEST['debug']))echo '<b>NB: No event transient caching possible yet  because objects do not serialise properly in php < 5.3</b>';
+		if (isset($_REQUEST['debugcache']))echo '<b>NB: No event transient caching possible yet  because objects do not serialise properly in php < 5.3</b>';
 		return(false);
 	}
 	else return (false) ; /* until we upgrade ourselves and can test properly  - icdsoft do not have yet */
 
-	if (isset($_REQUEST['debug']))echo '<h3>Trying cache = </h3>';
+	if (isset($_REQUEST['debugcache'])) echo '<h3>Trying cache = </h3>';
 //---- build the key
 	$key = amr_get_events_cache_key($criteria);
 // ----now see if we have a cache
@@ -1366,13 +1371,13 @@ function amr_get_cached_events_from_db($criteria) {
 	$cache = get_transient('amr_events');
 
 	if ( is_array($cache) && isset( $cache[ $key ] ) ) {
-		 echo ('<hr>we got an events cache with key '.$key);
+		 if (isset($_REQUEST['debugcache'])) echo ('<hr>we got an events cache with key '.$key);
 //		 var_dump($cache[ $key ]); die('let see');
 
          return ( $cache[$key] );
 	}
 	else {
-		echo ('<h3>No events cached - requery </h3>');
+		if (isset($_REQUEST['debugcache'])) echo ('<h3>No events cached - requery </h3>');
 		return false;
 	}
 }
@@ -1382,14 +1387,14 @@ function amr_set_cached_events_from_db($criteria, $events) {
 	global $amr_limits;
 //---- build the key
 	$key = amr_get_events_cache_key($criteria);
-	if (isset($_REQUEST['debug'])) echo '<h3>Setting cache with key = '.$key.'</h3>';
+	if (isset($_REQUEST['debugcache'])) echo '<h3>Setting cache with key = '.$key.'</h3>';
 // ----now see if we have a cache
 
 	$cache = get_transient('amr_events');
 	$cache[$key] = $events;
 	set_transient('amr_events', $cache, 60*20); /* save transient for 20 mins */
 
-	if (isset($_REQUEST['debug']))  echo ('<h3>cache set  '.$key.'</h3>');
+	if (isset($_REQUEST['debugcache']))  echo ('<h3>cache set  '.$key.'</h3>');
 	return true;
 }
 /* -------------------------------------------------------------------------*/
@@ -1407,7 +1412,7 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 	$amr_doing_icallist = true;
 	if (!empty($amrW)) $w = 'w'; /* so we know if we are in the widget or not */
 	else $w = '';
-	if (ICAL_EVENTS_DEBUG) {echo '<hr />Doing list not eventinfo '; var_dump($amr_doing_icallist); }
+	//if (ICAL_EVENTS_DEBUG) {echo '<hr />Doing list not eventinfo '; var_dump($amr_doing_icallist); }
 
 	$key = amr_get_events_cache_key ($criteria);
 	if (isset ($amr_one_page_events_cache[$key]))  {
@@ -1416,8 +1421,8 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 		if (ICAL_EVENTS_DEBUG)   echo ('<h3>Grabbing the one page events cache  '.$key.'</h3>');
 		}
 	else {
-		if (ICAL_EVENTS_DEBUG)   echo ('<h3>No one page events cache  '.$key.', so start afresh</h3>');
-		if (ICAL_EVENTS_DEBUG)  { echo ('<hr>Criteria '); var_dump($criteria);}
+		If (isset($_GET['debugcache']))   echo ('<h3>No one page events cache  '.$key.', so start afresh</h3>');
+		if (isset($_GET['debugcache'])) { echo ('<hr>Criteria '); var_dump($criteria);}
 		if ((isset($amr_limits['eventpoststoo'])) and ($amr_limits['eventpoststoo'])) {
 			if (function_exists('amr_ical_from_posts')) {
 //				$events = amr_get_cached_events_from_db($criteria);
@@ -1488,15 +1493,17 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 				}
 			}
 			If (isset($_REQUEST['debug'])) echo '<br />Got x events '.count($components);
+			
 			amrical_mem_debug('Before process');
 			$components = amr_process_icalevents($components, $start, $end, $no_events);
-			If (isset($_REQUEST['debug'])) echo '<br />After proces ical -Got x events '.count($components);
 			amrical_mem_debug('Before constrain');
 			$amrtotalevents = count($components);
 			$components = amr_constrain_components($components, $start, $end, $no_events);
 			$amr_last_date_time = amr_save_last_event_date($components);
-			If ((ICAL_EVENTS_DEBUG) or (isset($_REQUEST['debug'])))
-				echo '<br />After constrain '.count($components).' and last event date time is'.$amr_last_date_time;
+			If (ICAL_EVENTS_DEBUG) {
+				echo '<br />After constrain No dates:'.count($components).' and last event date time is: '.$amr_last_date_time->format('c');
+				var_dump($amr_last_date_time);
+			}
 		}
 		if (!isset ($amr_one_page_events_cache[$key])) {
 				$amr_one_page_events_cache[$key]['components'] = $components;
@@ -1538,16 +1545,27 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 	if (!empty($amr_options['do_grouping_js']) ) {
 		$thecal .=	amr_ical_load_frontend_scripts();
 	}
-
+	amrical_mem_debug('After generating listing');
 	return ($thecal);
-
+	
 	}
 /* -------------------------------------------------------------------------*/
 function amr_save_last_event_date($events) { // must have been sorted
 global $amr_last_date_time;
-	if (is_array($events)) $lastevent = end($events);
-//	else {echo 'not an array'; var_dump($events);}
-	if (!empty($lastevent['EventDate'])) $amr_last_date_time =   $lastevent['EventDate'];
+	if (is_array($events)) {
+		$lastevent = end($events);
+		if (!empty($lastevent['EventDate'])) {
+			$amr_last_date_time =   $lastevent['EventDate'];
+			return $amr_last_date_time;
+			}
+		else {	
+			if (ICAL_EVENTS_DEBUG) { echo ' No last date time in:'; var_dump($lastevent);}
+		}	
+	}
+	else {
+		if (ICAL_EVENTS_DEBUG) { echo ' Events not an array'; var_dump($events);}
+		}
+	
 // else will not save a last date.
 }
 /* -------------------------------------------------------------------------*/
@@ -1569,6 +1587,28 @@ function amr_get_params ($attributes=array()) {
 	$amr_calendar_url,
 	$amrW; // indicates if widget
 
+if (!defined ('ICAL_EVENTS_DEBUG')) { 
+	if (isset($_REQUEST["debug"])  
+		and ((is_user_logged_in() and current_user_can('administrator') ) or amr_is_trying_to_help()) )
+		{ /* for debug and support - calendar data is public anyway, so no danger*/
+		
+		define('ICAL_EVENTS_DEBUG', true);
+		}
+	else
+		define('ICAL_EVENTS_DEBUG', false);
+}
+
+if (ICAL_EVENTS_DEBUG) {
+	echo '<h1>Debug mode</h1>';
+	echo 'Other debug parameters that can be used together or separately to isolate problems: ';
+	echo 'debugexc, rdebug, cdebug, tzdebug, debugall, debugq, memdebug, debugtime <br/>';
+	if (!defined('AMR_ICAL_VERSION')) define('AMR_ICAL_VERSION', '0');
+	echo '<br />key:'.AMR_ICAL_VERSION.'+'.AMR_ICAL_LIST_VERSION.'#'.PHP_VERSION.'-'
+	.get_bloginfo('version').'+'.get_option( 'blog_charset' ).'+'.mb_internal_encoding();
+	echo '@'.ini_get("memory_limit");
+	echo ' time:'.ini_get('max_execution_time').' seconds';
+}
+	
 //	if (!empty ($amrW) ) //must be empty not isset
 //		$amr_listtype='4';
 //	else
@@ -1629,18 +1669,14 @@ function amr_get_params ($attributes=array()) {
 				}
 		} // end foreach
 	} //end if
-//
-//	If (ICAL_EVENTS_DEBUG) {echo '<hr>Attributes after any missing defaults added <br />'; var_dump($shortcode_params);}
 
-// -------------------------------------------------------------------------------------------------- handle taxonomies we do not event know about yet
+// -------------------------------------------------------------------------------------------------- 
+// handle taxonomies we do not event know about yet
 	/*  get the parameters we want out of the attributes, supplying defaults for anything missing  */
 	/* but now we may have missed taxonomies etc as the defaults do not know about them, so get the diff  */
 	if (!empty($attributes)) 		$taxo_selection = array_diff($attributes,$shortcode_params);
 	// if we had some taxos, marge them into shortcode selection
 	if (!empty($taxo_selection)) 	$shortcode_params = array_merge ($shortcode_params,$taxo_selection );
-
-//	If (ICAL_EVENTS_DEBUG) {echo '<hr>Any other selections in the attributes (taxonomies? <br />'; if (!empty($taxo_selection)) var_dump($taxo_selection);}
-//---------------------------------------------------------------------------------------------------------------------------------------------- now check for query or post
 
 	$allow_query = (!isset($shortcode_params['ignore_query']) or !($shortcode_params['ignore_query']) );
 	$ignore_query_all = (isset($shortcode_params['ignore_query']) and ($shortcode_params['ignore_query'] == 'all') );
@@ -1660,7 +1696,7 @@ function amr_get_params ($attributes=array()) {
 			if (isset($queryargs['calendar'])) 	$queryargs['listtype'] 	= $queryargs['calendar'];
 			if (isset($queryargs['agenda']) )	$queryargs['listtype'] 	= $queryargs['agenda'];
 		}
-		If (ICAL_EVENTS_DEBUG) {echo '<hr> Query allowed, attributes/args to consider adding:<br />'; var_dump($queryargs); }
+		If (isset($_REQUEST['debugq'])) {echo '<hr> Query allowed, attributes/args to consider adding:<br />'; var_dump($queryargs); }
 
 		unset($queryargs['page_id']);
 		unset($queryargs['debug']);
@@ -1672,7 +1708,7 @@ function amr_get_params ($attributes=array()) {
 //		if (ICAL_EVENTS_DEBUG) {echo '<hr>After merge with query args<br />'; var_dump($shortcode_params); }
 		//unset($queryargs['listtype']);
 	}
-	else if (ICAL_EVENTS_DEBUG) {echo '<hr>Ignoring most query parameters ';}
+	else if (isset($_REQUEST['debugq'])) {echo '<hr>Ignoring most query parameters ';}
 //
 	// save the global list type first
 	if (!empty($shortcode_params['listtype'])) {
@@ -1683,7 +1719,7 @@ function amr_get_params ($attributes=array()) {
 
 	//	unset($attributes['listtype']);
 	if ($change_view_allowed and $allow_query) { // then we will NOT ignore these query parameters as that  will break our navigation
-		if (ICAL_EVENTS_DEBUG) {echo '<br />Allowed to change views';}
+		//if (ICAL_EVENTS_DEBUG) {echo '<br />Allowed to change views';}
 		if (isset($_GET['listtype'])) $amr_listtype = intval ( $_GET['listtype']);
 		if (isset($_GET['eventmap'])) $amr_listtype = 'eventmap'; // havent figured this out yet
 	}
@@ -1721,7 +1757,7 @@ function amr_get_params ($attributes=array()) {
 		if (!empty($queryargs['tz']))
 				$shortcode_params['tz'] = filter_var($queryargs['tz'],FILTER_SANITIZE_STRING);
 	}
-	else if (ICAL_EVENTS_DEBUG) echo '<br/>** Ignoring all query parameters';
+	else if (isset($_REQUEST['debugall'])) echo '<br/>** Ignoring all query parameters';
 
 //----------------------------------------------------------------------------------------------------------------- now do thelimits array
 	// then get the limits for that list type
@@ -1735,7 +1771,7 @@ function amr_get_params ($attributes=array()) {
 	}  
 
 
-	If (ICAL_EVENTS_DEBUG) {echo '<hr>Defaults limits before we change them<br />'; var_dump($amr_limits ); }
+	If (isset($_REQUEST['debugall'])) {echo '<hr>Defaults limits before we change them<br />'; var_dump($amr_limits ); }
 // now check groupings
 	$gg = '';
 	if (!empty($shortcode_params['grouping']))
@@ -1903,13 +1939,13 @@ function amr_get_params ($attributes=array()) {
 
 
 //	date_time_set ($amr_limits['end'],23,59,59);  // if we have this, do we need the -1 second below?
-	If (ICAL_EVENTS_DEBUG) {
+	If (isset($_GET['debugq'])) {
 		echo '<hr> Before passing others <br />';
 		var_dump($shortcode_params);
 		echo amr_echo_parameters();
 	}
 
-	If (ICAL_EVENTS_DEBUG) {echo '<hr> Left in params to pass to wp query?: <br />'; var_dump($shortcode_params); }
+	If (isset($_GET['debugq']))  {echo '<hr> Left in params to pass to wp query?: <br />'; var_dump($shortcode_params); }
 	return ($shortcode_params);  // only return params needed for wp query ?
 }
 /* -------------------------------------------------------------------------*/
@@ -2201,8 +2237,11 @@ function amr_plugin_links($links, $file) {
 		}
 		return $links;
 	} // end plugin_links()
+	
+
 /* ------------------------------------------------------------------------------------------------------ */
 	set_exception_handler('amr_ical_exception_handler');
+	amr_ical_initialise ();   // setup all basic settings, like globals and constants etc
 
 	if (is_admin() )	{
 
@@ -2215,9 +2254,9 @@ function amr_plugin_links($links, $file) {
 		add_action('wp_enqueue_scripts' , 'amr_ical_load_frontend_scripts' ); //enque jquery
 		add_action('wp_footer' 			, 'amr_ical_include_scripts' ); // add js to footer
 	}
-// add_action('plugins_loaded'          , 'amr_ical_widget_init');
+
 	add_action('widgets_init'           , 'amr_ical_widget_init');
-	amr_ical_load_text();
+//	amr_ical_load_text();  // only load if required
 
 	add_action('plugins_loaded'         , 'amr_ical_load_text' );
 	add_action( 'init'             		, 'amr_ical_load_text' );
@@ -2230,5 +2269,6 @@ function amr_plugin_links($links, $file) {
 
 	register_activation_hook(__FILE__, 'amr_ical_events_list_record_version');
 	add_filter('plugin_row_meta', 'amr_plugin_links', 10, 2);
+	add_action('plugins_loaded', 'amr_debug_time');
 
 ?>
