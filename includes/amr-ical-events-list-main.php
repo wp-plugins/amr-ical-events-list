@@ -35,7 +35,14 @@ function amr_load_pluggables() {
 }
 /*----------------------------------------------------------------------------------------*/
 function amr_ical_events_list_record_version() {
-	update_option('amr-ical-events-list-version', AMR_ICAL_LIST_VERSION); // for upgrade checks
+	global $amr_options;
+	if (empty ($amr_options['amr-ical-events-list-version'])  or 
+		(version_compare(AMR_ICAL_LIST_VERSION , $amr_options['amr-ical-events-list-version'], '>'))) {
+		amr_ical_apply_version_upgrades ($amr_options['amr-ical-events-list-version']);
+		$amr_options['amr-ical-events-list-version'] = AMR_ICAL_LIST_VERSION;
+		$result = update_option( 'amr-ical-events-list', $amr_options);
+		return($result);
+	}
 }
 /* --------------------------------------------------  */
 function ical_ordinalize( $num ){
@@ -1587,27 +1594,7 @@ function amr_get_params ($attributes=array()) {
 	$amr_calendar_url,
 	$amrW; // indicates if widget
 
-if (!defined ('ICAL_EVENTS_DEBUG')) { 
-	if (isset($_REQUEST["debug"])  
-		and ((is_user_logged_in() and current_user_can('administrator') ) or amr_is_trying_to_help()) )
-		{ /* for debug and support - calendar data is public anyway, so no danger*/
-		
-		define('ICAL_EVENTS_DEBUG', true);
-		}
-	else
-		define('ICAL_EVENTS_DEBUG', false);
-}
 
-if (ICAL_EVENTS_DEBUG) {
-	echo '<h1>Debug mode</h1>';
-	echo 'Other debug parameters that can be used together or separately to isolate problems: ';
-	echo 'debugexc, rdebug, cdebug, tzdebug, debugall, debugq, memdebug, debugtime <br/>';
-	if (!defined('AMR_ICAL_VERSION')) define('AMR_ICAL_VERSION', '0');
-	echo '<br />key:'.AMR_ICAL_VERSION.'+'.AMR_ICAL_LIST_VERSION.'#'.PHP_VERSION.'-'
-	.get_bloginfo('version').'+'.get_option( 'blog_charset' ).'+'.mb_internal_encoding();
-	echo '@'.ini_get("memory_limit");
-	echo ' time:'.ini_get('max_execution_time').' seconds';
-}
 	
 //	if (!empty ($amrW) ) //must be empty not isset
 //		$amr_listtype='4';
