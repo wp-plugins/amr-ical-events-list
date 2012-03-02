@@ -19,11 +19,32 @@ global $amrdf;
 global $amrtf;
 global $amr_globaltz;
 global $utczobj;
+
+if (!defined ('ICAL_EVENTS_DEBUG')) { 
+	if (isset($_REQUEST["debug"])  
+		and ((is_user_logged_in() and current_user_can('administrator') ) or amr_is_trying_to_help()) )
+		{ /* for debug and support - calendar data is public anyway, so no danger*/
+		
+		define('ICAL_EVENTS_DEBUG', true);
+		}
+	else
+		define('ICAL_EVENTS_DEBUG', false);
+}
+
+if (ICAL_EVENTS_DEBUG) {
+	echo '<h1>Debug mode</h1>';
+	echo 'Other debug parameters that can be used together or separately to isolate problems: ';
+	echo 'debugexc, rdebug, cdebug, tzdebug, debugall, debugq, memdebug, debugtime <br/>';
+	if (!defined('AMR_ICAL_VERSION')) define('AMR_ICAL_VERSION', '0');
+	echo '<br />key:'.AMR_ICAL_VERSION.'+'.AMR_ICAL_LIST_VERSION.'#'.PHP_VERSION.'-'
+	.get_bloginfo('version').'+'.get_option( 'blog_charset' ).'+'.mb_internal_encoding();
+	echo '@'.ini_get("memory_limit");
+	echo ' time:'.ini_get('max_execution_time').' seconds';
+}
+
+
+
 $utczobj = timezone_open('UTC');
-
-
-
-
 
 /* set to empty string for concise code */
 if (!defined('AMR_NL')) define('AMR_NL',"\n" );
@@ -289,7 +310,7 @@ function amr_set_defaults() {
 	global $eventtaxonomies;
 	global $amr_options,$locale;
 	
-
+	
 	$amr_options = array (
 			'ngiyabonga' => false,
 			'own_css' => false,
@@ -318,7 +339,7 @@ function amr_set_defaults() {
 				If (isset($_REQUEST['tzdebug'])) {	echo '<br />Tz string:'.$a_tz;}
 			}
 		else {
-			If (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) {	echo '<h2>No timezone string found.</h2>';		}
+			
 			if (($gmt_offset = get_option ('gmt_offset')) and (!(is_null($gmt_offset))) and (is_numeric($gmt_offset))) {
 				$a_tz = amr_getTimeZone($gmt_offset);
 				$amr_globaltz = timezone_open($a_tz);
@@ -1097,8 +1118,9 @@ function amr_getset_options ($reset=false) {
 		}
 
 		}
-	if (!(isset($alreadyhave)) or (!$alreadyhave) ) amr_set_defaults(); 
-	else amr_ical_apply_any_version_changes ();
+	if (!(isset($alreadyhave)) or (!$alreadyhave) ) 
+		amr_set_defaults(); 
+	
 	
 	if (!empty($amr_options['usehumantime'])) { 
 		add_filter ('amr_human_time','amr_human_time');
@@ -1106,16 +1128,22 @@ function amr_getset_options ($reset=false) {
 	return ($amr_options);
 	}
 //----------------------------------------------	
-function amr_ical_apply_any_version_changes () {
+function amr_ical_apply_version_upgrades ($prev_version) {
 global $amr_options;
 
-	if (!isset($amr_options['lookprevmessage']) ) { // can be empty later
-
-			$amr_options['lookprevmessage'] = __('Look for Previous','amr-ical-events-list'); // for compatibility
-			$amr_options['resetmessage'] = __('Reset','amr-ical-events-list'); 
+	// must do oldest updates first
+	if (version_compare ($prev_version,'4.0.19','<')) {
+		if (!isset($amr_options['lookprevmessage']) ) { // can be empty later
+				$amr_options['lookprevmessage'] = __('Look for Previous','amr-ical-events-list'); // for compatibility
+				$amr_options['resetmessage'] = __('Reset','amr-ical-events-list'); 
+		}
+		if (!isset($amr_options['usehumantime'])) // can be false after admin has set the options
+			$amr_options['usehumantime'] = true;
+	}	
+	if (version_compare ($prev_version,'4.0.23','<')) {
+	// delete the old multiple options and resave as one for reduced db queries 
+		
 	}
-	if (!isset($amr_options['usehumantime'])) // can be false after admin has set the options
-		$amr_options['usehumantime'] = true;
 
 }	
 //----------------------------------------------  temp adjust
