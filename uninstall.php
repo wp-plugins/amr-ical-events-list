@@ -9,7 +9,7 @@
 if ( !defined('WP_UNINSTALL_PLUGIN') ) {
     exit();
 }
-<?php
+
 /* This is the amr ical uninstall file */
 	function amr_ical_uninstall(){	
 	if (function_exists ('delete_option')) {  	// delete all options we may have used over time
@@ -22,8 +22,8 @@ if ( !defined('WP_UNINSTALL_PLUGIN') ) {
 		echo '<p>'.__('amr ical options deleted from database', 'amr-ical-events-list').'</p>';
 		unlink();
 		// now look for and delete cache files in upload dir
-		$upload_dir = wp_upload_dir()
-		$dir_to_delete = $upload_dir . '/ical-event-scache/' ;
+		$upload_dir = wp_upload_dir();
+		$dir_to_delete = $upload_dir . '/ical-events-cache/' ;
 		$files = list_files( $dir_to_delete );
 		if ( $files ) {
 			$files_to_delete = array_merge($files_to_delete, $files);
@@ -35,7 +35,7 @@ if ( !defined('WP_UNINSTALL_PLUGIN') ) {
 		$cssdir = $upload_dir . '/css/' ;
 		$files = list_files( $cssdir );
 		foreach ($files as $i=> $file) {
-			echo '<br />'.
+			echo '<br />'.$file;
 		}
 	}
 	else {
