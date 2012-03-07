@@ -40,7 +40,6 @@ define( 'AMR_BASENAME', plugin_basename( __FILE__ ) );
 
 if (is_admin()	) {  // are we in admin territory
 	require_once('includes/amr-ical-list-admin.php');
-	require_once('includes/amr-ical-uninstall.php');
 
 	add_filter('plugin_action_links', 'amr_plugin_action', 8, 2);
 }
