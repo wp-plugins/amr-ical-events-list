@@ -19,9 +19,8 @@
  *	http://www.ietf.org/rfc/rfc2445.txt
  *
  */
-
 /* ---------------------------------------------------------------------- */
-	/*
+/*
 	 * Return the full path to the cache file for the specified URL.
 	 */
 	function get_cache_file($url) {
@@ -80,19 +79,26 @@ function amr_check_start_of_file ($data) {// check if the file looks like a icsf
 }
 
 /* ---------------------------------------------------------------------- */
-	function amr_cache_url($url, $cache=ICAL_EVENTS_CACHE_TTL) {
+function amr_cache_url($url, $cache=ICAL_EVENTS_CACHE_TTL) {
 	global $amr_lastcache;
 	global $amr_globaltz;
+	global $amr_options;
 	
 		$text = '';
+		if (!empty($amr_options['timeout'])) 
+			$args = array('timeout' =>  $amr_options['timeout']);
+		else 
+			$rgs = array(); // aloow std wp or other filters		
 //		If (ICAL_EVENTS_DEBUG) echo '<hr />url before decode: '.$url.'<br />';
 		$url = html_entity_decode($url);
 //		If (ICAL_EVENTS_DEBUG) echo '<br />url decoded: '.$url.'<hr />';
 		$cachedfile = get_cache_file($url);
 		if ( file_exists($cachedfile) ) {
 			$c = filemtime($cachedfile);
-			if ($c) $amr_lastcache = date_create(strftime('%c',$c));
-			else $amr_lastcache = '';
+			if ($c) 
+				$amr_lastcache = date_create(strftime('%c',$c));
+			else 
+				$amr_lastcache = '';
 		}
 		else {
 			$c = false;
@@ -105,7 +111,7 @@ function amr_check_start_of_file ($data) {// check if the file looks like a icsf
 			amrical_mem_debug('We are going to refresh next');
 
 			//$url = urlencode($u);  - do NOT encode - that gives an invalid URL response
-			$check = wp_remote_get($url);
+			$check = wp_remote_get($url, $args);
 			if (( is_wp_error($check) ) or  (isset ($check['response']['code']) and !($check['response']['code'] == 200))
 			or (isset ($check[0]) and preg_match ('#404#', $check[0]))) {/* is this bit still meaningful or needed ? */
 
@@ -149,7 +155,10 @@ function amr_check_start_of_file ($data) {// check if the file looks like a icsf
 					$text .= '&nbsp;'.sprintf(__('Error getting calendar file with htpp or curl %s','amr-ical-events-list'), $url);
 
 					if ( file_exists($cachedfile) ) { // Try use cached file if it exists
-						$text .= '&nbsp;...'.sprintf(__('Using File last cached at %s','amr-ical-events-list'), $amr_lastcache->format('D c'));
+						if (is_object($amr_lastcache)) 
+							$text .= '&nbsp;...'.sprintf(__('Using File last cached at %s','amr-ical-events-list'), $amr_lastcache->format('D c'));
+						else 
+							$text .= '&nbsp;...'.__('File last cached time not available','amr-ical-events-list');
 						echo '<a class="error" href="#" title="'
 						.__('Warning: Events may be out of date. ','amr-ical-events-list' )
 						. $text.'">!</a>';

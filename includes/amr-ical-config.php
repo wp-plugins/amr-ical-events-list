@@ -526,9 +526,7 @@ function amr_set_defaults() {
 //		add_option('amr-ical-events-list', $amr_options);  // hmm what to do - if we autosave, then they do noyt ickup new defaults automatically
 			
 }
-
-	/* -------------------------------------------------------------------------------------------------------------*/
-
+/* -------------------------------------------------------------------------------------------------------------*/
 function amr_ical_showmap ($text) { /* the address text */
 	global $amr_options;
 		$t1 = __('Show in Google map','amr-ical-events-list');
@@ -540,9 +538,8 @@ function amr_ical_showmap ($text) { /* the address text */
 		.str_replace(' ','%20',($text)).'" target="_BLANK"'   //google wants unencoded
 		.' title="'.__('Show location in Google Maps','amr-ical-events-list').'" >'.$t3.'</a>');
 	}
-	/* -------------------------------------------------------------------------------------------------------------*/
-	/* This is used to tailor the multiple default listing options offered.  A new listtype first gets the common default */
-
+/* -------------------------------------------------------------------------------------------------------------*/
+/* This is used to tailor the multiple default listing options offered.  A new listtype first gets the common default */
 function customise_listtype($i)	{ /* sets up some variations of the default list type*/
 	global $amr_options;
 
@@ -588,7 +585,7 @@ function customise_listtype($i)	{ /* sets up some variations of the default list
 			$amr_options['listtypes'][$i]['general']['name']=__('Widget','amr-ical-events-list'); /* No groupings, minimal */
 			$amr_options['listtypes'][$i]['general']['Description']=__('The new default setting for widgets uses lists for the table rows. Good for themes that cannot cope with tables in the sidebar. No grouping. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
 
-			$amr_options['listtypes'][$i]['general']['ListHTMLStyle']='list';
+			$amr_options['listtypes'][$i]['general']['ListHTMLStyle']='HTML5table';
 			$amr_options['listtypes'][$i]['format']['Day']='M'.'\&\n\b\s\p\;'.'j';
 			$amr_options['listtypes'][$i]['limit'] = array (	"events" => 10,	"days" 	=> 90,"cache" 	=> 24);  /* hours */
 			foreach ($amr_options['listtypes'][$i]['grouping'] as $g => $v) {$amr_options['listtypes'][$i]['grouping'][$g] = false;}
@@ -608,7 +605,7 @@ function customise_listtype($i)	{ /* sets up some variations of the default list
 			}
 		case 5: {
 			$amr_options['listtypes'][$i]['general']['name']=__('HTML5 Exp 1','amr-ical-events-list');
-			$amr_options['listtypes'][$i]['general']['Description']= __('Experimental new table style aiming to use html5 tags, but still within a table structure to allow columns. One cannot have two levels of grouping with this option as tbody cannot be nested. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
+			$amr_options['listtypes'][$i]['general']['Description']= __('Table style aiming to use html5 tags, but still within a table structure to allow columns. One cannot have two levels of grouping with this option as tbody cannot be nested. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
 			$amr_options['listtypes'][$i]['general']['ListHTMLStyle']='HTML5table';
 			$amr_options['listtypes'][$i]['format']['Day']='j'.'\&\n\b\s\p\;'.'M';
 			$amr_options['listtypes'][$i]['grouping']['Day'] = false;
@@ -687,7 +684,7 @@ function customise_listtype($i)	{ /* sets up some variations of the default list
 			$amr_options['listtypes'][$i]['general']['name']=__('EventInfo','amr-ical-events-list'); /* No groupings, minimal */
 			$amr_options['listtypes'][$i]['general']['Description']=__('For displaying additional event info on posts created as events. The summary and description are switched off as these are the post title and the post content. Calendar properties and groupings are also not relevant. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
 			$amr_options['listtypes'][$i]['limit'] = array (	"events" => 10,	"days" 	=> 366,"cache" 	=> 24);  /* hours */
-			$amr_options['listtypes'][$i]['general']['ListHTMLStyle']='list';
+			$amr_options['listtypes'][$i]['general']['ListHTMLStyle']='HTML5table';
 			$amr_options['listtypes'][$i]['format']['Day']='l, j F Y';
 
 			$amr_options['listtypes'][$i]['component']['VTODO'] = false;
@@ -966,7 +963,6 @@ function new_listtype()	{
 	);
 	return $amr_newlisttype;
 	}
-
 /* ---------------------------------------------------------------------*/
 function Quarter ($D)
 { 	/* Quarters can be complicated.  There are Tax and fiscal quarters, and many times the tax and fiscal year is different from the calendar year */

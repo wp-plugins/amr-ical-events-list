@@ -73,7 +73,7 @@ function amr_list_event_subset ($htm, $columns, $subset, $events) { // now a fla
 			$rowhtml .= $thiscolumn; // build up the row with each column 
 		} // end row
 
-		// so now we havefinsihed that group, start next
+		// so now we have finished that group, start next
 		// save the event or row,  for next group
 		if (!empty($rowhtml)) {
 			$tmp = apply_filters('amr_events_event_html', array('rowhtml'=>$rowhtml, 'event'=>$e));

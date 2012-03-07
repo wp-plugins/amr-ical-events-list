@@ -99,6 +99,7 @@ function amr_sort_date_array(&$datearray) {
 }
 /* --------------------------------------------------------------------------------------------------- */
 function amr_limit_by_setpos(&$datearray, $by) {
+	if (empty($datearray)) return;
 	$total = count($datearray);
 	foreach ($by as $i => $pos) {
 		if (!empty($pos)) $pos = (int) $pos;
@@ -487,6 +488,7 @@ function amr_expand_by_day_of_week_for_year (&$datearray, $pbys, $tz) {
 }
 /* --------------------------------------------------------------------------------------------------- */
 function amr_limit_by_yearday (&$datearray, $pbyyearday, $tz) {
+	if (empty($datearray)) return;
 	if (isset($_GET['rdebug'])) { echo '<br>Limit by year day';}
 	foreach ($datearray as $i=> $d) {
 		$dateobj = amr_create_date_from_parts ($d, $tz);
@@ -501,7 +503,8 @@ function amr_limit_by_yearday (&$datearray, $pbyyearday, $tz) {
 /* --------------------------------------------------------------------------------------------------- */
 function amr_limit_by_day_of_week (&$datearray, $pby, $tz) {
 	global $amr_day_of_week_from_no; /* MO=> 1, 'TU' => 2... 'SU'=> 6 etc */
-	if (isset($_GET['rdebug'])) { echo '<br>Limit by day of week '; print_r($pby);}
+	if (empty($datearray)) return;
+	if (isset($_GET['rdebug'])) { echo '<br>Limit by day of week '; print_r($pby); var_dump($datearray);}
 	foreach ($datearray as $i=> $d) {
 		$dateobj = amr_create_date_from_parts ($d, $tz);
 		if (is_object ($dateobj) ) {
@@ -664,10 +667,13 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 		unset ($p['NBYDAY']);
 	}
 	while ($start <= $until) {	 /* don't check astart here - may miss some */
+
+		$datearray[] = amr_get_date_parts($start);
 		if (isset($_GET['rdebug'])) { 
 			echo '<hr>Checked start against extra until (1 extra iteration to allow for negativebydays) etc '.$start->format('c').' '.$until->format('c');
+			echo '<br />date array = '; var_dump($datearray);
 		}
-		$datearray[] = amr_get_date_parts($start);
+		
 		switch ($freq) { /* the 'bys' are now in an array $p .  NOTE THE sequence here is important */
 			case 'SECONDLY': {
 				if (isset($p['month'])) 		$datearray = amr_limit ($datearray, $p['month'], 'month');
@@ -729,7 +735,7 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 				if ((isset($p['BYDAY'])) or (isset($p['NBYDAY']))) 		{
 				/* as per note 1  on page 44 of http://www.rfc-archive.org/getrfc.php?rfc=5545 */
 					if (isset($p['day'])) /* BYDAY limits if BYMONTH DAY is present , else a special expand for monthly */
-												$datearray = amr_limit_by_day_of_week ($datearray, $p);
+												$datearray = amr_limit_by_day_of_week ($datearray, $p, $tz);
 					else 						$datearray = amr_special_expand_by_day_of_week_and_month_note1 ($datearray, $p,$tz);
 				}
 				if (isset($p['hour'])) 			$datearray = amr_expand ($datearray, $p['hour'],'hour',$tz);
@@ -760,10 +766,10 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 			}	
 		}
 		$datearray = amr_sort_date_array($datearray);
-		//if (isset ($_GET['cdebug'])) {echo '<br /> We have in date array: '; print_r($datearray); }
+		if (isset ($_GET['rdebug'])) {echo '<br /> We have in date array: '; print_r($datearray); }
 			// There will only be > 1 if there was an expanding BY: 
 			
-		if (!empty($p['BYSETPOS'])) 	{
+		if (!empty($datearray) and !empty($p['BYSETPOS'])) 	{
 			$datearray = amr_limit_by_setpos ($datearray, $p['BYSETPOS']);
 			if (isset ($_GET['rdebug'])) {
 				echo '<br />Selected after bysetpos:'; print_r($p['BYSETPOS']); 

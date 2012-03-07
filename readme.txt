@@ -4,7 +4,7 @@ Tags: event, events, event calendar, events calendar, event manager, diary, sche
 
 Requires at least: 2.8
 Tested up to: 3.3.1
-Version: 4.0.23
+Version: 4.0.24
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec. Very customisable listings or box calendars.  This version uses ics as input. Upgrade option for ics feed generation, taxonomies etc
@@ -12,6 +12,12 @@ Event Calendar or Agenda list, add tab views, multiple ics files, handles any re
 == Description ==
 
 Display event lists, big box calendars, upcoming events widgets or small calendar widgets. Encourage viewers to subscribe to or bookmark your events on their calendars.  This plugin offers a thorough Ical calendar parser - copes with all the ical recurrence possibilities, and a large part of the rest of the spec. The free version accepts one or many ical urls for ics files.  It produces a very stylable list of events, notes, todo's or freebusy info.
+
+Test with your calendar's ics file at the demo site:
+
+[Demo site](http://test.icalevents.com)
+
+If you also want a complete "inhouse" solution where you can create events in wordpress with multiple event classification options, and produce your own ics feeds from those, please see [events plugin home page](http://icalevents.com). amr-events is an extension of amr-ical-events-list and will use any configuration from it.
 
 For more information, please see [plugin home page](http://icalevents.com)
 
@@ -22,12 +28,6 @@ Lots of css hooks to style it the way you want. - Generate multiple css tags inc
 List upcoming recurring or single events, notes, journal, freebusy information from many ical feeds. Offers a range of defaults and customisation options.
 
 Group events by month/week/day or many other for presentation and styling. Offers your viewers the option to subscribe or add the events or the whole calendar to their calendars (google or other).
-
-If you also want a complete "inhouse" solution where you can create events in wordpress with multiple event classification options, and produce your own ics feeds from those, please see [events plugin home page](http://icalevents.com). amr-events is an extension of this plugin and will use any configuration from it.
-
-Test with your calendar's ics file at the demo site:
-
-[Demo site](http://test.icalevents.com)
 
 Many thanks to the following people for the translations.  Note that I am unable to verify these and they may be out of date with the current version.:
 
@@ -91,6 +91,12 @@ amr-events has much additional functionality, including a taxonomy widget.
 
 
 == Changelog ==
+= Version 4.0.24 =
+* Add: added ability to set http timeout for those whose ics file fetches are timing out with default wp setting. See advanced settings.
+* Fix: Some notices in debug mode
+* Fix: allowed for possibility that filemtime doesn't always return a value even if cached file exists.  was used in error message when problme refreshing external ics file
+* Change: changed some default html choices to use html5 options rather (eg: widget, and eventinfo).  If youhaev saved options, they will be unaffacted.  You can choose html5 options by goingto list type settings, scroll to "other", open and choose HTML5Table or HTML5   
+
 = Version 4.0.23 =
 * Fix: Widget title had a hyperlink to calendar url - latest wp does not like that - weird results.  Link removed.
 * Fix: with recent update for weekly horizontal, the boxcalendar padding at end of month got slightly broken - fixed.

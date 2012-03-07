@@ -544,7 +544,7 @@ function amrical_validate_manage_listings()  {
 					.'</p></div';
 				else {
 					$amr_options['listtypes'][$i] = $importedlist;
-					//update_option ('amr-ical-listtype'.$il);
+					
 					echo '<div class="updated"><p>'
 					.sprintf(__('List %s will be saved with imported data','amr-ical-events-list'),$i)
 					.'</p></div';
@@ -774,6 +774,12 @@ function amr_ical_validate_general_options(){
 				}
 			else
 				$amr_ical_image_settings['images_size'] =  '16';
+				
+			if (isset($_POST['timeout']))  {
+				$amr_options['timeout'] =  (int) ($_POST['timeout']) ;		/* from dropdown */
+				}
+			else
+				$amr_options['timeout'] =  '5';	
 
 			update_option('amr-ical-events-list', $amr_options);
 			update_option('amr-ical-images-to-use', $amr_ical_image_settings);
@@ -980,7 +986,7 @@ function amrical_general_form ($i) {
 
 
 	$listtype = $amr_options['listtypes'][$i];
-	update_option('amr-ical-events-list-version', AMR_ICAL_LIST_VERSION); // for upgrade checks
+	
  ?><fieldset  id="general" class="general" >
 	<div><?php
 	if (! isset($listtype['general'])) echo 'No general specifications set';
@@ -1022,7 +1028,6 @@ function amrical_other_form ($i) {
 	<label for="ListHTMLStyle" ><?php _e('List HTML Style','amr-ical-events-list'); ?></label>
 		<select id="ListHTMLStyle" name="general[<?php echo $i; ?>][ListHTMLStyle]">
 			<option value="table" <?php if ($style==='table') echo 'selected="selected" '; ?>><?php _e('Table', 'amr-ical-events-list'); ?></option>
-			<option value="list" <?php if ($style==='list') echo 'selected="selected" '; ?>><?php _e('Lists for rows', 'amr-ical-events-list'); ?></option>
 			<option value="HTML5table" <?php if ($style=='HTML5table') echo 'selected="selected" '; ?>><?php _e('HTML5 in table', 'amr-ical-events-list'); ?></option>
 			<option value="HTML5" <?php if ($style==='HTML5') echo 'selected="selected" '; ?>><?php _e('HTML5 clean and lean', 'amr-ical-events-list'); ?></option>
 			<option value="custom" <?php if ($style==='custom') echo 'selected="selected" '; ?>><?php _e('Custom - file required', 'amr-ical-events-list'); ?></option>
@@ -1030,6 +1035,7 @@ function amrical_other_form ($i) {
 			<option value="smallcalendar" <?php if ($style==='smallcalendar') echo 'selected="selected" '; ?>><?php _e('Small box calendar', 'amr-ical-events-list'); ?></option>
 			<option value="largecalendar" <?php if ($style==='largecalendar') echo 'selected="selected" '; ?>><?php _e('Large box calendar', 'amr-ical-events-list'); ?></option>
 			<option value="weekscalendar" <?php if ($style==='weekscalendar') echo 'selected="selected" '; ?>><?php _e('Weeks calendar', 'amr-ical-events-list'); ?></option>
+			<option value="list" <?php if ($style==='list') echo 'selected="selected" '; ?>><?php _e('Lists for rows', 'amr-ical-events-list'); _e(' *Avoid - deprecated'); ?></option>
 			<option value="tableoriginal" <?php if ($style==='tableoriginal') echo 'selected="selected" '; ?>><?php _e('Table with lists in cells (original)', 'amr-ical-events-list'); ?></option>
 
 		</select><br />	<br />
@@ -1224,6 +1230,24 @@ if (version_compare('5.3', PHP_VERSION, '>')) {
 			<?php _e('wp', 'amr-ical-events-list'); echo ' - '.amr_wp_format_date('r', $now, false);?></label>
 			<br /><label for="wpg_localise"><input type="radio" id="wpg_localise" name="date_localise" value="wpgmt" <?php if ($amr_options['date_localise'] === "wpgmt") echo ' checked="checked" '; ?> />
 			<?php _e('wpgmt', 'amr-ical-events-list'); echo ' - '.amr_wp_format_date('r', $now, true);?></label>
+		<br /><br /><br />	
+		<?php 
+//		
+		_e('Http timeout for external ics files:', 'amr-ical-events-list');
+		$options = array('5','8','10','20','30','1');
+		if (!isset($amr_options['timeout'])) 
+			$amr_options['timeout'] = 5;
+		?><br /><br />	
+		<label for="timeout"><?php _e('Choose seconds before timeout for each ics file fetch', 'amr-ical-events-list'); ?></label>
+			<select id="timeout" name="timeout" ><?php
+			foreach ($options as $i=> $sec) {
+	
+				echo '<option value="'.$sec.'"';
+				if (isset($amr_options['timeout']) and ($amr_options['timeout'] == $sec)) echo ' selected="selected" ';
+				echo '>'.$sec.'</option>';
+			}
+			?></select><br />
+		<em><?php _e('Warning - 30 seconds is a long time! Let it use cache rather if things are slow', 'amr-ical-events-list'); ?></em>	
 		</div>
 		</fieldset>
 	</div>

@@ -962,7 +962,7 @@ function amr_get_html_structure($amr_liststyle, $no_cols) {
 			$amr_liststyle = 'table';
 	}
 	switch ($amr_liststyle) {
-	case 'list' :
+	case 'list' : // deprecated
 		$htm['ul'] 	= ''; $htm['li']= '';
 		$htm['ulc']	= ''; $htm['lic']= '';
 //		$htm['ul']	= '<span '; 	$htm['li']= '<span ';

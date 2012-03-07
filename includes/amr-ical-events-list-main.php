@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.0.23');
+define('AMR_ICAL_LIST_VERSION', '4.0.24');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -36,8 +36,9 @@ function amr_load_pluggables() {
 /*----------------------------------------------------------------------------------------*/
 function amr_ical_events_list_record_version() {
 	global $amr_options;
-	if (empty ($amr_options['amr-ical-events-list-version'])  or 
-		(version_compare(AMR_ICAL_LIST_VERSION , $amr_options['amr-ical-events-list-version'], '>'))) {
+	if (empty($amr_options['amr-ical-events-list-version'])) 
+		$amr_options['amr-ical-events-list-version'] = 1.0;
+	if ((version_compare(AMR_ICAL_LIST_VERSION , $amr_options['amr-ical-events-list-version'], '>'))) {
 		amr_ical_apply_version_upgrades ($amr_options['amr-ical-events-list-version']);
 		$amr_options['amr-ical-events-list-version'] = AMR_ICAL_LIST_VERSION;
 		$result = update_option( 'amr-ical-events-list', $amr_options);
@@ -2228,8 +2229,8 @@ function amr_plugin_links($links, $file) {
 
 /* ------------------------------------------------------------------------------------------------------ */
 	set_exception_handler('amr_ical_exception_handler');
-	amr_ical_initialise ();   // setup all basic settings, like globals and constants etc
-
+	//amr_ical_initialise ();   // setup all basic settings, like globals and constants etc
+	add_action('plugins_loaded'         , 'amr_ical_initialise' ); // so can check debug
 	if (is_admin() )	{
 
 		add_action('admin_init'         , 'amrical_add_adminstyle');

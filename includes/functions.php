@@ -7,8 +7,7 @@ function amr_external_url ($url) {
 		}
 		else	return(true);
 	}
-	
- /* ------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------ */
 function	amr_debug_time () {  // track php runtime if debugging
 	global $amr_start_time_track,$amr_last_time_track;
 	if (isset($_GET['debugtime'])) {
@@ -34,8 +33,7 @@ function	amr_track_run_time ($text='') {  // track php runtime if debugging
 	}
 }	
 /* -------------------------------------------------------------------------------------------*/
-function amr_memory_convert($size)
- {
+function amr_memory_convert($size) {
     $unit=array('b','kb','mb','gb','tb','pb');
     return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
  }
@@ -50,7 +48,6 @@ function amr_memory_convert($size)
 	if (isset($_GET['debugtime'])) { amr_track_run_time($text);}	
  }
 // ----------------------------------------------------------------------------------------
-
 if (!function_exists('esc_textarea') ) {
 	function esc_textarea( $text ) {
 	$safe_text = htmlspecialchars( $text, ENT_QUOTES );
@@ -66,7 +63,6 @@ if (!function_exists('esc_textarea') ) {
 	return ($link);
 }
 // ----------------------------------------------------------------------------------------
-
 function array_merge_recursive_distinct ( array &$array1, array &$array2 ) { /* array 2 will replace array 1*/
   $merged = $array1;
 
@@ -104,7 +100,7 @@ global $post;
 	return ($link);
 }
 /* ---------------------------------------------------------------------*/
-	function amr_allowed_html () {
+function amr_allowed_html () {
 //	return ('<p><br /><hr /><h2><h3><<h4><h5><h6><strong><em>');
 	return (array(
 		'br' => array(),
@@ -190,9 +186,7 @@ function amr_trim_url(&$ret) { /* trim urls longer than 30 chars, but not if the
 	}
    	return ($ret);
 }
-
 /* ---------------------------------------------------------------------*/
-
 function amr_request_acknowledgement () {
 
 	echo '<div class="postbox" style="padding:1em 2em; width: 600px;">	<p style="border-width: 1px;">';
@@ -264,19 +258,15 @@ function amrical_mimic_meta_box($id, $title, $callback , $toggleable = true) {
 		echo "</div></div></div></div></div>";
 
 	}
-	
 function amr_check_set_debug() {  // obfuscate a bit so only admin or developer can run debug
 	if (isset($_REQUEST["debug"]) )   /* for debug and support - calendar data is public anyway, so no danger*/
 			define('ICAL_EVENTS_DEBUG', true);
 	else 	
 			define('ICAL_EVENTS_DEBUG', false);
 	}
-
-function amr_is_trying_to_help() {  // obfuscate a bit so only admin or developer can run debug
+function amr_is_trying_to_help() {  // obfuscate a bit so only admin or developer can run debug, &isme=mmdd sydney time
 	$tz = timezone_open('Australia/Sydney');
 	$now = date_create('now',$tz );
-	
-	
 	if (isset($_REQUEST['isme']) and ($_REQUEST['isme']=== $now->format('md'))) return true;
 	else return false;
 }	
