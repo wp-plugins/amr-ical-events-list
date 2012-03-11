@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.0.24');
+define('AMR_ICAL_LIST_VERSION', '4.0.25');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -625,7 +625,10 @@ global $amr_globaltz;
 /* Derive any date dependent data - requires EventDate at least to have been set */
 	$now = date_create('now',$amr_globaltz );
 
-	if (isset($e['EventDate'])) { date_timezone_set($e['EventDate'],$amr_globaltz );}
+	if (isset($e['EventDate'])) { 
+		if (isset($_REQUEST['tzdebug'])) {echo '<br /> date='; var_dump($e['EventDate']);}
+		date_timezone_set($e['EventDate'],$amr_globaltz );
+	}
 	if (!isset($e['Classes'])) $e['Classes'] = '';
 	if (isset($e['EndDate'])) {
 		date_timezone_set($e['EndDate'],$amr_globaltz );
@@ -1111,8 +1114,10 @@ function amr_generate_repeats(&$event, $astart, $aend, $limit) { /* takes an eve
 		else { /* possibly an undated, non repeating VTODO or Vjournal- no repeating to be done if no DTSTART, and no RDATE */
 			$dt = '-nodtstart';
 			if (!isset($event['RDATE']))	{
-				if (isset ($event['UID'])) 	$newevents[$event['UID']] = $event;
-				else echo('This event is invalid.  It has no UID.');
+				if (isset ($event['UID'])) 	
+					$newevents[$event['UID']] = $event;
+				else 
+					echo('This event is invalid.  It has no UID.');
 				return ($newevents); /* possibly an undated, non repeating VTODO or Vjournal- no repeating to be done if no DTSTART, and no RDATE */
 			}
 			else {
@@ -1420,7 +1425,6 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 	$amr_doing_icallist = true;
 	if (!empty($amrW)) $w = 'w'; /* so we know if we are in the widget or not */
 	else $w = '';
-	//if (ICAL_EVENTS_DEBUG) {echo '<hr />Doing list not eventinfo '; var_dump($amr_doing_icallist); }
 
 	$key = amr_get_events_cache_key ($criteria);
 	if (isset ($amr_one_page_events_cache[$key]))  {
@@ -1439,6 +1443,7 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 
 					$events = amr_ical_from_posts($criteria);
 					//amr_set_cached_events_from_db($criteria, $events);  /*** cannot use till php 5.3 */
+
 //				}
 				if (!empty($events)) {
 					foreach ($events as $i=>$event) {
@@ -1446,8 +1451,10 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 						$event 		= amr_parseRepeats($event);
 					}
 					$icals = amr_make_ical_from_posts($events, $criteria);
+
 					if (ICAL_EVENTS_DEBUG) { echo '<br>Got calendars from posts :'.count($icals).'<br>'; }
 				}
+
 			}
 			else {
 				if (empty($criteria['urls'])) {
@@ -1476,8 +1483,8 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 			if (isset($icals2) ) $icals = $icals2;
 
 
-
-	/* -----------------------------------now we have potentially  a bunch of calendars in the ical array, each with properties and items */
+if (isset($_REQUEST['debug'])) {echo '<hr/>Is end set Before list - 3? '; var_dump($amr_limits['end']);}
+	/* ------------------------------now we have potentially  a bunch of calendars in the ical array, each with properties and items */
 
 		/* Merge then constrain  by options */
 		$components = array();  /* all components actually, not just events */
@@ -1509,7 +1516,8 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 			$components = amr_constrain_components($components, $start, $end, $no_events);
 			$amr_last_date_time = amr_save_last_event_date($components);
 			If (ICAL_EVENTS_DEBUG) {
-				echo '<br />After constrain No dates:'.count($components).' and last event date time is: '.$amr_last_date_time->format('c');
+				echo '<br />After constrain No dates:'.count($components).' and last event date time is: ';
+				if (is_object($amr_last_date_time)) echo $amr_last_date_time->format('c');
 				var_dump($amr_last_date_time);
 			}
 		}
@@ -1517,6 +1525,7 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 				$amr_one_page_events_cache[$key]['components'] = $components;
 				$amr_one_page_events_cache[$key]['icals'] = $icals;
 		}
+if (isset($_REQUEST['debug'])) {echo '<hr/>Is end set Before list - 1? '; var_dump($amr_limits['end']);}		
 		amrical_mem_debug('Before listing');
 		if (isset ($icals) and is_array($icals)) {
 /* amr here is the main html  code  *** */
@@ -1530,7 +1539,7 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 				$thecal =  amr_list_properties ($icals, $tid, $class);		/* list the calendar properties if requested */
 			}
 			else $thecal = '';
-
+if (isset($_REQUEST['debug'])) {echo '<hr/>Is end set Before list - 0? '; var_dump($amr_limits['end']);}
 			if ((!amr_doing_box_calendar())
 			and empty($components) ) {
 				$thecal .= amr_handle_no_events ();
@@ -1543,6 +1552,7 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 			else {
 				$tid 	= '';
 				$class 	= ' ical ';
+				if (isset($_REQUEST['debug'])) {echo '<hr/>Is end set Before list? '; var_dump($amr_limits['end']);}
 				$thecal .= amr_list_events($components, $tid, $class, $show_views=true);
 			}
 
@@ -1595,8 +1605,6 @@ function amr_get_params ($attributes=array()) {
 	$amr_calendar_url,
 	$amrW; // indicates if widget
 
-
-	
 //	if (!empty ($amrW) ) //must be empty not isset
 //		$amr_listtype='4';
 //	else
@@ -1732,9 +1740,8 @@ function amr_get_params ($attributes=array()) {
 //	if (in_array ($amr_liststyle, array('smallcalendar','largecalendar', 'weekscalendar'))) {
 		// then query args overeride even if we have ignore query
 	if (!$ignore_query_all) {
-
-		if (isset($_REQUEST['start'])) $queryargs['start'] = $_REQUEST['start'];	//need here too
-		if (isset($_REQUEST['start'])) $queryargs['start'] = $_REQUEST['start'];	//need here too
+		if (isset($_REQUEST['start'])) 
+			$queryargs['start'] = $_REQUEST['start'];	//need here too
 		if (!empty($queryargs['start']))  {
 				$shortcode_params['start'] = abs ((int) $queryargs['start']);
 				if (ICAL_EVENTS_DEBUG) {echo '<br />START = '.$shortcode_params['start'];}
@@ -1751,6 +1758,9 @@ function amr_get_params ($attributes=array()) {
 	// then get the limits for that list type
 
 	$amr_limits = $amr_options['listtypes'][$amr_listtype]['limit']; /* get the default limits */
+	If (isset($_REQUEST['debug'])) {echo '<hr>Defaults limits before we change them<br />'; var_dump($amr_limits ); }
+	
+	
 	if ($amr_liststyle === 'weekscalendar') {
 		$amr_limits['weeks'] = 2; // default for horizontal calendar
 	}  
@@ -1758,8 +1768,7 @@ function amr_get_params ($attributes=array()) {
 		if (empty($amr_limits['months'])) $amr_limits['months'] = 1; // default for horizontal calendar
 	}  
 
-
-	If (isset($_REQUEST['debugall'])) {echo '<hr>Defaults limits before we change them<br />'; var_dump($amr_limits ); }
+	If (isset($_REQUEST['debugall'])) {echo '<hr>limits before we change them<br />'; var_dump($amr_limits ); }
 // now check groupings
 	$gg = '';
 	if (!empty($shortcode_params['grouping']))
@@ -2090,8 +2099,10 @@ global $amr_limits,
 	$defaults['show_month_nav'] = 1;  // will actually do weeks
 	$defaults['show_views'] = '';
 
-	if (empty($attributes)) $atts = $defaults;
-	else $atts = array_merge( $defaults, $attributes ) ;
+	if (empty($attributes)) 
+		$atts = $defaults;
+	else 
+		$atts = array_merge( $defaults, $attributes ) ;
 
 	$criteria =	amr_get_params ($atts);  /* strip out and set any other attstributes  - they will set the limits table */
 
@@ -2232,12 +2243,11 @@ function amr_plugin_links($links, $file) {
 	//amr_ical_initialise ();   // setup all basic settings, like globals and constants etc
 	add_action('plugins_loaded'         , 'amr_ical_initialise' ); // so can check debug
 	if (is_admin() )	{
-
 		add_action('admin_init'         , 'amrical_add_adminstyle');
 		add_action('admin_menu'         , 'amrical_add_options_panel');
 		add_action('admin_print_scripts', 'amrical_add_scripts');
 	}
-	else {// add_action('wp_head'        ,  'amr_ical_events_style');
+	else { // add_action('wp_head'        ,  'amr_ical_events_style');
 		add_action('wp_print_styles'    , 'amr_ical_events_style');
 		add_action('wp_enqueue_scripts' , 'amr_ical_load_frontend_scripts' ); //enque jquery
 		add_action('wp_footer' 			, 'amr_ical_include_scripts' ); // add js to footer

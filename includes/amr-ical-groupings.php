@@ -99,8 +99,8 @@ function amr_list_events_in_groupings ($htm, $id='', $columns, $groupedevents, $
 	if (empty($events)) return;
 	$html = '';
 	if (empty($groupedevents)) {
-		$all= array_keys($events);
-		$html .= amr_list_event_subset ($htm, $columns, $all, $events);
+		$all= array_keys($events); 
+		$html .= $htm['body'].'>'.amr_list_event_subset ($htm, $columns, $all, $events).$htm['bodyc'];
 		return $html;
 	}
 	

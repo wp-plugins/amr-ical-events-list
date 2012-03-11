@@ -4,10 +4,10 @@ Tags: event, events, event calendar, events calendar, event manager, diary, sche
 
 Requires at least: 2.8
 Tested up to: 3.3.1
-Version: 4.0.24
+Version: 4.0.25
 Stable tag: trunk
 
-Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec. Very customisable listings or box calendars.  This version uses ics as input. Upgrade option for ics feed generation, taxonomies etc
+Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec. Very customisable listings or box calendars.  This version uses ics as input. Upgrade option for ics feed generation, taxonomies etc.  Tested with amr-events 3.0.9.
 
 == Description ==
 
@@ -91,6 +91,13 @@ amr-events has much additional functionality, including a taxonomy widget.
 
 
 == Changelog ==
+= Version 4.0.25 =
+* Fix: some code changes caused some problems with unset objects - particularly in calendar
+* Fix: Widget or ungrouped list could have missing 'ul' if no grouping s in thelist and an "html list style" of "lists for rows" was used (This was old default for widgets).  Now fixed - ul will be issued even if there is no grouping.  Alternatively you may prefer to use "html5" html list style instead - see 'other' under configure listtype.
+* Change: Deprecated the "lists for rows" html style option (still works, just discouraging use of it)
+* Change: Removed '<span>'s that wrapped 'cell' content in the "lists for rows" html style.  Since html text could conceivably end up inside the "cell", this would result in invalid html - cannot have '<p>' inside a span.  Overall this should be low impact; particularly as other html styles are more 'attractive' - html5 etc.
+* Tested with amr-events 3.0.9
+
 = Version 4.0.24 =
 * Add: added ability to set http timeout for those whose ics file fetches are timing out with default wp setting. See advanced settings.
 * Fix: Some notices in debug mode

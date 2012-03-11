@@ -292,8 +292,10 @@ if (!function_exists('amr_semi_paginate')) {
 function amr_semi_paginate() {
  	global $amr_limits;
 	global $amrW;
+	
 	if ($amrW) return ('');
-	$next = new datetime();
+
+	$next = new datetime();   
 	$next = clone $amr_limits['end'];
 	$next->modify('+1 second');
 	$nextd = $next->format("Ymd");
@@ -969,17 +971,16 @@ function amr_get_html_structure($amr_liststyle, $no_cols) {
 //		$htm['ulc']	= '</span>'; 	$htm['lic']= '</span> ';
 		$htm['row']	= '<li ';
 		$htm['rowc'] 	= '</li>'.AMR_NL;
-		$htm['hcell']	= '<span  ';
-		$htm['cell'] 	= '<span '; /* allow for a class specifictaion */
-		$htm['hcellc'] = '</span>';
-		$htm['cellc'] 	= '</span>';
+		$htm['hcell']	= '';
+		$htm['cell'] 	= ''; /* no class specification - as html in content can break the span validation */
+		$htm['hcellc'] = '';
+		$htm['cellc'] 	= '';
 		$htm['grow']	= '<li ';
 		$htm['growc']  = '</li>'.AMR_NL;
 		$htm['ghcell'] = '<span ';
 		$htm['ghcellc']= '</span>'.AMR_NL;
-		$htm['head'] 	= '<div> '; 		//closed
+		$htm['head'] 	= '<div> '; 		
 		$htm['headc'] 	= '</div>'.AMR_NL;
-
 		$htm['body'] 	= '<ul '; // open
 		$htm['bodyc'] 	= '</ul>'.AMR_NL;
 		$htm['box'] 	= AMR_NL.'<div ';
@@ -1115,6 +1116,7 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 	if (ICAL_EVENTS_DEBUG) {
 		echo '<br />Peak Memory So far :'.amr_memory_convert(memory_get_usage(true));
 		echo '<h2>Now Listing, and locale = '.$locale.' and list type = '.$amr_listtype.'</h2>';
+		echo '<br />Limits = '; var_dump($amr_limits);
 	}
 
 	if (!defined('AMR_NL')) define('AMR_NL','PHP_EOL');
@@ -1144,7 +1146,10 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 	/* -- show month year nav options or not  ----------------NOT IN USE - need to lift code out for reuse --------------------------*/
 
 	$start    = new Datetime('now',$amr_globaltz);
-	$start    = clone $amr_limits['start'];
+	if (empty($amr_limits['start'])) 
+		$start = date_create('now');
+	else	
+		$start    = clone $amr_limits['start'];
 	$navigation = '';
 	if ((isset($amr_limits['show_month_nav']))
 	and ($amr_limits['show_month_nav']) ) {
@@ -1215,158 +1220,8 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 /* -- body code ------------------------------------------*/
 /* ----------- check for groupings and compress these to requested groupings only */
 	$groupings 		= amr_get_groupings_requested ();
-	$groupedevents	= amr_assign_events_to_groupings ($groupings, $events);
+	$groupedevents	= amr_assign_events_to_groupings ($groupings, $events);  // will just return if no grouping
 	$html 			= amr_list_events_in_groupings ($htm, '', $columns, $groupedevents, $events);
-
-    if (false) {
-	if (!empty($groupings)) {
-			foreach ($groupings as $gi=>$v) {
-				$new[$gi] = $old[$gi] = '';
-			}
-		} /* initialise group change trackers */
-		if ((!is_array($events)) or (count($events) < 0 )) return ('');
-		$groupedhtml = '';
-		$changehtml = '';
-		$startallgroups = true;
-		foreach ($events as $i => $e) { /* for each event, loop through the properties and see if we should display */
-			amr_derive_component_further ($e);
-			if (isset($_GET['debugevent'])) var_dump($e);
-			if (!empty($e['Classes']))
-				$classes = strtolower($e['Classes']);
-			else $classes = '';
-			$eprop = ''; /*  each event on a new list */
-			$prevcol = 0;
-			$colcount = 0;
-			$col = 1; /* reset where we are with columns */
-
-			$rowhtml = '';
-			foreach ($columns as $col => $order) {  // prepare the row
-				$eprop = '';
-				foreach ($order as $k => $kv) { /* ie for one column in event, check how to order the bits  */
-					/* Now check if we should print the component or not, we may have an array of empty string */
-					if (isset($e[$k]))
-						$v = amr_check_flatten_array ($e[$k]); // *** huh? shoudl we do this here?
-					else
-						$v =null;
-
-					$selector = $htm['li'];
-					$selectorend = $htm['lic'];
-					if (!empty($selector)) 	$selector .=' class="'.strtolower($k).'">';
-					if (!empty($v)) {
-						$eprop .= $selector
-							.amr_format_value($v, $k, $e,$kv['Before'],$kv['After'] )
-							.$selectorend;
-					}
-				}
-
-				if (empty($eprop)) $eprop = '&nbsp;';  // a value for a dummytable cell if tere were no values in the column
-
-				// annoying but only way to pass variables by reference is through an array, must return array to then.
-				// so to allow filter of column and pass which column it is, thsi is how we do it
-				$tmp = apply_filters('amr_events_column_html',
-					array('colhtml'=>$eprop, 'col'=>$col));
-				$eprop = $tmp['colhtml'];
-
-				if (!empty($ul))  // will phase the ul's  out eventually
-					$eprop = $ul.' class="amrcol'.$col.' amrcol">'
-					.$eprop
-					.$htm['ulc'];
-
-				/* each column in a cell or list */
-				$cellclasses = '';
-				if (!empty($htm['cell']) ) { // if we have a selector that surounds each property , then add classes.
-					$cellclasses .= ' amrcol'.$col;
-					if ($col == $no_cols) $cellclasses .= ' lastcol'; /* only want the cell to be lastcol, not the row */
-					$thiscolumn = $htm['cell'].' class="'.$cellclasses.'">' .$eprop. (empty($htm['cellc']) ? '' : $htm['cellc']);
-				}
-				else $thiscolumn = $eprop;
-
-				$rowhtml .= $thiscolumn; // build up the row with each column
-			} // end row
-
-//			if (!($eprop === '')) { /* ------------------------------- if we have some event data to list  */
-
-				/* -------------------------- Check for a grouping change, need to end last group, if there was one and start another */
-				$changehtml = '';
-//				$changehtml = $rowhtml;
-				$groupclass = '';
-				if (!empty($groupings) and ($groupings)) {  // if there is a already
-					foreach ($groupings as $gi=>$v) {
-						//if (WP_DEBUG) echo '<br />Grouping = '.$gi;
-						if (isset($e['EventDate']))
-							$grouping = amr_format_grouping($gi, $e['EventDate']) ;
-						else
-							$grouping = '';
-						$new[$gi] = amr_string($grouping);
-						if (!($new[$gi] == $old[$gi]))	{   // if there is a change of group
-						    /* we have a new group  */
-							$id = amr_string($gi.$new[$gi]);
-							$changehtml =
-								((!empty($htm['grow'])) ? $htm['grow'].'class="group '.$gi.'">' : '')
-								.((!empty($htm['ghcell'])) ? $htm['ghcell'].' class="group '.$gi. '" >' : '')
-								.$grouping
-								.$htm['ghcellc']
-								.$htm['growc'];
-							// allow the row to be filterd to maybe add a column
-							$tmp = apply_filters ('amr_events_event_html', array('rowhtml'=>$rowhtml, 'event'=>$e));
-							$rowhtml = $tmp['rowhtml'];
-							// end filter
-							$changehtml .=  // start a new body with the row we just processed that flagged that we had a change of group
-								((!empty($htm['body'])) ? $htm['body'].' class="'.$gi.'"> ' : '')
-								.(!empty($htm['row']) ? ($htm['row'].($alt ? ' class="odd alt':' class="').$classes.'"> ') : '')
-								.$rowhtml
-								.$htm['rowc'];
-							$rowhtml = '';
-							if ($alt) $alt=false;
-							else $alt=true;
-//
-							$old[$gi] = $new[$gi];
-
-							if (!$startallgroups) {// 	ie if we already had some going
-								$html .= $htm['bodyc'].'<!-- end group that just changed -->'; // finish off the group that just changed
-							}
-							//else  we are just starting, so no need to finish off
-						}
-					}
-					$startallgroups = false;
-					// so now we have finished off any changed groups, so now we can add the new bit in
-					$html .= $changehtml;
-
-				}
-
-				if ($startallgroups) { // there were no groups, so we have no opening body
-					$html .= $htm['body'].'>';
-					$startallgroups = false;
-				}
-
-				// so now we havefinsihed that group, start next
-				// save the event or row,  for next group
-				if (!empty($rowhtml)) {
-					$tmp = apply_filters('amr_events_event_html', array('rowhtml'=>$rowhtml, 'event'=>$e));
-					$rowhtml = $tmp['rowhtml'];
-					$rowhtml = (!empty($htm['row']) ? ($htm['row'].($alt ? ' class="odd alt':' class="').$classes.'"> ') : '')
-					.$rowhtml
-					.$htm['rowc'];
-
-				if ($alt) $alt=false;
-				else $alt=true;
-
-				$html .= $rowhtml;		/* build  the group of events , adding on eprop */
-				$rowhtml = '';
-				}
-
-			}
-			//end of row or event
-		// finish off each group as there will not have been a change ?
-		if (!empty($g) and ($g)) {
-			foreach ($g as $gi=>$v) {
-				$html .= $htm['bodyc'].'<!-- end grouping '.$gi.'-->';
-			}
-		}
-		else {	// there may have been  no  grouping but still events
-			$html .= $htm['bodyc'].'<!-- end if no grouping -->';
-		}
-	}
 
 	if (!empty ($tid)) {
 		$tid = ' id="'.$tid.'" ';

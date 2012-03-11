@@ -20,6 +20,7 @@ class amr_ical_widget extends WP_widget {
 	$change_view_allowed,
 	$widget_icalno; /* used to give each ical widget a unique id on a page */
 //
+	
 	amr_ical_load_text(); // do we have to reload all over theplace ?  wp does not always seem to have the translations
 	$change_view_allowed = false;
 	$amr_ical_am_doing = 'listwidget';
@@ -189,6 +190,7 @@ class amr_icalendar_widget extends WP_widget {
 	global $widget_icalno; /* used to give each ical widget a unique id on a page */
 	global $amr_calendar_url;
 
+	$criteria 	= amr_get_params ($args);  /* this may update listtype, limits  etc */
 	amr_ical_load_text(); // do we have to reload all over theplace ?  wp does not always seem to have the translations
 
 	$change_view_allowed = false;

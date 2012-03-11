@@ -88,7 +88,7 @@ function amr_cache_url($url, $cache=ICAL_EVENTS_CACHE_TTL) {
 		if (!empty($amr_options['timeout'])) 
 			$args = array('timeout' =>  $amr_options['timeout']);
 		else 
-			$rgs = array(); // aloow std wp or other filters		
+			$args = array(); // aloow std wp or other filters		
 //		If (ICAL_EVENTS_DEBUG) echo '<hr />url before decode: '.$url.'<br />';
 		$url = html_entity_decode($url);
 //		If (ICAL_EVENTS_DEBUG) echo '<br />url decoded: '.$url.'<hr />';

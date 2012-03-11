@@ -416,8 +416,9 @@ function amrical_limits($i) {
 		.'</em></p>';
 		if (! isset($listtype['limit'])) echo 'No default limits set';
 		else {
-			foreach ( $listtype['limit'] as $c => $v )
-			{
+			
+			foreach ( $listtype['limit'] as $c => $v ) {
+				
 				echo '<label for="L'.$i.$c.'" >'.__($c,'amr-ical-events-list').'</label>';
 				echo '<input type="text" size="2" id="L'.$i.$c.'"  name="limit['.$i.']['.$c.']"';
 				echo ' value="'.$v.'" />';

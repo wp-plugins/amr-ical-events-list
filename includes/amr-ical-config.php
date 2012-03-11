@@ -1,15 +1,17 @@
 <?php
 /* This is the amr-ical config section file */
 
+
 function amr_ical_initialise () {
+
 global $amr_options;
 global $amr_general;
+
 global $amr_components;
 global $amr_calprop;
 global $amr_colheading;
 global $amr_compprop;
 global $amr_groupings;
-global $amr_limits;
 global $amr_formats;
 global $amr_csize;
 global $amr_validrepeatablecomponents;
@@ -17,8 +19,9 @@ global $amr_validrepeatableproperties;
 global $amr_wkst;
 global $amrdf;
 global $amrtf;
-global $amr_globaltz;
+global $amr_globaltz,$ical_timezone; // amr events uses ical_timezone
 global $utczobj;
+
 
 if (!defined ('ICAL_EVENTS_DEBUG')) { 
 	if (isset($_REQUEST["debug"])  
@@ -324,7 +327,8 @@ function amr_set_defaults() {
 			);
 
 
-	if (defined('AMR_ICAL_VERSION'))	$amr_options['ngiyabonga']	= true; //do not show credit link
+	if (defined('AMR_ICAL_VERSION'))	
+		$amr_options['ngiyabonga']	= true; //do not show credit link
 	$alreadyhave = false;
 //	if ($locale === 'en_US' )  $amr_options['date_localise'] = 'none';   // v4.0.9 commented out - multi lingual situations may have en as base, but will need localisation
 //	else 	
@@ -364,7 +368,7 @@ function amr_set_defaults() {
 			"events" 	=> 30,
 			"days" 		=> 90,
 			"cache" 	=> 24, /* hours */
-			"eventscache" => 0.5);
+			"eventscache" => 0.5);  // must not set start here
 	$amr_components = array (
 			"VEVENT" 	=> true,
 			"VTODO" 	=> true,
@@ -585,7 +589,7 @@ function customise_listtype($i)	{ /* sets up some variations of the default list
 			$amr_options['listtypes'][$i]['general']['name']=__('Widget','amr-ical-events-list'); /* No groupings, minimal */
 			$amr_options['listtypes'][$i]['general']['Description']=__('The new default setting for widgets uses lists for the table rows. Good for themes that cannot cope with tables in the sidebar. No grouping. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list');
 
-			$amr_options['listtypes'][$i]['general']['ListHTMLStyle']='HTML5table';
+			$amr_options['listtypes'][$i]['general']['ListHTMLStyle']='HTML5';
 			$amr_options['listtypes'][$i]['format']['Day']='M'.'\&\n\b\s\p\;'.'j';
 			$amr_options['listtypes'][$i]['limit'] = array (	"events" => 10,	"days" 	=> 90,"cache" 	=> 24);  /* hours */
 			foreach ($amr_options['listtypes'][$i]['grouping'] as $g => $v) {$amr_options['listtypes'][$i]['grouping'][$g] = false;}

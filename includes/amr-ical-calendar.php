@@ -171,7 +171,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 	$today_day 		= $start->format('j');
 	$today_month 	= $start->format('m');
 	$today_year 	= $start->format('Y');
-	
+
 	$start    	= clone $amr_limits['start'];	
 	$thismonth	= $start->format('m');
 	$thisyear 	= $start->format('Y');
