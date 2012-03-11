@@ -95,7 +95,7 @@ amr-events has much additional functionality, including a taxonomy widget.
 * Fix: some code changes caused some problems with unset objects - particularly in calendar
 * Fix: Widget or ungrouped list could have missing 'ul' if no grouping s in thelist and an "html list style" of "lists for rows" was used (This was old default for widgets).  Now fixed - ul will be issued even if there is no grouping.  Alternatively you may prefer to use "html5" html list style instead - see 'other' under configure listtype.
 * Change: Deprecated the "lists for rows" html style option (still works, just discouraging use of it)
-* Change: Removed '<span>'s that wrapped 'cell' content in the "lists for rows" html style.  Since html text could conceivably end up inside the "cell", this would result in invalid html - cannot have '<p>' inside a span.  Overall this should be low impact; particularly as other html styles are more 'attractive' - html5 etc.
+* Change: Removed '<span>'s that wrapped 'cell' content in the "lists for rows" html style.  Since html text could conceivably end up inside the "cell", this would result in invalid html - cannot have paragraph tag inside a span.  Overall this should be low impact; particularly as other html styles are more 'attractive' - html5 etc.
 * Tested with amr-events 3.0.9
 
 = Version 4.0.24 =
