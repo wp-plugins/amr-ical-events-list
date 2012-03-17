@@ -125,12 +125,12 @@ function amr_week_links ($start,$weeks) { // returns array ($nextlink, $prevlink
 	$link = amr_clean_link();
 
 	$prevlink =
-		'<a class="prevweek" href="'
+		'<a rel="prev" class="prevweek" href="'
 		. htmlentities(add_query_arg('start',$prevstring,$link)) . '" title="'
 		. sprintf(__('Week starting %1$s', 'amr-ical-events-list'), $prevstring2)
 		. '">'._x('&larr;','for prev navigation, translate allows you to use words', 'amr-ical-events-list').'</a>';
 
-	$nextlink = '<a class="nextweek" href="'
+	$nextlink = '<a rel="next" class="nextweek" href="'
 		. htmlentities(add_query_arg('start',$nextstring,$link))
 		. '" title="'
 		. sprintf(__('Week starting %1$s', 'amr-ical-events-list'), $nextstring2)
@@ -166,14 +166,14 @@ function amr_month_year_links ($start,$months) { // returns array ($nextlink, $p
 		$link = add_query_arg('calendar',$_REQUEST['calendar'], $link);
 
 	if ( $previous ) { $prevlink =
-		'<a class="prevmonth" href="'
+		'<a rel="prev" class="prevmonth" href="'
 		. htmlentities(amrical_get_month_link($previous->format('Ymd'), $months, $link)) . '" title="'
 		. sprintf(__('Go to %1$s %2$s', 'amr-ical-events-list'), $wp_locale->get_month($prevmonth), $prevyear) . '">&laquo;'
 		. $wp_locale->get_month_abbrev($wp_locale->get_month($prevmonth)) . '</a>';
 	}
 	else $prevlink = '';
 	if ( $next ) {
-		$nextlink = '<a class="nextmonth" href="'
+		$nextlink = '<a rel="next" class="nextmonth" href="'
 		. htmlentities(amrical_get_month_link($next->format('Ymd'), $months, $link))
 		. '" title="' . esc_attr( sprintf(__('Go to %1$s %2$s', 'amr-ical-events-list'), $wp_locale->get_month($nextmonth), $nextyear))
 		. '">' . $wp_locale->get_month_abbrev($wp_locale->get_month($nextmonth)) . '&raquo;</a>';
@@ -378,7 +378,7 @@ function amr_semi_paginate() {
 	$eventnum100t= __('show maximum 100 events if available' ,'amr-events').$explaint;
 	return (
 		'<div id="icalnavs" class="icalnav" >'
-		.'<a id="icalback" class="icalnav symbol" title="'.$prevt
+		.'<a rel="next" id="icalback" class="icalnav symbol" title="'.$prevt
 		.'" href="'.$goback.'">&larr;</a>&nbsp;'
 		.'<a id="icalmuchless" class="icalnav symbol" title="'.$muchlesst
 		.'" href="'.$showmuchless.'">&minus;&minus;</a>&nbsp;'
@@ -391,7 +391,7 @@ function amr_semi_paginate() {
 		.'" href="'.$showmore.'">+</a>&nbsp;'
 		.'<a id="icalmuchmore"  class="icalnav symbol" title="'.$muchmoret
 		.'" href="'.$showmuchmore.'">++</a>&nbsp;'
-		.'<a id="icalnext"  class="icalnav symbol" title="'.$nextt
+		.'<a rel="next" id="icalnext"  class="icalnav symbol" title="'.$nextt
 		.'" href="'.$next.'">&rarr;</a>'
 //		.'<br /><span id="explain" style="font-style: italic; font-size: small; ">'.amr_explain_limits().'</span>'
 		.'</div>'
@@ -709,7 +709,8 @@ if (!function_exists('amr_derive_summary')) {
 		if (isset($e['SUMMARY'])) $e['SUMMARY'] = (amr_just_flatten_array ($e['SUMMARY'] ));
 	//	if (isset($e['SUMMARY'])) $e['SUMMARY'] = htmlspecialchars(amr_just_flatten_array ($e['SUMMARY'] ));
 		else return ('');
-		if (isset($e['URL'])) $e_url = amr_just_flatten_array($e['URL']);
+		if (isset($e['URL'])) 
+			$e_url = amr_just_flatten_array($e['URL']);
 		else $e_url = '';
 		/* If not a widget, not listype 4, then if no url, do not need or want a link */
 		/* Correction - we want a link to the bookmark anchor on the calendar page***/
@@ -1175,15 +1176,19 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 /* -- heading and footers code ------------------------------------------*/
 
 	if (ICAL_EVENTS_DEBUG) {echo '<br />Limit parameters '; var_dump($amr_limits);}
-	if (isset($amr_limits['headings'])) $doheadings = $amr_limits['headings'];
-	else $doheadings = true;
-	if (isset($amr_limits['pagination'])) $dopagination = $amr_limits['pagination'];
-	else $dopagination = true;
+	if (isset($amr_limits['headings'])) 
+		$doheadings = $amr_limits['headings'];
+	else 
+		$doheadings = true;
+	if (isset($amr_limits['pagination'])) 
+		$dopagination = $amr_limits['pagination'];
+	else 
+		$dopagination = true;
 
 	$headhtml = '';
 	if ($doheadings) {
 		$docolheading=false;
-
+		if (ICAL_EVENTS_DEBUG) {echo '<br />Headings? '; var_dump($amr_options['listtypes'][$amr_listtype]['heading']);}
 		foreach ($amr_options['listtypes'][$amr_listtype]['heading'] as $i => $h) {
 			if (!empty($h)) $docolheading=true;
 		}
@@ -1198,7 +1203,6 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 			$html .= amr_do_column_header_html($htm, $i, $headhtml);
 		}
 	}
-
 /* ***** with thechange in list types, we have to rethink how we do the footers .... for tables we say the footers up front, but for others not. */
 		$fhtml = '';
 		if ((isset($amr_options['ngiyabonga']) and ($amr_options['ngiyabonga'])))
@@ -1221,7 +1225,7 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 /* ----------- check for groupings and compress these to requested groupings only */
 	$groupings 		= amr_get_groupings_requested ();
 	$groupedevents	= amr_assign_events_to_groupings ($groupings, $events);  // will just return if no grouping
-	$html 			= amr_list_events_in_groupings ($htm, '', $columns, $groupedevents, $events);
+	$html 			.= amr_list_events_in_groupings ($htm, '', $columns, $groupedevents, $events);
 
 	if (!empty ($tid)) {
 		$tid = ' id="'.$tid.'" ';
@@ -1320,7 +1324,7 @@ function amr_show_look_more() {
 		.'" href="'.esc_attr($reseturl).'">'.$reset.'</a>';
 	}
 	if (!empty ($prevt) ) {
-		$prevt ='<a id="icalaprev"  title="'
+		$prevt ='<a rel="prev" id="icalaprev"  title="'
 		.__('Go back to previous events' ,'amr-events')
 		.'" href="'.esc_attr($prevurl).'">'.$prevt.'</a>';
 	}
@@ -1328,7 +1332,7 @@ function amr_show_look_more() {
 		'<div id="icallookmore" class="icalnext" >&nbsp;'
 		.$prevt.'&nbsp;'
 		.$reset.'&nbsp;'
-		.'<a id="icalalookmore"  title="'.$explaint.' '.$morett.'" href="'.esc_attr($nexturl).'">'.$moret.'</a>'
+		.'<a rel="next" id="icalalookmore"  title="'.$explaint.' '.$morett.'" href="'.esc_attr($nexturl).'">'.$moret.'</a>'
 		.'</div>'
 		);
 	}

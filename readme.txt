@@ -4,7 +4,7 @@ Tags: event, events, event calendar, events calendar, event manager, diary, sche
 
 Requires at least: 2.8
 Tested up to: 3.3.1
-Version: 4.0.25
+Version: 4.0.26
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec. Very customisable listings or box calendars.  This version uses ics as input. Upgrade option for ics feed generation, taxonomies etc.  Tested with amr-events 3.0.9.
@@ -91,6 +91,11 @@ amr-events has much additional functionality, including a taxonomy widget.
 
 
 == Changelog ==
+= Version 4.0.26 =
+* Fix: slight admin screen html tweak so 'internal description will go to next line on wide screens
+* Change: some error messages when you realy haven't set up your settings correctly, when now only be shown to the administrator
+* Change:  added rel="next" and rel="prev" where appropriate to the various date navigation
+
 = Version 4.0.25 =
 * Fix: some code changes caused some problems with unset objects - particularly in calendar
 * Fix: Widget or ungrouped list could have missing 'ul' if no grouping s in thelist and an "html list style" of "lists for rows" was used (This was old default for widgets).  Now fixed - ul will be issued even if there is no grouping.  Alternatively you may prefer to use "html5" html list style instead - see 'other' under configure listtype.

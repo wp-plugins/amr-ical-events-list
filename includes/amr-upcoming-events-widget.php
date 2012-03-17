@@ -30,8 +30,12 @@ class amr_ical_widget extends WP_widget {
 
 	if (!empty ($shortcode_urls)) // get any args stored in the widget settings
 		$args		= shortcode_parse_atts($shortcode_urls);
-	$amr_listtype =   '4';
-	if (!empty ($args['listtype'])) $amr_listtype = $args['listtype'];
+		
+	if (empty ($args['listtype'])) 
+		$args['listtype'] = '4';
+	$amr_listtype = (int) $args['listtype'];
+	
+
 //
 	if (!empty ($externalicalonly) and $externalicalonly)
 			$args['eventpoststoo'] = '0';
@@ -56,6 +60,7 @@ class amr_ical_widget extends WP_widget {
 	if (ICAL_EVENTS_DEBUG) echo 'Calendar url = '.$amr_calendar_url;
 	if (isset($_REQUEST['lang'])) 
 		$moreurl = add_query_arg('lang',$_REQUEST['lang'],$moreurl);
+// wp 3.3.1 doesn't like html in titles anymore - why ?		
 //	if (!empty ($moreurl))
 //		$title = '<a title="'.__('Look for more','amr-ical-events-list').'" href= "'.$moreurl.'">'.__($title,'amr-ical-events-list') .'</a>';
 
@@ -211,11 +216,12 @@ class amr_icalendar_widget extends WP_widget {
 		$atts['eventpoststoo'] = '1';
 	$atts['show_views'] = '0';
 	$atts['ignore_query'] = 1;
-//	$atts['agenda'] = '4';  // do not hardcode - may want to pass it
 	$atts['show_month_nav'] = 1;
 //
-	if (!(isset($widget_icalno))) $widget_icalno = 0;
-	else $widget_icalno= $widget_icalno + 1;
+	if (!(isset($widget_icalno))) 
+		$widget_icalno = 0;
+	else 
+		$widget_icalno= $widget_icalno + 1;
 	$amrW = 'w';	 /* to maintain consistency with previous version */
 
 	$content 	= amr_do_smallcal_shortcode($atts);  // thsi will check query params etc

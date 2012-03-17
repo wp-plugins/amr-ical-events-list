@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.0.25');
+define('AMR_ICAL_LIST_VERSION', '4.0.26');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -1452,7 +1452,7 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 					}
 					$icals = amr_make_ical_from_posts($events, $criteria);
 
-					if (ICAL_EVENTS_DEBUG) { echo '<br>Got calendars from posts :'.count($icals).'<br>'; }
+					if (ICAL_EVENTS_DEBUG) { echo '<br>Got calendars from posts :'.count($icals).' events='.count($events).'<br>'; }
 				}
 
 			}
@@ -1477,13 +1477,13 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 			}
 		}
 
-		if (!empty($icals) ) { if (isset($icals2) )
-			$icals = array_merge($icals, $icals2 );}
+		if (!empty($icals) ) { 
+			if (isset($icals2) )
+				$icals = array_merge($icals, $icals2 );
+		}
 		else
 			if (isset($icals2) ) $icals = $icals2;
 
-
-if (isset($_REQUEST['debug'])) {echo '<hr/>Is end set Before list - 3? '; var_dump($amr_limits['end']);}
 	/* ------------------------------now we have potentially  a bunch of calendars in the ical array, each with properties and items */
 
 		/* Merge then constrain  by options */
@@ -1500,8 +1500,11 @@ if (isset($_REQUEST['debug'])) {echo '<hr/>Is end set Before list - 3? '; var_du
 									$ical[$i][$k]['type'] = $i;
 									$ical[$i][$k]['name'] = 'cal'.$j; /* save the name for styling */
 								}
-								if (!empty($components) ) {$components = array_merge ($components, $ical[$i]);	}
-								else $components = $ical[$i];
+								if (!empty($components) ) {
+									$components = array_merge ($components, $ical[$i]);	
+								}
+								else 
+									$components = $ical[$i];
 							}
 						}
 					}
@@ -1603,13 +1606,14 @@ function amr_get_params ($attributes=array()) {
 	$amr_globaltz,
 	$change_view_allowed,
 	$amr_calendar_url,
-	$amrW; // indicates if widget
+	$amrW; // indicates if widget, 
 
-//	if (!empty ($amrW) ) //must be empty not isset
+//	if (!empty ($amrW) ) //must be empty not isset  ??nlr - default listtype should be set in attributes
 //		$amr_listtype='4';
 //	else
 //		$amr_listtype='1';
-	If (ICAL_EVENTS_DEBUG) {echo '<hr>Attributes passed by calling function<br />'; var_dump($attributes); }
+
+	//If (ICAL_EVENTS_DEBUG) {echo '<hr>Attributes passed by calling function<br />'; var_dump($attributes); }
 //
 	$amr_options = amr_getset_options();
 //
@@ -1657,7 +1661,13 @@ function amr_get_params ($attributes=array()) {
 				$v = (str_ireplace('webcal://', 'http://',$v));
 				if ((function_exists('filter_var')) and (!filter_var($v, FILTER_VALIDATE_URL))) { /* rejecting a valid URL on php 5.2.14  */
 					echo '<h2>'.sprintf(__('Invalid Ical URL %s','amr-ical-events-list'), $v).'</h2>';
-					echo '<p>Note: the php validation functon does not cope with internationalised domain, please contact the developer if this affects you.</p>';
+					if (current_user_can('administrator')) {
+						echo '<p>Notes to admin only (does not show if not logged in as admin): 
+						<ul>
+						<li>If you have put [ical in the widget - take it out! </li>
+						<li>the php validation functon does not cope with internationalised domain, please contact the developer if this affects you.</li>
+						</ul></p>';
+					}
 				}
 				else
 					$shortcode_params['urls'][$i] = esc_url_raw($v);
@@ -1670,9 +1680,11 @@ function amr_get_params ($attributes=array()) {
 // handle taxonomies we do not event know about yet
 	/*  get the parameters we want out of the attributes, supplying defaults for anything missing  */
 	/* but now we may have missed taxonomies etc as the defaults do not know about them, so get the diff  */
-	if (!empty($attributes)) 		$taxo_selection = array_diff($attributes,$shortcode_params);
+	if (!empty($attributes)) 		
+		$taxo_selection = array_diff($attributes,$shortcode_params);
 	// if we had some taxos, marge them into shortcode selection
-	if (!empty($taxo_selection)) 	$shortcode_params = array_merge ($shortcode_params,$taxo_selection );
+	if (!empty($taxo_selection)) 	
+		$shortcode_params = array_merge ($shortcode_params,$taxo_selection );
 
 	$allow_query = (!isset($shortcode_params['ignore_query']) or !($shortcode_params['ignore_query']) );
 	$ignore_query_all = (isset($shortcode_params['ignore_query']) and ($shortcode_params['ignore_query'] == 'all') );
@@ -1689,13 +1701,16 @@ function amr_get_params ($attributes=array()) {
 			$queryargs[$i] = filter_var($arg, FILTER_SANITIZE_STRING); //Strip tags,
 			}
 		if ($change_view_allowed) {	// for upcoming events widget, may want to allow query of days etc, but not the listtype change
-			if (isset($queryargs['calendar'])) 	$queryargs['listtype'] 	= $queryargs['calendar'];
-			if (isset($queryargs['agenda']) )	$queryargs['listtype'] 	= $queryargs['agenda'];
+			if (isset($queryargs['calendar'])) 	
+				$queryargs['listtype'] 	= $queryargs['calendar'];
+			if (isset($queryargs['agenda']) )	
+				$queryargs['listtype'] 	= $queryargs['agenda'];
 		}
-		If (isset($_REQUEST['debugq'])) {echo '<hr> Query allowed, attributes/args to consider adding:<br />'; var_dump($queryargs); }
+		
 
 		unset($queryargs['page_id']);
 		unset($queryargs['debug']);
+		If (isset($_REQUEST['debugq'])) {echo '<hr> Query allowed, attributes/args to consider adding:<br />'; var_dump($queryargs); }
 
 		$shortcode_params = array_merge ($shortcode_params, $queryargs);
 	/* If the input arrays have the same string keys, then the later value for that key will overwrite the previous one.
@@ -1710,20 +1725,26 @@ function amr_get_params ($attributes=array()) {
 	if (!empty($shortcode_params['listtype'])) {
 		$amr_listtype = $shortcode_params['listtype'];
 		unset($shortcode_params['listtype']);
+		if (ICAL_EVENTS_DEBUG) {echo '<br />Listtype from shortcode: '.$amr_listtype;}
 	}
-	if (ICAL_EVENTS_DEBUG) {echo '<br />Listtype from shortcode: '.$amr_listtype;}
+	
 
 	//	unset($attributes['listtype']);
 	if ($change_view_allowed and $allow_query) { // then we will NOT ignore these query parameters as that  will break our navigation
 		//if (ICAL_EVENTS_DEBUG) {echo '<br />Allowed to change views';}
-		if (isset($_GET['listtype'])) $amr_listtype = intval ( $_GET['listtype']);
-		if (isset($_GET['eventmap'])) $amr_listtype = 'eventmap'; // havent figured this out yet
+		if (isset($_GET['listtype'])) 
+			$amr_listtype = intval ( $_GET['listtype']);
+		if (isset($_GET['eventmap'])) 
+			$amr_listtype = 'eventmap'; // havent figured this out yet
 	}
 
 	// check the listtype here ?
 	if (empty($amr_options['listtypes'][$amr_listtype])) {
-		echo (sprintf(__('System error - event list type %s missing - please inform administrator.', 'amr-ical-events-list'),$amr_listtype));
-		_e('Now using an available list type to list events','amr-ical-events-list');
+		if (current_user_can('administrator') ) { 
+			echo (sprintf(__('System error - event list type %s missing - please inform administrator.', 'amr-ical-events-list'),$amr_listtype));
+			
+			_e('Now using an available list type to list events','amr-ical-events-list');
+		}
 		$amr_listtype = amr_first_available_listtype ();
 	}
 
@@ -1748,9 +1769,10 @@ function amr_get_params ($attributes=array()) {
 
 //			$shortcode_params['start'] = (substr((string) $shortcode_params['start'],0,6).'01'); //set to month start - done in month shortcdoe?
 			}
-		if (!empty($queryargs['months'])) $shortcode_params['months'] = abs( (int) $queryargs['months']);
+		if (!empty($queryargs['months'])) 
+			$shortcode_params['months'] = abs( (int) $queryargs['months']);
 		if (!empty($queryargs['tz']))
-				$shortcode_params['tz'] = filter_var($queryargs['tz'],FILTER_SANITIZE_STRING);
+			$shortcode_params['tz'] = filter_var($queryargs['tz'],FILTER_SANITIZE_STRING);
 	}
 	else if (isset($_REQUEST['debugall'])) echo '<br/>** Ignoring all query parameters';
 
@@ -1786,34 +1808,38 @@ function amr_get_params ($attributes=array()) {
 
 	if (!empty ($shortcode_params ) ) {
 		foreach ($shortcode_params as $i => $v) { // must be atts not limits as atts may hold more then limits - limits just has initial limits
-		if (in_array($i, array(
-			'headings',
-			'show_views',
-			'agenda',
-			'eventmap',
-			'calendar',
-			'eventpoststoo',
-			'pagination',
-			'calendar_properties',
-			'no_filters',
-			'show_month_nav',
-			'show_look_more',
-			'day_links',
-			'more_url',
-			'month_year_dropdown',
-			'month_prev_next'
-			)	)) {
-			$amr_limits[$i] = abs (intval ( $v));
-			unset($shortcode_params[$i]);  // only unset if empty  what??? - else will lose others
-		}
-		else {
-			if  (in_array($i, array('days','events','months','listtype','hours', 'weeks'
-				,'daysoffset', 'startoffset', 'hoursoffset','monthsoffset'))) {
-				if (!empty($v)) 
-					$amr_limits[$i] = (int)$v ;  // can be negative, so no abs
-				unset($shortcode_params[$i]);
-				}
+			if (in_array($i, array(
+				'headings',
+				'show_views',
+				'agenda',
+				'eventmap',
+				'calendar',
+				'eventpoststoo',
+				'pagination',
+				'calendar_properties',
+				'no_filters',
+				'show_month_nav',
+				'show_look_more',
+				'day_links',
+				'more_url',
+				'month_year_dropdown',
+				'month_prev_next'
+				)	)) {
+				$amr_limits[$i] = abs (intval ( $v));
+				unset($shortcode_params[$i]);  // only unset if empty  what??? - else will lose others
 			}
+			else {
+				if  (in_array($i, array('days','events','months','listtype','hours', 'weeks'
+					,'daysoffset', 'startoffset', 'hoursoffset','monthsoffset'))) {
+					if (!empty($v)) 
+						$amr_limits[$i] = (int)$v ;  // can be negative, so no abs
+					unset($shortcode_params[$i]);
+					}
+				}
+		}
+		if (!empty($amr_limits['listtype'])) {
+			$amr_listtype = $amr_limits['listtype'];
+			if (ICAL_EVENTS_DEBUG) echo '<br />listtype set to: ';
 		}
 	}
 

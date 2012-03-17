@@ -548,7 +548,7 @@ function amr_get_day_link($thisyear, $thismonth, $thisday, &$link) { /* the star
 	else 
 		$agenda = 1;
 	
-	$link = add_query_arg( 'listtype', $agenda ,$link);
+	//$link = add_query_arg( 'listtype', $agenda ,$link); // no ? - they must just do something sensible when they set up the  page
 	
 	$link = add_query_arg( 'days', '1' ,$link);
 	$link = add_query_arg( 'months', '0' ,$link);  // else existing months will override days 

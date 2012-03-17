@@ -996,6 +996,7 @@ function amrical_general_form ($i) {
 	?><label for="name" ><?php _e('Name','amr-ical-events-list'); ?></label>
 		<input type="text" class="wide" size="20" id="name" name="general[<?php echo $i; ?>][name]" value="<?php
 		if (isset($listtype['general']['name'])) echo $listtype['general']['name']; ?>" />
+		<br />
 	<label for="description" ><?php _e('Internal Description','amr-ical-events-list'); ?></label><br />
 		<textarea cols="60" rows="4" id="description" name="general[<?php echo $i; ?>][Description]"><?php
 		if (isset($listtype['general']['Description'])) echo $listtype['general']['Description']; ?></textarea><br />

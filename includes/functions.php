@@ -136,6 +136,7 @@ function amr_allowed_html () {
 	}
 	/* ---------------------------------------------------------------------- */
 function  amr_make_sticky_url($url) {
+
 	$page_id = url_to_postid($url);
 
 	if (!$page_id) return false ;

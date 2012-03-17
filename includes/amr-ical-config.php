@@ -305,7 +305,7 @@ function amr_set_defaults() {
 	global $amr_compprop;
 	global $amr_groupings;
 	global $amr_components;
-	global $amr_limits;
+	global $amr_limits,$amr_listtype;
 	global $amr_formats;
 	global $amr_general;
 	global $amr_globaltz;
@@ -313,7 +313,7 @@ function amr_set_defaults() {
 	global $eventtaxonomies;
 	global $amr_options,$locale;
 	
-	
+	$amr_listtype = '1'; // global default
 	$amr_options = array (
 			'ngiyabonga' => false,
 			'own_css' => false,
@@ -405,7 +405,7 @@ function amr_set_defaults() {
 	// check if we have any taxonomies that we may wish to assign an event to
 	$eventtaxonomies = amr_define_possible_taxonomies ();
 	foreach ($eventtaxonomies as $i=>$tax) {
-		 $eventtaxonomiesprop[$tax] = array('Column' => 2, 'Order' => 200, 'Before' => '', 'After' => '');
+		 $eventtaxonomiesprop[$tax] = array('Column' => 2, 'Order' => 200, 'Before' => '', 'After' => '&nbsp;');
 		}
 		
 	$amr_calprop = array (
@@ -943,14 +943,14 @@ function customise_listtype($i)	{ /* sets up some variations of the default list
 }
 /* ---------------------------------------------------------------------*/
 function new_listtype()	{
-	global $amr_calprop;
-	global $amr_colheading;
-	global $amr_compprop;
-	global $amr_groupings;
-	global $amr_components;
-	global $amr_limits;
-	global $amr_formats;
-	global $amr_general;
+	global $amr_calprop,
+	$amr_colheading,
+	$amr_compprop,
+	$amr_groupings,
+	$amr_components,
+	$amr_limits,
+	$amr_formats,
+	$amr_general;
 
 	$amr_newlisttype = (array
 		(
