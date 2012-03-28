@@ -754,7 +754,8 @@ if (!function_exists('amr_derive_summary')) {
 				$e_desc = ' title="'.$e['SUMMARY'].' - '.__('More information', 'amr-ical-events-list').'" ';
 			}
 		if (!empty ($e_url)) {
-			if (amr_external_url($e_url)) $e_url .= ' target="_blank" '; 
+			if (amr_external_url($e_url)) 
+				$e_url .= ' target="_blank" '; 
 			$e_summ = '<a '.$e_url.$e_desc.'>'. $e['SUMMARY'].'</a>';
 		}
 		else $e_summ = $e['SUMMARY'];

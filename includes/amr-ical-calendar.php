@@ -446,7 +446,8 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 			$pad = 6 - calendar_week_mod($dow - $week_begins) ;  
 			if ( $pad != 0 && $pad != 7 ) {
 				$calendar_output .= "\n\t\t".'<td class="pad" colspan="'. esc_attr($pad) .'">&nbsp;'
-				.$dow.' '.$week_begins.'</td>';
+				//.$dow.' '.$week_begins
+				.'</td>';
 				}
 			else 
 				$week=$week-1;

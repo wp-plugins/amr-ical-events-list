@@ -454,7 +454,8 @@ what about all day?
 		}
 	}
 
-	if (empty ($htmlcontent) ) return;
+	if (empty ($htmlcontent) ) 
+		return;
 	return ($before.$htmlcontent.$after);
 
 }

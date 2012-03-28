@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.0.26');
+define('AMR_ICAL_LIST_VERSION', '4.0.27');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -2171,7 +2171,6 @@ function amr_get_set_start_for_nav () {  // gets or sets a date object to the be
 	}
 	return ($start);
 }
-//
 /* -------------------------------------------------------------------------------------------------------------*/
 if (!function_exists('amr_load_custom_text') ) { // for filter
 	function amr_load_custom_text( $mofile, $domain='' ) {

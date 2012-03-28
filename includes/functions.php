@@ -77,8 +77,8 @@ function array_merge_recursive_distinct ( array &$array1, array &$array2 ) { /* 
   return $merged;
 }
 /* ---------------------------------------------------------------------*/
-function amr_clean_link() { /* get cleaned up version of current url  remove other parameters */
-global $post;
+function amr_clean_link() { /* get cleaned up version of current url remove other parameters */
+global $page_id;
 
 	$link = remove_query_arg(array(
 	'months',
@@ -92,9 +92,10 @@ global $post;
 	'agenda',
 	'eventmap'));
 
-	if (is_front_page() and (isset($post->ID))) {
-		$pageid = $post->ID;
-		$link = add_query_arg(array('page_id'=>$pageid),$link);
+	/* not sure if we still need, but some folks with main eventlist on home page with other weird stuff on frontpage  had problems before, so keeping for now  */
+	if (is_front_page() and (isset($page_id))) {  
+		// use page_id not $post->id, because if have a post on home page too $post gets overwritten
+		$link = add_query_arg(array('page_id'=>$page_id),$link);
 	}
 
 	return ($link);
