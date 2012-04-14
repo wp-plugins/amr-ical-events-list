@@ -4,7 +4,7 @@ Tags: event, events, event calendar, events calendar, event manager, diary, sche
 
 Requires at least: 2.8
 Tested up to: 3.3.1
-Version: 4.0.27
+Version: 4.0.28
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec. Very customisable listings or box calendars.  This version uses ics as input. Upgrade option for ics feed generation, taxonomies etc.  Tested with amr-events 3.0.9.
@@ -91,6 +91,10 @@ amr-events has much additional functionality, including a taxonomy widget.
 
 
 == Changelog ==
+= Version 4.0.28 =
+* Fix: Google at some point changed event publisher practice for all day end dates (but not yet documentation) to follow ics all day end date practice.  Event ends on the 'next' day.  Function 'add to  google' updated accordingly.
+* Fix: The html5 'styles' were a bit too clean.  The html markup required for rich snippets gets missed.  Other htmlstyles were fine. Html markup using spans added back so that rich snippets would be available.  
+
 = Version 4.0.27 =
 * Fix: for sites with events list on home page AND somehow have another post on home page too (global $post ends up with post data, not homepage data (id) )
 * Fix: day of week text showing in calendar on empty cells after end month from last update - removed

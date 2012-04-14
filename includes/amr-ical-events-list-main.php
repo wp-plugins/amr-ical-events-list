@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.0.27');
+define('AMR_ICAL_LIST_VERSION', '4.0.28');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -215,29 +215,64 @@ global $amr_globaltz;
 }
 /* -------------------------------------------------------------------------*/
 function amr_get_googletime($time)   {
-	if (!(is_object($time))) return;
+	if (!(is_object($time))) return($time);
 	$t = clone ($time);  /* if you get a parse error, then you are not on PHP 5! */
-    $t->setTimezone(new DateTimeZone("UTC"));
-    return ($t->format("Ymd\THis\Z"));
+    $t->setTimezone(new DateTimeZone("UTC")); // google wants UTC
+	$text = $t->format("Ymd\THis\Z");
+
+    return ($text);
 
    }
 /*--------------------------------------------------------------------------------*/
 function amr_get_googledate($time)   {
-	if (!(is_object($time))) return;
+	if (!(is_object($time))) return($time);
 	$t = clone ($time);
-    $t->setTimezone(new DateTimeZone("UTC"));
+    $t->setTimezone(new DateTimeZone("UTC")); // google wants UTC
     return ($t->format("Ymd"));
 
    }
 /*--------------------------------------------------------------------------------*/
-function amr_get_googleeventdate($e) {
-		if (isset ($e['StartTime'])) $d = (amr_get_googletime ($e['StartTime']));
-		else if (isset ($e['EventDate'] )) $d = (amr_get_googledate ($e['EventDate'])); /* no time just a day */
-		else return (''); /* we have no start date or start time */
-		if (isset ($e['EndTime'])) $e = (amr_get_googletime ($e['EndTime']));
-		else if (isset ($e['EndDate'])) $e = (amr_get_googledate ($e['EndDate']));
-		else return ($d.'/'.$d);
-		return ($d.'/'.$e);
+function amr_get_googleeventdate($e) { 
+/* google has updated functioning to use ics end date for all day events (note instructions at
+http://support.google.com/calendar/bin/answer.py?hl=en&answer=2476685 are wrong - they show same date for end date for 1 day event.
+Testing shows one can also leave enddate blank for single day events.
+NOTE: must all be in UTC!!
+ */
+
+	if (!isset ($e['EventDate'] )) 
+		return (''); /* we have no start date or start time */
+	else { 
+		// we have a start date
+		if (isset ($e['allday']) and (!($e['allday'] === 'allday') ))  {  
+			// not an all day
+			if (isset ($e['EndDate'])) {
+				$end = '/'.amr_get_googletime ($e['EndDate']);
+				
+			}
+			else $e = ''; // no end date
+		
+			$start = amr_get_googletime ($e['EventDate']);
+		
+		}
+		else { // it is an all day
+			
+			$start = amr_get_googledate ($e['EventDate']);
+			if (isset ($e['EndDate'])) {
+				if ($e['EndDate'] == $e['EventDate']) 
+					$end = '';
+				else {	
+					$ics_enddate = clone($e['EndDate']);
+					date_modify($ics_enddate,'+1 day');
+					$end = '/'.amr_get_googledate ($ics_enddate);
+				}
+			}
+			else $end = ''; // no end date
+		}
+	}
+	
+	return ($start.$end);
+
+
    }
 /* ---------------------------------------------------------------------- */
 function amr_get_css_url_choices () {
@@ -637,9 +672,10 @@ global $amr_globaltz;
 	else /* ie there is no end date, just an event date */ if (amr_is_before($e['EventDate'], $now)) $e['Classes'] .= ' history';
 	if (amr_is_before( $now, $e['EventDate'])) $e['Classes'] .= ' future';
 	else $e['Classes'] .= ' inprogress';
+	
 	if (amr_is_same_day ($e['EventDate'],  $now)) $e['Classes'] .= ' today';
 
-	if (isset ($e['Untimed'])) { /* if it is untimed, the ical spec says that the end date is the "next day" */
+		if (isset ($e['Untimed'])) { /* if it is untimed, the ical spec says that the end date is the "next day" */
 		$e['Classes'] .= ' untimed';
 		if (isset ($e['EndDate']) ) {
 			if (	(amr_is_an_ical_single_day ($e['EventDate'], $e['EndDate'])) OR

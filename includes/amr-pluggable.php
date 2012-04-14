@@ -592,7 +592,10 @@ if (!function_exists('amr_format_allday') ) {
 }
 /* ------------------------------------------------------------------------------------*/
 if (!function_exists('amr_format_taxonomy_link') ) {  //problem ics file categories are string not array ? so skip?
-	function amr_format_taxonomy_link ($tax_name, $tax_term, $link='') {  // willl receive id
+	function amr_format_taxonomy_link ($tax_name, $tax_term, $link='') {  // will receive id
+	// if in widget should link to calendar page
+	// if in agenda or calendar - same ?
+	// if in event info - either calendar page or archive
 	global $amr_calendar_url;
 
 	if (empty($amr_calendar_url))
@@ -875,8 +878,8 @@ if (!function_exists('amr_list_properties')) {
 		$htm['boxc']	= '</section>';
 		$r   	= '<header><h2>';
 		$rc  	= '</h2></header> ';
-		$d  	= '';
-		$dc		= '';
+		$d 		=''; 
+		$dc 	='';
 		break;
 	case 'custom':
 		$where_am_i = 'in_calendar_properties';
@@ -989,12 +992,20 @@ function amr_get_html_structure($amr_liststyle, $no_cols) {
 		$htm['boxc'] 	= '</div>'.AMR_NL;
 		break;
 	case 'table':
-		$htm['ul']	= '<div '; 	$htm['li']= '<div '; // need these if we want details to hover
-		$htm['ulc']	= '</div>'; $htm['lic']= '</div>';
-		$htm['row']	= '<tr '; 	$htm['hcell']	='<th '; 	$htm['cell'] 	='<td '; /* allow for a class specifictaion */
-		$htm['rowc'] 	= '</tr> '; $htm['hcellc'] ='</th>'; 	$htm['cellc'] 	='</td>';
-		$htm['grow']	= '<tr ';	$htm['ghcell']  = '<th colspan="'.$no_cols.'"'; $htm['ghcellc'] = $htm['hcellc'];
-		$htm['growc']  ='</tr>'.AMR_NL;
+		$htm['ul']		= '<div '; 		
+		$htm['li']		= '<div '; // need these if we want details to hover
+		$htm['ulc']		= '</div>'; 	
+		$htm['lic']		= '</div>';
+		$htm['row']		= '<tr '; 		
+		$htm['hcell']	='<th '; 	
+		$htm['cell'] 	='<td '; /* allow for a class specifictaion */
+		$htm['rowc'] 	= '</tr> '; 
+		$htm['hcellc'] 	='</th>'; 	
+		$htm['cellc'] 	='</td>';
+		$htm['grow']	= '<tr ';	
+		$htm['ghcell']  = '<th colspan="'.$no_cols.'"'; 
+		$htm['ghcellc'] = $htm['hcellc'];
+		$htm['growc']  	='</tr>'.AMR_NL;
 		$htm['head'] 	= '<thead>';
 		$htm['headc'] 	= '</thead>';
 		//$foot 	= '<tfoot>';
@@ -1005,20 +1016,21 @@ function amr_get_html_structure($amr_liststyle, $no_cols) {
 		$htm['boxc'] 	= '</table>'.AMR_NL;
 		break;
 	case 'HTML5table' :
-		/* historical - will fall away one day */
-		$htm['ul']	= ''; $htm['li']= '';
-		$htm['ulc']	= ''; $htm['lic']= '';
+		$htm['ul']		= ''; 
+		$htm['ulc']		= ''; 
+		$htm['li']		= '<span '; // required for rich snippets, microformat
+		$htm['lic']		= '</span>';
 		/* allow for a class specifictaion */
-		$htm['row']	= PHP_EOL.'<tr ';
+		$htm['row']		= PHP_EOL.'<tr ';
 		$htm['rowc'] 	= PHP_EOL.'</tr>'.PHP_EOL;
 		$htm['hcell']	='<th ';
-		$htm['hcellc'] ='</th>';
+		$htm['hcellc'] 	='</th>';
 		$htm['cell'] 	='<td ';
 		$htm['cellc'] 	='</td>';
 		$htm['grow']	= '<tr ';
-		$htm['ghcell'] = '<th colspan="'.$no_cols.'"';
+		$htm['ghcell'] 	= '<th colspan="'.$no_cols.'"';
 		$htm['ghcellc'] = $htm['hcellc'];
-		$htm['growc']  ='</tr>'.PHP_EOL;
+		$htm['growc']  	='</tr>'.PHP_EOL;
 		$htm['head'] 	= PHP_EOL.'<thead>';
 		$htm['headc'] 	= '</thead>'.PHP_EOL;
 		$htm['body'] 	= PHP_EOL.'<tbody '; //open
@@ -1027,18 +1039,20 @@ function amr_get_html_structure($amr_liststyle, $no_cols) {
 		$htm['boxc'] 	= '</table>'.PHP_EOL;
 		break;
 	case 'HTML5' :
-		/* historical - will fall away one day */
-		$htm['ul']	= ''; $htm['li']= '';
-		$htm['ulc']	= ''; $htm['lic']= '';
+		
+		$htm['ul']		= ''; 
+		$htm['ulc']		= ''; 
+		$htm['li']		= '<span '; // required for rich snippets, microformat
+		$htm['lic']		= '</span>';
 		/* allow for a class specifictaion */
-		$htm['row']	= '<article '; 	 // each event
+		$htm['row']		= '<article '; 	 // each event
 		$htm['rowc'] 	= '</article>'.AMR_NL;
 		$htm['hcell']	='<h2 '; 	// the 'column' header cell
-		$htm['hcellc'] ='</h2>';
+		$htm['hcellc'] 	='</h2>';
 		$htm['cell'] 	='';
 		$htm['cellc'] 	='';
 //
-		$htm['grow']	 = '<header><h3 ';	// the grouping html text for a group of events - not the surrounding selector
+		$htm['grow']	= '<header><h3 ';	// the grouping html text for a group of events - not the surrounding selector
 		$htm['growc']   = '</h3></header>'.AMR_NL;
 		$htm['ghcell']  = '';
 		$htm['ghcellc'] = '';
@@ -1055,9 +1069,11 @@ function amr_get_html_structure($amr_liststyle, $no_cols) {
 		$htm['boxc'] 	= '</section>'.AMR_NL;
 		break;
 	case 'breaks' :
-		$htm['ul']	= ''; 	$htm['li']= '';
-		$htm['ulc']	= ''; 	$htm['lic']= '';
-		$htm['row']	= '';
+		$htm['ul']		= ''; 
+		$htm['ulc']		= ''; 
+		$htm['li']		= '<span '; // required for rich snippets, microformat
+		$htm['lic']		= '</span>';
+		$htm['row']		= '';
 		$htm['rowc'] 	= '';
 		$htm['hcell']	='<div ';
 		$htm['hcellc'] ='</div>&nbsp;';
@@ -1076,18 +1092,27 @@ function amr_get_html_structure($amr_liststyle, $no_cols) {
 		break;
 	case 'custom':
 		$where_am_i = 'in_events';
-		$htm['ul']	= ''; 	$htm['li']= ''; // we will phase these out eventually
-		$htm['ulc']	= ''; 	$htm['lic']= '';
+		$htm['ul']		= ''; 
+		$htm['ulc']		= ''; 
+		$htm['li']		= '<span '; // required for rich snippets, microformat
+		$htm['lic']		= '</span>';
 		include ($custom_htmlstyle_file);  // can check the $where_am_i
 	break;
 
 	default:  /* the old way or tableoriginal*/
-		$htm['ul']	= '<ul';	$htm['li']= '<li';
-		$htm['ulc']	= '</ul>';	$htm['lic']= '</li>';
-		$htm['row']	= '<tr '; 				$htm['hcell']	='<th '; 	$htm['cell'] 	='<td '; /* allow for a class specifictaion */
-		$htm['rowc'] 	= '</tr> '; 			$htm['hcellc'] ='</th>'; 	$htm['cellc'] 	='</td>';
+		$htm['ul']	= '<ul';	
+		$htm['li']= '<li';
+		$htm['ulc']	= '</ul>';	
+		$htm['lic']= '</li>';
+		$htm['row']	= '<tr '; 				
+		$htm['hcell']	='<th '; 	
+		$htm['cell'] 	='<td '; /* allow for a class specifictaion */
+		$htm['rowc'] 	= '</tr> '; 			
+		$htm['hcellc'] ='</th>'; 	
+		$htm['cellc'] 	='</td>';
 		$htm['ghcell'] = '<th colspan="'.$no_cols.'"';
-		$htm['grow']	= '<tr ';	        $htm['growc']  ='</tr>';
+		$htm['grow']	= '<tr ';	        
+		$htm['growc']  ='</tr>';
         $htm['ghcellc']= $htm['hcellc'];
 		$htm['head'] 	= AMR_NL.'<thead>';
 		$htm['body'] 	= AMR_NL.'<tbody ';

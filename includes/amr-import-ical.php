@@ -887,8 +887,9 @@ function amr_parse_component($type)	{	/* so we know we have a vcalendar at lines
 							$subarray [$basepart[0]] = amr_parse_property($parts);
 							if (($basepart[0] === 'DTSTART') and (isset($basepart[1]))) {
 								if (amr_is_untimed($basepart[1])) { /* ie has VALUE=DATE */
-									$subarray ['Untimed'] = true;
-									$subarray ['allday'] = true;  // v4.0.17
+									//$subarray ['Untimed'] = true; // removed v4.0.28
+									//$subarray ['allday'] = true;  // v4.0.17
+									$subarray ['allday'] = 'allday';  // v4.0.28
 								}
 							}
 							if (($basepart[0] === 'X-MOZ-GENERATION') and (!isset( $subarray ['SEQUENCE']))) 

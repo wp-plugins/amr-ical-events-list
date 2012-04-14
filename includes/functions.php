@@ -8,7 +8,7 @@ function amr_external_url ($url) {
 		else	return(true);
 	}
 /* ------------------------------------------------------------------------------------------------------ */
-function	amr_debug_time () {  // track php runtime if debugging
+function amr_debug_time () {  // track php runtime if debugging
 	global $amr_start_time_track,$amr_last_time_track;
 	if (isset($_GET['debugtime'])) {
 		$amr_start_time_track = microtime();
@@ -18,7 +18,7 @@ function	amr_debug_time () {  // track php runtime if debugging
 	}
 }
  /* ------------------------------------------------------------------------------------------------------ */
-function	amr_track_run_time ($text='') {  // track php runtime if debugging
+function amr_track_run_time ($text='') {  // track php runtime if debugging
 	global $amr_start_time_track;
 	global $amr_last_time_track;
 	if (isset($_GET['debugtime'])) {
@@ -38,7 +38,7 @@ function amr_memory_convert($size) {
     return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
  }
  /* -------------------------------------------------------------------------------------------*/
- function amrical_mem_debug($text) {
+function amrical_mem_debug($text) {
 	if (isset($_GET['memdebug'])) {
 		$mem = memory_get_usage (true);
 		$peak = memory_get_peak_usage (true);
@@ -93,7 +93,7 @@ global $page_id;
 	'eventmap'));
 
 	/* not sure if we still need, but some folks with main eventlist on home page with other weird stuff on frontpage  had problems before, so keeping for now  */
-	if (is_front_page() and (isset($page_id))) {  
+	if (is_front_page() and (!empty($page_id))) {  /* don't use if page_id = 0  v4.0.28*/
 		// use page_id not $post->id, because if have a post on home page too $post gets overwritten
 		$link = add_query_arg(array('page_id'=>$page_id),$link);
 	}
@@ -136,7 +136,7 @@ function amr_allowed_html () {
 		));
 	}
 	/* ---------------------------------------------------------------------- */
-function  amr_make_sticky_url($url) {
+function amr_make_sticky_url($url) {
 
 	$page_id = url_to_postid($url);
 
@@ -147,11 +147,11 @@ function  amr_make_sticky_url($url) {
 	}
 }
 /* ---------------------------------------------------------------------- */
-function  amr_invalid_url() {
+function amr_invalid_url() {
 ?><div class="error fade"><?php	_e('Invalid Url','amr-ical-events-list');?></div><?php
 }
 /* ---------------------------------------------------------------------- */
-function  amr_invalid_file() {
+function amr_invalid_file() {
 ?><div class="error fade"><?php	_e('Invalid Url','amr-ical-events-list');?></div><?php
 }
 /* --------------------------------------------------  */
