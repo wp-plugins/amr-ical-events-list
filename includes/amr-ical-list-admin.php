@@ -250,7 +250,7 @@ function amrical_calpropsoption($i) {
 function amrical_compropsoption($i) {
 	global $amr_options;
 	global $amr_csize;
-
+	
 		$listtype = $amr_options['listtypes'][$i];
 
 		echo '<fieldset id="comprop" class="props" >
@@ -259,9 +259,9 @@ function amrical_compropsoption($i) {
 		echo '</a></h4>
 		<div class="toggle_container"><p><em>';
 		_e('Note: a 0 (zero) in column = do not show that field.', 'amr-ical-events-list');
-	echo '</em></p><p><em>';
-	_e('Uppercase fields are those defined in the iCal specification.', 'amr-ical-events-list');
-	echo '</em>
+		echo '</em></p><p><em>';
+		_e('Uppercase fields are those defined in the iCal specification.', 'amr-ical-events-list');
+		echo '</em>
 		<a title="RFC5545" href="http://tools.ietf.org/html/rfc5545">RFC 5545</a></p>
 		<p><em>';
 		_e('Lowercase fields are additional fields added by this plugin and derived from the iCal fields for your convenience.' , 'amr-ical-events-list');
@@ -513,6 +513,7 @@ function amrical_validate_manage_listings()  {
 					$amr_options['listtypes'][$nn] = new_listtype();
 					$amr_options['listtypes'][$nn]['Id'] = $nn;
 					$amr_options['listtypes'][$nn]['general']['name'] .= $nn;
+					$amr_options['listtypes'][$nn] = customise_listtype($nn); // includes the fix, need till we drop away old compatibility
 					echo '<br />Create new '.$nn;
 				}
 				else  {// we are changing a list number, copy the list type to the new number
@@ -1140,6 +1141,14 @@ function amr_ical_general_form() {
 			<input class="wide regular-text" type="text" id="resetmessage" name="resetmessage"
 			<?php if (isset($amr_options['resetmessage']) and ($amr_options['resetmessage']))
 				{echo 'value="'.$amr_options['resetmessage'].'"';}?>/>
+			<br />
+			<label for="freebusymessage">
+			<?php _e('Free busy text: ', 'amr-ical-events-list');
+			_e(' - replaces the summary text (Busy)in a VFREEBUSY component.', 'amr-ical-events-list');
+			?></label><br />
+			<input class="wide regular-text" type="text" id="freebusymessage" name="freebusymessage"
+			<?php if (isset($amr_options['freebusymessage']) and ($amr_options['freebusymessage']))
+				{echo 'value="'.$amr_options['freebusymessage'].'"';}?>/>
 			<br />
 
 			<label for="usehumantime">

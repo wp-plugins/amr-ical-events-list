@@ -413,9 +413,12 @@ function amr_special_expand_by_day_of_week_and_month_note1 (&$datearray, $pbys, 
 		print_date_array($datearray);
 	}
 
-	if (isset($pbys['BYDAY']))  $pbyday = $pbys['BYDAY'];
-	else if (isset($pbys['NBYDAY']))  $pbyday = $pbys['NBYDAY'];
-	else return ($datearray);
+	if (isset($pbys['BYDAY']))  
+		$pbyday = $pbys['BYDAY'];
+	elseif (isset($pbys['NBYDAY']))  
+		$pbyday = $pbys['NBYDAY'];
+	else 
+		return ($datearray);
 	/* For each date array - take the year and the month - get the first of the month, then the get the first day with that day of week, then get them all or the nbyday  */
 	$dateobj = new DateTime();
 	foreach ($datearray as $i=> $datea) {
@@ -426,7 +429,7 @@ function amr_special_expand_by_day_of_week_and_month_note1 (&$datearray, $pbys, 
 
 		$daysinmonth = $day1->format('t');
 		foreach ($pbyday as $byday => $bool ) {
-			if (isset($_GET['rdebug'])) echo '<br />BYDAY='.$byday.' ';
+			if (isset($_GET['rdebug'])) {echo '<br />BYDAY='.$byday.' dealing with:'; var_dump($bool); }
 			if (is_array($bool)) {/* then have numeric - possibly many */
 				foreach ($bool as $num) {
 					if (($num < 0) and ($num >= -5)) { /* *** go to end and work back */
@@ -436,14 +439,17 @@ function amr_special_expand_by_day_of_week_and_month_note1 (&$datearray, $pbys, 
 						$dateobj = amr_goto_byday ($dateobj, $byday, '-');/* get the last day that is that day of week */
 						if (isset($_GET['rdebug'])) { echo ' get day '.$dateobj->format('Ymd l');}
 						$num = ($num+1)*7;
-						if (!($num == 0)) date_modify($dateobj,'-'.$num.' days');	/* date modify deos not like zero in some phps */
-						if (isset($_GET['rdebug'])) { echo ' and then adjust by '.$num.' '.$dateobj->format('Ymd l');}
+						//if (!($num == 0)) date_modify($dateobj,'-'.$num.' days');	/* date modify deos not like zero in some phps */
+						if (!($num == 0)) date_modify($dateobj,$num.' days');	/* date modify deos not like zero in some phps */
+						if (isset($_GET['rdebug'])) { echo ' and then adjust by '.$num.' <br />'.$dateobj->format('Ymd l');}
 					}
-					else if ($num <= 5){
+					else if ($num <= 5) {
+						if (isset($_GET['rdebug'])) { echo ' we have positive num:'.$num.' starting from day1:'.$day1->format('Ymd l');}
 						$dateobj = clone ($day1);
-						$dateobj = amr_goto_byday ($dateobj, $byday, '+');/* get the last day that is that day of week */
+						$dateobj = amr_goto_byday ($dateobj, $byday, '+');/* get the first day that is that day of week */
 						$num = (($num-1)*7);
-						if (!($num == 0)) date_modify($dateobj,'+'.$num.' days');
+						if (!($num == 0)) 
+							date_modify($dateobj,'+'.$num.' days');
 						if (isset($_GET['rdebug'])) { echo ' num = '.$num.' '.$dateobj->format('Ymd l');}
 					}
 					/* else invalid numeric byday */
@@ -536,7 +542,7 @@ function amr_create_date_from_parts ($d, $tz) { /* create a date object from the
 				return (false);
 				}
 	// somehow this exception business not helping?
-	if (isset($_GET['rdebug'])) { echo '<br />Datestring: '.$datestring.' as date: '.$possdate->format('c');}
+	//if (isset($_GET['rdebug'])) { echo '<br />Datestring: '.$datestring.' as date: '.$possdate->format('c');}
 	// if date does not match date string, then reject
 	if ($d['day'] > 28) { //then check whther date was created correctly, or whether it should have been rejected.
 		$newday = $possdate->format('j');
@@ -1037,16 +1043,27 @@ function amr_get_last_day ($date, $format)	{ /* helper function format passed is
 function amr_goto_byday ($dateobj, $byday, $sign)	{
 	global $amr_day_of_week_no;
 		$dayofweek = $dateobj->format('w'); /* 0=sunday, 6 = saturday */
-		if ($dayofweek == '-1') $dayofweek = get_oldweekdays($dateobj); /* php seems to break around 1760   */
+		if ($dayofweek == '-1') 
+			$dayofweek = get_oldweekdays($dateobj); /* php seems to break around 1760   */
+			
 		$target 	= $amr_day_of_week_no[$byday]; /*  mo=1 ,su=7  */
 		$adjustment = $target - $dayofweek;
-		if (isset ($_GET['rdebug'])) echo '<br />'.$dateobj->format('Ymd l').$sign.$byday.' Target = '.$target.' Dayofweek = '.$dayofweek.' '.$dateobj->format('l').' Adjustment = '.	$adjustment;
-		if ($sign === '+') {
-			if ($adjustment < 0) $adjustment = $adjustment + 7;
+		if (isset ($_GET['rdebug'])) {
+			echo '<br />GO to day of week from '.$dateobj->format('Ymd l').
+			' going to '.$sign.$byday.' Target = '.$target.' Dayofweek = '.$dayofweek.' '.$dateobj->format('l');
 		}
-		else if ($adjustment > 0) $adjustment = $adjustment-7;
-
-		if (isset ($_GET['rdebug'])) echo ' Adj = '.	$adjustment;
+		if ($sign === '+') {
+			if ($adjustment < 0) 
+				$adjustment = $adjustment + 7;
+		}
+		else { // sign must be neg
+			if ($adjustment > 0) 
+				$adjustment = $adjustment-7;
+		}
+		
+		if ($adjustment == 7)  $adjustment = 0;	 // else will skip the first one if it matches
+		
+		if (isset ($_GET['rdebug'])) echo '<br />Adj = '.	$adjustment;
 		$d2 = new DateTime();
 		$d2 = clone ($dateobj);
 		date_modify ($d2,$adjustment.' days');

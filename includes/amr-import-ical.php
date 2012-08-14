@@ -204,12 +204,48 @@ ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=Anna-m
 ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;CN=an
 
  drew@pahlman.com;X-NUM-GUESTS=0:mailto:andrew@pahlman.com
+ 
+ATTENDEE;X-NUM-GUESTS=0:mailto:1bfb88li8v385q41k6s7fnl9ls@group.calendar.go
+ ogle.com 
 
+ ATTENDEE;ROLE=REQ-PARTICIPANT;DELEGATED-FROM="mailto:bob@
+        example.com";PARTSTAT=ACCEPTED;CN=Jane Doe:mailto:jdoe@
+        example.com
+		
+ATTENDEE;SENT-BY=mailto:jan_doe@example.com;CN=John Smith:
+        mailto:jsmith@example.com		
 NOT USING FOR NOW - INTERNAL ATTENDEES ONLY
  */
-	return($arraybycolon);
-}
 
+// the first one should start with ATTENDEE
+
+		$properties = $arraybycolon[0]; 
+		unset($arraybycolon[0]);
+		foreach ($arraybycolon as $next) {
+			if (strstr($next, 'mailto')) {
+				$email = amr_parseMailto($next);
+			}
+		}
+		$attendee['mailto'] = $email;
+		//
+		//ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=Common Name;X-NUM-GUESTS=0
+		$parameters = explode (';',$properties);
+
+		foreach ($parameters as $param) {
+			if (!($param == 'ATTENDEE')) { // skip the first one
+				$parts = explode('=',$param);	
+				if (count($parts) == 2) {
+					$attendee[$parts[0]] = $parts[1];
+				}
+			}
+		}
+
+	return($attendee); // a single attendee
+}
+/* ---------------------------------------------------------------------- */
+    function amr_parseMailto ($text) { //mailto:ovcweb@uoguelph.ca    return email
+		return (str_replace('mailto:','',$text));
+	} 
 /* ---------------------------------------------------------------------- */
     function amr_parseOrganiser($arraybysemicolon)    { /* receive full string parsed to array split by the semicolon
 	[0]=>ORGANIZER;SENT-BY="mailto
@@ -493,6 +529,8 @@ Africa/Asmara
 	VALUE=PERIOD:19960403T020000Z/19960403T040000Z,	19960404T010000Z/PT3H
 	VALUE=DATE:19970101,19970120,19970217,19970421,..	19970526,19970704,19970901,19971014,19971128,19971129,19971225
 	VALUE=DATE;TZID=/mozilla.org/20070129_1/Europe/Berlin:20061223	*/
+	
+	
 		if (empty($text)) {
 			if (ICAL_EVENTS_DEBUG) {echo 'For value: '.$VALUE.' text is blank';}
 			return (false);
@@ -516,8 +554,10 @@ Africa/Asmara
 				else {
 					if (substr ($p[1], 0, 4) === 'TZID') {/* then we have a weird TZ */
 						$tzobj = amr_deal_with_tzpath_in_date (substr($p[1],5)); /* pass the rest of the string over for tz extraction */
-						if (!($d = amr_parseDate($text, $tzobj))) return (false);
-						else return ($d);
+						if (!($d = amr_parseDate($text, $tzobj))) 
+							return (false);
+						else 
+							return ($d);
 					}
 					else {
 						if (ICAL_EVENTS_DEBUG) {echo 'Error: Unexpected data in file '; print_r($p[1]);}
@@ -875,13 +915,20 @@ function amr_parse_component($type)	{	/* so we know we have a vcalendar at lines
 							$parts[0] === 'X-WR-TIMEZONE';
 						$basepart = explode (';', $parts[0], 2);  /* Looking for RRULE; something...*/
 						if (in_array ($basepart[0], $amr_validrepeatableproperties)) {
-							$temp = amr_parse_property ($parts);  // now this might return an array (eg categories), which can be multiple lines too
-							if (is_array($temp)) {
-								if (!empty($subarray[$basepart[0]]) and is_array($subarray[$basepart[0]]))  // ie we got an array already, must be multiple lines
+							$temp = amr_parse_property ($parts);  
+							// now this might return an array (eg categories), which can be multiple lines too
+							if ($basepart[0] == 'CATEGORIES') {
+							//if (is_array($temp)) {
+								//if (WP_DEBUG) {echo '<br />Got an array:'.$basepart[0].' '; var_dump($temp);}
+								if (!empty($subarray[$basepart[0]]) and is_array($subarray[$basepart[0]]))  {
+								// ie we got an array already, must be multiple lines
 									$subarray[$basepart[0]] = array_merge($subarray[$basepart[0]], $temp);
-								else $subarray[$basepart[0]] = $temp;
-							}	
-							else $subarray[$basepart[0]][] = $temp;		// was not an array, make it an array					
+
+								}
+								else $subarray[$basepart[0]]= $temp;
+							}
+	
+							else $subarray[$basepart[0]][] = $temp;					
 						}
 						else {
 							$subarray [$basepart[0]] = amr_parse_property($parts);

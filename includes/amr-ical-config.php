@@ -110,8 +110,9 @@ $amr_validrepeatableproperties = array (   // properties that may have multiple 
 		'DESCRIPTION', 'DAYLIGHT',
 		'EXDATE','EXRULE',
 		'FREEBUSY',
-		'RDATE', 'RSTATUS','RELATED','RESOURCES','RRULE','RECURID',
-		'SEQ',  'SUMMARY', 'STATUS', 'STANDARD',
+		'RDATE', 'RSTATUS','RELATED','RESOURCES','RRULE',
+		//'SEQ',  
+		'SUMMARY', 'STATUS', 'STANDARD',
 		'TZOFFSETTO','TZOFFSETFROM',
 		'URL',
 		'XPARAM', 'X-PROP');
@@ -299,6 +300,34 @@ function amr_define_possible_taxonomies () {
 	return ($eventtaxonomies);	
 }
 /* ---------------------------------------------------------------------------*/
+function amr_set_defaults_for_datetime() {
+	global $amr_globaltz;
+	global $ical_timezone;
+
+		if (($a_tz = get_option ('timezone_string') ) and (!empty($a_tz))) {
+				$amr_globaltz = timezone_open($a_tz);
+				date_default_timezone_set($a_tz);
+				If (isset($_REQUEST['tzdebug'])) {	echo '<br />Tz string:'.$a_tz;}
+			}
+		else {
+			
+			if (($gmt_offset = get_option ('gmt_offset')) and (!(is_null($gmt_offset))) and (is_numeric($gmt_offset))) {
+				$a_tz = amr_getTimeZone($gmt_offset);
+				$amr_globaltz = timezone_open($a_tz);
+				date_default_timezone_set($a_tz);
+				if (isset($_REQUEST['tzdebug'])) {	echo '<h2>Found gmt offset in wordpress options:'.$gmt_offset.'</h2>';}
+			}
+			else {
+				if (isset($_REQUEST['tzdebug'])) {	echo '<h2>Using php default for timezone</h2>';}
+				$amr_globaltz = timezone_open(date_default_timezone_get());
+			}
+		}
+	if (empty($amr_globaltz)) {
+		echo '<br />Error getting and setting global timezone either from wp or the default php  ';
+	}
+	$ical_timezone = $amr_globaltz;  // usedin amr-events apparently - can we rationalise sometime?
+}
+/* ---------------------------------------------------------------------------*/
 function amr_set_defaults() {
 	global $amr_calprop;
 	global $amr_colheading;
@@ -334,29 +363,8 @@ function amr_set_defaults() {
 //	else 	
 	$amr_options['date_localise'] = 'wp';
 	//
-	if (function_exists ('get_option')) {
-	//	if ($d = get_option ('date_format')) $amr_formats['Day'] = $d;
-	//	if ($d = get_option ('time_format')) $amr_formats['Time'] = $d;
-		if (($a_tz = get_option ('timezone_string') ) and (!empty($a_tz))) {
-				$amr_globaltz = timezone_open($a_tz);
-				date_default_timezone_set($a_tz);
-				If (isset($_REQUEST['tzdebug'])) {	echo '<br />Tz string:'.$a_tz;}
-			}
-		else {
-			
-			if (($gmt_offset = get_option ('gmt_offset')) and (!(is_null($gmt_offset))) and (is_numeric($gmt_offset))) {
-				$a_tz = amr_getTimeZone($gmt_offset);
-				$amr_globaltz = timezone_open($a_tz);
-				date_default_timezone_set($a_tz);
-				If (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) {	echo '<h2>Found gmt offset in wordpress options:'.$gmt_offset.'</h2>';}
-			}
-			else {
-				$amr_globaltz = timezone_open(date_default_timezone_get());
-			}
-		}
-	}
-	else $amr_globaltz = timezone_open(date_default_timezone_get());
-	$ical_timezone = $amr_globaltz;
+	amr_set_defaults_for_datetime();
+
 	$amr_general = array (
 			'name' 				=> __('Default','amr-ical-events-list'),
 			'Description'		=> __('A default calendar list. This one set to tables with lists in the cells.  Usually needs the css file enabled. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. ','amr-ical-events-list'),
@@ -935,10 +943,13 @@ function customise_listtype($i)	{ /* sets up some variations of the default list
 			}
 
 	}
-			//--- temp fix before re editing all above
+	
+	//--- temp fix before re editing all above, to keep compatibility with older versions.. will eventually drop away the old version.
+	
 	$amr_options['listtypes'][$i]['compprop'] = amr_remove_array_level ($amr_options['listtypes'][$i]['compprop']);
 // so now we have both versions - need to unset the other, but can leave for now.
 //	var_dump($amr_options['listtypes'][$i]['compprop']);
+
 	return ( $amr_options['listtypes'][$i]);
 }
 /* ---------------------------------------------------------------------*/
@@ -1140,10 +1151,14 @@ global $amr_options;
 		if (!isset($amr_options['usehumantime'])) // can be false after admin has set the options
 			$amr_options['usehumantime'] = true;
 	}	
-	if (version_compare ($prev_version,'4.0.23','<')) {
-	// delete the old multiple options and resave as one for reduced db queries 
+	if (version_compare ($prev_version,'4.0.29','<')) {
+		if (!isset($amr_options['freebusymessage']) ) { // can be empty later
+			$amr_options['freebusymessage'] = __('Busy','amr-ical-events-list'); // for translation 
+			$amr_options['freebusymessage'] = '&#10006;';
+		}
 		
 	}
+	// later delete the old multiple options and resave as one for reduced db queries 
 
 }	
 //----------------------------------------------  temp adjust
@@ -1157,6 +1172,7 @@ function amr_remove_array_level ($compprop) {
 
 	return($newcompprop);
 }
+//---------------------------------------------- 
 	global 	$amr_freq,
 		$amr_freq_unit;
 

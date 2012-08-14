@@ -439,8 +439,9 @@ if (!function_exists('amr_mimic_taxonomies')) { // only called if we have an ics
 /* --------------------------------------------------------- */
 if (!function_exists('amr_format_attendees') ) {
 	function amr_format_attendees ($attendees) {/* receive array of hopefully attendess[] CN and MAILTO, and possibly other */
-
-	If (ICAL_EVENTS_DEBUG) {echo '<br />Attendee array:    '; var_dump($attendees);}
+	
+	amr_sort_by_two_cols ('PARTSTAT', 'CN', &$attendees); // sort by participaton status, may include all
+	
 	$text = '';
 
 	if (is_array($attendees))
@@ -448,22 +449,52 @@ if (!function_exists('amr_format_attendees') ) {
 			$list[] = amr_format_attendee ($attendee);
 		}
 
-	if (!empty($list)) $text = implode (', ',$list);
+	if (!empty($list)) {
+		$text = implode (', ',$list);
+	}
 	return($text);
+	}
+}
+/* --------------------------------------------------------- */
+if (!function_exists('amr_format_PARTSTAT') ) {
+	function amr_format_PARTSTAT ($participation_status, $attendee) {
+		$text = '';
+		switch ($participation_status) {
+			case 'ACCEPTED': $text = $text. ' &#10004;'; break;
+			case 'DECLINED': $text = $text. ' &#10008;'; break;
+			case 'TENTATIVE': $text = $text. ' ?'; break;
+			case 'DELEGATED': $text = $text. ' &rarr;'; break;
+			case 'NEEDS-ACTION': $text = $text. ' &quest;'; break;
+			}
+		return ($text);	
 	}
 }
 /* --------------------------------------------------------- */
 if (!function_exists('amr_format_attendee') ) {
 	function amr_format_attendee ($attendee) {  // do not show emails for privacy reasons
+// array could have 
+//CUTYPE=INDIVIDUAL
+//ROLE=REQ-PARTICIPANT
+//PARTSTAT=ACCEPTED or PARTSTAT=NEEDS-ACTION  Participation status
+// "ACCEPTED" ,"DECLINED","TENTATIVE", "DELEGATED
+//X-NUM-GUESTS=0
+//CN=Common name
+//DELEGATED-FROM="mailto:bob@example.com
+//SENT-BY=mailto:jan_doe@example.com
 
 	if (!empty ($attendee['CN'])) {
-		if (!empty  ($attendee['LINK']))
+		if (!empty  ($attendee['LINK']))  // internal representation , not spec
 		$text = '<a href="'.$attendee['LINK'].'" >'.$attendee['CN'].'</a>';
 		else $text = $attendee['CN'];
 	}
-	else {
-		if (is_array($attendee)) $text= implode($attendee);
-		else $text = $attendee;
+	else { // we  have no name
+		if (is_array($attendee)) 
+			$text= implode(', ', $attendee);
+		else 
+			$text = $attendee;
+	}
+	if (!empty($attendee['PARTSTAT'])) {
+		$text .= amr_format_PARTSTAT ($attendee['PARTSTAT'], $attendee);
 	}
 
 	return ($text);
@@ -686,6 +717,7 @@ if (!function_exists('amr_derive_calprop_further')) {
 		return ($p);
 	}
 }
+
 /* --------------------------------------------------------- */
 if (!function_exists('amr_derive_summary')) {
 	function amr_derive_summary (&$e ) {
@@ -696,6 +728,15 @@ if (!function_exists('amr_derive_summary')) {
 		global $amr_calendar_url;
 		global $amr_liststyle;
 	/* If there is a event url, use that as href, else use icsurl, use description as title */
+	
+	
+	if (($e['type'] == 'VFREEBUSY') ) {
+		$e['excerpt'] = $e['SUMMARY'];
+		$e['DESCRIPTION'] = $e['SUMMARY'];
+		if (!empty($amr_options['freebusymessage'])) 
+			$e['SUMMARY'] = $amr_options['freebusymessage'];
+	}	
+	
 		if (in_array($amr_liststyle, array('smallcalendar', 'largecalendar','weekscalendar')))
 			$hoverdesc = false;
 		else {

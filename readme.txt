@@ -3,8 +3,8 @@ Contributors: anmari
 Tags: event, events, event calendar, events calendar, event manager, diary, schedule, ical, ics, ics calendar, ical feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, agenda, happenings, shows, concerts, conferences, courses, timetable, schedule
 
 Requires at least: 2.8
-Tested up to: 3.3.1
-Version: 4.0.28
+Tested up to: 3.4.1
+Version: 4.0.29
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec. Very customisable listings or box calendars.  This version uses ics as input. Upgrade option for ics feed generation, taxonomies etc.  Tested with amr-events 3.0.9.
@@ -88,9 +88,14 @@ Note that some information may apply to the paid version amr-events - this is us
 amr-events has much additional functionality, including a taxonomy widget.
 
 
-
-
 == Changelog ==
+= Version 4.0.29 =
+* Fix: Minor bug if one created a new listtype without copying and pasting from an existing listtype.  Fixed.
+* Update: French lang update from fxbenard.com, also a dutch update was added a few months back - thanks!
+* Fix: Thanks to tubtenkunga.org, a very specfic little bug when using monthly recurring 'nth' day of week.
+* Fix: Cleaned up attendee parsing and default listing in case anyone using it!
+* Add: Added ability to define what shows for VFREEBUSY components instead of the 'Busy'. See listing events in settings.
+
 = Version 4.0.28 =
 * Fix: Google at some point changed event publisher practice for all day end dates (but not yet documentation) to follow ics all day end date practice.  Event ends on the 'next' day.  Function 'add to  google' updated accordingly.
 * Fix: The html5 'styles' were a bit too clean.  The html markup required for rich snippets gets missed.  Other htmlstyles were fine. Html markup using spans added back so that rich snippets would be available.  

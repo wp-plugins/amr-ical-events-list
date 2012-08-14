@@ -1,10 +1,11 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.0.28');
+define('AMR_ICAL_LIST_VERSION', '4.0.29');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
 global $amrW;  /* set to W if running as widget, so that css id's will be different */
 $amrW = '';
+
 if (version_compare(AMR_PHPVERSION_REQUIRED, PHP_VERSION, '>')) {
 	echo( '<h2>'.__('Minimum Php version '.AMR_PHPVERSION_REQUIRED.' required for Amr Ical Events.  Your version is '.PHP_VERSION,'amr-ical-events-list').	'</h2>');
 	}
@@ -24,7 +25,8 @@ if (!(class_exists('DateTime'))) {
     ');
 
   }
-
+  
+amr_set_defaults_for_datetime();  // needed all over the place
 /*----------------------------------------------------------------------------------------*/
 //add_action ('after_setup_theme','amr_load_pluggables');
 //add_action ('wp','amr_load_pluggables', 10);	//move it later, No not good , plugins that apply the filters will nothave it then, so will fail
@@ -967,7 +969,11 @@ function amr_arrayobj_unique2 (&$arr) { 	/* Process an array of datetime objects
 		$limit = count ($arr);
 		if (isset($_REQUEST['debugexc'])) {echo '<br><br>Check for modifications or exceptions for array of '.$limit.' records<br>'; }
 		krsort ($arr);  /***  sort numerically  We can then walk through and "toss" the lower sequence numbers for a given uid and date instance */
-		if (isset($_REQUEST['debugexc'])) foreach ($arr as $i=> $a) {echo '<br>..'.$i;}  /* Check the sorting */
+		if (isset($_REQUEST['debugexc'])) {
+			echo '<br />Check sorted correctly :';
+			foreach ($arr as $i=> $a) {echo '<br>..'.$i;}  /* Check the sorting */
+			echo '<br />End Check sorted correctly.<br />';
+		}
 		$seqprev = '';
 		$uiddateprev = '';
 		foreach ($arr as $i => $e) {
@@ -975,7 +981,9 @@ function amr_arrayobj_unique2 (&$arr) { 	/* Process an array of datetime objects
 					$seq = (int) substr($i, $seqstart, 100);
 					$uiddate = substr ($i, 0, $seqstart);
 				}
-				else {if (isset($_REQUEST['debugexc'])) echo '<hr/>Must be a unique event? as key does not match pattern'; break;} /* not an ical event, must be a unique post event */
+				else {
+					if (isset($_REQUEST['debugexc'])) echo '<hr/>Must be a unique event? as key does not match pattern'; break;
+				} /* not an ical event, must be a unique post event */
 				if (isset($_REQUEST['debugexc'])) {
 					echo '<br />seq='.$seq.' '.substr($i,0,6).'...'.substr($i,$seqstart-26,200);
 					echo '<br />uidate: '.$uiddate;
@@ -993,6 +1001,9 @@ function amr_arrayobj_unique2 (&$arr) { 	/* Process an array of datetime objects
 					}
 					else echo '<br ><b>Unexpected inability to sort modification from original.  Please inform administrator. ? seqprev = '.$seqprev.' and seq = '.$seq.'</b>';
 					/* Note that while sequence numbers can be the same for a recurrencid, the plugn will add 999 for a recurrence id */
+				}
+				else {
+					if (isset($_REQUEST['debugexc'])) {echo '<br />No uid and date match.<br />';}
 				}
 				$uiddateprev = $uiddate;
 				$seqprev = $seq;
@@ -1168,6 +1179,7 @@ function amr_generate_repeats(&$event, $astart, $aend, $limit) { /* takes an eve
 		 /* there is no repeating rule, so just copy over */
 		if (isset ($event['RECURRENCE-ID'])) {   /* a modification or exceptions to a repeating instance ? */
 //					$recdate = $dt;
+			if (isset ($_GET['debugexc'])) {echo '<br />RECURRENCE-ID:'; var_dump($event['RECURRENCE-ID']);}
 			if (is_array($event['RECURRENCE-ID'])) { /* just take first, should only be one */
 				$recdateobj = $event['RECURRENCE-ID'][0];
 				$recdate = $recdateobj->format('YmdHis');   // purely identifies specifc instances of a repeating rule are affected by the exception/modification
@@ -1176,7 +1188,7 @@ function amr_generate_repeats(&$event, $astart, $aend, $limit) { /* takes an eve
 			else if (is_object($event['RECURRENCE-ID'])) {  /* Then it is a date instance which has been modified .  We need to overwrite the appropriate repeating dates.  This is done later? *** */
 				$recdateobj = $event['RECURRENCE-ID'];
 				$recdate = $recdateobj->format('YmdHis');
-				if (isset ($_GET['debugexc'])) {echo '<br /> We have a single object recurrence date to check for modifications of an event.' ;echo($recdate);}
+				if (isset ($_GET['debugexc'])) {echo '<br />RecurrenceID date to check against event rrule.' ;echo($recdate);}
 			}
 			else { /****  should deal with THISANDFUTURE or THISANDPRIOR  EG:
 				 RECURRENCE-ID;RANGE=THISANDPRIOR:19980401T133000Z */
@@ -1256,7 +1268,7 @@ function amr_generate_repeats(&$event, $astart, $aend, $limit) { /* takes an eve
 	 */
 function amr_constrain_components($events, $start, $end, $limit) {
 global $amr_limits;
-//		$newevents = amr_process_icalevents($events, $start, $end, $limit);
+
 		$newevents = $events;
 		/* should we be moving to destination date  */
 		if ((count($newevents) < 1) or (!is_array($newevents)))	return (false);
@@ -1309,7 +1321,8 @@ function amr_process_icalevents($events, $astart, $aend, $limit) {
 		foreach ($events as $i=> $event) {
 			amr_derive_dates ($event); /* basic clean up only - removing unnecessary arrays etc */
 			$more = amr_generate_repeats($event, $astart, $aend, $limit);
-			if (is_array($more)) $dates = array_merge ($dates,$more) ;
+			if (is_array($more)) 
+				$dates = array_merge ($dates,$more) ;
 			//amrical_mem_debug('before unset '.$i);
 			//unset($more);
 			//amrical_mem_debug('After event '.$i);
@@ -1881,7 +1894,7 @@ function amr_get_params ($attributes=array()) {
 
  // else might be a taxonomy or categeory etc  ... pass through - not if we have filtered string
 /* ----check if we want to overwrite the wordpress timezone */
-	if (!(empty($shortcode_params['tz'])))
+	if (!(empty($shortcode_params['tz'])))  // allows one to overwrite the timezone
 		$amr_globaltz = timezone_open ($shortcode_params['tz']);
 
 	unset ($shortcode_params['preview']);	//clear it out so we do not pass to wp query

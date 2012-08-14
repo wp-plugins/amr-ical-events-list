@@ -137,8 +137,11 @@ global 	$amr_freq,
 		if (isset($rule['NBYDAY'])) $nbyday = ' '.sprintf(__('on %s ', 'amr-ical-events-list'),amr_prettyprint_byday($rule['NBYDAY']));
 		if (isset($rule['BYDAY'])) $byday = ' '.sprintf(__('on %s ', 'amr-ical-events-list'),amr_prettyprint_byday($rule['BYDAY']));
 		$ofthefreq = '';
-		if (in_array($rule['FREQ'], array('MONTHLY', 'YEARLY')))
-			$ofthefreq = sprintf (_x(' of the %s',' eg: last day of the year/month ','amr-ical-events-list'),__(strtolower ($amr_freq_unit[$rule['FREQ']]),'amr-ical-events-list'));
+		// change to accomodate dutch having different artcles for month and year de or het
+		if ($rule['FREQ'] == 'MONTHLY')
+			$ofthefreq = __(' of the month','eg: last day of the month', 'amr-ical-events-list');
+		else if ($rule['FREQ'] == 'YEARLY')
+			$ofthefreq = __(' of the year','eg: last day of the year','amr-ical-events-list');	
 		if (isset ($nbyday) and isset ($byday)) $c .= $nbyday.__(' and ','amr-ical-events-list').$byday.$ofthefreq;
 		else { if (isset ($byday)) $c .= $byday.$ofthefreq;
 			if (isset ($nbyday)) $c .= $nbyday.$ofthefreq;
@@ -407,6 +410,10 @@ what about all day?
 	elseif (is_null($content) OR ($content === ''))
 		$htmlcontent = '';
 	else {
+		if (function_exists ('amr_format_'.$k)) {
+			$htmlcontent =(call_user_func('amr_format_'.$k, $content));
+		}
+		else 
 		switch ($k){
 			case 'COMMENT':
 			case 'DESCRIPTION': {
@@ -452,6 +459,7 @@ what about all day?
 					$htmlcontent = str_replace("\n", "<br />", $content);
 
 		}
+		
 	}
 
 	if (empty ($htmlcontent) ) 
