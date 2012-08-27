@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.0.29');
+define('AMR_ICAL_LIST_VERSION', '4.0.30');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -904,6 +904,16 @@ function amr_sort_by_key($data, $key) {
 			return $data;
 		}
 /* ------------------------------------------------------------------------------------*/
+function amr_reverse_sort_by_key($data, $key) {
+	if (!(is_array($data)) ) return ($data);
+			// Reverse sort
+			$compare = create_function('$a, $b', 'if (!isset($a["' . $key . '"])) return false;'
+			.'	if (!isset($b["' . $key . '"])) return (false) ;'
+			.'	if  ($a["' . $key . '"] == $b["' . $key . '"]) { return 0; } else { return ($a["' . $key . '"] > $b["' . $key . '"]) ? -1 : 1; }');
+			usort($data, $compare);
+			return $data;
+		}
+
 function amr_falls_between($eventdate, $astart, $aend) {
 		/*
 		 * Return true iff the specified event falls between the given
@@ -1149,6 +1159,7 @@ function amr_create_enddate (&$e) {
 function amr_generate_repeats(&$event, $astart, $aend, $limit) { /* takes an event and some parameters and generates the repeat events */
 		$repeats = array(); // and array of dates
 		$newevents = array();  // an array of events
+		
 		if (isset($event['DTSTART'])) {
 			if (is_object($event['DTSTART'])) {
 				$dtstart = $event['DTSTART'];
@@ -1164,7 +1175,7 @@ function amr_generate_repeats(&$event, $astart, $aend, $limit) { /* takes an eve
 				if (isset ($event['UID'])) 	
 					$newevents[$event['UID']] = $event;
 				else 
-					echo('This event is invalid.  It has no UID.');
+					if (WP_DEBUG) echo ('Debug msg: There is an invalid event.  It has no UID.');
 				return ($newevents); /* possibly an undated, non repeating VTODO or Vjournal- no repeating to be done if no DTSTART, and no RDATE */
 			}
 			else {
@@ -1271,7 +1282,9 @@ global $amr_limits;
 
 		$newevents = $events;
 		/* should we be moving to destination date  */
-		if ((count($newevents) < 1) or (!is_array($newevents)))	return (false);
+		if ((count($newevents) < 1) or (!is_array($newevents)))	
+			return (false);
+			
 		$newevents = amr_sort_by_key($newevents , 'EventDate');
 
 		$newevents = apply_filters('amr_events_after_sort', $newevents);
@@ -1472,8 +1485,10 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 		$amr_one_page_events_cache;  /* if widget and calendar doing same thing */
 
 	$amr_doing_icallist = true;
-	if (!empty($amrW)) $w = 'w'; /* so we know if we are in the widget or not */
-	else $w = '';
+	if (!empty($amrW)) 
+		$w = 'w'; /* so we know if we are in the widget or not */
+	else 
+		$w = '';
 
 	$key = amr_get_events_cache_key ($criteria);
 	if (isset ($amr_one_page_events_cache[$key]))  {
@@ -1481,7 +1496,11 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 		$components = $amr_one_page_events_cache[$key]['components'];
 		if (ICAL_EVENTS_DEBUG)   echo ('<h3>Grabbing the one page events cache  '.$key.'</h3>');
 		}
-	else {
+	else { 
+		if (!empty($criteria['exclude_in_progress']))
+			add_filter ('amr_events_after_sort_and_constrain', 'amr_events_exclude_in_progress');
+		if (!empty($criteria['sort_later_events_first']))
+			add_filter ('amr_events_after_sort_and_constrain', 'amr_events_sort_later_events_first');	
 		If (isset($_GET['debugcache']))   echo ('<h3>No one page events cache  '.$key.', so start afresh</h3>');
 		if (isset($_GET['debugcache'])) { echo ('<hr>Criteria '); var_dump($criteria);}
 		if ((isset($amr_limits['eventpoststoo'])) and ($amr_limits['eventpoststoo'])) {
@@ -1695,7 +1714,9 @@ function amr_get_params ($attributes=array()) {
 	'ignore_query' => '',
 	'grouping' => '',
 	'more_url' => '',
-	'no_filters' => '0'
+	'no_filters' => '0',
+	'sort_later_events_first' => '0',
+	'exclude_in_progress' => '0'
 	);
 
 	$shortcode_params = shortcode_atts( $defaults, $attributes ) ;

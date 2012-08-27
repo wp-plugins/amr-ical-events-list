@@ -4,7 +4,7 @@ Plugin Name: amr events calendar or lists with ical files
 Author: anmari
 Author URI: http://anmari.com/
 Plugin URI: http://icalevents.com
-Version: 4.0.29
+Version: 4.0.30
 Text Domain: amr-ical-events-list
 Domain Path:  /lang
 
@@ -37,26 +37,7 @@ define( 'AMR_BASENAME', plugin_basename( __FILE__ ) );
 	require_once('includes/functions.php');
 	require_once('includes/amr-ical-plugin-form-html.php');
 
-
 if (is_admin()	) {  // are we in admin territory
 	require_once('includes/amr-ical-list-admin.php');
-
-	add_filter('plugin_action_links', 'amr_plugin_action', 8, 2);
 }
-
-function amr_plugin_action($links, $file) {
-	static $this_plugin;
-
-	if( ! $this_plugin ) $this_plugin = plugin_basename(__FILE__);
-
-
-	if( stristr($this_plugin,$file )) {
-	/* create link */
-		array_unshift($links,'<a href="admin.php?page=manage_amr_ical">'. __('Settings','amr-ical-events-list').'</a>' );
-	}
-
-	return $links;
-	} // end plugin_action()
-
-
 ?>

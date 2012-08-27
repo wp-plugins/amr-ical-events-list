@@ -907,6 +907,7 @@ function amr_parse_component($type)	{	/* so we know we have a vcalendar at lines
 				}
 				else {
 					if ($parts[0] === 'END') {
+						if (empty($subarray)) return (false);
 						return ($subarray );
 					}
 					/* now grab the value - just in case there may have been ";" in the value we will take all the rest of the string */

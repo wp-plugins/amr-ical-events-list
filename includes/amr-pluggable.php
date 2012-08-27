@@ -1,5 +1,25 @@
 <?php /* Pluggable functions that need to be loaded after the theme so that a theme functions.php can override
 */
+if (!function_exists ('amr_events_sort_later_events_first')) {
+	function amr_events_sort_later_events_first($constrained) {
+		$constrained = amr_reverse_sort_by_key($constrained , 'EventDate');
+		return ($constrained);
+	}
+}
+// ---------------------------------------------------------------
+if (!function_exists ('amr_events_exclude_in_progress')) {
+	function amr_events_exclude_in_progress($constrained) { // exclude any events that started before the start date
+		global $amr_limits;
+		foreach ($constrained as $i => $e) {
+			if (amr_is_before($e['EventDate'], $amr_limits['start'])) {
+				unset($constrained[$i]);
+			}			
+		}
+		return ($constrained);
+	}
+}
+
+// ---------------------------------------------------------------
 if (!function_exists ('amr_register_for_event')) {
 	function amr_register_for_event() {
 		return ("Register!");
@@ -440,7 +460,7 @@ if (!function_exists('amr_mimic_taxonomies')) { // only called if we have an ics
 if (!function_exists('amr_format_attendees') ) {
 	function amr_format_attendees ($attendees) {/* receive array of hopefully attendess[] CN and MAILTO, and possibly other */
 	
-	amr_sort_by_two_cols ('PARTSTAT', 'CN', &$attendees); // sort by participaton status, may include all
+	amr_sort_by_two_cols ('PARTSTAT', 'CN', $attendees); // sort by participaton status, may include all
 	
 	$text = '';
 

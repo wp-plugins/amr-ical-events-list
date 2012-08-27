@@ -4,7 +4,7 @@ Tags: event, events, event calendar, events calendar, event manager, diary, sche
 
 Requires at least: 2.8
 Tested up to: 3.4.1
-Version: 4.0.29
+Version: 4.0.30
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec. Very customisable listings or box calendars.  This version uses ics as input. Upgrade option for ics feed generation, taxonomies etc.  Tested with amr-events 3.0.9.
@@ -89,6 +89,12 @@ amr-events has much additional functionality, including a taxonomy widget.
 
 
 == Changelog ==
+
+= Version 4.0.30 =
+*  Add: as per request, can now use as shortcode parameter: sort_later_events_first=1 to change the default sort.  By default listings start with events closest to start date and proceed into the future.   These will reverse sort.  They may be useful for past event listings - why does one want to show old events ?  Well they just do want to!
+*  Add: as per request, can now use as shortcode parameter: exclude_in_progress=1 to exclude events that may be in progress across chose start date ie: they started before chosen startdate.  By default these show as their end date is after the chosen start date.
+*  Fix: for those few of you on php 5.4 - fix deprecated pass by reference.
+
 = Version 4.0.29 =
 * Fix: Minor bug if one created a new listtype without copying and pasting from an existing listtype.  Fixed.
 * Update: French lang update from fxbenard.com, also a dutch update was added a few months back - thanks!
