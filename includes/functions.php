@@ -1,5 +1,19 @@
 <?php //comonly useful functions
 /* -------------------------------------------------------------------------------------------*/
+function amr_tell_admin_the_error ($text) {
+	// only report the error to admin if logged in ?
+	// else report with comment
+	if (function_exists('is_user_logged_in') // sometimes not yet loaded ???
+	and (current_user_can('manage_options')) ) { 
+		echo '<br /><b>Message displayed to logged in admin only:</b><br />'.$text.'<br />';
+	}
+	else if (WP_DEBUG)  
+		echo '<br /><b>Message (only displayed if WP_DEBUG):</b><br />'.$text;
+	else	
+		echo '<!--'.$text.'-->'; // give some notification at least rather than just failing silently
+	
+	}
+/* -------------------------------------------------------------------------------------------*/
 function amr_external_url ($url) {
 	// if it is an external url, then open in new window
 		if (stristr( $url, get_bloginfo('url'))) {

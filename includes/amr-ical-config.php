@@ -116,7 +116,7 @@ $amr_validrepeatableproperties = array (   // properties that may have multiple 
 		'TZOFFSETTO','TZOFFSETFROM',
 		'URL',
 		'XPARAM', 'X-PROP');
-
+$amr_validrepeatableproperties = apply_filters('amr_valid_repeatable_properties',$amr_validrepeatableproperties);
 
 $dateformat = str_replace(' ','\&\n\b\s\p\;', get_option('date_format'));
 
@@ -529,6 +529,7 @@ function amr_set_defaults() {
 		= array('Column' => 0, 'Order' => 510, 'Before' => '', 'After' => '');
 		}
 //		
+
 		
 		for ($i = 1; $i <= 13; $i++)  { /* setup some list type defaults if we have empty list type arrays */
 				$amr_options['listtypes'][$i] = new_listtype(); // set up basic
@@ -794,6 +795,7 @@ function customise_listtype($i)	{ /* sets up some variations of the default list
 			}
 			$amr_options['listtypes'][$i]['grouping']['Day'] = true;
 			$amr_options['listtypes'][$i]['grouping']['Month'] = true;
+			$amr_options['listtypes'][$i]['compprop'][] = apply_filters('amr_ics_component_properties', array()); 
 			foreach ($amr_options['listtypes'][$i]['compprop'] as $g => $v) {
 				foreach ($v as $g2 => $v2) {
 				 	$amr_options['listtypes'][$i]['compprop'][$g][$g2]['After'] = '<br />';
@@ -948,7 +950,6 @@ function customise_listtype($i)	{ /* sets up some variations of the default list
 	
 	$amr_options['listtypes'][$i]['compprop'] = amr_remove_array_level ($amr_options['listtypes'][$i]['compprop']);
 // so now we have both versions - need to unset the other, but can leave for now.
-//	var_dump($amr_options['listtypes'][$i]['compprop']);
 
 	return ( $amr_options['listtypes'][$i]);
 }
@@ -1131,7 +1132,6 @@ function amr_getset_options ($reset=false) {
 		}
 	if (!(isset($alreadyhave)) or (!$alreadyhave) ) 
 		amr_set_defaults(); 
-	
 	
 	if (!empty($amr_options['usehumantime'])) { 
 		add_filter ('amr_human_time','amr_human_time');

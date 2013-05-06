@@ -1,13 +1,13 @@
 <?php /* Pluggable functions that need to be loaded after the theme so that a theme functions.php can override
 */
-if (!function_exists ('amr_events_sort_later_events_first')) {
+if (!function_exists('amr_events_sort_later_events_first')) {
 	function amr_events_sort_later_events_first($constrained) {
 		$constrained = amr_reverse_sort_by_key($constrained , 'EventDate');
 		return ($constrained);
 	}
 }
 // ---------------------------------------------------------------
-if (!function_exists ('amr_events_exclude_in_progress')) {
+if (!function_exists('amr_events_exclude_in_progress')) {
 	function amr_events_exclude_in_progress($constrained) { // exclude any events that started before the start date
 		global $amr_limits;
 		foreach ($constrained as $i => $e) {
@@ -18,15 +18,14 @@ if (!function_exists ('amr_events_exclude_in_progress')) {
 		return ($constrained);
 	}
 }
-
 // ---------------------------------------------------------------
-if (!function_exists ('amr_register_for_event')) {
+if (!function_exists('amr_register_for_event')) {
 	function amr_register_for_event() {
 		return ("Register!");
 	}
 }
 // ----------------------------------------------------------------------------------------
-if (!function_exists( 'amr_handle_no_events')) {
+if (!function_exists('amr_handle_no_events')) {
 	function amr_handle_no_events () {
 		global $amr_options,
 		$amr_limits;
@@ -48,7 +47,7 @@ if (!function_exists( 'amr_handle_no_events')) {
 	} // end function
 }
 // ----------------------------------------------------------------------------------------
-if (!function_exists( 'amr_human_time')) {
+if (!function_exists('amr_human_time')) {
 	function amr_human_time ($time) {
 		if ($time == '000000') return (__('midnight', 'amr-ical-events-list'));  // to avoid am/pm confusion, note midnight is start of day
 		else if ($time == '120000') return (__('midday', 'amr-ical-events-list'));  // to avoid am/pm confusion
@@ -60,8 +59,6 @@ if (!function_exists('amrical_calendar_views')) {
 function amrical_calendar_views () {
 	global $amr_limits;
 
-	if (ICAL_EVENTS_DEBUG) echo '<br />Preparing views<br />';
-
 //	$link = amr_clean_link();  // // NOT clean link - must remember context.
 	$link = remove_query_arg(array(
 		'calendar',
@@ -69,12 +66,18 @@ function amrical_calendar_views () {
 		'listtype',
 		'eventmap'));
 
-	if (!empty ($amr_limits['agenda'])) $agenda = $amr_limits['agenda'];
-	else $agenda = 1;
-	if (!empty ($amr_limits['eventmap'])) $eventmap = $amr_limits['eventmap'];
-	else $eventmap = false;  // if not explicitly asked for a map, then do not do it
-	if (!empty($amr_limits['calendar'])) $calendar = $amr_limits['calendar'];
-	else {		$calendar = 9;
+	if (!empty ($amr_limits['agenda']))   // did the shortcode tell us which list type to use as agenda
+		$agenda = $amr_limits['agenda'];
+	else 
+		$agenda = 1;
+	if (!empty ($amr_limits['eventmap'])) // not avail yet, but one day map of events with locations
+		$eventmap = $amr_limits['eventmap'];
+	else 
+		$eventmap = false;  // if not explicitly asked for a map, then do not do it
+	if (!empty($amr_limits['calendar']))   // did the shortcode tell us which list type to use as agenda
+		$calendar = $amr_limits['calendar'];
+	else {		
+		$calendar = 9;
 	}
 
 	if ($agenda) {
@@ -82,15 +85,14 @@ function amrical_calendar_views () {
 		$agendaviewlink = add_query_arg(array('agenda'=>$agenda),$agendaviewlink );
 		$agendaviewlink = '<a class="agendalink button" href="'
 		. htmlentities($agendaviewlink)
-
 		. '" title="' . __('Go to agenda or list view', 'amr-ical-events-list'). '">'.__('Agenda', 'amr-ical-events-list').'</a>';
 	}
-	else $agendaviewlink = '';
+	else 
+		$agendaviewlink = '';
 	//
 	if ($calendar) {
 		$calendarviewlink = ' <a class="calendarlink" href="'
 		. htmlentities(add_query_arg(array('calendar'=>$calendar),$link ))
-
 		. '" title="' . __('Go to calendar view', 'amr-ical-events-list'). '">'.__('Calendar', 'amr-ical-events-list').'</a>';
 	}
 	else $calendarviewlink  = '';
@@ -98,7 +100,6 @@ function amrical_calendar_views () {
 	if ($eventmap) {
 		$mapviewlink = ' <a class="maplink" href="'
 		. htmlentities(add_query_arg('view','map',$link ))
-
 		. '" title="' . __('Go to map view', 'amr-ical-events-list'). '">'.__('Map', 'amr-ical-events-list').'</a>';
 	}
 	else $mapviewlink = '';
@@ -268,45 +269,6 @@ if (!function_exists('amr_weeks_caption')) {
 		return($calendar_caption);
 	}
 }
-// ----------------------------------------------------------------------------------------
-if (!function_exists('amr_calendar_navigation')) {
-function amr_calendar_navigation($start, $months, $weeks, $liststyle, $views='') {
-
-	if ($liststyle === 'weekscalendar')
-		$month_nav_html = amr_week_links ($start, $weeks); // returns array ($nextlink, $prevlink, $dropdown
-	else
-		$month_nav_html = amr_month_year_links ($start, $months); // returns array ($nextlink, $prevlink, $dropdown
-	$prevlink = $month_nav_html['prevlink'];
-	$nextlink = $month_nav_html['nextlink'];
-	//
-	if (($liststyle === 'weekscalendar') OR
-	(($months < 2) and ($liststyle == "smallcalendar"))) {
-		$navigation = $prevlink.'&nbsp;&nbsp;'.$nextlink;
-	}
-	else {
-		$navigation =
-		amr_month_year_navigation ($start)
-		.$prevlink.'&nbsp;'
-		.$nextlink
-		;
-	}
-	return ($navigation);
-		//------------------------end navigation-----------
-}
-}
-/* --------------------------------------------------  */
-if (!function_exists('amr_weeks_caption')) {
-	function amr_weeks_caption($start) {
-	// do not just want to use day format here, as may be too concise and week format cannot handle the start date, and there is no universal consistency on the week number logic
-	// later may offer an option we can use, but for now people can write a function
-	// should we use this for weeks grouping too ?   maybe
-		$caption_format = 'l jS F';
-		$calendar_caption = sprintf(
-			__('Week starting %s','amr-ical-events-list'),
-			amr_date_i18n ($caption_format, $start));
-		return($calendar_caption);
-	}
-}
 /* --------------------------------------------------  */
 if (!function_exists('amr_semi_paginate')) {
 function amr_semi_paginate() {
@@ -428,8 +390,8 @@ if (!function_exists('amr_format_CID'))  {
 if (!function_exists('amr_mimic_taxonomies')) { // only called if we have an ics file
 	function amr_mimic_taxonomies ($ical) {  // check if there is anything in the query url and only accept matches
 
-		if (isset($ical['VEVENT']) and (isset($_REQUEST['category_name']))) 	{
-			$catname = $_REQUEST['category_name'];
+		if (isset($ical['VEVENT']) and (isset($_REQUEST['category']))) 	{
+			$catname = $_REQUEST['category'];
 
 			foreach ($ical['VEVENT'] as $i => $e) {
 				$found= false;
@@ -535,7 +497,7 @@ if (!function_exists ('amr_ical_showmap')) {
 	}
 }
 /* --------------------------------------------------------- */
-if (!function_exists('amr_format_allday')) {
+/*if (!function_exists('amr_format_allday')) {
 	function amr_format_allday ($content) {
 			if ($content == 'allday') return (__('all day', 'amr-ical-events-list'));
 		else return ('');
@@ -647,21 +609,38 @@ if (!function_exists('amr_format_taxonomy_link') ) {  //problem ics file categor
 	// if in widget should link to calendar page
 	// if in agenda or calendar - same ?
 	// if in event info - either calendar page or archive
-	global $amr_calendar_url;
+	global $amr_calendar_url, $amr_taxonomy_url; 
 
-	if (empty($amr_calendar_url))
-		$amr_calendar_url = amr_clean_link();
-	if (empty($link) and (!empty($amr_calendar_url)) )
-		$link = $amr_calendar_url;
-
+	if (empty($amr_taxonomy_url))  {// not yet set
+		if (empty($amr_calendar_url)) {
+			$amr_taxonomy_url = amr_clean_link();  // not good - basically populates the global when it possible should not
+			}
+		else {
+			$amr_taxonomy_url = $amr_calendar_url;
+		}
+	}
+	
+	if (empty($link) and (!empty($amr_taxonomy_url)) ) {
+		$link = $amr_taxonomy_url;	
+	}	
 	$term = get_term($tax_term, $tax_name, OBJECT);
-	if (!isset($term->name)) {return $tax_term; }
-
-	$link2 = add_query_arg ($tax_name, $term->slug, $link);
-	$html = '<a href="'.htmlspecialchars($link2).'" title="'
-			.sprintf(__('View events in %s %s','amr-ical-events-list'),
-			__($tax_name,'amr-events'), $term->name).'">'
-			.$term->name.'</a>';
+	
+	if (!isset($term->name)) {  // if it is not a wordpress taxonomy ?
+		$name = $tax_term;
+		$link2 = add_query_arg ('category', $tax_term, $link);
+		$title = sprintf(__('View events in %s %s','amr-ical-events-list'),
+			__('category'), $tax_term);
+		
+	}
+	else {
+		$name = $term->name;
+		$link2 = add_query_arg ($tax_name, $term->slug, $link);
+		$title = sprintf(__('View events in %s %s','amr-ical-events-list'),
+				__($tax_name,'amr-events'), $term->name);
+	}
+	$html = '<a href="'.htmlspecialchars($link2)
+		.'" title="'.$title
+		.'">'.$name.'</a>';
 	return ($html);
 	}
 }
@@ -708,7 +687,7 @@ if (!function_exists('amr_derive_calprop_further')) {
 					htmlentities ($p['X-WR-CALNAME']));
 					$p['X-WR-CALNAME'] = '<a class="x-wr-calname" '
 					.' title="'.$p['subscribe'].'"'
-					.' href="'.htmlentities($p['icsurl']).'">'
+					.' href="'.html_entity_decode($p['icsurl']).'">'
 					.htmlspecialchars($p['X-WR-CALNAME'])
 					.'</a><!-- '.$desc.' -->';
 			}
@@ -717,7 +696,7 @@ if (!function_exists('amr_derive_calprop_further')) {
 					$p['subscribe'] = sprintf(__('Subscribe to %s Calendar','amr-ical-events-list'), $f);
 					$p['X-WR-CALNAME'] = '<a '
 					.' title="'.$p['subscribe'].'"'
-					.' href="'.htmlentities($p['icsurl']).'">'
+					.' href="'.html_entity_decode($p['icsurl']).'">'
 					.$f
 					.'</a>';
 			}
@@ -729,7 +708,7 @@ if (!function_exists('amr_derive_calprop_further')) {
 
 			$p['icsurl'] =
 				'<a class="amr-bling icalsubscribe" title="'.$p['subscribe']
-				.'" href="'.htmlentities($p['icsurl']).'">'
+				.'" href="'.html_entity_decode($p['icsurl']).'">'
 				.$t3.'</a>';
 		}
 		
@@ -737,7 +716,6 @@ if (!function_exists('amr_derive_calprop_further')) {
 		return ($p);
 	}
 }
-
 /* --------------------------------------------------------- */
 if (!function_exists('amr_derive_summary')) {
 	function amr_derive_summary (&$e ) {
@@ -837,7 +815,7 @@ if (!function_exists('add_cal_to_google')) {
 		else
 			$text2 = '<img src="'.IMAGES_LOCATION.ADDTOGOOGLEIMAGE.'" title="'.$text1.'" alt="'.$text1.'" class="amr-bling" />';
 		return (
-		'<a class= "amr-bling addtogoogle" href="http://www.google.com/calendar/render?cid='.htmlentities($cal).'" target="_blank"  title="'.$text1.'">'.$text2.'</a>');
+		'<a class= "amr-bling addtogoogle" href="http://www.google.com/calendar/render?cid='.html_entity_decode($cal).'" target="_blank"  title="'.$text1.'">'.$text2.'</a>');
 	}
 }
 /*--------------------------------------------------------------------------------*/
@@ -1201,6 +1179,7 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 		$amr_groupings,
 		$change_view_allowed;
 
+		
 	if (ICAL_EVENTS_DEBUG) {
 		echo '<br />Peak Memory So far :'.amr_memory_convert(memory_get_usage(true));
 		echo '<h2>Now Listing, and locale = '.$locale.' and list type = '.$amr_listtype.'</h2>';
@@ -1447,6 +1426,371 @@ if (!function_exists('amr_format_organiser')) {
 	}
 }
 /* -------------------------------------------------------- */
+if (!function_exists('amr_parseModifiers')) {   
+	function amr_parseModifiers($text)    {  
+/* NAME="Contact Name";ID=28380;TYPE=SingleLine		
+*/	
+		$modifers = array();
+		$p = explode (';',$text); 	/* if only a single will still return one array value */
+		foreach ($p as $i => $v) {
+			$eq			= strpos($v,'=');
+			$pmodifier 	= substr ($v,0,$eq);
+			$pvalue 	= substr ($v,$eq+1);
+			$func 		= 'amr_parse'.$pmodifier;
+			if (function_exists ($func)) {
+				$modifers[$pmodifier] =  (call_user_func($func, $pvalue));
+			}
+			else {
+				$modifers[$pmodifier] = $pvalue;
+			}
+		}
+		return ($modifers);
+
+    }
+}	
+	
+/* -------------------------------------------------------- */
+if (!function_exists('amr_format_repeatable_property')) {
+function amr_format_repeatable_property ($content, $k, $event, $before='', $after='') {
+// for properties that can have multiple values and for which we have received an array of those values, we need to do the format routine for each value
+
+	$c = '';
+	foreach ($content as $i => $v) {
+		if (!(empty($v))) {
+			$c .= amr_format_value ($v, $k, $event,	$before,$after) .' ';
+			}
+	}
+	return ($c);
+}
+}
+/* --------------------------------------------------------- */
+if (!function_exists('amr_format_value')) {
+function amr_format_value ($content, $k, $event, $before='', $after='') { /* include the event so we can check for things like all day */
+/*  Format each Ical value for our presentation purposes
+Note: Google does toss away the html when editing the text, but it is there if you add but don't edit.
+what about all day?
+*/
+	global $amr_formats;  /* amr check that this get set to the chosen list type */
+	global $amr_options;
+	global $amr_listtype;
+	global $eventtaxonomies;
+
+//	echo '<br >'.$k;
+	if (empty($content)) return('');
+
+	if ($k == 'ORGANIZER') 	{ // it is an array but a parsed one, not repeatable
+		$htmlcontent = amr_format_organiser ($content);
+		}
+	elseif ($k == 'ATTENDEE') 	{
+		$htmlcontent = amr_format_attendees ($content);
+		}
+	else if (is_object($content)) {
+		switch ($k){
+			case 'EventDate': {
+				$htmlcontent = ('<abbr class="dtstart" title="'
+//					.amr_format_date ('l jS F Y, H:i e ', $content).'">'
+					.amr_format_date ('c', $content).'">' //must be ISO 8601 date for microformats to work
+					.amr_format_date ($amr_formats['Day'], $content)
+					.'</abbr>'
+					);
+				break;
+			}
+			case 'EndDate': {
+				$days = amr_event_is_multiday($event);
+				if ( $days > 1)
+					$htmlcontent = ('<abbr class="dtend" title="'
+					.amr_format_date ('c', $content).'">'  //must be ISO 8601 date
+					.amr_format_date ($amr_formats['Day'], $content)
+					.'</abbr>'
+					);
+				else $htmlcontent = '';
+				break;
+			}
+			case 'EndTime':
+			case 'StartTime':{
+				if (isset($event['allday']) and ($event['allday'] === 'allday'))
+					$htmlcontent = '';
+				else
+					$htmlcontent = amr_format_time ($amr_formats['Time'], $content);
+				break;
+			}
+			case 'DTSTART':
+			case 'DTEND':
+			case 'UNTIL': {
+				$htmlcontent = amr_format_date ($amr_formats['Day'], $content);
+				if (empty($event['allday']) or !($event['allday'] == 'allday'))
+					$htmlcontent  .= ' '.amr_format_time ($amr_formats['Time'], $content);
+				break;
+				}
+			case 'X-WR-TIMEZONE': { /* amr  need to add code to reformat the timezone as per admin entry.  Also only show if timezone different ? */
+				$htmlcontent = amr_format_tz(timezone_name_get($content));
+				break;
+			}
+			case 'TZID': { /* amr  need to add code to reformat the timezone as per admin entry.  Also only show if timezone different ? */
+				$htmlcontent = amr_format_tz (timezone_name_get($content));
+				break;
+			}
+			default: 	/* should not be any */
+				$htmlcontent = amr_format_date ($amr_formats['DateTime'], $content);
+		}
+	}
+	elseif (is_array($content)) {
+
+		if ($k === 'DURATION') {
+			$htmlcontent = amr_format_duration ($content);
+		}
+		elseif (($k === 'RRULE') or ($k === 'EXRULE')) {
+			$htmlcontent = amr_format_rrule($content);
+			}
+		elseif (($k === 'RDATE') or ($k === 'EXDATE')) {
+			$htmlcontent = amr_prettyprint_r_ex_date ($content);
+			}
+		elseif ($k=== 'CATEGORIES') {  // umm - what if ics category
+				$htmlcontent = amr_format_taxonomies ('category', $content);
+
+			}
+		elseif ($k=== 'post_tag' ) {
+				$htmlcontent = amr_format_taxonomies ('post_tag', $content);
+
+			}
+		elseif ($k == 'ATTACH') {
+			if (isset($content[0]['type'] ))	{
+				// then we are at the top level of the array, so can ask to handled repetaed values
+				return ( amr_format_repeatable_property ($content, $k, $event, $before, $after));
+			}
+			else
+				$htmlcontent = amr_format_attach ($content, $event);
+		}
+		else {  /* simple array don't think we need to list the items separately eg: multiple comments or descriptions - just line  */
+			if (!empty( $eventtaxonomies) and in_array( $k, $eventtaxonomies)) {
+					$htmlcontent = amr_format_taxonomies ($k, $content);
+				}
+			else
+				return( amr_format_repeatable_property ($content, $k, $event, $before, $after));
+			}
+		}
+
+	elseif (is_null($content) OR ($content === ''))
+		$htmlcontent = '';
+	else {
+		if (function_exists ('amr_format_'.$k)) {
+			$htmlcontent =(call_user_func('amr_format_'.$k, $content));
+		}
+		else 
+		switch ($k){
+			case 'COMMENT':
+			case 'DESCRIPTION': {
+				$htmlcontent = html_entity_decode(amr_click_and_trim(nl2br2(amr_amp($content))));
+				break;
+			}
+			case 'SUMMARY':
+			case 'icsurl':
+			case 'addtogoogle':
+			case 'addevent':
+			case 'subscribeevent':
+			case 'subscribeseries':
+			case 'map':
+			case 'refresh':
+			case 'attending_event': {
+				$htmlcontent = $content; /* avoid hyperlink as we may have added url already */
+				break;
+			}
+			case 'URL': /* assume valid URL, should not need to validate here, then format it as such */
+				$htmlcontent = amr_format_url($content);
+				break;
+			case 'LOCATION': {
+				$htmlcontent = (amr_click_and_trim(nl2br2(amr_amp($content))));
+				break;
+			}
+
+			case 'X-WR-TIMEZONE':{	/* not parsed as object - since it is cal attribute, not property attribue */
+				$htmlcontent = (amr_format_tz ($content));
+				break;
+			}
+			case 'allday': {
+				$htmlcontent =(amr_format_allday($content));
+				break;
+			}
+
+
+			default: 	/* Convert any newlines to html breaks */
+
+				if (!empty( $eventtaxonomies) and in_array( $k, $eventtaxonomies)) {
+					$htmlcontent = amr_format_taxonomies ($k, $content);
+				}
+				else {
+					$func = 'amr_format_'.str_replace('-','_',$k);
+
+					if (function_exists($func))		{	
+						$htmlcontent = call_user_func ($func, $content);
+
+					}
+					$htmlcontent = str_replace("\n", "<br />", $content);
+				}	
+
+		}
+		
+	}
+
+	if (empty ($htmlcontent) ) 
+		return;
+	return ($before.$htmlcontent.$after);
+
+}
+}
+/* ------------------------------------------------------------------------------------*/
+if (!function_exists('amr_wp_format_date')) {
+function amr_wp_format_date( $format, $datestamp, $gmttf) { /* want a  integer timestamp or a date object  */
+global $amr_options, $wp_locale;
+/* Need to get rid the unnecessary dat logic - should only be using date objects for now */
+
+	if (is_object($datestamp))	{
+		$offset = $datestamp->getOffset();
+		If (isset ($_REQUEST['tzdebug'])) {
+			echo '<br />Want to format '.$datestamp->format('Ymd His').' in '.$format.' like this '.$datestamp->format($format).' but localised';
+//			echo '<br />Add offset '.$offset/(60*60).' back to Unix timestamp to force correct localised date ';
+			}
+		$dateInt = $datestamp->format('U') /* + $offset */;
+		}
+	else if (is_integer ($datestamp)) $dateInt = $datestamp;
+	else return(false);
+
+	if (stristr($format, '%') ) return (strftime( $format, $dateInt ));  /* keep this for compatibility!  will not localise though */
+	else {
+		$text = date_i18n($format, $dateInt, $gmttf); /*  should  be false, otherwise we get the utc/gmt time.   */
+/*		If (isset ($_REQUEST['tzdebug']))
+			{
+				echo '<br />Localised with gmt=false: '.$text.'<br />';
+				$text2 = date_i18n($format, $dateInt, false);
+				echo 'Localised with gmt=true:  '.$text2.'<br />';
+				$text3 = amr_date_i18n ('D, F j, Y g:i a', $datestamp);
+				echo 'Localised with amr date obj fn: '.$text3.'<br />';
+			} */
+		return ($text); //
+		}
+}
+}
+/* -------------------------------------------------------------------------------------------*/
+if (!function_exists('amr_format_time')) {
+function amr_format_time( $format, $datestamp) { /* want a  integer timestamp or a date object  */
+global 	$amr_options,
+		$amr_globaltz;
+
+	date_timezone_set ($datestamp, $amr_globaltz);  /* Converting here, but then some derivations wrong eg: unsetting of end date */
+	// check for midnight, midday, noon etc
+	$time = $datestamp->format('His');
+	if (isset($_GET['tzdebug'])) echo  '<br />Time='.$time;
+
+	$humanspeak = apply_filters('amr_human_time',$time);
+	if (!($time === $humanspeak )) return($humanspeak);
+	else
+		return (amr_format_date( $format, $datestamp))	;
+}
+}
+/* -------------------------------------------------------------------------------------------*/
+if (!function_exists('amr_format_date')) {
+function amr_format_date( $format, $datestamp) { /* want a  integer timestamp or a date object  */
+global 	$amr_options,
+		$amr_globaltz;
+
+	//if (is_string($datestamp)) $datestamp = date_create($datestamp, $amr_globaltz);
+
+	if (isset ($amr_options ['date_localise']))
+		$method = $amr_options ['date_localise'];
+	else
+		$method = 'wp';  // v4.0.9 was none
+
+	if (isset($_GET['tzdebug'])) echo  '<br />set tz for: '.$datestamp->format('c');
+
+	date_timezone_set ($datestamp, $amr_globaltz);  /* Converting here, but then some derivations wrong eg: unsetting of end date */
+
+	if (isset($_GET['tzdebug'])) echo  '<br />'.$datestamp->format('c');
+
+	if ($method === 'wp') return amr_wp_format_date ( $format, $datestamp, false);
+	else if ($method === 'wpgmt') return amr_wp_format_date ( $format, $datestamp, true);
+	else if ($method === 'amr') return amr_date_i18n ( $format, $datestamp);
+	else {
+		if (stristr($format, '%') ) return (strftime( $format, $datestamp->format('U') ));  /* keep this for compatibility!  will not localise though */
+		else return ($datestamp->format($format));
+		}
+}
+}
+/*--------------------------------------------------------------------------------*/
+if (!function_exists('amr_format_duration')) {
+function amr_format_duration ($arr) {
+	/* receive an array of hours, min, sec */
+
+	foreach ($arr as $i => $d) if ($d === 0) unset ($arr[$i]);
+	$i = count($arr);
+
+	if ($i > 1) $sep = ', ';
+	else $sep = '';
+
+	$d = '';
+	if (isset ($arr['years'] )) {
+		$d .= sprintf (_n ("%u year", "%u years", $arr['years'], 'amr-ical-events-list'), $arr['years']);
+		$d .= $sep;
+		$i = $i-1;
+		}
+	if (isset ($arr['months'] )) {
+		$d .= sprintf (_n ("%u month ", "%u months ", $arr['months'], 'amr-ical-events-list'), $arr['months']);
+		if ($i> 1) {$d .= $sep;}
+		$i = $i-1;
+		}
+	if (isset ($arr['weeks'] )) {
+		$d .= sprintf (_n ("%u week ", "%u weeks", $arr['weeks'], 'amr-ical-events-list'), $arr['weeks']);
+		if ($i> 1) {$d .= $sep;}
+		$i = $i-1;
+		}
+	if ((isset ($arr['days'] )) ) {
+			$d .= sprintf (_n ("%u day", "%u days", $arr['days'], 'amr-ical-events-list'), $arr['days']);
+//			If (ICAL_EVENTS_DEBUG) {echo ' and d = '.$d;}
+			if ($i> 1) {$d .= $sep;}
+			$i = $i-1;
+		}
+	if (isset ($arr['hours'] )) {
+		$d .= sprintf (_n ("%u hour", "%u hours", $arr['hours'], 'amr-ical-events-list'), $arr['hours']);
+		if ($i> 1) {$d .= $sep;}
+		$i = $i-1;
+		}
+	if (isset ($arr['minutes'] )) {
+		$d .= sprintf (_n ("%u minute", "%u minutes", $arr['minutes'], 'amr-ical-events-list'), $arr['minutes']);
+		if ($i> 1) {$d .= $sep;}
+		$i = $i-1;
+		}
+	if (isset ($arr['seconds'] )) {
+		$d .= sprintf (_n ("%u second", "%u seconds", $arr['seconds'], 'amr-ical-events-list'), $arr['seconds']);
+
+		}
+	return($d);
+	}
+}
+/* --------------------------------------------------------- */
+if (!function_exists('amr_format_tz')) {
+function amr_format_tz ($tzstring) {
+global $amr_globaltz, $amr_options;
+
+	$url = esc_url_raw($_SERVER['REQUEST_URI']);
+	$tz = timezone_name_get($amr_globaltz);
+	if ($tz === $tzstring) 
+		$tz2 = date_default_timezone_get();
+	else 
+		$tz2 = $tzstring;
+	if ($tz2===$tz) 
+		$tz2 = 'UTC';
+	$text1 = __('Change Timezone','amr-ical-events-list');
+	$text2 = sprintf( __('Timezone: %s, Click for %s','amr-ical-events-list'),$tz, $tz2);
+	if (isset ($amr_options['no_images']) and $amr_options['no_images']) 
+		$t3 = $text1;
+	else 
+		$t3 = '<img title = "'.$text2.'" src="'.IMAGES_LOCATION.TIMEZONEIMAGE.'" class="amr-bling" alt="'.$text1.'" />';
+
+	return ('<a class="timezone amr-bling" href="'
+		.htmlentities(add_querystring_var($url,'tz',$tz2)).'" title="'
+		.$text2.'" >'.$t3.' </a>');
+}
+}
+/* ------------------------------------------------------------------------------------*/
 if (!function_exists('adebug')) {  // we are loading late, so hope fully this should be fine - don'twant top long a name
 	function adebug( $text, $whattodebug=true) {
 		if ((isset ($_REQUEST['debug']) ) and ($_REQUEST['debug'] == $whattodebug))

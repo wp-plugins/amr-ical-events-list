@@ -31,16 +31,20 @@ function amr_list_event_subset ($htm, $columns, $subset, $events) { // now a fla
 		foreach ($columns as $col => $order) {  // prepare the row
 			$eprop = '';
 			foreach ($order as $k => $kv) { /* ie for one column in event, check how to order the bits  */
+				
 				/* Now check if we should print the component or not, we may have an array of empty string */
-				if (isset($e[$k]))
+				if (isset($e[$k])) {
 					$v = amr_check_flatten_array ($e[$k]); // *** huh? shoudl we do this here?
+					
+					}
 				else
 					$v =null;
 
 				$selector = $htm['li'];
 				$selectorend = $htm['lic'];
 				if (!empty($selector)) 	$selector .=' class="'.strtolower($k).'">';
-				if (!empty($v)) {
+				
+				if (!empty($v)) { // some custom eg: TRUMBA fields may have empty or no  values
 					$eprop .= $selector
 						.amr_format_value($v, $k, $e,$kv['Before'],$kv['After'] )
 						.$selectorend;
@@ -65,7 +69,9 @@ function amr_list_event_subset ($htm, $columns, $subset, $events) { // now a fla
 			$cellclasses = '';
 			if (!empty($htm['cell']) ) { // if we have a selector that surounds each property , then add classes.
 				$cellclasses .= ' amrcol'.$col;
-				if ($col == $no_cols) $cellclasses .= ' lastcol'; /* only want the cell to be lastcol, not the row */
+				if ($col == $no_cols) {
+					$cellclasses .= ' lastcol'; /* only want the cell to be lastcol, not the row */
+				}
 				$thiscolumn = $htm['cell'].' class="'.$cellclasses.'">' .$eprop. (empty($htm['cellc']) ? '' : $htm['cellc']);
 			}
 			else $thiscolumn = $eprop;

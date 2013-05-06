@@ -20,18 +20,15 @@
  *
  */
 /* ---------------------------------------------------------------------- */
-/*
-	 * Return the full path to the cache file for the specified URL.
-	 */
-	function get_cache_file($url) {
+/* Return the full path to the cache file for the specified URL.*/
+function get_cache_file($url) {
 		return get_cache_path() .'/'. amr_get_cache_filename($url);
 	}
 /* ---------------------------------------------------------------------- */
-	/*
-	 * Attempt to create the cache directory if it doesn't exist.
+/* Attempt to create the cache directory if it doesn't exist.
 	 * Return the path if successful.
-	 */
-	function get_cache_path() {
+*/
+function get_cache_path() {
 	global $amr_options;
 		$cache_path = (ICAL_EVENTS_CACHE_LOCATION. '/ical-events-cache');
 		if (!file_exists($cache_path)) { /* if there is no folder */
@@ -45,8 +42,8 @@
 		return $cache_path;
 	}
 /* ---------------------------------------------------------------------- */
-	/* Return the cache filename for the specified URL.	 */
-	function amr_get_cache_filename($url) {
+/* Return the cache filename for the specified URL.	 */
+function amr_get_cache_filename($url) {
 		$extension = ICAL_EVENTS_CACHE_DEFAULT_EXTENSION;
 		$matches = array();
 		if (preg_match('/\.(\w+)$/', $url, $matches)) {
@@ -55,11 +52,10 @@
 		return md5($url) . ".$extension";
 	}
 /* ---------------------------------------------------------------------- */
-	/* Cache the specified URL and return the name of the destination file.	 */
-	if( !class_exists( 'WP_Http' ) )
+/* Cache the specified URL and return the name of the destination file.	 */
+if( !class_exists( 'WP_Http' ) )
           include_once( ABSPATH . WPINC. '/class-http.php' );
 /* ---------------------------------------------------------------------- */
-
 function amr_check_start_of_file ($data) {// check if the file looks like a icsfile
 	if (empty($data)) return false;
 	$checkstart = substr($data,0,15);
@@ -77,7 +73,13 @@ function amr_check_start_of_file ($data) {// check if the file looks like a icsf
 	return true;	
 
 }
-
+function amr_set_http_timeout($val) {
+global $amr_options;
+	if (!empty($amr_options['timeout'])) 
+		return ($amr_options['timeout']);
+	else 
+		return $val;
+}
 /* ---------------------------------------------------------------------- */
 function amr_cache_url($url, $cache=ICAL_EVENTS_CACHE_TTL) {
 	global $amr_lastcache;
@@ -85,10 +87,10 @@ function amr_cache_url($url, $cache=ICAL_EVENTS_CACHE_TTL) {
 	global $amr_options;
 	
 		$text = '';
-		if (!empty($amr_options['timeout'])) 
-			$args = array('timeout' =>  $amr_options['timeout']);
-		else 
-			$args = array(); // aloow std wp or other filters		
+		// if any args are sent then all must be sent - use wp defaults more or less
+		// so better to use filters		
+		add_filter( 'http_request_timeout', 'amr_set_http_timeout' );	
+		
 //		If (ICAL_EVENTS_DEBUG) echo '<hr />url before decode: '.$url.'<br />';
 		$url = html_entity_decode($url);
 //		If (ICAL_EVENTS_DEBUG) echo '<br />url decoded: '.$url.'<hr />';
@@ -111,7 +113,8 @@ function amr_cache_url($url, $cache=ICAL_EVENTS_CACHE_TTL) {
 			amrical_mem_debug('We are going to refresh next');
 
 			//$url = urlencode($u);  - do NOT encode - that gives an invalid URL response
-			$check = wp_remote_get($url, $args);
+			$check = wp_remote_get($url);  
+			// if use args, must set all - rather use filters and let wp do its thing
 			if (( is_wp_error($check) ) or  (isset ($check['response']['code']) and !($check['response']['code'] == 200))
 			or (isset ($check[0]) and preg_match ('#404#', $check[0]))) {/* is this bit still meaningful or needed ? */
 
@@ -193,9 +196,8 @@ function amr_cache_url($url, $cache=ICAL_EVENTS_CACHE_TTL) {
 		return ($cachedfile);
 
 }
-
 /* ---------------------------------------------------------------------- */
-    function amr_parseAttendees	($arraybycolon)    { /* receive full string parsed to array  */
+function amr_parseAttendees	($arraybycolon)    { /* receive full string parsed to array  */
 /*
 ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=Anna-m
 
@@ -243,11 +245,11 @@ NOT USING FOR NOW - INTERNAL ATTENDEES ONLY
 	return($attendee); // a single attendee
 }
 /* ---------------------------------------------------------------------- */
-    function amr_parseMailto ($text) { //mailto:ovcweb@uoguelph.ca    return email
+function amr_parseMailto ($text) { //mailto:ovcweb@uoguelph.ca    return email
 		return (str_replace('mailto:','',$text));
 	} 
 /* ---------------------------------------------------------------------- */
-    function amr_parseOrganiser($arraybysemicolon)    { /* receive full string parsed to array split by the semicolon
+function amr_parseOrganiser($arraybysemicolon)    { /* receive full string parsed to array split by the semicolon
 	[0]=>ORGANIZER;SENT-BY="mailto
 	[1]=>dwood@uoguelph.ca":mailto:ovcweb@uoguelph.ca
 
@@ -292,7 +294,7 @@ NOT USING FOR NOW - INTERNAL ATTENDEES ONLY
     /**
      * Parse a Time Period field.
      */
-    function amr_parsePeriod($text,$tzobj)    {
+function amr_parsePeriod($text,$tzobj)    {
         $periodParts = explode('/', $text);
         if (!($start = amr_parseDateTime($periodParts[0], $tzobj))) return (false);
         if ($duration = amr_parseDuration($periodParts[1])) return array('start' => $start, 'duration' => $duration);
@@ -307,7 +309,7 @@ NOT USING FOR NOW - INTERNAL ATTENDEES ONLY
 	   /**
      * Parses a DateTime field and returns a datetime object, with either it's own tz if it has one, or the passed one
      */
-    function amr_parseDateTime($d, $tzobj)    {
+function amr_parseDateTime($d, $tzobj)    {
 		global $amr_globaltz;
 		global $utczobj;
 		/*  	19970714T133000            ;Local time
@@ -335,17 +337,18 @@ NOT USING FOR NOW - INTERNAL ATTENDEES ONLY
 		else $time .= ':00';
 		/* Now create our date with the timezone in which it was defined , or if local, then in the plugin glovbal timezone */
 		
-		try {	$dt = new DateTime($date.' '.$time,	$tzobj); }
-		catch(Exception $e) {
-			echo '<br />Unable to create DateTime object from '.$date.' <br />'.$e->getMessage();
-			return (false);
-		}
+		$dt = amr_create_date_time ($date.' '.$time, $tzobj);
+		//try {	$dt = new DateTime($date.' '.$time,	$tzobj); }
+		//catch(Exception $e) {
+		//	echo '<br />Unable to create DateTime object from '.$date.' <br />'.$e->getMessage();
+		//	return (false);
+		//}
 
 	return ($dt);
     }
 	/* ---------------------------------------------------------------------- */
     /* Parses a Date field. */
-    function amr_parseRange($range, $daterange, $tzobj)    {  /*
+function amr_parseRange($range, $daterange, $tzobj)    {  /*
   For RECURRENCE-ID;
   Strings like:
  VALUE=DATE:19960401
@@ -361,60 +364,38 @@ NOT USING FOR NOW - INTERNAL ATTENDEES ONLY
     }
 	/* ---------------------------------------------------------------------- */
     /* Parses a Date field. */
-    function amr_parseDate($text, $tzobj)    {  /*
+function amr_parseDate($text, $tzobj)    {  /*
 		 VALUE=DATE:
 		 19970101,19970120,19970217,19970421
 		   19970526,19970704,19970901,19971014,19971128,19971129,19971225
 		   VALUE=DATE;TZID=/mozilla.org/20070129_1/Europe/Berlin:20061223
 	*/
+		
 		$p = explode (',',$text); 	/* if only a single will still return one array value */
 		foreach ($p as $i => $v) {
-			try {
-				$dates[] =  new DateTime(substr($v,0, 4).'-'.substr($v,4, 2).'-'.substr($v,6, 2), $tzobj);
-			}
-			catch(Exception $e) {
-				echo '<br />Unable to create DateTime object from '.$text.' <br />'.$e->getMessage();
-				return (false);
-			}
+			$datestring = substr($v, 0, 4).'-'.substr($v,4, 2).'-'.substr($v,6, 2);
+			$dates[] = amr_create_date_time ($datestring, $tzobj);
+			/*try {
+			//	$dates[] =  new DateTime(substr($v,0, 4).'-'.substr($v,4, 2).'-'.substr($v,6, 2), $tzobj);
+			//}
+			//catch(Exception $e) {
+			//	echo '<br />Unable to create DateTime object from '.$text.' <br />'.$e->getMessage();
+			//	return (false);
+			}*/
 		}
 		return ($dates);
 
     }
 	/* ------------------------------------------------------------------ */
-	function amr_parseTZDate ($value, $tzid) {
+function amr_parseTZDate ($value, $tzid) {
 		$tzobj = amr_parseTZID($text);
 
 		if (!($d = amr_parseDateTime ($value, $tzobj))) return(false);
 		else return ($d);
 	}
 	/* ------------------------------------------------------------------ */
-    function amr_get_timezone_cities () {
-	    $timezone_identifiers = DateTimeZone::listIdentifiers();
-/* Africa/Abidjan
-
-Africa/Accra
-
-Africa/Addis_Ababa
-
-Africa/Algiers
-
-Africa/Asmara
-
-*/
-
-	    foreach( $timezone_identifiers as $i=> $value ){
-			$c = explode("/",$value);//obtain continent,city
-			$tzcities[$value]['continent'] = $c[0];
-
-	        if (isset($c[1])) $tzcities[$c[1]] = $value;
-			else $tzcities[$c[0]] = $value;
-
-	     }
-		//print_r($tzcities);
-		return ($tzcities);
-	}
-	/* ------------------------------------------------------------------ */
-   function amr_parseTZID($text)    {
+/* ------------------------------------------------------------------ */
+function amr_parseTZID($text)    {
    global $amr_globaltz;
    /* take a string that may have a olson tz object and try to return a tz object */
    /* accept long and short TZ's, --- assume website tz if not valid eg Zimbra's: GMT+01.00/+02.00 */
@@ -488,13 +469,16 @@ Africa/Asmara
 				$tz =  timezone_open($tzname);
 			}
 			catch(Exception $e) {
-				echo '<br />Unable to create Time zone object., Using wp default.<br />'.$e->getMessage();
+				$text = 'Unable to create Time zone object., Using wp default.<br />'.$e->getMessage();
+				amr_tell_admin_the_error ($text);
+				
+				//echo '<br />Unable to create Time zone object., Using wp default.<br />'.$e->getMessage();
 				return ($amr_globaltz);
 			}
 		return ( $tz);
     }
 /* ------------------------------------------------------------------ */
-   function amr_parseSingleDate($VALUE='DATE-TIME', $text, $tzobj)	{
+function amr_parseSingleDate($VALUE='DATE-TIME', $text, $tzobj)	{
    /* used for those properties that should only have one value - since many other dates can have multiple date specs, the parsing function returns an array
 	Reduce the array to a single value */
 		$arr = amr_parseVALUE($VALUE, $text, $tzobj);
@@ -506,25 +490,8 @@ Africa/Asmara
 		}
 		return ($arr);
 	}
-	/* ---------------------------------------------------------------------- */
-   function amr_deal_with_tzpath_in_date ( $tzstring )	{
-   /* Receive something like   /mozilla.org/20070129_1/Europe/Berlin
-	and return a tz object */
-		$tz = explode ('/',$tzstring);
-		$l = count ($tz);
-		if ($l>1) {
-			$tzid= $tz[$l-2].'/'.$tz[$l-1];
-		}
-		else $tzid = $tz[0] ;
-		$tzobj = timezone_open  ( $tzid );
-		If (ICAL_EVENTS_DEBUG or isset ($_REQUEST['tzdebug'])) {
-			echo '<br />Timezone Reduced to: '.$tzid.' Result of timezone object creation:';
-			print_r($tzobj);
-		}
-		return ($tzobj);
-	}
-	/* ---------------------------------------------------------------------- */
-   function amr_parseVALUE($VALUE, $text, $tzobj)	{
+/* ---------------------------------------------------------------------- */
+function amr_parseVALUE($VALUE, $text, $tzobj)	{
 	/* amr parsing a value like
 	VALUE=PERIOD:19960403T020000Z/19960403T040000Z,	19960404T010000Z/PT3H
 	VALUE=DATE:19970101,19970120,19970217,19970421,..	19970526,19970704,19970901,19971014,19971128,19971129,19971225
@@ -569,10 +536,8 @@ Africa/Asmara
 		}
 	}
 /* ---------------------------------------------------------------------- */
-/**
-     * Parse a Duration Value field.
- */
-    function amr_parseDuration($text)     {
+/** * Parse a Duration Value field.*/
+function amr_parseDuration($text)     {
 	/*
 	A duration of 15 days, 5 hours and 20 seconds would be:  P15DT5H0M20S
 	A duration of 7 weeks would be:  P7W, can be days or weeks, but not both
@@ -617,19 +582,10 @@ Africa/Asmara
             return false;
         }
     }
-
 /* ---------------------------------------------------------------------- */
 function amr_parse_CATEGORIES ($text ) {
 	$cats = explode(',',$text);   // will return an array, but since we can have multiple CATEGORIES lines, will get an array of arrays .. confusing
 	return($cats);
-}
-/* ---------------------------------------------------------------------- */
-function amr_track_last_mod($date) {
-global $amr_last_modified;
-if (empty ($amr_last_modified)) $amr_last_modified = date_create('0000-00-00 00:00:01');
-if ($date->format('c') > $amr_last_modified->format('c')) {
-	$amr_last_modified = clone ($date);
-	}
 }
 /* ---------------------------------------------------------------------- */
 function amr_parseRDATE ($string, $tzobj ) {
@@ -702,113 +658,6 @@ function amr_parseRDATE ($string, $tzobj ) {
 	else return (false);
 }
 /* ---------------------------------------------------------------------- */
-function amr_parse_property ($parts) {
-/* would receive something like array ('DTSTART; VALUE=DATE', '20060315')) */
-/*  NOTE: parts[0]    has the long tag eg: RDATE;TZID=US-EASTERN
-or could be DTEND;TZID=America/New_York;VALUE=DATE-TIME:     and the date 20110724T100000 in parts 1  (see forum note from dusty - he is generating the DATETIME
-		parts[1]  the bit after the :  19960403T020000Z/19960403T040000Z, 19960404T010000Z/PT3H
-		IF 'Z' then must be in UTC
-		If no Z
-*/
-global $amr_globaltz;
-
-	$tzobj = $amr_globaltz;  /* Because if there is no timezone specified in any way for the date time then it must a floating value, and so should be created in the global timezone.*/
-//	if (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) {echo '<br /> Property : '.$parts[0];}
-	$p0 = explode (';', $parts[0]);  /* Looking for ; VALUE = something...;   or TZID=... or both, or more than one anyway ???*/
-	// the first bit will be the property like PRODID, or X_WR_TIMEZONE
-	// the next will be the modifiers
-	$prop = array_shift($p0);
-	if (!empty($p0)) {  // if we have some modifiers
-		foreach ($p0 as $p) {  // handle each modifier , could be  VALUE=DATE, TZID=
-
-			if (stristr($p, 'TZID')) {		
-			    /* Normal TZ, not the one with the path eg:  DTSTART;TZID=US-Eastern:19980119T020000 or  zimbras TZID="GMT+01.00/+02.00 */
-//				$TZID = substr($p0[1], 4 );
-				$TZID = substr($p, 4 );
-				$tzobj = amr_parseTZID($TZID);
-			}  /* should create datetime object with it's own TZ, datetime maths works correctly with TZ's */
-			else {/* might be just a value=date, in which case we use the global tz?  no may still have TZid */
-				$tzobj = $amr_globaltz;
-				if (stristr($p, 'VALUE')) {  // we have a possibly redundant modified
-						$VALUE = substr($p,6);  // take everything after the '='
-				}
-				else {// unknown maybe custom modifier
-					if (isset($_REQUEST['debugall'])) {echo '<br />Ignoring Unknown or custom modifer = '.$p;}
-				}				
-			}
-		}
-	}
-//	else $tzobj = $amr_globaltz;  /* Because if there is no timezone specified in any way for the date time then it must a floating value, and so should be created in the global timezone.*/
-//	switch ($p0[0]) {
-	switch ($prop) {
-		case 'CREATED':
-		case 'COMPLETED':
-		case 'LAST-MODIFIED':
-		case 'DTSTART':
-		case 'DTEND':
-		case 'DTSTAMP':
-		case 'DUE':
-			if (isset($VALUE)) {
-				$date = amr_parseValue($VALUE, $parts[1], $tzobj);	}
-/*				return (amr_parseSingleDate($VALUE, $parts[1], $tzobj));	} */
-			else {
-				$date = amr_parseSingleDate('DATE-TIME', $parts[1], $tzobj);
-			}
-			if (($prop === 'LAST-MODIFIED') or ($prop === 'CREATED')) amr_track_last_mod($date);
-			return ($date);
-		case 'ALARM':
-		case 'RECURRENCE-ID':  /* could also have range ?*/
-			if (isset($VALUE)) {
-				return (amr_parseValue($VALUE, $parts[1], $tzobj));	}
-			elseif (isset($RANGE)){
-				return (amr_parseRange($RANGE, $parts[1], $tzobj));
-				}
-			else {
-				return (amr_parseSingleDate('DATE-TIME', $parts[1], $tzobj));
-				}
-		case 'EXRULE':
-		case 'RRULE': return (amr_parseRRULE($parts[1]));
-		case 'BDAY':
-			return (amr_parseDate ($parts[1]));
-
-		case 'EXDATE':  {if (isset($_REQUEST['debugexc'])) {echo '<br>  Parsing EXDATE ';}}
-		case 'RDATE':
-			return (amr_parseRDATE ($parts[1],$tzobj));
-		case 'TRIGGER': /* not supported yet, check for datetime and / or duration */
-		case 'DURATION':
-			$dur = amr_parseDuration ($parts[1]);
-			if (isset($_GET['debugdur'])) {echo '<br />Parts1 = '.$parts[1].'<br />Duration = '; var_dump($dur);}
-			return ($dur);
-		case 'FREEBUSY':
-			return ( amr_parsePeriod ($parts[1]));
-		case 'TZID': /* ie TZID is a property, not part of a date spec */
-			return ($parts[1]);
-		case 'ORGANIZER': {
-			return(amr_parseOrganiser($parts));
-			}
-		case 'ATTENDEE': {
-			return(amr_parseAttendees($parts));
-			}
-		case 'ATTACH': {
-			$attach = amr_parseAttach($parts);
-			If (ICAL_EVENTS_DEBUG) echo '<br />ATTACH returned:<br />'.print_r($attach,true);
-			return($attach);
-			}
-		case 'CATEGORIES': {
-			$cats = amr_parse_CATEGORIES($parts[1]);
-			If (ICAL_EVENTS_DEBUG) {
-				var_dump($parts[1]);
-				echo '<br />catreturned  :<br />'.print_r($cats ,true);
-			}	
-			return($cats );
-			}
-		default:
-			if (isset ($parts[1])) return (str_replace ('\,', ',', $parts[1]));
-			/* replace any slashes added by ical generator */
-			else return;
-	}
-}
-/* ---------------------------------------------------------------------- */
 function amr_parseAttach ($parts) {
 /*
 This property can be specified multiple times in a
@@ -865,20 +714,138 @@ ATTACH;FMTTYPE=application/msword:http://example.com/
 	return($newattach);
 }
 /* ---------------------------------------------------------------------- */
-// Replace RFC 2445 escape characters
-function amr_format_ical_text($value) {
-  $output = str_replace(
-    array('\\\\', '\;', '\,', '\N', '\n'),
-    array('\\',   ';',  ',',  "\n", "\n"),
-    $value
-  );
-  return $output;
-}
-/* ---------------------------------------------------------------------- */
-function amr_is_untimed($text) {
-/*  checks for VALUE=DATE */
-if (stristr ($text, 'VALUE=DATE') and (!stristr($text, 'VALUE=DATE-TIME'))) return (true);
-else return (false);
+/* -------------------------------------------------------- */
+function amr_parseDefault($prop, $parts) {
+
+			$func = 'amr_parse'.str_replace('-','_',$prop);
+			if (function_exists($func))		{	
+				$result = call_user_func ($func, $parts);
+				if (isset($_REQUEST['debugcustom'])) {echo '<br />Used custom function..'.$func; var_dump($result);}
+				return ($result);
+			//		return (amr_parseCustomModifiers($p));
+			}
+			else {
+				//if (isset($_REQUEST['debugcustom'])) {echo '<br>No function..'.$func.' for '; var_dump($parts);}
+				if (isset ($parts[1])) {  // its a straight value
+					return (str_replace ('\,', ',', $parts[1]));
+					}
+				/* replace any slashes added by ical generator */
+				else { //nothing to see here folks... move along
+					return '';
+				}
+				return;
+			}
+	}
+
+//--------------------------------------------------------------------
+function amr_parse_property ($parts) {
+/* would receive something like array ('DTSTART; VALUE=DATE', '20060315')) */
+/*  NOTE: parts[0]    has the long tag eg: RDATE;TZID=US-EASTERN
+or could be DTEND;TZID=America/New_York;VALUE=DATE-TIME:     and the date 20110724T100000 in parts 1  (see forum note from dusty - he is generating the DATETIME
+		parts[1]  the bit after the :  19960403T020000Z/19960403T040000Z, 19960404T010000Z/PT3H
+		IF 'Z' then must be in UTC
+		If no Z
+*/
+global $amr_globaltz;
+	//if (isset($_REQUEST['debugcustom'])) {echo '<br />Enter parse property'; var_dump($parts);}
+
+	$tzobj = $amr_globaltz;  /* Because if there is no timezone specified in any way for the date time then it must a floating value, and so should be created in the global timezone.*/
+//	if (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) {echo '<br /> Property : '.$parts[0];}
+	$p0 = explode (';', $parts[0]);  /* Looking for ; VALUE = something...;   or TZID=... or both, or more than one anyway ???*/
+	// the first bit will be the property like PRODID, or X_WR_TIMEZONE
+	// the next will be the modifiers
+	$prop = array_shift($p0);
+	if (!empty($p0)) {  // if we have some modifiers
+		foreach ($p0 as $p) {  // handle special modifiers , could be  VALUE=DATE, TZID=
+			
+			if (stristr($p, 'TZID')) {		
+			    /* Normal TZ, not the one with the path eg:  DTSTART;TZID=US-Eastern:19980119T020000 or  zimbras TZID="GMT+01.00/+02.00 */
+//				$TZID = substr($p0[1], 4 );
+				$TZID = substr($p, 4 );
+				$tzobj = amr_parseTZID($TZID);
+			}  /* should create datetime object with it's own TZ, datetime maths works correctly with TZ's */
+			else {/* might be just a value=date, in which case we use the global tz?  no may still have TZid */
+				$tzobj = $amr_globaltz;
+				if (stristr($p, 'VALUE')) {  // we have a possibly redundant modified
+						$VALUE = substr($p,6);  // take everything after the '='
+				}
+				else {// not necessary to deal with modifier here or unknown maybe custom modifiers	
+					// only urgent to get tZID's.. or maybe we could even do those later? 
+					//check it out on major code revamp, meanwhile if it aint broke, dont fix it
+				}				
+			}
+		}
+	}
+//	else $tzobj = $amr_globaltz;  /* Because if there is no timezone specified in any way for the date time then it must a floating value, and so should be created in the global timezone.*/
+//	switch ($p0[0]) {
+	
+	switch ($prop) {
+		case 'CREATED':
+		case 'COMPLETED':
+		case 'LAST-MODIFIED':
+		case 'DTSTART':
+		case 'DTEND':
+		case 'DTSTAMP':
+		case 'DUE':
+			if (isset($VALUE)) {
+				$date = amr_parseValue($VALUE, $parts[1], $tzobj);	}
+/*				return (amr_parseSingleDate($VALUE, $parts[1], $tzobj));	} */
+			else {
+				$date = amr_parseSingleDate('DATE-TIME', $parts[1], $tzobj);
+			}
+			if (($prop === 'LAST-MODIFIED') or ($prop === 'CREATED')) amr_track_last_mod($date);
+			return ($date);
+		case 'ALARM':
+		case 'RECURRENCE-ID':  /* could also have range ?*/
+			if (isset($VALUE)) {
+				return (amr_parseValue($VALUE, $parts[1], $tzobj));	}
+			elseif (isset($RANGE)){
+				return (amr_parseRange($RANGE, $parts[1], $tzobj));
+				}
+			else {
+				return (amr_parseSingleDate('DATE-TIME', $parts[1], $tzobj));
+				}
+		case 'EXRULE':
+		case 'RRULE': 
+			return (amr_parseRRULE($parts[1]));
+		case 'BDAY':
+			return (amr_parseDate ($parts[1]));
+
+		case 'EXDATE':  {if (isset($_REQUEST['debugexc'])) {echo '<br>  Parsing EXDATE ';}}
+		case 'RDATE':
+			return (amr_parseRDATE ($parts[1],$tzobj));
+		case 'TRIGGER': /* not supported yet, check for datetime and / or duration */
+		case 'DURATION':
+			$dur = amr_parseDuration ($parts[1]);
+			if (isset($_GET['debugdur'])) {echo '<br />Parts1 = '.$parts[1].'<br />Duration = '; var_dump($dur);}
+			return ($dur);
+		case 'FREEBUSY':
+			return ( amr_parsePeriod ($parts[1]));
+		case 'TZID': /* ie TZID is a property, not part of a date spec */
+			return ($parts[1]);
+		case 'ORGANIZER': {
+			return(amr_parseOrganiser($parts));
+			}
+		case 'ATTENDEE': {
+			return(amr_parseAttendees($parts));
+			}
+		case 'ATTACH': {
+			$attach = amr_parseAttach($parts);
+			If (ICAL_EVENTS_DEBUG) echo '<br />ATTACH returned:<br />'.print_r($attach,true);
+			return($attach);
+			}
+		case 'CATEGORIES': {
+			$cats = amr_parse_CATEGORIES($parts[1]);
+			If (ICAL_EVENTS_DEBUG) {
+				var_dump($parts[1]);
+				echo '<br />catreturned  :<br />'.print_r($cats ,true);
+			}	
+			return($cats );
+			}
+		default:{
+			return (amr_parseDefault($prop, $parts));
+		}		
+	}
 }
 /* ---------------------------------------------------------------------- */
 function amr_parse_component($type)	{	/* so we know we have a vcalendar at lines[$n] - check for properties or components */
@@ -892,69 +859,75 @@ function amr_parse_component($type)	{	/* so we know we have a vcalendar at lines
 
 	while (($amr_n < $amr_totallines)	)	{
 		//if (ICAL_EVENTS_DEBUG) {echo '<br/>*** '.$type.' '.$amr_lines[$amr_n];}
-			$amr_n++;
-			$parts = explode (':', $amr_lines[$amr_n],2 ); /* explode faster than the preg, just split first : */
-			if ((!$parts) or ($parts === $amr_lines[$amr_n])) {
-				if (ICAL_EVENTS_DEBUG) echo ( '<br /> Error in line, skipping '.$amr_n.': with value:'.$amr_lines[$amr_n]);
+		$amr_n++;
+		$parts = explode (':', $amr_lines[$amr_n],2 ); /* explode faster than the preg, just split first : */
+		if ((!$parts) or ($parts === $amr_lines[$amr_n])) {
+			if (ICAL_EVENTS_DEBUG) echo ( '<br /> Error in line, skipping '.$amr_n.': with value:'.$amr_lines[$amr_n]);
+			}
+		else {
+			if ($parts[0] === 'BEGIN') { /* the we are starting a new sub component - end of the properties, so drop down */
+				if (in_array ($parts[1], $amr_validrepeatablecomponents)) {
+					$subarray[$parts[1]][] = amr_parse_component($parts[1]);
 				}
+				else { $subarray[$parts[1]] = amr_parse_component($parts[1]);
+				}
+			}
 			else {
-				if ($parts[0] === 'BEGIN') { /* the we are starting a new sub component - end of the properties, so drop down */
-					if (in_array ($parts[1], $amr_validrepeatablecomponents)) {
-						$subarray[$parts[1]][] = amr_parse_component($parts[1]);
-					}
-					else { $subarray[$parts[1]] = amr_parse_component($parts[1]);
-					}
+				if ($parts[0] === 'END') {
+					if (empty($subarray)) return (false);
+					return ($subarray );
 				}
+				/* now grab the value - just in case there may have been ";" in the value we will take all the rest of the string */
 				else {
-					if ($parts[0] === 'END') {
-						if (empty($subarray)) return (false);
-						return ($subarray );
-					}
-					/* now grab the value - just in case there may have been ";" in the value we will take all the rest of the string */
-					else {
-						if ($parts[0] === 'X-WR-TIMEZONE;VALUE=TEXT') 
-							$parts[0] === 'X-WR-TIMEZONE';
-						$basepart = explode (';', $parts[0], 2);  /* Looking for RRULE; something...*/
-						if (in_array ($basepart[0], $amr_validrepeatableproperties)) {
-							$temp = amr_parse_property ($parts);  
-							// now this might return an array (eg categories), which can be multiple lines too
-							if ($basepart[0] == 'CATEGORIES') {
-							//if (is_array($temp)) {
-								//if (WP_DEBUG) {echo '<br />Got an array:'.$basepart[0].' '; var_dump($temp);}
-								if (!empty($subarray[$basepart[0]]) and is_array($subarray[$basepart[0]]))  {
-								// ie we got an array already, must be multiple lines
-									$subarray[$basepart[0]] = array_merge($subarray[$basepart[0]], $temp);
+					if ($parts[0] === 'X-WR-TIMEZONE;VALUE=TEXT') 
+						$parts[0] === 'X-WR-TIMEZONE';
+						
+					$basepart = explode (';', $parts[0], 2);  /* Looking for RRULE; something...*/
+					
+					//if (isset($_GET['debugcustom'])) {echo '<br />checking basepart '; var_dump($basepart);  echo ' against '; var_dump($amr_validrepeatableproperties); }
+					
+					if (in_array ($basepart[0], $amr_validrepeatableproperties)) {
+						$temp = amr_parse_property ($parts);  
+						// now this might return an array (eg categories), which can be multiple lines too
+						
+						if ($basepart[0] == 'CATEGORIES') {
+						//if (is_array($temp)) {
+							//if (WP_DEBUG) {echo '<br />Got an array:'.$basepart[0].' '; var_dump($temp);}
+							if (!empty($subarray[$basepart[0]]) and is_array($subarray[$basepart[0]]))  {
+							// ie we got an array already, must be multiple lines
+								$subarray[$basepart[0]] = array_merge($subarray[$basepart[0]], $temp);
 
-								}
-								else $subarray[$basepart[0]]= $temp;
 							}
-	
-							else $subarray[$basepart[0]][] = $temp;					
+							else $subarray[$basepart[0]]= $temp;
+						}
+
+						else $subarray[$basepart[0]][] = $temp;					
+					}
+					else {
+						$subarray [$basepart[0]] = amr_parse_property($parts);
+						if (($basepart[0] === 'DTSTART') and (isset($basepart[1]))) {
+							if (amr_is_untimed($basepart[1])) { /* ie has VALUE=DATE */
+								//$subarray ['Untimed'] = true; // removed v4.0.28
+								//$subarray ['allday'] = true;  // v4.0.17
+								$subarray ['allday'] = 'allday';  // v4.0.28
+							}
+						}
+						else if (($basepart[0] === 'X-MOZ-GENERATION') and (!isset( $subarray ['SEQUENCE']))) {
+							$subarray ['SEQUENCE'] = $subarray ['X-MOZ-GENERATION'] ;
+						/* If we have an mozilla funny thing, convert it to the sequence if there is no sequence */
 						}
 						else {
-							$subarray [$basepart[0]] = amr_parse_property($parts);
-							if (($basepart[0] === 'DTSTART') and (isset($basepart[1]))) {
-								if (amr_is_untimed($basepart[1])) { /* ie has VALUE=DATE */
-									//$subarray ['Untimed'] = true; // removed v4.0.28
-									//$subarray ['allday'] = true;  // v4.0.17
-									$subarray ['allday'] = 'allday';  // v4.0.28
+							if (isset($_GET['debugcustom']) and ($basepart[0] === 'X-TRUMBA-CUSTOMFIELD')) { 
+								echo '<br />Base Part = '.$basepart[0];
+								//var_dump($subarray [$basepart[0]]);
 								}
-							}
-							if (($basepart[0] === 'X-MOZ-GENERATION') and (!isset( $subarray ['SEQUENCE']))) 
-								$subarray ['SEQUENCE'] = $subarray ['X-MOZ-GENERATION'] ;
-							/* If we have an mozilla funny thing, convert it to the sequence if there is no sequence */
 						}
 					}
 				}
 			}
 		}
-		return ($subarray);	/* return the possibly nested component */
 	}
-/* ---------------------------------------------------------------------- */
-function amr_remove_folding ($data) {
-		$data = preg_replace ( "/[\r\n]+ /", "", $data );
-	    $data = preg_replace ( "/[\r\n]+/", "\n", $data );
-	return($data);
+	return ($subarray);	/* return the possibly nested component */
 }
 /* ---------------------------------------------------------------------- */
 // Parse the ical file and return an array ('Properties' => array ( name & params, value), 'Items' => array(( name & params, value), )
@@ -990,11 +963,18 @@ function amr_parse_ical ( $cal_file ) {
 			echo '<br />';
 			}
 
-		$parts = explode (':', $amr_lines[$amr_n],2 ); /* explode faster than the preg, just split first : */
+		$parts = explode (':', $amr_lines[$amr_n],2 ); 
+		/* explode faster than the preg, just split first : */
 
 		if ($parts[0] === 'BEGIN') {
+		
 			$ical = amr_parse_component('VCALENDAR');
-			if (!empty ($amr_last_modified)) $ical['LastModificationTime'] = $amr_last_modified;
+			
+			if (!empty ($amr_last_modified)) 
+				$ical['LastModificationTime'] = $amr_last_modified;
+			
+			//if (isset($_GET['debugcustom'])) {var_dump($ical);}
+			
 			return($ical);
 			}
 		else {
@@ -1006,14 +986,88 @@ function amr_parse_ical ( $cal_file ) {
 			}
 
 }
-//------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------
 function amr_create_date_time ($datetimestring, $tzobj) { // date time create with exception trap to avoid fatal errors
 
 		try {	$dt = new DateTime($datetimestring,	$tzobj); }
 		catch(Exception $e) {
-			echo '<br />Unable to create DateTime object from '.$d.' <br />'.$e->getMessage();
+			$text = '<br />Unable to create DateTime object from '.$datetimestring.' <br />'.$e->getMessage();
+			amr_tell_admin_the_error ($text);
 			return (false);
 		}
 	return ($dt);
 }		
-		
+/* ---------------------------------------------------------------------- */
+function amr_deal_with_tzpath_in_date ( $tzstring )	{
+   /* Receive something like   /mozilla.org/20070129_1/Europe/Berlin
+	and return a tz object */
+		$tz = explode ('/',$tzstring);
+		$l = count ($tz);
+		if ($l>1) {
+			$tzid= $tz[$l-2].'/'.$tz[$l-1];
+		}
+		else $tzid = $tz[0] ;
+		$tzobj = timezone_open  ( $tzid );
+		If (ICAL_EVENTS_DEBUG or isset ($_REQUEST['tzdebug'])) {
+			echo '<br />Timezone Reduced to: '.$tzid.' Result of timezone object creation:';
+			print_r($tzobj);
+		}
+		return ($tzobj);
+	}
+/* ---------------------------------------------------------------------- */	
+function amr_get_timezone_cities () {
+	    $timezone_identifiers = DateTimeZone::listIdentifiers();
+/* Africa/Abidjan
+
+Africa/Accra
+
+Africa/Addis_Ababa
+
+Africa/Algiers
+
+Africa/Asmara
+
+*/
+
+	    foreach( $timezone_identifiers as $i=> $value ){
+			$c = explode("/",$value);//obtain continent,city
+			$tzcities[$value]['continent'] = $c[0];
+
+	        if (isset($c[1])) $tzcities[$c[1]] = $value;
+			else $tzcities[$c[0]] = $value;
+
+	     }
+		//print_r($tzcities);
+		return ($tzcities);
+	}
+/* ---------------------------------------------------------------------- */
+function amr_remove_folding ($data) {
+		$data = preg_replace ( "/[\r\n]+ /", "", $data );
+	    $data = preg_replace ( "/[\r\n]+/", "\n", $data );
+	return($data);
+}
+/* ---------------------------------------------------------------------- */
+// Replace RFC 2445 escape characters
+function amr_format_ical_text($value) {
+  $output = str_replace(
+    array('\\\\', '\;', '\,', '\N', '\n'),
+    array('\\',   ';',  ',',  "\n", "\n"),
+    $value
+  );
+  return $output;
+}
+/* ---------------------------------------------------------------------- */
+function amr_is_untimed($text) {
+/*  checks for VALUE=DATE */
+if (stristr ($text, 'VALUE=DATE') and (!stristr($text, 'VALUE=DATE-TIME'))) return (true);
+else return (false);
+}
+/* ---------------------------------------------------------------------- */
+function amr_track_last_mod($date) {
+global $amr_last_modified;
+if (empty ($amr_last_modified)) $amr_last_modified = date_create('0000-00-00 00:00:01');
+if ($date->format('c') > $amr_last_modified->format('c')) {
+	$amr_last_modified = clone ($date);
+	}
+}
+

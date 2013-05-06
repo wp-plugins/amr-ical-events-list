@@ -3,11 +3,11 @@ Contributors: anmari
 Tags: event, events, event calendar, events calendar, event manager, diary, schedule, ical, ics, ics calendar, ical feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, agenda, happenings, shows, concerts, conferences, courses, timetable, schedule
 
 Requires at least: 2.8
-Tested up to: 3.4.1
-Version: 4.0.30
+Tested up to: 3.5.1
+Version: 4.1
 Stable tag: trunk
 
-Event Calendar or Agenda list, add tab views, multiple ics files, handles any recurring event according to the ical spec. Very customisable listings or box calendars.  This version uses ics as input. Upgrade option for ics feed generation, taxonomies etc.  Tested with amr-events 3.0.9.
+Event Calendar or Agenda list, add tab views, combine multiple ics files, handles any recurring event according to the ical spec. Very customisable listings or box calendars.  This version uses ics as input. Upgrade option for ics feed generation, taxonomies etc.  
 
 == Description ==
 
@@ -89,6 +89,15 @@ amr-events has much additional functionality, including a taxonomy widget.
 
 
 == Changelog ==
+
+= Version 4.1 =
+*  Add:  as per request, added ability to parse custom fields such as Trumba's.  Filters etc added.  An example add on created to demonstrate.  See icalevents.com in a day or so for info.
+*  Fix: A minor styling bug occured if your ics file had categories on some events but not others. Fixed. 
+*  Add: As part of the fix, ability to filter ics events by category was added.
+*  Change: some minor tweaks made to default css to make default event list widget look a little better in twentytwelve default theme without breaking the look in twentyeleven.
+*  Add: added css tweak to remove underlining of abbr (microformat markup) classes.
+*  Fix: Change wp_remote_get to use filter to change http timeout instead of passing args. If args passed, then ALL must be passed.  Rather let wordpress determine the best default settings ad filter as needed.  Thanks to ob1chewy for pointing out. 
+*  Tested on wp 3.5.2 - alpha
 
 = Version 4.0.30 =
 *  Add: as per request, can now use as shortcode parameter: sort_later_events_first=1 to change the default sort.  By default listings start with events closest to start date and proceed into the future.   These will reverse sort.  They may be useful for past event listings - why does one want to show old events ?  Well they just do want to!

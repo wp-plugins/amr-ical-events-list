@@ -606,7 +606,7 @@ global $wp_locale,
 			}
 		
 		}
-		date_modify($dummydate, '+1 day');
+//		date_modify($dummydate, '+1 day');
 //		$day_name = ($liststyle=="smallcalendar") ? 
 //			$wp_locale->get_weekday_initial($wd) : 
 //			$wp_locale->get_weekday_abbrev($wd);

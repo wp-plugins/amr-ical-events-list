@@ -534,13 +534,16 @@ function amr_limit_by_day_of_week (&$datearray, $pby, $tz) {
 function amr_create_date_from_parts ($d, $tz) { /* create a date object from the parts array, with the TZ passed */
 	// wtf? new DateTime();
 	$datestring = $d['year'].'-'.$d['month'].'-'.$d['day'].' '.$d['hour'].':'.$d['minute'].':'.$d['second'];
-	try { $possdate =  new DateTime($datestring, $tz);
-		}
-	catch (Exception $e) {
-				echo '<b>'.__('Unexpected error creating date with string: '.$datestring,'amr-ical-events-list').'</b>';
-				echo $e->getMessage();
-				return (false);
-				}
+	
+	$possdate = amr_create_date_time ($datestring, $tz);
+	
+	//try { $possdate =  new DateTime($datestring, $tz);
+	//	}
+	//catch (Exception $e) {
+	//			echo '<b>'.__('Unexpected error creating date with string: '.$datestring,'amr-ical-events-list').'</b>';
+	//			echo $e->getMessage();
+	//			return (false);
+	//			}
 	// somehow this exception business not helping?
 	//if (isset($_GET['rdebug'])) { echo '<br />Datestring: '.$datestring.' as date: '.$possdate->format('c');}
 	// if date does not match date string, then reject
