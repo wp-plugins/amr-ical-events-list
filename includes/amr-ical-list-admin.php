@@ -98,8 +98,11 @@ function amr_check_timezonesettings () {
 			break;
 		$utctz= new DateTimeZone('UTC');
 		if (isset ($tr['ts']) ) {
-			try {$d = new DateTime( "@{$tr['ts']}",$utctz );}
-			catch(Exception $e) { break;}
+		
+			$d = amr_create_date_time ( "@{$tr['ts']}",$utctz );
+			//try {$d = new DateTime( "@{$tr['ts']}",$utctz );}
+			//catch(Exception $e) { break;}
+			
 			date_timezone_set ($d,$amr_globaltz );
 			printf('<li>'.__('Switches to %s on %s. GMT offset: %d', 'amr-ical-events-list').'</li>',
 				 $tr['isdst'] ? "DST" : "standard time",
@@ -298,6 +301,12 @@ function amrical_compropsoption($i) {
 		echo '<tfoot>'.$thead.'</tfoot>';
 		echo '<tbody>';
 		$desc = amr_set_helpful_descriptions();
+		
+		
+		//var_dump($listtype['compprop']);
+		$listtype['compprop'] = apply_filters('amr_ics_component_properties', $listtype['compprop']);  
+		// add arrays of field array('Column' => 0, 'Order' => 510, 'Before' => '', 'After' => '');
+		
 		foreach ( $listtype['compprop']  as $p => $pv )  {/* for each specification, eg: p= SUMMARY  */
 				$text = '<em class="desc">'.(!empty($desc[$p])? $desc[$p] : '').'</em>';
 				echo "\n\t\t".'<tr style="border-bottom: 0; "><td style="border-bottom: 0; "><b>'.$p.'</b></th>';
@@ -408,6 +417,7 @@ function amrical_componentsoption($i) {
 	<div class="toggle_container">';
 
 	$desc = amr_set_helpful_descriptions ();
+
 	if (! isset($listtype['component'])) echo 'No default components set';
 		else {
 			foreach ( $listtype['component'] as $c => $v ) {

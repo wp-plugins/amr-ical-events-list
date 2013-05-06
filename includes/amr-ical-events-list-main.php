@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.0.30');
+define('AMR_ICAL_LIST_VERSION', '4.1');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -734,7 +734,6 @@ function amr_derive_for_list_or_eventinfo (&$e) {  // should only derive the one
 	if (function_exists ('amr_subscribe_to_event')) {
 		$g = amr_subscribe_to_event($e);
 		if (!empty($g) ) $e['subscribeevent'] = $g;
-
 	}
 	if (function_exists ('amr_subscribe_to_event_series')) {
 		$g = amr_subscribe_to_event_series($e);
@@ -746,6 +745,7 @@ function amr_derive_for_list_or_eventinfo (&$e) {  // should only derive the one
 	if (function_exists ('amr_register_for_event') and !empty($e['id'])) {
 		$e['register'] = amr_register_for_event($e['id']);
 	}
+	$e = apply_filters('amr-derive-custom-fields',$e);
 	return ($e);
 
 }
@@ -1175,7 +1175,7 @@ function amr_generate_repeats(&$event, $astart, $aend, $limit) { /* takes an eve
 				if (isset ($event['UID'])) 	
 					$newevents[$event['UID']] = $event;
 				else 
-					if (WP_DEBUG) echo ('Debug msg: There is an invalid event.  It has no UID.');
+					amr_tell_admin_the_error('There is an invalid event.  It has no UID:'.print_r($event,true));
 				return ($newevents); /* possibly an undated, non repeating VTODO or Vjournal- no repeating to be done if no DTSTART, and no RDATE */
 			}
 			else {
@@ -2285,7 +2285,7 @@ function amrical_add_adminstyle() {
 }
 /* ------------------------------------------------------------------------------------------------------ */
 function amr_ical_exception_handler($exception) {
-
+	
   echo __("Uncaught exception: ", 'amr-ical-events-list') , $exception->getMessage(), "\n";
   _e('<br /><br />An error in the input data may prevent correct display of this page.  Please advise the administrator as soon as possible.', 'amr-ical-events-list');
 

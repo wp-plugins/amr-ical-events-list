@@ -1,1765 +1,2058 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: AmR iCal Events List 4.0.20\n"
+"Project-Id-Version: AmR iCal Events List 4.0.30\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-07 17:25+0100\n"
+"POT-Creation-Date: 2012-09-23 20:54+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Team Blogos <wordpress@blogos.dk>\n"
 "Language-Team: Team Blogos <wordpress@blogos.dk>\n"
+"Language: da_DK\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2;plural=n != 1;\n"
-"X-Poedit-Language: Danish\n"
-"X-Poedit-Country: DENMARK\n"
-"X-Poedit-SourceCharset: utf-8\n"
-"X-Poedit-KeywordsList: __;_e;_n:1,2;__ngettext:1,2;__ngettext_noop:1,2;_nc:4c,1,2;_nx:4c,1,2;_n_noop:1,2;_nx_noop:4c,1,2;_x:1,2c;_c;esc_html__;esc_html_e;esc_html_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;__ngettext:1,2;__ngettext_noop:1,2;"
+"_nc:4c,1,2;_nx:4c,1,2;_n_noop:1,2;_nx_noop:4c,1,2;_x:1,2c;_c;esc_html__;"
+"esc_html_e;esc_html_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c\n"
 "X-Poedit-Basepath: d:\\wordpress\\plugins\\amr-ical-events-list\n"
+"X-Generator: Poedit 1.5.3\n"
 "X-Poedit-SearchPath-0: d:\\wordpress\\plugins\\amr-ical-events-list\n"
 
-#: d:\wordpress\plugins\amr-ical-events-list/amr-ical-events-list.php:50
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2682
-msgid "Settings"
-msgstr "Opsætning"
+#: d:\wordpress\plugins\amr-ical-events-list/uninstall.php:22
+msgid "amr ical options deleted from database"
+msgstr "amr ical-indstillinger slettet fra databasen"
+
+#: d:\wordpress\plugins\amr-ical-events-list/uninstall.php:33
+msgid "amr ical cached ics files deleted "
+msgstr "De filer, amr ical har cachet, er slettet "
+
+#: d:\wordpress\plugins\amr-ical-events-list/uninstall.php:34
+msgid ""
+"Css files may also exist.  They and the css folder have not been deleted as "
+"they have been shared with other plugins."
+msgstr ""
+"CSS-filer findes måske også. De og CSS-mappen er ikke blevet slettet, da de "
+"er delt med andre plugins."
 
 #: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-calendar.php:49
 msgid "Go to events for this day only"
 msgstr "Gå kun til denne dags begivenheder"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:122
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:487
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:141
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:290
 msgid "Column"
 msgstr "Kolonne"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:123
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:490
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:142
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:293
 msgid "Order"
 msgstr "Rækkefølge"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:124
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:491
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:143
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:294
 msgid "Before"
 msgstr "Før"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:125
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:492
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:144
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:295
 msgid "After"
 msgstr "Efter"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:181
-msgid "A link to allow user to add the whole calendar to their google calendar."
-msgstr "Et link til at lade bruger tilføje hele kalenderen til sin Google-kalender."
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:202
+msgid ""
+"A link to allow user to add the whole calendar to their google calendar."
+msgstr ""
+"Et link til at lade bruger tilføje hele kalenderen til sin Google-kalender."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:182
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:203
 msgid "A link to allow user to refetch an ics file"
 msgstr "Et link, der tillader bruger at hente en ICS-fil igen"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:183
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:204
 msgid "The time the ics file was last modified"
 msgstr "Tidspunktet, ICS-filen senest blev ændret"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:185
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:206
 msgid "WordPress post title or ICS SUMMARY"
 msgstr "WordPress-indlægtstitel eller ICS-resumé"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:186
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:207
 msgid "WordPress content or ICS description"
 msgstr "WordPress-indhold eller ICS-beskrivelse"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:187
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:208
 msgid "WordPress excerpt"
 msgstr "WordPress-uddrag"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:188
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:209
 msgid "WordPress post thumbnail"
 msgstr "WordPress-indlægsminiature"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:189
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:210
 msgid "Address"
 msgstr "Adresse"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:190
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:211
 msgid "Link to map"
 msgstr "Link til kort"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:191
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:212
 msgid "Link to add event to a google calendar"
 msgstr "Link til at tilføje begivenhed til en Google Kalender"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:192
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:213
 msgid "Link to single event ics file"
 msgstr "Link til ICS-fil med enkeltbegivenheder"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:193
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:214
 msgid "Link to recurring event series ics file"
 msgstr "Link til ICS-fil med gentagne begivenhedsrækker"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:194
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:215
 msgid "The latitude and longitude"
 msgstr "Bredde- og højdegrad"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:195
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:216
 msgid "Links to specified ATTACHMENTS (ics)"
 msgstr "Links til angivne Vedhæftede filer (ICS)"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:197
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:218
 msgid "WordPress or ics file categories "
 msgstr "WordPress- eller ICS-filkategorier"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:198
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:219
 msgid "ics class"
 msgstr "ICS-klasse"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:199
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:220
 msgid "ics comment"
 msgstr "ICS-kommentar"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:201
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:222
 msgid "ics event priority"
 msgstr "ICS-begivenhedsprioritet"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:203
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:224
 msgid "ics event status"
 msgstr "ICS-begivenhedsstatus"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:204
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:225
 msgid "The date of instance of a repeating date, or the event date"
 msgstr "Dato for begivenhed i tilbagevendende begivenhed eller for begivenhed"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:205
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:226
 msgid "The time of instance of a repeating date, or the event date"
-msgstr "Tidspunkt for begivenhed i tilbagevendende begivenhed eller for begivenhed"
+msgstr ""
+"Tidspunkt for begivenhed i tilbagevendende begivenhed eller for begivenhed"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:206
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:227
 msgid "The date an event instance ends.  Blank if same as event date "
-msgstr "Datoen, en enkeltbegivenhed ender. Tom, hvis samme som begivenhedsdatoen "
+msgstr ""
+"Datoen, en enkeltbegivenhed ender. Tom, hvis samme som begivenhedsdatoen "
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:207
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:228
 msgid "The time an event instance ends. "
 msgstr "Tidspunktet, en enkeltbegivenhed i gentagen begivenhed ender."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:208
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:229
 msgid "The original or first event date of a recurring series"
-msgstr "Datoen for den oprindelige eller første begivenhed i en gentagen begivenhedsserie"
+msgstr ""
+"Datoen for den oprindelige eller første begivenhed i en gentagen "
+"begivenhedsserie"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:210
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:231
 msgid "The original or first event's end date of a recurring series"
-msgstr "Slutdato for den oprindelige eller første begivenhed i en tilbagevende serie"
+msgstr ""
+"Slutdato for den oprindelige eller første begivenhed i en tilbagevende serie"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:211
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:232
 msgid "The due date of a task."
 msgstr "En opgaves termin"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:212
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:233
 msgid "The duration of an event."
 msgstr "Begivenhedens længde"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:213
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:234
 msgid "Says \"all day\" (translated) if the event has full days."
 msgstr "Siger \"hele dagen\" (oversat), hvis begivenheden tager hele dagen."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:214
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:235
 msgid "If a task is completed."
 msgstr "Hvis en opgave er udført."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:215
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:236
 msgid "Show busy (translated) if the freebusy component is in use."
 msgstr "Vis optaget (oversat), hvis fri-optaget-komponenten anvendes."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:218
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:240
 msgid "Users who have accepted."
 msgstr "Brugere, der har accepteret."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:220
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:242
+msgid ""
+"Add register button. Registration settings can be set as global defaults or "
+"per event."
+msgstr ""
+"Tilføj registreringsknap. Indstillinger for registrering kan sættes som "
+"globale standarder eller for hvert enkelt event."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:243
 msgid "Links to indicate if attending."
 msgstr "Links til at angive, om man deltager."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:221
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:244
 msgid "The contact person if available."
 msgstr "Eventuel kontaktperson."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:222
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:245
 msgid "The author of the event."
 msgstr "Ophavsmand til begivenheden."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:223
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:246
 msgid "Users who are attending."
 msgstr "Brugere, der deltager."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:224
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:247
 msgid "The unique id of a recurrence instance or exception."
-msgstr "Unik id for en enkeltbegivenhed i tilbagevende begivenhed eller for en undtagelse."
+msgstr ""
+"Unik id for en enkeltbegivenhed i tilbagevende begivenhed eller for en "
+"undtagelse."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:226
-msgid "The events url as provided by ics file, or the wordpress event permalink."
-msgstr "Begivenhedens URL som angivet af ICS-filen, eller WordPress-permalink for begivenheden."
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:249
+msgid ""
+"The events url as provided by ics file, or the wordpress event permalink."
+msgstr ""
+"Begivenhedens URL som angivet af ICS-filen, eller WordPress-permalink for "
+"begivenheden."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:227
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:250
 msgid "The unique identifier of the event."
 msgstr "Unik id for begivenheden."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:228
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:251
 msgid "Dates excluded from the recurring series"
 msgstr "Datoer udeladt fra tilbagevendende serie"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:229
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:252
 msgid "Exclusion rule - no longer in spec"
 msgstr "Udeladelsesregel &ndash; ikke længere med i specifikationen"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:230
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:253
 msgid "Individual dates on which event is to be repeated"
 msgstr "Enkeltdatoer, som begivenheden skal gentages på"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:231
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:254
 msgid "The rule for the recurrence of the event."
 msgstr "Regel for begivenhedens gentagelse."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:232
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:255
 msgid "Alarm action."
 msgstr "Alarmhandling."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:233
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:256
 msgid "Alarm repeat."
 msgstr "Gentagelse af alarm."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:234
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:257
 msgid "Alarm trigger."
 msgstr "Udløser af alarm."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:235
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:258
 msgid "Date event created."
 msgstr "Begivenhedsdato oprettet."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:236
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:259
 msgid "Date event published."
 msgstr "Begivenhedsdato udgivet."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:237
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:260
 msgid "Modification level of event."
 msgstr "Begivenhedens ændringsniveau."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:238
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:261
 msgid "Date event last modified."
 msgstr "Begivenhedsdato sidst ændret."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:272
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:262
+msgid "Events in an ics file"
+msgstr "Begivenheder i en ICS-fil"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:263
+msgid "Items in an ics file that indicate busy or available time slots"
+msgstr ""
+"Optegnelser i en ICS-fil, som angiver tidsrum, hvor man er optaget eller "
+"tilgængelig"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:264
+msgid "Todo Task Items in an ics file"
+msgstr "Gøremål i en opgaveliste i en ICS-fil"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:265
+msgid "Journal notes in an ics file - no date or time"
+msgstr "Dagbogsnoter i en ICS-fil – ingen dato eller klokkeslæt"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:352
 msgid "No events found within criteria"
 msgstr "Ingen begivenheder opfyldte kriterierne"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:273
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:1417
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:353
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:1384
 msgid "Look for more"
 msgstr "Se efter mere"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:274
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:354
 msgid "Look for previous"
 msgstr "Se efter tidligere"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:275
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1063
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:355
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1149
 msgid "Reset"
 msgstr "Nulstil"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:310
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:369
 msgid "Default"
 msgstr "Standard"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:311
-msgid "A default calendar list. This one set to tables with lists in the cells.  Usually needs the css file enabled. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. "
-msgstr "En standard-kalenderliste. Denne er sat op med tabeller med lister i celler. Kræver normalt, at CSS-filen er aktiveret. Hvis du tilpasser den, foreslår jeg, at du ændrer denne beskrivelse som et praj om, hvordan/hvorfor den er tilpasset, som den er. "
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:370
+msgid ""
+"A default calendar list. This one set to tables with lists in the cells.  "
+"Usually needs the css file enabled. If you configure it, I suggest changing "
+"this description to aid your memory of how/why it is configured the way that "
+"it is. "
+msgstr ""
+"En standard-kalenderliste. Denne er sat op med tabeller med lister i celler. "
+"Kræver normalt, at CSS-filen er aktiveret. Hvis du tilpasser den, foreslår "
+"jeg, at du ændrer denne beskrivelse som et praj om, hvordan/hvorfor den er "
+"tilpasset, som den er. "
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:330
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:389
 msgid "Year"
 msgstr "År"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:331
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:390
 msgid "Quarter"
 msgstr "Kvartal"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:332
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:391
 msgid "Astronomical Season"
 msgstr "Astronomisk årstid"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:333
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:392
 msgid "Traditional Season"
 msgstr "Traditionel årstid"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:334
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:393
 msgid "Western Zodiac"
 msgstr "Vestlig stjernekreds"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:335
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:394
 msgid "Month"
 msgstr "Måned"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:336
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:395
 msgid "Week"
 msgstr "Uge"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:337
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:396
 msgid "Day"
 msgstr "Dag"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:351
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:403
 msgid "When"
 msgstr "Hvornår"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:352
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:404
 msgid "What"
 msgstr "Hvad"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:353
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:405
 msgid "Where"
 msgstr "Hvor"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:404
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:452
 msgid "More info: "
 msgstr "Flere oplysninger: "
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:418
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:466
 msgid " to"
 msgstr " til"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:498
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:472
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:544
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:527
 msgid "Show in Google map"
 msgstr "Vis på Google-kort"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:505
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:479
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:551
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:534
 msgid "Show location in Google Maps"
 msgstr "Vis sted på Google Maps"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:519
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:564
 msgid "On Tour"
 msgstr "På turné"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:520
-msgid "Default setting uses the original table with lists in the cells. It is grouped by month. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. "
-msgstr "Standardindstillingen bruger den oprindelige tabel med lister i cellerne. Den er grupperet efter måneder. Hvis du tilpasser den, foreslår jeg, at du ændrer denne beskrivelse som et praj om, hvordan/hvorfor den er tilpasset, som den er. "
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:565
+msgid ""
+"Default setting uses the original table with lists in the cells. It is "
+"grouped by month. If you configure it, I suggest changing this description "
+"to aid your memory of how/why it is configured the way that it is. "
+msgstr ""
+"Standardindstillingen bruger den oprindelige tabel med lister i cellerne. "
+"Den er grupperet efter måneder. Hvis du tilpasser den, foreslår jeg, at du "
+"ændrer denne beskrivelse som et praj om, hvordan/hvorfor den er tilpasset, "
+"som den er. "
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:528
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:573
 msgid "Venue"
 msgstr "Sted"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:529
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:574
 msgid "Description"
 msgstr "Beskrivelse"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:533
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:578
 msgid "Timetable"
 msgstr "Tidsplan"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:534
-msgid "Default setting uses the original table with lists in the cells. It is grouped by day. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. "
-msgstr "Standardindstillingen bruger den oprindelige tabel med lister i cellerne. Den er grupperet efter dage. Hvis du tilpasser den, foreslår jeg, at du ændrer denne beskrivelse som et praj om, hvordan/hvorfor den er tilpasset, som den er. "
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:579
+msgid ""
+"Default setting uses the original table with lists in the cells. It is "
+"grouped by day. If you configure it, I suggest changing this description to "
+"aid your memory of how/why it is configured the way that it is. "
+msgstr ""
+"Standardindstillingen bruger den oprindelige tabel med lister i cellerne. "
+"Den er grupperet efter dage. Hvis du tilpasser den, foreslår jeg, at du "
+"ændrer denne beskrivelse som et praj om, hvordan/hvorfor den er tilpasset, "
+"som den er. "
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:545
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:590
 msgid "Date"
 msgstr "Dato"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:546
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:591
 msgid "Class"
 msgstr "Klasse"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:547
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:592
 msgid "Room"
 msgstr "Rum"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:552
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:597
 msgid "Widget"
 msgstr "Widget"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:553
-msgid "The new default setting for widgets uses lists for the table rows. Good for themes that cannot cope with tables in the sidebar. No grouping. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. "
-msgstr "Den nye standardindstilling for widgets bruger lister som tabelrækker. Så fungerer det også med temaer, som ikke kan vise tabeller i sidepanelerne. Ingen gruppering. Hvis du tilpasser den, foreslår jeg, at du ændrer denne beskrivelse som et praj om, hvordan/hvorfor den er tilpasset, som den er. "
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:598
+msgid ""
+"The new default setting for widgets uses lists for the table rows. Good for "
+"themes that cannot cope with tables in the sidebar. No grouping. If you "
+"configure it, I suggest changing this description to aid your memory of how/"
+"why it is configured the way that it is. "
+msgstr ""
+"Den nye standardindstilling for widgets bruger lister som tabelrækker. Så "
+"fungerer det også med temaer, som ikke kan vise tabeller i sidepanelerne. "
+"Ingen gruppering. Hvis du tilpasser den, foreslår jeg, at du ændrer denne "
+"beskrivelse som et praj om, hvordan/hvorfor den er tilpasset, som den er. "
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:574
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:619
 msgid "HTML5 Exp 1"
 msgstr "HTML5 Eks. 1"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:575
-msgid "Experimental new table style aiming to use html5 tags, but still within a table structure to allow columns. One cannot have two levels of grouping with this option as tbody cannot be nested. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. "
-msgstr "En eksperimental, ny tabel beregnet på brug af HTML5-tags, men stadig i en tabelstruktur, så der kan bruges kolonner. Man kan ikke have to grupperingsniveauer med denne opsætning, fordi tbody ikke kan indlejres. Hvis du tilpasser den, foreslår jeg, at du ændrer denne beskrivelse som et praj om, hvordan/hvorfor den er tilpasset, som den er. "
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:620
+msgid ""
+"Table style aiming to use html5 tags, but still within a table structure to "
+"allow columns. One cannot have two levels of grouping with this option as "
+"tbody cannot be nested. If you configure it, I suggest changing this "
+"description to aid your memory of how/why it is configured the way that it "
+"is. "
+msgstr ""
+"En tabel-style beregnet på brug af HTML5-tags, men stadig i en "
+"tabelstruktur, så der kan bruges kolonner. Man kan ikke have to "
+"grupperingsniveauer med denne opsætning, fordi tbody ikke kan anvendes inden "
+"i en tbody-struktur. Hvis du tilpasser den, foreslår jeg, at du ændrer denne "
+"beskrivelse som et praj om, hvordan/hvorfor den er tilpasset, som den er. "
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:606
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:651
 msgid "HTML5 Exp 2"
 msgstr "HTML5 Eks. 2"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:607
-msgid "An HTML5 test option that tries to be leaner. You can have two level of grouping with this option. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. "
-msgstr "En HTML5-testopsætning, som forsøger at være enklere. Man kan have to grupperingsniveauer med denne indstilling. Hvis du tilpasser den, foreslår jeg, at du ændrer denne beskrivelse som et praj om, hvordan/hvorfor den er tilpasset, som den er. "
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:652
+msgid ""
+"An HTML5 test option that tries to be leaner. You can have two level of "
+"grouping with this option. If you configure it, I suggest changing this "
+"description to aid your memory of how/why it is configured the way that it "
+"is. "
+msgstr ""
+"En HTML5-testopsætning, som forsøger at være enklere. Man kan have to "
+"grupperingsniveauer med denne indstilling. Hvis du tilpasser den, foreslår "
+"jeg, at du ændrer denne beskrivelse som et praj om, hvordan/hvorfor den er "
+"tilpasset, som den er. "
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:651
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:696
 msgid "EventInfo"
 msgstr "Begivenhedsinfo"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:652
-msgid "For displaying additional event info on posts created as events. The summary and description are switched off as these are the post title and the post content. Calendar properties and groupings are also not relevant. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. "
-msgstr "Til visning af yderligere begivenhedsinformationer på indlæg oprettet som begivenheder. Resumé og beskrivelse vises ikke, eftersom de bruges som indlægstitel og indlægsindhold. Kalenderegenskaber og grupperinger er heller ikke relevante. Hvis du tilpasser den, foreslår jeg, at du ændrer denne beskrivelse som et praj om, hvordan/hvorfor den er tilpasset, som den er. "
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:697
+msgid ""
+"For displaying additional event info on posts created as events. The summary "
+"and description are switched off as these are the post title and the post "
+"content. Calendar properties and groupings are also not relevant. If you "
+"configure it, I suggest changing this description to aid your memory of how/"
+"why it is configured the way that it is. "
+msgstr ""
+"Til visning af yderligere begivenhedsinformationer på indlæg oprettet som "
+"begivenheder. Resumé og beskrivelse vises ikke, eftersom de bruges som "
+"indlægstitel og indlægsindhold. Kalenderegenskaber og grupperinger er heller "
+"ikke relevante. Hvis du tilpasser den, foreslår jeg, at du ændrer denne "
+"beskrivelse som et praj om, hvordan/hvorfor den er tilpasset, som den er. "
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:683
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:728
 msgid "Small-Calendar"
 msgstr "Lille kalender"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:684
-msgid "The new default setting for calendar widgets. No grouping, No headings. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. "
-msgstr "Den nye standardopsætning for kalenderwidgets. Ingen gruppering, ingen overskrifter. Hvis du tilpasser den, foreslår jeg, at du ændrer denne beskrivelse som et praj om, hvordan/hvorfor den er tilpasset, som den er. "
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:729
+msgid ""
+"The new default setting for calendar widgets. No grouping, No headings. If "
+"you configure it, I suggest changing this description to aid your memory of "
+"how/why it is configured the way that it is. "
+msgstr ""
+"Den nye standardopsætning for kalenderwidgets. Ingen gruppering, ingen "
+"overskrifter. Hvis du tilpasser den, foreslår jeg, at du ændrer denne "
+"beskrivelse som et praj om, hvordan/hvorfor den er tilpasset, som den er. "
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:711
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:757
 msgid "Large-Calendar"
 msgstr "Stor kalender"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:712
-msgid "The new default setting for a large monthly calendar. No grouping, No headings. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is."
-msgstr "De nye standardindstillinger for en stor månedskalender. Ingen grupperinger, ingen overskrifter. Hvis du tilpasser dem, foreslår jeg, at du ændrer denne beskrivelse som et praj om, hvordan/hvorfor de er tilpasset, som de er."
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:758
+msgid ""
+"The new default setting for a large monthly calendar. No grouping, No "
+"headings. If you configure it, I suggest changing this description to aid "
+"your memory of how/why it is configured the way that it is."
+msgstr ""
+"De nye standardindstillinger for en stor månedskalender. Ingen grupperinger, "
+"ingen overskrifter. Hvis du tilpasser dem, foreslår jeg, at du ændrer denne "
+"beskrivelse som et praj om, hvordan/hvorfor de er tilpasset, som de er."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:741
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:787
 msgid "Testing"
 msgstr "Test"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:742
-msgid "A test option with lots of fields switched on. It has 2 levels of grouping - this is fine so long as the html in use can be nested. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. "
-msgstr "En testopsætning med et stort antal felter slået til. Den har to grupperingsniveauer &ndash; det er fint, så længe der bruges HTML, der kan indlejres. Hvis du tilpasser den, foreslår jeg, at du ændrer denne beskrivelse som et praj om, hvordan/hvorfor den er tilpasset, som den er. "
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:788
+msgid ""
+"A test option with lots of fields switched on. It has 2 levels of grouping - "
+"this is fine so long as the html in use can be nested. If you configure it, "
+"I suggest changing this description to aid your memory of how/why it is "
+"configured the way that it is. "
+msgstr ""
+"En testopsætning med et stort antal felter slået til. Den har to "
+"grupperingsniveauer &ndash; det er fint, så længe der bruges HTML, der kan "
+"indlejres. Hvis du tilpasser den, foreslår jeg, at du ændrer denne "
+"beskrivelse som et praj om, hvordan/hvorfor den er tilpasset, som den er. "
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:791
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:837
 msgid "Weekly Horizontal"
 msgstr "Ugentligt, horisontalt"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:793
-msgid "Like the large calendar, but different - grouped by week and the weeks continue across months.  Really 2 weeks should be displayed a time."
-msgstr "Som den store kalender, men anderledes &ndash; grupperet efter uger, og ugerne fortsætter over månedsskifter. Mindst to uger bør vises ad gangen!"
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:839
+msgid ""
+"Like the large calendar, but different - grouped by week and the weeks "
+"continue across months.  Really 2 weeks should be displayed a time."
+msgstr ""
+"Som den store kalender, men anderledes &ndash; grupperet efter uger, og "
+"ugerne fortsætter over månedsskifter. Mindst to uger bør vises ad gangen!"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:794
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:826
-msgid " If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. "
-msgstr " Hvis du tilpasser den, foreslår jeg, at du ændrer denne beskrivelse som et praj om, hvordan/hvorfor den er tilpasset, som den er. "
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:840
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:872
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:916
+msgid ""
+" If you configure it, I suggest changing this description to aid your memory "
+"of how/why it is configured the way that it is. "
+msgstr ""
+" Hvis du tilpasser den, foreslår jeg, at du ændrer denne beskrivelse som et "
+"praj om, hvordan/hvorfor den er tilpasset, som den er. "
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:823
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:869
 msgid "Weekly Vertical"
 msgstr "Ugentligt, vertikalt"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:825
-msgid "Grouped by day, but only showing 1 week. 3 columns, with excerpt not full description. No icons."
-msgstr "Grupperet efter dage, men viser kun én uge. Tre kolonner, med uddrag, ikke fuld beskrivelse. Ingen ikoner."
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:871
+msgid ""
+"Grouped by day, but only showing 1 week. 3 columns, with excerpt not full "
+"description. No icons."
+msgstr ""
+"Grupperet efter dage, men viser kun én uge. Tre kolonner, med uddrag, ikke "
+"fuld beskrivelse. Ingen ikoner."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1009
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:913
+msgid "Event Master"
+msgstr "Begivenhedsmaster"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:915
+msgid "Grouped by category, intended to be used with no recurrences"
+msgstr "Grupperet efter kategori; ikke til brug med gentagelser"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1093
 msgid "Resetting options..."
 msgstr "Nulstiller indstillinger ..."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1012
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1096
 msgid "Options Deleted..."
 msgstr "Indstillinger slettet ..."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1013
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1097
 msgid "Option was not saved before or error deleting option..."
-msgstr "Indstilling blev ikke gemt før, eller fejl i forsøg på slette indstilling &hellip;"
+msgstr ""
+"Indstilling blev ikke gemt før, eller fejl i forsøg på slette indstilling "
+"&hellip;"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1043
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1127
 msgid " Converting option key to lowercase"
 msgstr " Konverterer nøgler i Indstillinger til små bogstaver"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1062
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1148
 msgid "Look for Previous"
 msgstr "Se efter tidligere"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1083
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1156
+msgid "Busy"
+msgstr "Optaget"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1179
 msgid "Daily"
 msgstr "Daglig"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1084
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1180
 msgid "Weekly"
 msgstr "Ugentlig"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1085
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1181
 msgid "Monthly"
 msgstr "Månedlig"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1086
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1182
 msgid "Yearly"
 msgstr "Årlig"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1087
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1183
 msgid "Hourly"
 msgstr "Hver time"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1088
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1184
 msgid "on certain dates"
 msgstr "på visse dage"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1089
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1185
 msgid "day"
 msgstr "dag"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1090
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1186
 msgid "week"
 msgstr "uge"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1091
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1187
 msgid "month"
 msgstr "måned"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1092
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1188
 msgid "year"
 msgstr "år"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1093
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-config.php:1189
 msgid "hour"
 msgstr "time"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:9
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:10
 msgid "Minimum Php version "
 msgstr "Minimum PHP-version "
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:13
-msgid "The <a href=\"http://au.php.net/manual/en/class.datetime.php\"> DateTime Class </a> must be enabled on your system for this plugin to work. They may need to be enabled at compile time.  The class should exist by default in PHP version 5.2."
-msgstr "<a href=\"http://au.php.net/manual/en/class.datetime.php\">DateTime Class</a> skal være aktiveret på dit system, hvis dette plugin skal virker. Måske skal klassen være aktiveret, når PHP kompileres. Klassen bør som standard være med i PHP-version 5.2.should exist by default in PHP version 5.2."
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:14
+msgid ""
+"The <a href=\"http://au.php.net/manual/en/class.datetime.php\"> DateTime "
+"Class </a> must be enabled on your system for this plugin to work. They may "
+"need to be enabled at compile time.  The class should exist by default in "
+"PHP version 5.2."
+msgstr ""
+"<a href=\"http://au.php.net/manual/en/class.datetime.php\">DateTime Class</"
+"a> skal være aktiveret på dit system, hvis dette plugin skal virker. Måske "
+"skal klassen være aktiveret, når PHP kompileres. Klassen bør som standard "
+"være med i PHP-version 5.2.should exist by default in PHP version 5.2."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:44
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:54
 #, php-format
 msgctxt " the 11, 12 or 13th "
 msgid "%s th"
 msgstr "%s."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:51
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:61
 #, php-format
 msgctxt " the twenty first etc "
 msgid "%s st"
 msgstr "%s."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:54
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:64
 #, php-format
 msgctxt " the second "
 msgid "%s nd"
 msgstr "%s."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:57
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:67
 #, php-format
 msgctxt " the third "
 msgid "%s rd"
 msgstr "%s."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:60
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:70
 #, php-format
 msgctxt " the nth "
 msgid "%s th"
 msgstr "%s."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:68
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:78
 msgid "the first"
 msgstr "den første"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:70
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:80
 msgid "every"
 msgstr "alle"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:72
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:82
 msgid "the last"
 msgstr "den sidste"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:74
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:84
 #, php-format
 msgid "the %s last"
 msgstr "den %s sidste"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:76
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:86
 #, php-format
 msgid "the %s"
 msgstr "den %s"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:112
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:122
 msgid "Monday"
 msgstr "Mandag"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:114
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:124
 msgid "Tuesday"
 msgstr "Tirsdag"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:116
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:126
 msgid "Wednesday"
 msgstr "Onsdag"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:118
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:128
 msgid "Thursday"
 msgstr "Torsdag"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:120
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:130
 msgid "Friday"
 msgstr "Fredag"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:122
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:132
 msgid "Saturday"
 msgstr "Lørdag"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:124
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:134
 msgid "Sunday"
 msgstr "Søndag"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:179
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:303
+#, php-format
+msgid "Error creating custom css directory %s. Please check permissions"
+msgstr ""
+"Fejl i oprettelse af brugerdefineret CSS-mappe %s. Tjek venligst rettigheder"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:325
+msgid "Could not copy file."
+msgstr "Kunne ikke kopiere fil."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:1357
+#, php-format
+msgid "Unable to load or cache ical calendar %s"
+msgstr "Kan ikke indlæse eller cache iCa-kalenderen %s"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:1365
+#, php-format
+msgid "Error finding or parsing ical calendar %s"
+msgstr "Fejl i forsøg på at finde eller parse iCa-kalenderen %s"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:1401
+msgid "This feature requires the plugin amr-events"
+msgstr "Den ønskede funktion kræver pluginnet amr-events"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:1402
+msgid "Get it here"
+msgstr "Få det her"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:1529
+msgid "No url entered - did you want events from posts ?"
+msgstr "Ingen URL indtastet &ndash; ønkede du begivenheder fra indlæg?"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:1562
+msgid "No ical components requested for display"
+msgstr "Ingen visningsanmodninger for iCal-komponenter"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:1733
+#, php-format
+msgid "Invalid Ical URL %s"
+msgstr "Ugyldig iCal-URL %s"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:1814
+#, php-format
+msgid ""
+"System error - event list type %s missing - please inform administrator."
+msgstr ""
+"Systemfejl - begivenhedslistetypen %s mangler - informér venligst "
+"administratoren."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:1816
+msgid "Now using an available list type to list events"
+msgstr ""
+"Bruger nu en tilgængelig listetype til at lave liste med begivenhederne"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:1952
+msgid "Invalid Start Date"
+msgstr "Ugyldig startdato"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2289
+msgid "Uncaught exception: "
+msgstr "Ubehandlet undtagelse: "
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2290
+msgid ""
+"<br /><br />An error in the input data may prevent correct display of this "
+"page.  Please advise the administrator as soon as possible."
+msgstr ""
+"<br /><br />En fejl i input-data kan forhindre en korrekt visning af denne "
+"side. Orientér venligst administrator så hurtigt som muligt."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2297
+msgid ""
+"Your existing saved list types have been converted.  If you wish to return "
+"to the earlier version of the plugin, you will have to reset the list types "
+"and reapply your changes. Or use your DB backup to set the amr-ical-events-"
+"list option back to previous version. You do have regular backups right? "
+msgstr ""
+"Dine eksisterende gemte listetyper er blevet konverteret. Hvis du ønsker at "
+"vende tilbage til den tidligere version af pluginnet, skal du nulstille "
+"listetyperne og indtaste dine ændringer igen. Eller bruge din "
+"databasesikkerhedskopi til at føre amr-ical-events-list-indstillingerne "
+"tilbage til den tidligere version. Du tager regelmæssige sikkerhedskopier, "
+"ikke?"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2326
+msgid "General listing Settings"
+msgstr "Generelle listeindstillinger"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2328
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:16
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-plugin-form-html.php:48
+msgid "Settings"
+msgstr "Opsætning"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2329
+msgid "List Type Settings"
+msgstr "Listtype-indstillinger"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2330
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:27
+msgid "Documentation"
+msgstr "Dokumentation"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-groupings.php:6
+msgid "Show all"
+msgstr "Vis alle"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-groupings.php:7
+msgid "Hide all"
+msgstr "Skjul alle"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:30
+msgid "Support"
+msgstr "Support"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:33
+msgid "Videos"
+msgstr "Videoer"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:36
+msgid "Rate it at WP"
+msgstr "Bedøm det på WP"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:38
+msgid "Plugin feed"
+msgstr "Plugin-feed"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:43
+msgid "Forum feed"
+msgstr "Forumfeed"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:67
+#, php-format
+msgid "Your timezone db version is: %s"
+msgstr "Versionen af din tidszonedatabase er: %s"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:69
+msgid "Plugin cannot determine timezonedb version in php &lt; 5.3."
+msgstr "Kan ikke finde version på tidszonedatabasen i PHP &lt; 5.3."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:72
+msgid "Php timezonedb versions"
+msgstr "Versioner af PHP-tidszonedatabaser"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:74
+msgid "Info on what changes are in which timezonedb version"
+msgstr ""
+"Oplysninger om, hvilke ændringer der er foretaget i hvilken "
+"tidszonedatabaseversioner"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:77
+msgid "No global timezone - is there a problem here? "
+msgstr "Ingen global tidszone &ndash; er der et problem her? "
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:80
+msgid "Go to settings"
+msgstr "Gå til opsætning"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:84
+msgid "You are using the \"old\" gmt_offset setting "
+msgstr "Du bruger den \"gamle\" gmt_offset-indstilling "
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:85
+msgid "Consider changing to the more accurate timezone setting"
+msgstr "Overvej at skifte til den mere præcise tidszoneindstilling"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:90
+msgid "The plugin thinks your timezone is: "
+msgstr "Pluginnet har bestemt din tidszone som: "
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:94
+msgid "The current UTC offset for that timezone is: "
+msgstr "Den aktuelle UTC-forskel for denne tidszone er: "
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:104
+#, php-format
+msgid "Switches to %s on %s. GMT offset: %d"
+msgstr "Skifter til %s den %s. GMT-tidsforskel: %d"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:110
+msgid "Current time (unlocalised): "
+msgstr "Aktuel tid (ikke-lokaliseret): "
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:120
+msgid "Save the settings"
+msgstr "Gem opsætning"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:122
+msgid "Update"
+msgstr "Opdatér"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:127
+msgid "Uninstall the plugin and delete the options from the database."
+msgstr "Afinstallér pluginnet og slet indstillingerne fra databasen."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:129
+msgid "Uninstall"
+msgstr "Afinstallér"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:134
+msgid "Warning: This will reset ALL the listing options immediately."
+msgstr ""
+"Advarsel: Dette vil nulstille <em>alle</em> indstillinger for lister med det "
+"samme."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:137
+msgid "Reset all listing options"
+msgstr "Nulstil alle indstillinger for lister"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:152
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1117
+msgid "Manage Event List Types"
+msgstr "Håndtér iCal-begivenhedstyper"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:167
+msgid "Configure event list type: "
+msgstr "Konfigurér begivenhedslistetype: "
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:174
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:618
+msgid "Preview the list using a calendar page."
+msgstr "Preview listen på en kalenderside."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:175
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:619
+msgid "Preview"
+msgstr "Preview"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:181
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:673
+msgid "Saving...."
+msgstr "Gemmer ..."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:183
+msgid "Lists saved"
+msgstr "Lister gemt"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:184
+msgid "No change to options or unexpected error in saving"
+msgstr "Ingen ændringer i indstillinger eller en uventet fejl under gemning"
+
+# TJEK
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:200
+msgid "Check for lists to delete"
+msgstr "Tjek for lister, der skal slettes"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:207
+#, php-format
+msgid "List %s will be deleted"
+msgstr "Liste %s vil blive slettet"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:222
+msgid "Column Headings:"
+msgstr "Kolonneoverskrifter:"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:248
+msgid "Calendar properties"
+msgstr "Egenskaber for kalender"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:274
+msgid "Specify fields to show:"
+msgstr "Vælg felter at vise:"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:277
+msgid "Note: a 0 (zero) in column = do not show that field."
+msgstr "Bemærk: Et 0 (nul) i kolonnen betyder, at feltet ikke skal vises."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:279
+msgid "Uppercase fields are those defined in the iCal specification."
+msgstr "Felter med store bogstaver er defineret i iCal-specifikationen."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:283
+msgid ""
+"Lowercase fields are additional fields added by this plugin and derived from "
+"the iCal fields for your convenience."
+msgstr ""
+"Felter med små bogstaver er ekstra felter tilføjet af dette plugin og udledt "
+"af iCal-felterne for at gøre det lettere for dig."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:284
+msgid ""
+"Fields show if \"column\" > 0 and if there is data available in your event "
+"or ics file."
+msgstr ""
+"Felter vises, hvis \"kolonne\" > 0, og hvis der er tilgængelige data i din "
+"begivenhed eller ICS-fil."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:289
+msgid "Field"
+msgstr "Felt"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:291
+msgid "(0 to hide)"
+msgstr "(0 for at skjule)"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:333
+msgid "Define grouping:"
+msgstr "Definér grupperinger:"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:337
+msgid "Possible Groupings"
+msgstr "Mulige grupperinger"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:337
+msgid "Level"
+msgstr "Niveau"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:349
+msgid "No grouping"
+msgstr "Ingen grupperinger"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:358
+msgid "Taxonomies"
+msgstr "Taksonomier"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:358
+msgid "(Requires amr-events)"
+msgstr "(Kræver amr-events)"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:377
+msgid "Date based"
+msgstr "Datobaseret"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:377
+msgid "(See also date and time formats)"
+msgstr "(Se også formater for dato og klokkeslæt)"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:404
+msgid "Select components to show:"
+msgstr "Vælg komponenter at vise:"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:406
+msgid "Wikipedia entry describing components"
+msgstr "Wikipediaopslag, der beskriver komponenterne"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:428
+msgid "Define maximums:"
+msgstr "Definér maksimummer:"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:431
+msgid "Note cache times are in hours"
+msgstr "Bemærk, at cachetider er i timer"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:471
+msgid "Configure another list type: "
+msgstr "Konfigurér ny listetype: "
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:484
+msgid "Return to manage list types"
+msgstr "Tilbage til håndtering af listetyper"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:518
+msgid "Please use numbers > 1"
+msgstr "Brug venligst tal > 1"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:561
+#, php-format
+msgid "Imported settings for list %s invalid - not saved"
+msgstr ""
+"Importerede indstillinger for listen %s er ugyldige &ndash; blev ikke gemt"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:567
+#, php-format
+msgid "List %s will be saved with imported data"
+msgstr "Listen %s vil blive gemt med importerede data"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:609
+msgid "Configure: "
+msgstr "Konfigurér: "
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:613
+msgid "Click to choose the fields, the columns and set other parameters."
+msgstr "Klik for at vælge felter, kolonner og andre parametre."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:614
+msgid "Configure"
+msgstr "Konfigurér"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:623
+msgid "Calendar Page URL for previews must be entered above"
+msgstr "URL for kalenderside til previews skal indtastes ovenfor"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:624
+msgid "n/a"
+msgstr "&nbsp;&ndash;&nbsp;"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:648
+msgid "Enter a list number to start a list type with new default settings."
+msgstr ""
+"Indtast nummer på liste for at begynde på en listetype med nye "
+"standardindstillinger."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:650
+msgid ""
+"After that, cut and paste from the list type closest to what you want to get "
+"you started"
+msgstr ""
+"Derefter skal du kopiere og indsætte fra listetypen, der er tættest på, hvad "
+"du ønsker, for at komme i gang"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:660
+msgid "iCal Events List "
+msgstr "iCal Events List"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:677
+msgid "List saved"
+msgstr "Liste gemt"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:699
+msgid "iCal Events List"
+msgstr "iCal Events List"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:707
+msgid "Listing Events"
+msgstr "Laver liste med begivenheder"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:727
+msgid "iCal Events Lists"
+msgstr "Liste med iCal-begivenheder"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:728
+msgid "List types"
+msgstr "Listetyper"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:943
+msgid "Error in form - calprop array not found"
+msgstr "Fejl i formular &ndash; calprop-arrayet ikke fundet"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1013
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1321
+msgid "Name"
+msgstr "Navn"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1017
+msgid "Internal Description"
+msgstr "Intern beskrivelse"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1041
+msgid "Other:"
+msgstr "Andet:"
+
+# tjekkes
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1047
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1322
+msgid "List HTML Style"
+msgstr "HTML-style for liste"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1049
+msgid "Table"
+msgstr "Tabel"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1050
+msgid "HTML5 in table"
+msgstr "HTML5 i tabel"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1051
+msgid "HTML5 clean and lean"
+msgstr "HTML5 enkelt og simpelt"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1052
+msgid "Custom - file required"
+msgstr "Egen - fil påkrævet"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1053
+msgid "Breaks for rows!"
+msgstr "Rækker med ny linje!"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1054
+msgid "Small box calendar"
+msgstr "Lille box-kalender"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1055
+msgid "Large box calendar"
+msgstr "Stor box-kalender"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1056
+msgid "Weeks calendar"
+msgstr "Ugekalender"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1057
+msgid "Lists for rows"
+msgstr "Rækker som lister"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1057
+msgid " *Avoid - deprecated"
+msgstr " *Undgå – frarådes pga. forældelse"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1058
+msgid "Table with lists in cells (original)"
+msgstr "Tabel med lister i celler (oprindelig)"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1064
+#, php-format
+msgid "Custom HTML style file at %s..."
+msgstr "Fil med egen HTML-style i %s..."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1065
+msgid " (Html and some php knowledge required)"
+msgstr " (HTML og en vis viden om PHP påkrævet)"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1076
+msgid "Default Event URL"
+msgstr "Standard-URL for begivenhed"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1078
+msgid " (For ics files in widget. External, or calendar page.)"
+msgstr " (Vedr. ICS-filer i widget. Ekstern, eller kalenderside.)"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1080
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:818
+msgid "More information"
+msgstr "Flere oplysninger"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1114
+msgid "General Options"
+msgstr "Generelle indstillinger"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1115
+msgid "Styling and Images"
+msgstr "Styling og billeder"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1116
+msgid "Advanced"
+msgstr "Avanceret"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1134
+msgid "Message if no events found: "
+msgstr "Besked, hvis ingen begivenheder fundet: "
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1141
+msgid "Look for more events message: "
+msgstr "Se efter flere begivenheder-besked: "
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1148
+msgid "Look for previous events message: "
+msgstr "Se efter tidligere begivenheder-besked: "
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1155
+msgid "Reset events message: "
+msgstr "Nulstil begivenheder-besked: "
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1162
+msgid "Free busy text: "
+msgstr "Fri/optaget-tekst: "
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1163
+msgid " - replaces the summary text (Busy)in a VFREEBUSY component."
+msgstr " – erstatter resumeteksten (Optaget) i en VFREEBUSY-komponent."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1173
+msgid "Use human time like midday, midnight"
+msgstr "Brug menneskelig tid som middag og midnat"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1178
+msgid "Do not give credit to the author"
+msgstr "Giv ikke kreditering til udvikler"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1187
+msgid "Use javascript to collapse event groupings"
+msgstr "Brug JavaScript til at skjule begivenhedsgrupperinger"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1194
+msgid "Use my theme css, not plugin css"
+msgstr "Brug mit temas CSS, ikke pluginnets CSS"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1201
+msgid " No images (tick for text only)"
+msgstr " Ingen billeder (markér for kun tekst)"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1207
+msgid "Image icon size:"
+msgstr "Størrelse på ikonbillede:"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1210
+msgid "16"
+msgstr "16"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1214
+msgid "32"
+msgstr "32"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1217
+msgid ""
+"The css provided works with the default twenty-ten theme and similar "
+"themes.  Your theme may be different."
+msgstr ""
+"CSS-filen, som er inkluderet, fungerer med Twenty Ten-temaet og lignende "
+"temaer. Dit tema kan ske at være anderledes."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1219
+msgid ""
+"To edit the file, download the custom one added to your uploads folder: "
+"uploads/css."
+msgstr ""
+"For at redigere filen skal du downloade den, der er tilføjet til din uploads-"
+"mappe: uploads/css (hvis ellers pluginnet har rettigheder til det. o.a.)."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1220
+msgid ""
+"Edit it and then re-upload to that same folder. Then select it in the box "
+"below."
+msgstr ""
+"Redigér det og upload det til den samme mappe. Vælg så filen i feltet "
+"nedenfor."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1222
+msgid ""
+"This file will not be overwritten when the plugin is upgraded or when your "
+"theme is upgraded. "
+msgstr ""
+"Denne fil vil ikke blive overskrevet, når pluginnet eller dit tema opdateres."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1223
+msgid "More info"
+msgstr "Flere oplysninger"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1225
+msgid "Download the latest provided css file for editing"
+msgstr "Download den seneste CSS-fil, du kan redigere"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1225
+msgid "(optional)"
+msgstr "(valgfri)"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1226
+msgid "Choose plugin default css or choose a custom css and edit it."
+msgstr ""
+"Vælg pluginnets standard-CSS-fil, eller vælg din egen CSS og redigér det."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1228
+msgid "No css files found in css directory "
+msgstr "Ingen CSS-filer i CSS-mappen "
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1238
+msgid "Advanced:"
+msgstr "Avanceret:"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1240
+#, php-format
+msgid "Your php version is: %s"
+msgstr "Din PHP-version er: %s"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1242
+msgid "Minimum Php version 5.3 required for events cacheing. "
+msgstr "Der kræves mindst PHP version 5.3 for caching af begivenheder."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1243
+msgid ""
+"Cacheing of generated events for re-use on same page (eg: widget plus list) "
+"will not be attempted. "
+msgstr ""
+"Caching af genererede begivenheder for genbrug på samme side (fx: widget "
+"plus liste) vil ikke blive forsøgt."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1244
+msgid "Apparently objects do not serialise correctly in php < 5.3."
+msgstr "Objekter serialiseres tilsyneladende ikke korrekt i PHP < 5.3."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1250
+msgid "Choose date localisation method:"
+msgstr "Vælg lokaliseringsmetode for dato:"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1253
+msgid "none"
+msgstr "ingen"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1255
+msgid "amr"
+msgstr "amr"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1257
+msgid "wp"
+msgstr "WP"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1259
+msgid "wpgmt"
+msgstr "WPGMT"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1263
+msgid "Http timeout for external ics files:"
+msgstr "HTTP-timeout for eksterne ICS-filer:"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1268
+msgid "Choose seconds before timeout for each ics file fetch"
+msgstr ""
+"Vælg, hvor mange sekunder der skal gå inden timout for hver ICS-filhentning"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1277
+msgid ""
+"Warning - 30 seconds is a long time! Let it use cache rather if things are "
+"slow"
+msgstr ""
+"Advarsel – 30 sekunder er lang tid! Brug hellere cache, hvis tingene går så "
+"langsomt"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1293
+msgid "Calendar Page URL for Previews:"
+msgstr "URL for kalenderside til previews:"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1294
+msgid ""
+"Enter the url of a page with [events] or [largecalendar] in the content to "
+"use for list type previews."
+msgstr ""
+"Indtast URL'en for en side med [events] eller [largecalendar] i indholdet "
+"til at anvende til previews med listetyper."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1306
+msgid "Click the name of each list type below to configure that list."
+msgstr "Klik på navnet på hver listetype nedenfor for at konfigurere den."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1308
+msgid "Go to plugin website for documentation."
+msgstr "Se dokumentation på pluginwebsitet."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1310
+msgid "Configuration help"
+msgstr "Hjælp til konfigurering"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1311
+msgid ""
+"Be careful when editing or deleting - some listtypes are defaults for "
+"shortcodes and widgets. "
+msgstr ""
+"Vær forsigtig, når du ændrer eller sletter &ndash; nogle listetyper er "
+"standarder for kortkoder (shortcodes) og widgets. "
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1312
+msgid ""
+"Add listtype=n in the parameters of the shortcode or widget to use another "
+"list type."
+msgstr ""
+"Tilføj listtype=n i parametrene for kortkoden eller widgetten for at bruge "
+"en anden listetype."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1316
+msgid "Warning: This will delete all selected list types immediately."
+msgstr "Advarsel: Dette vil slette alle de valgte listetyper med det samme."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1317
+msgid "Delete"
+msgstr "Slet"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1320
+msgid "List"
+msgstr "Liste"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1324
+msgid "To export or copy a list type"
+msgstr "For at eksportere eller kopiere en listetype"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1325
+msgid "Select ALL the content, and COPY."
+msgstr "Vælg ALT indhold og KOPIÉR."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1327
+msgid "The encoding is to prevent errors when copying and pasting."
+msgstr "Kodningen tjener til at forebygge fejl, når der kopieres og indsættes."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1328
+msgid ""
+"The whole string must be selected (it should be when you click on the text "
+"box)"
+msgstr ""
+"Hele strengen skal vælges (det burde ske, når du klikker på tekstfeltet)"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1329
+msgid "The list type is a huge array."
+msgstr "Listetypen er en meget stor array."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1330
+msgid ""
+"Without encoding, there were varying problems with slashes. Encoding was "
+"more stable."
+msgstr ""
+"Uden kodning var der diverse problemer med skråstreger. Med kodning var det "
+"mere stabilt."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1331
+msgid "Why encode?"
+msgstr "Hvorfor kode?"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1335
+msgid "To import or paste a list type"
+msgstr "For at importere eller indsætte en listetype"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1336
+msgid "PASTE list type string"
+msgstr "INDSÆT listetypestrengen"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1338
+msgid ""
+"If you did not produce the string and are concerned about the contents, then "
+"inspect the list type string using a decode tool. You should see a "
+"serialised array."
+msgstr ""
+"Hvis du ikke dannede strengen og er bekymret over, hvad det indeholder, kan "
+"du undersøge listetypestrengen med et program til at dekode med. Du skulle "
+"gerne se en serialiseret array."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1339
+msgid "Click to search for decoding tools"
+msgstr "Klik for at søge efter dekodningsprogrammer"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1339
+msgid "Test decode"
+msgstr "Test dekodning"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1375
+msgid " Define date and time formats:"
+msgstr " Definér formater for dato og klokkeslæt:"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1377
+msgid ""
+"Define the formats for the day (eg: Event date, End Date) and time (eg: "
+"Start time, End Time) fields. You can actually use any of these to display a "
+"full Date time string too. Use the Event date for event instances - the "
+"DTSTART field is the first startdate of a recurring event sequence."
+msgstr ""
+"Definér formaterne for Dag- (fx Begivenhedsdato, Slutdato) og Klokkeslæt- "
+"(fx Starttidspunkt, Sluttidspunkt) felterne."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1378
+msgid ""
+"These are also used for the date related grouping headings (ie: will show "
+"the date in that format as a heading for that group of dates if relevant.)"
+msgstr ""
+"Disse definitioner bruges også for datorelaterede gruppeoverskrifter (dvs. "
+"de vil vise datoen i dette format som overskrift for en gruppe af datoer, "
+"hvis relevant.)"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1379
+msgid "Use the standard PHP format strings: "
+msgstr "Brug PHP's gængse formatteringsstrenge: "
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1380
+msgid "Php manual - date datetime formats"
+msgstr "PHP-manual &ndash; formater for dato og klokkeslæt"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1382
+msgid "See php date function format strings"
+msgstr "See PHP's datoformatteringsstrenge"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1383
+msgid " (will localise) "
+msgstr " (bliver lokaliseret) "
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1413
+msgid "Expand/Contract all"
+msgstr "Vis/Skjul alle"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-plugin-form-html.php:146
+msgid "Why not do any or all of the following:"
+msgstr "Hvorfor ikke prøve et af – eller alle de følgende forslag:"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-plugin-form-html.php:148
+msgid "Link to it so other folks can find out about it."
+msgstr "Link til det, så andre kan lære det at kende."
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-plugin-form-html.php:156
+msgid ""
+"If you have any problems with this plugin or good ideas for improvements or "
+"new features, please talk about them in the"
+msgstr ""
+"Hvis du har problemer med dette plugin eller gode ideer til forbedringer "
+"eller nye funktioner, så nævn dem i"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-plugin-form-html.php:156
+msgid "Support forums"
+msgstr "Supportforum"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:5
 #, php-format
 msgid "Weeks start on %s"
 msgstr "Uger starter på %s"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:207
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:215
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:231
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:316
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:33
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:41
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:57
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:145
 msgid " and "
 msgstr " og "
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:217
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:43
 msgid "every "
 msgstr "alle "
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:246
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:72
 msgid " or "
 msgstr " eller "
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:259
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:85
 #, php-format
 msgid "%u "
 msgid_plural "%u "
 msgstr[0] "%u "
 msgstr[1] "%u "
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:283
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:109
 #, php-format
 msgid "Every %s %s"
 msgstr "Alle %s %s"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:293
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:119
 #, php-format
 msgid "On %s instance within %s"
 msgstr "På den %s i %s"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:298
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:124
 #, php-format
 msgid "%s times"
 msgstr "%s gange"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:303
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:129
 #, php-format
 msgid "until %s %s"
 msgstr "indtil %s %s"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:305
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:131
 #, php-format
 msgid " if month is %s"
 msgstr " hvis måned er %s"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:307
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:133
 #, php-format
 msgid " in %s weeks of the year"
 msgstr " i %s uger af året"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:309
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:135
 #, php-format
 msgid "on %s day of the year"
 msgstr "på %s dag i året"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:310
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:136
 #, php-format
 msgid "on %s day of each month"
 msgstr "på %s dag i hver måned"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:311
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:312
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:137
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:138
 #, php-format
 msgid "on %s "
 msgstr "på %s "
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:315
-#, php-format
-msgctxt " eg: last day of the year/month "
-msgid " of the %s"
-msgstr " på den %s"
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:142
+msgid " of the month"
+msgstr " i måneden"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:320
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:144
+msgid " of the year"
+msgstr " i året"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:149
 #, php-format
 msgid "at the %s hour"
 msgstr "i den %s time"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:321
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:150
 #, php-format
 msgid "at the %s minute"
 msgstr "i den %s minut"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:322
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:151
 #, php-format
 msgid "at the %s second"
 msgstr "i den %s sekund"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:463
-#, php-format
-msgid "Error creating custom css directory %s. Please check permissions"
-msgstr "Fejl i oprettelse af brugerdefineret CSS-mappe %s. Tjek venligst rettigheder"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:485
-msgid "Could not copy file."
-msgstr "Kunne ikke kopiere fil."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:769
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:220
 #, php-format
 msgid "%u year"
 msgid_plural "%u years"
 msgstr[0] "%u år"
 msgstr[1] "%u år"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:774
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:225
 #, php-format
 msgid "%u month "
 msgid_plural "%u months "
 msgstr[0] "%u måned "
 msgstr[1] "%u måneder "
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:779
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:230
 #, php-format
 msgid "%u week "
 msgid_plural "%u weeks"
 msgstr[0] "%u uge "
 msgstr[1] "%u uger"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:784
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:235
 #, php-format
 msgid "%u day"
 msgid_plural "%u days"
 msgstr[0] "%u dag"
 msgstr[1] "%u dage"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:790
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:241
 #, php-format
 msgid "%u hour"
 msgid_plural "%u hours"
 msgstr[0] "%u time"
 msgstr[1] "%u timer"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:795
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:246
 #, php-format
 msgid "%u minute"
 msgid_plural "%u minutes"
 msgstr[0] "%u minut"
 msgstr[1] "%u minutter"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:800
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:251
 #, php-format
 msgid "%u second"
 msgid_plural "%u seconds"
 msgstr[0] "%u sekunder"
 msgstr[1] "%u sekunder"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:813
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:268
 msgid "Change Timezone"
 msgstr "Skift tidszone"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:814
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-pretty-print.php:269
 #, php-format
 msgid "Timezone: %s, Click for %s"
 msgstr "Tidszone: %s, Klik for %s"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:1793
-#, php-format
-msgid "Unable to load or cache ical calendar %s"
-msgstr "Kan ikke indlæse eller cache iCa-kalenderen %s"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:1799
-#, php-format
-msgid "Error finding or parsing ical calendar %s"
-msgstr "Fejl i forsøg på at finde eller parse iCa-kalenderen %s"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:1835
-msgid "This feature requires the plugin amr-events"
-msgstr "Den ønskede funktion kræver pluginnet amr-events"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:1836
-msgid "Get it here"
-msgstr "Få det her"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:1956
-msgid "No url entered - did you want events from posts ?"
-msgstr "Ingen URL indtastet &ndash; ønkede du begivenheder fra indlæg?"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:1989
-msgid "No ical components requested for display"
-msgstr "Ingen visningsanmodninger for iCal-komponenter"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2132
-#, php-format
-msgid "Invalid Ical URL %s"
-msgstr "Ugyldig iCal-URL %s"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2202
-#, php-format
-msgid "System error - event list type %s missing - please inform administrator."
-msgstr "Systemfejl - begivenhedslistetypen %s mangler - informér venligst administratoren."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2203
-msgid "Now using an available list type to list events"
-msgstr "Bruger nu en tilgængelig listetype til at lave liste med begivenhederne"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2323
-msgid "Invalid Start Date"
-msgstr "Ugyldig startdato"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2662
-msgid "Uncaught exception: "
-msgstr "Ubehandlet undtagelse: "
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2663
-msgid "<br /><br />An error in the input data may prevent correct display of this page.  Please advise the administrator as soon as possible."
-msgstr "<br /><br />En fejl i input-data kan forhindre en korrekt visning af denne side. Orientér venligst administrator så hurtigt som muligt."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2670
-msgid "Your existing saved list types have been converted.  If you wish to return to the earlier version of the plugin, you will have to reset the list types and reapply your changes. Or use your DB backup to set the amr-ical-events-list option back to previous version. You do have regular backups right? "
-msgstr "Dine eksisterende gemte listetyper er blevet konverteret. Hvis du ønsker at vende tilbage til den tidligere version af pluginnet, skal du nulstille listetyperne og indtaste dine ændringer igen. Eller bruge din databasesikkerhedskopi til at føre amr-ical-events-list-indstillingerne tilbage til den tidligere version. Du tager regelmæssige sikkerhedskopier, ikke?"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2680
-msgid "General listing Settings"
-msgstr "Generelle listeindstillinger"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2683
-msgid "List Type Settings"
-msgstr "Listtype-indstillinger"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-events-list-main.php:2684
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:553
-msgid "Documentation"
-msgstr "Dokumentation"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:14
-msgid "iCal Events List"
-msgstr "iCal Events List"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:22
-msgid "Listing Events"
-msgstr "Laver liste med begivenheder"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:42
-msgid "iCal Events Lists"
-msgstr "Liste med iCal-begivenheder"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:43
-msgid "List types"
-msgstr "Listetyper"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:228
-msgid "Error in form - calprop array not found"
-msgstr "Fejl i formular &ndash; calprop-arrayet ikke fundet"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:298
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1107
-msgid "Name"
-msgstr "Navn"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:301
-msgid "Internal Description"
-msgstr "Intern beskrivelse"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:320
-msgid "Other:"
-msgstr "Andet:"
-
-# tjekkes
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:326
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1108
-msgid "List HTML Style"
-msgstr "HTML-style for liste"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:328
-msgid "Table"
-msgstr "Tabel"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:329
-msgid "Lists for rows"
-msgstr "Rækker som lister"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:330
-msgid "HTML5 in table"
-msgstr "HTML5 i tabel"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:331
-msgid "HTML5 clean and lean"
-msgstr "HTML5 enkelt og simpelt"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:332
-msgid "Custom - file required"
-msgstr "Egen - fil påkrævet"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:333
-msgid "Breaks for rows!"
-msgstr "Rækker med ny linje!"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:334
-msgid "Small box calendar"
-msgstr "Lille box-kalender"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:335
-msgid "Large box calendar"
-msgstr "Stor box-kalender"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:336
-msgid "Weeks calendar"
-msgstr "Ugekalender"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:337
-msgid "Table with lists in cells (original)"
-msgstr "Tabel med lister i celler (oprindelig)"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:343
-#, php-format
-msgid "Custom HTML style file at %s..."
-msgstr "Fil med egen HTML-style i %s..."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:344
-msgid " (Html and some php knowledge required)"
-msgstr " (HTML og en vis viden om PHP påkrævet)"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:355
-msgid "Default Event URL"
-msgstr "Standard-URL for begivenhed"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:357
-msgid " (For ics files in widget. External, or calendar page.)"
-msgstr " (Vedr. ICS-filer i widget. Ekstern, eller kalenderside.)"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:359
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:728
-msgid "More information"
-msgstr "Flere oplysninger"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:376
-msgid "Define maximums:"
-msgstr "Definér maksimummer:"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:379
-msgid "Note cache times are in hours"
-msgstr "Bemærk, at cachetider er i timer"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:402
-msgid "Select components to show:"
-msgstr "Vælg komponenter at vise:"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:404
-msgid "Wikipedia entry describing components"
-msgstr "Wikipediaopslag, der beskriver komponenterne"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:426
-msgid "Define grouping:"
-msgstr "Definér grupperinger:"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:445
-msgid "Calendar properties"
-msgstr "Egenskaber for kalender"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:471
-msgid "Specify fields to show:"
-msgstr "Vælg felter at vise:"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:474
-msgid "Note: a 0 (zero) in column = do not show that field."
-msgstr "Bemærk: Et 0 (nul) i kolonnen betyder, at feltet ikke skal vises."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:476
-msgid "Uppercase fields are those defined in the iCal specification."
-msgstr "Felter med store bogstaver er defineret i iCal-specifikationen."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:480
-msgid "Lowercase fields are additional fields added by this plugin and derived from the iCal fields for your convenience."
-msgstr "Felter med små bogstaver er ekstra felter tilføjet af dette plugin og udledt af iCal-felterne for at gøre det lettere for dig."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:481
-msgid "Fields show if \"column\" > 0 and if there is data available in your event or ics file."
-msgstr "Felter vises, hvis \"kolonne\" > 0, og hvis der er tilgængelige data i din begivenhed eller ICS-fil."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:486
-msgid "Field"
-msgstr "Felt"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:488
-msgid "(0 to hide)"
-msgstr "(0 for at skjule)"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:529
-msgid "Column Headings:"
-msgstr "Kolonneoverskrifter:"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:555
-msgid "Support"
-msgstr "Support"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:557
-msgid "Videos"
-msgstr "Videoer"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:559
-msgid "Rate it at WP"
-msgstr "Bedøm det på WP"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:561
-msgid "Plugin feed"
-msgstr "Plugin-feed"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:564
-msgid "Forum feed"
-msgstr "Forumfeed"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:590
-msgid "Unable to create Custom css file for you to edit if you wish - not essential."
-msgstr "Kunne ikke oprette bruger-CSS-fil, som du kan redigere, hvis du vil. Den er ikke uundværlig."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:594
-#, php-format
-msgid "Copied %s1 to %s2 to allow custom css"
-msgstr "Kopierede %s1 til %s2 for at give mulighed for bruger-CSS"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:603
-msgid "Get started:"
-msgstr "Kom i gang:"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:605
-msgid "Create a calendar page and enter: [iCal http://youricsurl.ics]"
-msgstr "Opret en kalenderside og indtast: [iCal http://youricsurl.ics]"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:607
-msgid "Create a calendar page"
-msgstr "Opret kalenderside"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:609
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:72
-msgid "Calendar"
-msgstr "Kalender"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:610
-msgid "Add new"
-msgstr "Tilføj ny"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:619
-#, php-format
-msgid "Your timezone db version is: %s"
-msgstr "Versionen af din tidszonedatabase er: %s"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:621
-msgid "Plugin cannot determine timezonedb version in php &lt; 5.3."
-msgstr "Kan ikke finde version på tidszonedatabasen i PHP &lt; 5.3."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:624
-msgid "The timezone database defines the daylight saving changes amongst other things.  If correct daylight saving switchover is important to you, please check for the latest updates. "
-msgstr "Tidszone-databasen definerer bl.a. sommertidsændringer. Hvis det er vigtigt for dig, at skift til og fra sommertid sker præcist, så tjek for de seneste opdateringer."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:624
-msgid "You may need to talk to your webhost."
-msgstr "Du skal måske kontakte din webudbyder."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:625
-msgid "Php timezonedb versions"
-msgstr "Versioner af PHP-tidszonedatabaser"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:625
-msgid "Info on what changes are in which timezonedb version"
-msgstr "Oplysninger om, hvilke ændringer der er foretaget i hvilken tidszonedatabaseversioner"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:629
-msgid "No global timezone - is there a problem here? "
-msgstr "Ingen global tidszone &ndash; er der et problem her? "
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:632
-msgid "Go to settings"
-msgstr "Gå til opsætning"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:636
-msgid "You are using the \"old\" gmt_offset setting "
-msgstr "Du bruger den \"gamle\" gmt_offset-indstilling "
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:637
-msgid "Consider changing to the more accurate timezone setting"
-msgstr "Overvej at skifte til den mere præcise tidszoneindstilling"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:642
-msgid "The plugin thinks your timezone is: "
-msgstr "Pluginnet har bestemt din tidszone som: "
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:646
-msgid "The current UTC offset for that timezone is: "
-msgstr "Den aktuelle UTC-forskel for denne tidszone er: "
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:656
-#, php-format
-msgid "Switches to %s on %s. GMT offset: %d"
-msgstr "Skifter til %s den %s. GMT-tidsforskel: %d"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:662
-msgid "Current time (unlocalised): "
-msgstr "Aktuel tid (ikke-lokaliseret): "
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:688
-msgid "General Options"
-msgstr "Generelle indstillinger"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:689
-msgid "Styling and Images"
-msgstr "Styling og billeder"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:690
-msgid "Advanced"
-msgstr "Avanceret"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:691
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1184
-msgid "Manage Event List Types"
-msgstr "Håndtér iCal-begivenhedstyper"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:708
-msgid "Message if no events found: "
-msgstr "Besked, hvis ingen begivenheder fundet: "
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:715
-msgid "Look for more events message: "
-msgstr "Se efter flere begivenheder-besked: "
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:722
-msgid "Look for previous events message: "
-msgstr "Se efter tidligere begivenheder-besked: "
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:729
-msgid "Reset events message: "
-msgstr "Nulstil begivenheder-besked: "
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:739
-msgid "Use human time like midday, midnight"
-msgstr "Brug menneskelig tid som middag og midnat"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:744
-msgid "Do not give credit to the author"
-msgstr "Giv ikke kreditering til udvikler"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:754
-msgid "Use my theme css, not plugin css"
-msgstr "Brug mit temas CSS, ikke pluginnets CSS"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:761
-msgid " No images (tick for text only)"
-msgstr " Ingen billeder (markér for kun tekst)"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:767
-msgid "Image icon size:"
-msgstr "Størrelse på ikonbillede:"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:770
-msgid "16"
-msgstr "16"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:774
-msgid "32"
-msgstr "32"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:777
-msgid "The css provided works with the default twenty-ten theme and similar themes.  Your theme may be different."
-msgstr "CSS-filen, som er inkluderet, fungerer med Twenty Ten-temaet og lignende temaer. Dit tema kan ske at være anderledes."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:779
-msgid "To edit the file, download the custom one added to your uploads folder: uploads/css."
-msgstr "For at redigere filen skal du downloade den, der er tilføjet til din uploads-mappe: uploads/css (hvis ellers pluginnet har rettigheder til det. o.a.)."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:780
-msgid "Edit it and then re-upload to that same folder. Then select it in the box below."
-msgstr "Redigér det og upload det til den samme mappe. Vælg så filen i feltet nedenfor."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:782
-msgid "This file will not be overwritten when the plugin is upgraded or when your theme is upgraded. "
-msgstr "Denne fil vil ikke blive overskrevet, når pluginnet eller dit tema opdateres."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:783
-msgid "More info"
-msgstr "Flere oplysninger"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:785
-msgid "Download the latest provided css file for editing"
-msgstr "Download den seneste CSS-fil, du kan redigere"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:785
-msgid "(optional)"
-msgstr "(valgfri)"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:786
-msgid "Choose plugin default css or choose a custom css and edit it."
-msgstr "Vælg pluginnets standard-CSS-fil, eller vælg din egen CSS og redigér det."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:788
-msgid "No css files found in css directory "
-msgstr "Ingen CSS-filer i CSS-mappen "
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:798
-msgid "Advanced:"
-msgstr "Avanceret:"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:800
-#, php-format
-msgid "Your php version is: %s"
-msgstr "Din PHP-version er: %s"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:802
-msgid "Minimum Php version 5.3 required for events cacheing. "
-msgstr "Der kræves mindst PHP version 5.3 for caching af begivenheder."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:803
-msgid "Cacheing of generated events for re-use on same page (eg: widget plus list) will not be attempted. "
-msgstr "Caching af genererede begivenheder for genbrug på samme side (fx: widget plus liste) vil ikke blive forsøgt."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:804
-msgid "Apparently objects do not serialise correctly in php < 5.3."
-msgstr "Objekter serialiseres tilsyneladende ikke korrekt i PHP < 5.3."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:810
-msgid "Choose date localisation method:"
-msgstr "Vælg lokaliseringsmetode for dato:"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:813
-msgid "none"
-msgstr "ingen"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:815
-msgid "amr"
-msgstr "amr"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:817
-msgid "wp"
-msgstr "WP"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:819
-msgid "wpgmt"
-msgstr "WPGMT"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:830
-msgid "iCal Events List "
-msgstr "iCal Events List"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:843
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1213
-msgid "Saving...."
-msgstr "Gemmer ..."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:847
-msgid "List saved"
-msgstr "Liste gemt"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:884
-msgid "Configure another list type: "
-msgstr "Konfigurér ny listetype: "
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:897
-msgid "Return to manage list types"
-msgstr "Tilbage til håndtering af listetyper"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:931
-msgid "Please use numbers > 1"
-msgstr "Brug venligst tal > 1"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:973
-#, php-format
-msgid "Imported settings for list %s invalid - not saved"
-msgstr "Importerede indstillinger for listen %s er ugyldige &ndash; blev ikke gemt"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:979
-#, php-format
-msgid "List %s will be saved with imported data"
-msgstr "Listen %s vil blive gemt med importerede data"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1023
-msgid "Configure: "
-msgstr "Konfigurér: "
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1027
-msgid "Click to choose the fields, the columns and set other parameters."
-msgstr "Klik for at vælge felter, kolonner og andre parametre."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1028
-msgid "Configure"
-msgstr "Konfigurér"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1032
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1206
-msgid "Preview the list using a calendar page."
-msgstr "Preview listen på en kalenderside."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1033
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1207
-msgid "Preview"
-msgstr "Preview"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1037
-msgid "Calendar Page URL for previews must be entered above"
-msgstr "URL for kalenderside til previews skal indtastes ovenfor"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1038
-msgid "n/a"
-msgstr "&nbsp;&ndash;&nbsp;"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1062
-msgid "Enter a list number to start a list type with new default settings."
-msgstr "Indtast nummer på liste for at begynde på en listetype med nye standardindstillinger."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1064
-msgid "After that, cut and paste from the list type closest to what you want to get you started"
-msgstr "Derefter skal du kopiere og indsætte fra listetypen, der er tættest på, hvad du ønsker, for at komme i gang"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1079
-msgid "Calendar Page URL for Previews:"
-msgstr "URL for kalenderside til previews:"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1080
-msgid "Enter the url of a page with [events] or [largecalendar] in the content to use for list type previews."
-msgstr "Indtast URL'en for en side med [events] eller [largecalendar] i indholdet til at anvende til previews med listetyper."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1092
-msgid "Click the name of each list type below to configure that list."
-msgstr "Klik på navnet på hver listetype nedenfor for at konfigurere den."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1094
-msgid "Go to plugin website for documentation."
-msgstr "Se dokumentation på pluginwebsitet."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1096
-msgid "Configuration help"
-msgstr "Hjælp til konfigurering"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1097
-msgid "Be careful when editing or deleting - some listtypes are defaults for shortcodes and widgets. "
-msgstr "Vær forsigtig, når du ændrer eller sletter &ndash; nogle listetyper er standarder for kortkoder (shortcodes) og widgets. "
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1098
-msgid "Add listtype=n in the parameters of the shortcode or widget to use another list type."
-msgstr "Tilføj listtype=n i parametrene for kortkoden eller widgetten for at bruge en anden listetype."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1102
-msgid "Warning: This will delete all selected list types immediately."
-msgstr "Advarsel: Dette vil slette alle de valgte listetyper med det samme."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1103
-msgid "Delete"
-msgstr "Slet"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1106
-msgid "List"
-msgstr "Liste"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1110
-msgid "To export or copy a list type"
-msgstr "For at eksportere eller kopiere en listetype"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1111
-msgid "Select ALL the content, and COPY."
-msgstr "Vælg ALT indhold og KOPIÉR."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1113
-msgid "The encoding is to prevent errors when copying and pasting."
-msgstr "Kodningen tjener til at forebygge fejl, når der kopieres og indsættes."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1114
-msgid "The whole string must be selected (it should be when you click on the text box)"
-msgstr "Hele strengen skal vælges (det burde ske, når du klikker på tekstfeltet)"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1115
-msgid "The list type is a huge array."
-msgstr "Listetypen er en meget stor array."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1116
-msgid "Without encoding, there were varying problems with slashes. Encoding was more stable."
-msgstr "Uden kodning var der diverse problemer med skråstreger. Med kodning var det mere stabilt."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1117
-msgid "Why encode?"
-msgstr "Hvorfor kode?"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1121
-msgid "To import or paste a list type"
-msgstr "For at importere eller indsætte en listetype"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1122
-msgid "PASTE list type string"
-msgstr "INDSÆT listetypestrengen"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1124
-msgid "If you did not produce the string and are concerned about the contents, then inspect the list type string using a decode tool. You should see a serialised array."
-msgstr "Hvis du ikke dannede strengen og er bekymret over, hvad det indeholder, kan du undersøge listetypestrengen med et program til at dekode med. Du skulle gerne se en serialiseret array."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1125
-msgid "Click to search for decoding tools"
-msgstr "Klik for at søge efter dekodningsprogrammer"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1125
-msgid "Test decode"
-msgstr "Test dekodning"
-
-# TJEK
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1160
-msgid "Check for lists to delete"
-msgstr "Tjek for lister, der skal slettes"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1167
-#, php-format
-msgid "List %s will be deleted"
-msgstr "Liste %s vil blive slettet"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1199
-msgid "Configure event list type: "
-msgstr "Konfigurér begivenhedslistetype: "
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1215
-msgid "Lists saved"
-msgstr "Lister gemt"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1216
-msgid "No change to options or unexpected error in saving"
-msgstr "Ingen ændringer i indstillinger eller en uventet fejl under gemning"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1233
-msgid " Define date and time formats:"
-msgstr " Definér formater for dato og klokkeslæt:"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1235
-msgid "Define the formats for the day (eg: Event date, End Date) and time (eg: Start time, End Time) fields. You can actually use any of these to display a full Date time string too. Use the Event date for event instances - the DTSTART field is the first startdate of a recurring event sequence."
-msgstr "Definér formaterne for Dag- (fx Begivenhedsdato, Slutdato) og Klokkeslæt- (fx Starttidspunkt, Sluttidspunkt) felterne."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1236
-msgid "These are also used for the date related grouping headings (ie: will show the date in that format as a heading for that group of dates if relevant.)"
-msgstr "Disse definitioner bruges også for datorelaterede gruppeoverskrifter (dvs. de vil vise datoen i dette format som overskrift for en gruppe af datoer, hvis relevant.)"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1237
-msgid "Use the standard PHP format strings: "
-msgstr "Brug PHP's gængse formatteringsstrenge: "
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1238
-msgid "Php manual - date datetime formats"
-msgstr "PHP-manual &ndash; formater for dato og klokkeslæt"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1240
-msgid "See php date function format strings"
-msgstr "See PHP's datoformatteringsstrenge"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1241
-msgid " (will localise) "
-msgstr " (bliver lokaliseret) "
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1270
-msgid "Save the settings"
-msgstr "Gem opsætning"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1271
-msgid "Update"
-msgstr "Opdatér"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1275
-msgid "Uninstall the plugin and delete the options from the database."
-msgstr "Afinstallér pluginnet og slet indstillingerne fra databasen."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1277
-msgid "Uninstall"
-msgstr "Afinstallér"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1282
-msgid "Warning: This will reset ALL the listing options immediately."
-msgstr "Advarsel: Dette vil nulstille <em>alle</em> indstillinger for lister med det samme."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1285
-msgid "Reset all listing options"
-msgstr "Nulstil alle indstillinger for lister"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-list-admin.php:1296
-msgid "Expand/Contract all"
-msgstr "Vis/Skjul alle"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-uninstall.php:7
-msgid "AmR iCal Options deleted from Database"
-msgstr "AmR iCal-indstillinger slettet fra databasen"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-uninstall.php:10
-msgid "AmR iCal Widget Options deleted from Database"
-msgstr "AmR iCal-widgetindstillinger slettet fra databasen"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-uninstall.php:25
-msgid "Uninstall AmR iCal Events List Options"
-msgstr "Afinstallér AmR iCal-indstillinger for begivenhedslister"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-uninstall.php:26
-msgid "Note this function removes the options from the database.  To completely uninstall, one should continue on to use the standard wordpress functions to deactivate the plugin and delete the files.  It is not necessary to run this separately as the uninstall will also run as part of the wordpress delete plug-in files."
-msgstr "Bemærk, at denne funktion fjerner indstillingerne fra databasen. For at afinstallere pluginnet fuldstændigt, skal man fortsætte og bruge WordPress' normale funktioner til at deaktivere et plugin og slette filerne. Det er ikke nødvendigt at bruge denne funktion for sig selv, da afinstallation også foretages, når WordPress sletter plugin-filer."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-uninstall.php:27
-msgid "The function is provided here as an aid to someone who has perhaps got their wordpress install in a knot and wishes to temporarily remove the options from the database as part of their debugging or cleanup.  Consider also the use of the RESET."
-msgstr "Denne funktion er medtaget som en hjælp for den, der måske har fået problemer med sin WordPress-installation og ønsker midlertidigt at fjerne indstillingerne fra databasen som en del af deres debugging eller oprydning. Du kan også overveje at bruge NULSTIL."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-uninstall.php:35
-msgid "Note: Navigating to \"Manage AmR ICal Settings\" will RELOAD default options - negating the uninstall."
-msgstr "Bemærk: Hvis du går til \"AmR ICal-indstillinger\", GENINDLÆSES standardindstillingerne, så pluginnet ikke længere er afinstalleret."
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-uninstall.php:37
-msgid "Continue to Plugin list to delete files as well"
-msgstr "Fortsæt til Plugins for også at slette filerne"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-uninstall.php:46
-msgid "Cancel"
-msgstr "Annullér"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-ical-uninstall.php:47
-msgid "Really Uninstall Options?"
-msgstr "Ønsker du virkelig at afinstallere indstillingerne?"
-
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-import-ical.php:40
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-import-ical.php:39
 #, php-format
 msgid "Your cache directory %s has been created"
 msgstr "Din cache-mappe %s er blevet oprettet"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-import-ical.php:43
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-import-ical.php:42
 #, php-format
 msgid "Error creating cache directory %s. Please check permissions"
 msgstr "Fejl i oprettelse af cache-mappen %s. Tjek venligst rettigheder"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-import-ical.php:72
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-import-ical.php:71
 msgid "Unexpected data contents. Please tell administrator."
 msgstr "Uventet dataindhold. Giv venligst administrator besked."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-import-ical.php:73
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-import-ical.php:72
 msgid "See comments in source for response received from ics server."
 msgstr "Se kommentarer i kilden for svar modtaget fra ICS-server."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-import-ical.php:148
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-import-ical.php:155
 #, php-format
 msgid "Error getting calendar file with htpp or curl %s"
 msgstr "Fejl i hentning af kalenderfil med HTTP eller cURL %s"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-import-ical.php:151
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-import-ical.php:159
 #, php-format
 msgid "Using File last cached at %s"
 msgstr "Bruger fil der senest blev cachet: %s"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-import-ical.php:153
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-import-ical.php:161
+msgid "File last cached time not available"
+msgstr "Tidspunkt for filens sidste cache ikke tilgængelig"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-import-ical.php:163
 msgid "Warning: Events may be out of date. "
 msgstr "Advarsel: Begivenhederne kan være forældet. "
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-import-ical.php:159
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-import-ical.php:169
 msgid "No cached ical file for events"
 msgstr "Ingen cachet iCal-fil med begivenheder"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:28
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:53
 msgid "midnight"
 msgstr "midnat"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:29
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:54
 msgid "midday"
 msgstr "middag"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:64
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:86
 msgid "Go to agenda or list view"
 msgstr "Gå til visning af program eller liste"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:64
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:86
 msgid "Agenda"
 msgstr "Program"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:72
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:94
 msgid "Go to calendar view"
 msgstr "Gå til kalendervisning"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:80
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:94
+msgid "Calendar"
+msgstr "Kalender"
+
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:102
 msgid "Go to map view"
 msgstr "Gå til kortvisning"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:80
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:102
 msgid "Map"
 msgstr "Kort"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:98
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:120
 msgid "Go to date"
 msgstr "Gå til dato"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:99
-msgctxt "Submit button for month and year navigation.  Use translation to replace with words if you want."
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:121
+msgctxt ""
+"Submit button for month and year navigation.  Use translation to replace "
+"with words if you want."
 msgid "&raquo;&raquo;"
 msgstr "&raquo;&raquo;"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:128
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:134
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:150
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:156
 #, php-format
 msgid "Week starting %1$s"
 msgstr "Uge startende med %1$s"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:129
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:151
 msgctxt "for prev navigation, translate allows you to use words"
 msgid "&larr;"
 msgstr "&larr;"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:135
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:157
 msgctxt "for next navigation, translate allows you to use words"
 msgid "&rarr;"
 msgstr "&rarr;"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:169
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:176
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:191
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:198
 #, php-format
 msgid "Go to %1$s %2$s"
 msgstr "Gå til %1$s %2$s"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:244
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:283
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:266
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:305
 #, php-format
 msgid "Week starting %s"
 msgstr "Uge startende med %s"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:320
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:344
 msgid "hours"
 msgstr "timer"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:340
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:364
 msgid "months"
 msgstr "måneder"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:356
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:380
 msgid "days"
 msgstr "dage"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:364
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:388
 msgid "show past events"
 msgstr "vis afholdte begivenheder"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:365
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:389
 msgid "show less"
 msgstr "vis mindre"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:366
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:390
 msgid "show more"
 msgstr "vis mere"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:367
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:391
 msgid "show much less"
 msgstr "vis meget mindre"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:368
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:392
 msgid "show much more"
 msgstr "vis meget mere"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:371
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:395
 msgid "show future events"
 msgstr "vis fremtidige begivenheder"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:372
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:396
 msgid "show maximum 10 events if available"
 msgstr "vis de maksimale 10 begivenheder, hvis de findes"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:373
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:397
 msgid "show maximum 50 events if available"
 msgstr "vis de maksimale 50 begivenheder, hvis de findes"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:374
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:398
 msgid "show maximum 100 events if available"
 msgstr "vis de maksimale 100 begivenheder, hvis de findes"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:485
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:540
 msgid "all day"
 msgstr "hele dagen"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:545
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:600
 msgid "Event attachment"
 msgstr "Fil vedhæftet begivenhed"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:571
-msgctxt "when an event runs for full days, note the &nbsp; prevents the text wrappping in a table."
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:640
+msgctxt ""
+"when an event runs for full days, note the &nbsp; prevents the text "
+"wrappping in a table."
 msgid "all&nbsp;day"
 msgstr "Hele&nbsp;dagen"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:586
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:662
 #, php-format
 msgid "View events in %s %s"
 msgstr "Se begivenheder i %s %s"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:617
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:693
 msgid "Total events: "
 msgstr "Samlet antal begivenheder: "
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:623
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:699
 msgid "No description available"
 msgstr "Ingen beskrivelse"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:631
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:641
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:707
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:717
 #, php-format
 msgid "Subscribe to %s Calendar"
 msgstr "Abonnér på %s-kalender"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:648
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:724
 msgid "Subscribe to calendar in your calendar application."
 msgstr "Abonnér på kalender i dit kalenderprogram."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:650
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:726
 msgid "Subscribe to calendar"
 msgstr "Abonnér på kalender"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:741
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:834
 msgid "Add to google calendar"
 msgstr "Tilføj til Google Kalender"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:743
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:836
 msgid "Add to google"
 msgstr "Tilføj til Google"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:759
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:852
 msgid "Add event to google"
 msgstr "Tilføj begivenhed til Google"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:783
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:876
 msgid "Last Refresh time unexpectedly not available"
 msgstr "Tidspunkt for Sidste genindlæsning mangler uventet"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:787
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:880
 msgid "Refresh calendars"
 msgstr "Genindlæs kalender"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:788
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:881
 #, php-format
 msgid "Last refresh was at %s. "
 msgstr "Sidste genindlæsning skete %s"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:790
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:883
 msgid "Remote file had no modifications. "
 msgstr "Fjernfil indeholdt ingen ændringer. "
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:794
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:887
 #, php-format
 msgid "The remote file was last modified on %s."
 msgstr "Fjernfilen blev senest ændret %s."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:799
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:892
 msgid "Click to refresh"
 msgstr "Klik for at genindlæse"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:914
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:1012
 #, php-format
 msgid "Week  %u"
 msgstr "Uge %u"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:1421
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:1388
 #, php-format
 msgid "Look for more from %s"
 msgstr "Se efter mere fra %s"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:1443
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:1410
 msgid "Go back to initial view"
 msgstr "Tilbage til første visning"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:1448
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:1415
 msgid "Go back to previous events"
 msgstr "Tilbage til tidligere begivenheder"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:1478
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-pluggable.php:1444
 msgid "Sent by "
 msgstr "Sendt af "
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-rrule.php:531
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-rrule.php:540
 msgid "Unexpected error creating date with string: "
 msgstr "Uventet fejl under oprettelse af dato med strengen: "
 
 #: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:9
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:100
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:170
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:246
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:111
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:181
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:259
 msgid "Upcoming Events"
 msgstr "Kommende begivenheder"
 
@@ -1767,117 +2060,222 @@ msgstr "Kommende begivenheder"
 msgid "Upcoming Events List"
 msgstr "Liste med kommende begivenheder"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:121
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:132
 msgid "See plugin website for more details"
 msgstr "Se flere detaljer på pluginwebsitet"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:124
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:257
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:135
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:270
 msgid "Title"
 msgstr "Titel"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:130
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:263
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:141
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:276
 msgid "Calendar page url"
 msgstr "URL for side med kalender"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:131
-msgid "Calendar page url in this website, for event title links"
-msgstr "URL til kalenderside på denne website, for links til titel på begivenheder"
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:142
+msgid "Calendar page url in this website"
+msgstr "URL til kalenderside på dette website"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:137
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:148
 msgid "Hover description on Title"
 msgstr "Beskrivelse på titel ved mus-over"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:138
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:149
 msgid "Do an event summary hyperlink with event description as title text "
-msgstr "Lav et link til resumé af begivenhed med beskrivelse af begivenheden som titeltekst"
+msgstr ""
+"Lav et link til resumé af begivenhed med beskrivelse af begivenheden som "
+"titeltekst"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:145
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:270
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:156
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:283
 msgid "External events only"
 msgstr "Kun eksterne begivenheder"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:146
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:271
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:157
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:284
 msgid "Show events from external ics only, do NOT pickup any internal events."
-msgstr "Vis kun begivenheder fra ekstern ics, medtag <i>ikke</i> interne begivenheder."
+msgstr ""
+"Vis kun begivenheder fra ekstern ics, medtag <i>ikke</i> interne "
+"begivenheder."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:147
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:272
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:158
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:285
 msgid "Else include events created internally too"
 msgstr "Alternativt, inkludér også begivenheder oprettet internt"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:153
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:278
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:164
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:291
 msgid "External ics urls and advanced options"
 msgstr "Eksterne ics-URL&#39;er og avancerede indstillinger"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:154
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:279
-msgid "External ics urls and/or optional shortcode parameters separated by spaces.)"
-msgstr "Eksterne ics-URL&#39;er og/eller valgfri kortkode-parametre adskilte af mellemrum.)"
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:165
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:292
+msgid ""
+"External ics urls and/or optional shortcode parameters separated by spaces.)"
+msgstr ""
+"Eksterne ics-URL&#39;er og/eller valgfri kortkode-parametre adskilte af "
+"mellemrum.)"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:155
-msgid " Examples: listtype=4 events=10 days=60 start=yyyymmdd startoffset=-2... )"
-msgstr " Eksempler: listtype=4 events=10 days=60 start=yyyymmdd startoffset=-2... )"
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:166
+msgid ""
+" Examples: listtype=4 events=10 days=60 start=yyyymmdd startoffset=-2... )"
+msgstr ""
+" Eksempler: listtype=4 events=10 days=60 start=yyyymmdd startoffset=-2... )"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:157
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:168
 msgid "See more parameters"
 msgstr "Se flere parametre"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:173
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:184
 msgid "Upcoming Events Calendar"
 msgstr "Kalender med kommende begivenheder"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:255
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:268
 msgid "See more"
 msgstr "Se efter mere"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:264
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:277
 msgid "Calendar page url in this website, for links from widget"
 msgstr "URL til kalenderside på denne website, for links i widget"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:280
-msgid " Examples: listtype=8 events=10 days=60 start=yymmdd startoffset=-2... )"
-msgstr " Eksempler: listtype=8 events=10 days=60 start=yymmdd startoffset=-2... )"
+#: d:\wordpress\plugins\amr-ical-events-list/includes/amr-upcoming-events-widget.php:293
+msgid ""
+" Examples: listtype=8 events=10 days=60 start=yymmdd startoffset=-2... )"
+msgstr ""
+" Eksempler: listtype=8 events=10 days=60 start=yymmdd startoffset=-2... )"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/functions.php:117
-#: d:\wordpress\plugins\amr-ical-events-list/includes/functions.php:121
+#: d:\wordpress\plugins\amr-ical-events-list/includes/functions.php:151
+#: d:\wordpress\plugins\amr-ical-events-list/includes/functions.php:155
 msgid "Invalid Url"
 msgstr "Ugyldig URL"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/functions.php:164
-msgid "I try to make these plugins work <strong>\"out of the box\"</strong> with minimal effort; that they be easy to use but <strong>very configurable</strong>; <strong>well tested</strong>; with <strong>valid html and css</strong> both at the front and admin area."
-msgstr "Jeg prøver at sikre, at disse plugins <strong>uden videre virker</strong> med et minimum af indsats, er nemme at bruge, men også <strong>har mange indstillinger</strong>, at de er <strong>gennemtestede</strong>, at de er <strong>gennemtestede</strong>, at de genererer <strong>gyldig HTML og CSS</strong> både i selve bloggen og i administrationspanelet."
+#: d:\wordpress\plugins\amr-ical-events-list/includes/functions.php:195
+msgid ""
+"I try to make these plugins work <strong>\"out of the box\"</strong> with "
+"minimal effort; that they be easy to use but <strong>very configurable</"
+"strong>; <strong>well tested</strong>; with <strong>valid html and css</"
+"strong> both at the front and admin area."
+msgstr ""
+"Jeg prøver at sikre, at disse plugins <strong>uden videre virker</strong> "
+"med et minimum af indsats, er nemme at bruge, men også <strong>har mange "
+"indstillinger</strong>, at de er <strong>gennemtestede</strong>, at de er "
+"<strong>gennemtestede</strong>, at de genererer <strong>gyldig HTML og CSS</"
+"strong> både i selve bloggen og i administrationspanelet."
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/functions.php:165
+#: d:\wordpress\plugins\amr-ical-events-list/includes/functions.php:196
 msgid "If you have a feature request, please do let me know. "
 msgstr "Hvis du har et ønske om en funktion, så lad mig det vide. "
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/functions.php:167
+#: d:\wordpress\plugins\amr-ical-events-list/includes/functions.php:198
 msgid "To edit events in wordpress:"
 msgstr "For at redigere begivenheder i WordPress:"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/functions.php:169
+#: d:\wordpress\plugins\amr-ical-events-list/includes/functions.php:200
 msgid "Upgrade to amr-events at "
 msgstr "Opgradér til amr-events på "
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/functions.php:174
+#: d:\wordpress\plugins\amr-ical-events-list/includes/functions.php:205
 msgid "Keep all these settings and lists"
 msgstr "Behold alle disse opsætninger og lister"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/functions.php:176
+#: d:\wordpress\plugins\amr-ical-events-list/includes/functions.php:207
 msgid "Offers many additional benefits."
 msgstr "Giver mange flere fordele. "
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/functions.php:177
+#: d:\wordpress\plugins\amr-ical-events-list/includes/functions.php:208
 msgid "Find out more"
 msgstr "Find ud af mere"
 
-#: d:\wordpress\plugins\amr-ical-events-list/includes/functions.php:208
+#: d:\wordpress\plugins\amr-ical-events-list/includes/functions.php:239
 msgid "Events plugin by anmari"
 msgstr "Events-plugin af anmari"
+
+# toggle
+#: d:\wordpress\plugins\amr-ical-events-list/includes/functions.php:255
+msgid "Click to toggle"
+msgstr "Klik for at skifte"
+
+#~ msgid ""
+#~ "Unable to create Custom css file for you to edit if you wish - not "
+#~ "essential."
+#~ msgstr ""
+#~ "Kunne ikke oprette bruger-CSS-fil, som du kan redigere, hvis du vil. Den "
+#~ "er ikke uundværlig."
+
+#~ msgid "Copied %s1 to %s2 to allow custom css"
+#~ msgstr "Kopierede %s1 til %s2 for at give mulighed for bruger-CSS"
+
+#~ msgid "Get started:"
+#~ msgstr "Kom i gang:"
+
+#~ msgid "Create a calendar page and enter: [iCal http://youricsurl.ics]"
+#~ msgstr "Opret en kalenderside og indtast: [iCal http://youricsurl.ics]"
+
+#~ msgid "Create a calendar page"
+#~ msgstr "Opret kalenderside"
+
+#~ msgid "Add new"
+#~ msgstr "Tilføj ny"
+
+#~ msgid ""
+#~ "The timezone database defines the daylight saving changes amongst other "
+#~ "things.  If correct daylight saving switchover is important to you, "
+#~ "please check for the latest updates. "
+#~ msgstr ""
+#~ "Tidszone-databasen definerer bl.a. sommertidsændringer. Hvis det er "
+#~ "vigtigt for dig, at skift til og fra sommertid sker præcist, så tjek for "
+#~ "de seneste opdateringer."
+
+#~ msgid "You may need to talk to your webhost."
+#~ msgstr "Du skal måske kontakte din webudbyder."
+
+#~ msgid "AmR iCal Widget Options deleted from Database"
+#~ msgstr "AmR iCal-widgetindstillinger slettet fra databasen"
+
+#~ msgid "Uninstall AmR iCal Events List Options"
+#~ msgstr "Afinstallér AmR iCal-indstillinger for begivenhedslister"
+
+#~ msgid ""
+#~ "Note this function removes the options from the database.  To completely "
+#~ "uninstall, one should continue on to use the standard wordpress functions "
+#~ "to deactivate the plugin and delete the files.  It is not necessary to "
+#~ "run this separately as the uninstall will also run as part of the "
+#~ "wordpress delete plug-in files."
+#~ msgstr ""
+#~ "Bemærk, at denne funktion fjerner indstillingerne fra databasen. For at "
+#~ "afinstallere pluginnet fuldstændigt, skal man fortsætte og bruge "
+#~ "WordPress' normale funktioner til at deaktivere et plugin og slette "
+#~ "filerne. Det er ikke nødvendigt at bruge denne funktion for sig selv, da "
+#~ "afinstallation også foretages, når WordPress sletter plugin-filer."
+
+#~ msgid ""
+#~ "The function is provided here as an aid to someone who has perhaps got "
+#~ "their wordpress install in a knot and wishes to temporarily remove the "
+#~ "options from the database as part of their debugging or cleanup.  "
+#~ "Consider also the use of the RESET."
+#~ msgstr ""
+#~ "Denne funktion er medtaget som en hjælp for den, der måske har fået "
+#~ "problemer med sin WordPress-installation og ønsker midlertidigt at fjerne "
+#~ "indstillingerne fra databasen som en del af deres debugging eller "
+#~ "oprydning. Du kan også overveje at bruge NULSTIL."
+
+#~ msgid ""
+#~ "Note: Navigating to \"Manage AmR ICal Settings\" will RELOAD default "
+#~ "options - negating the uninstall."
+#~ msgstr ""
+#~ "Bemærk: Hvis du går til \"AmR ICal-indstillinger\", GENINDLÆSES "
+#~ "standardindstillingerne, så pluginnet ikke længere er afinstalleret."
+
+#~ msgid "Continue to Plugin list to delete files as well"
+#~ msgstr "Fortsæt til Plugins for også at slette filerne"
+
+#~ msgid "Cancel"
+#~ msgstr "Annullér"
+
+#~ msgid "Really Uninstall Options?"
+#~ msgstr "Ønsker du virkelig at afinstallere indstillingerne?"
 
 #~ msgid "Timing"
 #~ msgstr "Tidspunkt"
@@ -1899,9 +2297,6 @@ msgstr "Events-plugin af anmari"
 
 #~ msgid "Invalid Ical URL passed in query string %s"
 #~ msgstr "Ugyldig iCal-URL overført i søgestrengen %s"
-
-#~ msgid "Taxonomies"
-#~ msgstr "Taksonomier"
 
 #~ msgid "Invalid Number of Lists"
 #~ msgstr "Ugyldigt antal lister"

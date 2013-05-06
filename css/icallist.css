@@ -2,6 +2,16 @@
 This file should have been copied to a css folder in your uploads directory.  It may safely be edited in the uploads folder and will not be overwritten by upgrades,
 You can always refer back to the default css in the plugin folder for the latest suggested or example css.
 */
+
+/* TwentyTwelve widget compatibility*/
+.widget .ical .enddate,
+.widget .ical .eventdate,
+.widget .ical .endtime,
+.widget .ical .starttime {
+    color: #AAAAAA;
+    line-height: 1.84615;
+    font-size: 0.785714rem;
+}
 /*----------------------------------------------- */
 /* html5 code */
 	article, aside, figure, footer, header, hgroup, menu, nav, section { 
@@ -22,6 +32,7 @@ tr.level0 {
 #events_wrap {  
 	word-wrap: break-word; /* make sure that any very long words do not cause overflow*/
 }
+.event abbr,
 #events_wrap abbr {  
 /* do not show the hcalendar abbr underline - the abbr is confusing  especially since the format of the date is ISO8601, not human friendly 
 However is required if we want hcal functionality */
