@@ -144,13 +144,14 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 	global $wpdb, $wp_locale;
 	global $amr_calendar_url;
 
-// ---  Note that if months set, then events will have started from beg of month */
+	$empty = '&nbsp;';
 
 	if (!empty($amr_calendar_url))  
 		$link = $amr_calendar_url;
 	else 
 		$link = amr_clean_link();
-
+		
+// ---  Note that if months set, then events will have started from beg of month */
 
 	$months = 1;
 	$weeks = 2;  // as default
@@ -204,8 +205,9 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 
 	if ($liststyle === 'weekscalendar') {		
 		if (!empty($amr_options['listtypes'][$amr_listtype]['format']['Day']))
-				$caption_format = $amr_options['listtypes'][$amr_listtype]['format']['Day'];
-		else 	$caption_format = 'j M';	
+			$caption_format = $amr_options['listtypes'][$amr_listtype]['format']['Day'];
+		else 	
+			$caption_format = 'j M';	
 	}
 	else {
 		if (!empty($amr_options['listtypes'][$amr_listtype]['format']['Month']))
@@ -360,7 +362,9 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 				$pad = calendar_week_mod($start->format('w')-$week_begins);
 				if ( 0 != $pad ) {
 					$calendar_output .=
-					"\n\t\t".'<td colspan="'. esc_attr($pad) .'" class="pad">&nbsp;'
+					"\n\t\t".'<td colspan="'. esc_attr($pad) .'" class="pad">'
+					//.'&nbsp;'
+					.$empty
 					.'</td>';			
 				}
 				$day1 = 1;
@@ -436,6 +440,9 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 					if (in_array ($liststyle, array('largecalendar','weekscalendar')) 
 					and (!empty($dayhtml[$day])))
 						$calendar_output .= AMR_NL.$dayhtml[$day];
+				}
+				else {
+					$calendar_output .= $empty; //'&nbsp;';
 				}
 				$calendar_output .= '</td>';
 				date_modify($nextdate, '+1 day');
@@ -589,6 +596,7 @@ global $wp_locale,
 		if ($dayofweek == 0) $sunday = $wdcount;
 		if ($dayofweek == 6) $satday = $wdcount;
 	}
+	
 	foreach ( $myweek as $dayofweek => $wd ) {
 
 		switch ($liststyle) {
@@ -606,13 +614,16 @@ global $wp_locale,
 			}
 		
 		}
-//		date_modify($dummydate, '+1 day');
+		date_modify($dummydate, '+1 day'); //must increment the day 
+		
 //		$day_name = ($liststyle=="smallcalendar") ? 
 //			$wp_locale->get_weekday_initial($wd) : 
 //			$wp_locale->get_weekday_abbrev($wd);
 		$wd = esc_attr($wd);
-		if ($dayofweek === $sunday) $class= ' class="sunday" ';
-		elseif ($dayofweek === $satday) $class= ' class="saturday" ';
+		if ($dayofweek === $sunday) 
+			$class= ' class="sunday" ';
+		elseif ($dayofweek === $satday) 
+			$class= ' class="saturday" ';
 		else $class='';
 
 		$calendar_output .= "\n\t\t<th ".$class." scope=\"col\" title=\"$wd\">$day_name</th>";

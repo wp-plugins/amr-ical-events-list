@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.1');
+define('AMR_ICAL_LIST_VERSION', '4.2');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -1657,6 +1657,7 @@ global $amr_last_date_time;
 	
 // else will not save a last date.
 }
+
 /* -------------------------------------------------------------------------*/
 function amr_get_params ($attributes=array()) {
 /*  We are passed the widget or shortcode attributes,
@@ -1747,11 +1748,15 @@ function amr_get_params ($attributes=array()) {
 	} //end if
 
 // -------------------------------------------------------------------------------------------------- 
-// handle taxonomies we do not event know about yet
+// handle taxonomies we do not even know about yet
 	/*  get the parameters we want out of the attributes, supplying defaults for anything missing  */
 	/* but now we may have missed taxonomies etc as the defaults do not know about them, so get the diff  */
-	if (!empty($attributes)) 		
-		$taxo_selection = array_diff($attributes,$shortcode_params);
+	if (!empty($attributes)) {		
+		//var_dump($attributes);
+		//var_dump($shortcode_params); // - this could be multi-d array due to urls so array diff will throw a notice in php 5.4
+		// maybe extract somehow ourselves?  or use array_diff_key instead /****
+		$taxo_selection = array_diff_key($attributes,$shortcode_params);
+	}	
 	// if we had some taxos, marge them into shortcode selection
 	if (!empty($taxo_selection)) 	
 		$shortcode_params = array_merge ($shortcode_params,$taxo_selection );

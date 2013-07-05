@@ -3,8 +3,8 @@ Contributors: anmari
 Tags: event, events, event calendar, events calendar, event manager, diary, schedule, ical, ics, ics calendar, ical feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, agenda, happenings, shows, concerts, conferences, courses, timetable, schedule
 
 Requires at least: 2.8
-Tested up to: 3.5.1
-Version: 4.1
+Tested up to: 3.5.2
+Version: 4.2
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, combine multiple ics files, handles any recurring event according to the ical spec. Very customisable listings or box calendars.  This version uses ics as input. Upgrade option for ics feed generation, taxonomies etc.  
@@ -89,6 +89,9 @@ amr-events has much additional functionality, including a taxonomy widget.
 
 
 == Changelog ==
+= Version 4.2 =
+*  Fix:  fixed a weekly calendar header bug that somehow got introduced recently
+*  Fix:  some minor notices that occured in php 5.4.3 up to do with use of array_diff
 
 = Version 4.1 =
 *  Add:  as per request, added ability to parse custom fields such as Trumba's.  Filters etc added.  An example add on created to demonstrate.  See icalevents.com in a day or so for info.
