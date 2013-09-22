@@ -1323,8 +1323,8 @@ global $amr_limits;
 		$constrained = apply_filters('amr_events_after_sort_and_constrain', $constrained);
 		return $constrained;
 	}
-	/* ========================================================================= */
-		/*
+/* ========================================================================= */
+/*
 		 * generate repeating events down to nonrepeating events at the  corresponding repeat time.
 		 For ease of processing the repeat arrays will initially be ISO 8601 date (added in PHP 5)  eg:	2004-02-12T15:19:21+00:00
 		 we will then convert them to date time objects
@@ -1937,7 +1937,7 @@ function amr_get_params ($attributes=array()) {
 	/* check non url parameters  */
 
 	if (empty ($shortcode_params['start'])) {
-		$amr_limits['start'] = date_create('now',$amr_globaltz);
+		$amr_limits['start'] = date_create('now',$amr_globaltz);		
 	}
 	else {
 		$amr_limits['start'] = abs((int) $shortcode_params['start']);
@@ -2367,6 +2367,6 @@ function amr_plugin_links($links, $file) {
 
 	register_activation_hook(__FILE__, 'amr_ical_events_list_record_version');
 	add_filter('plugin_row_meta', 'amr_plugin_links', 10, 2);
-	add_action('plugins_loaded', 'amr_debug_time');
+	//add_action('plugins_loaded', 'amr_debug_time');  // removed for now - 'only' a debug function wrt to load times and somehow functionnotfound in mutisite. 
 
 ?>
