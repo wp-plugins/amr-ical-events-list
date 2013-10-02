@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.2');
+define('AMR_ICAL_LIST_VERSION', '4.4');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -237,7 +237,7 @@ function amr_get_googledate($time)   {
 function amr_get_googleeventdate($e) { 
 /* google has updated functioning to use ics end date for all day events (note instructions at
 http://support.google.com/calendar/bin/answer.py?hl=en&answer=2476685 are wrong - they show same date for end date for 1 day event.
-Testing shows one can also leave enddate blank for single day events.
+Testing shows one can also leave enddate blank for single day events. No more - now need an enddate
 NOTE: must all be in UTC!!
  */
 
@@ -247,13 +247,14 @@ NOTE: must all be in UTC!!
 		// we have a start date
 		if (isset ($e['allday']) and (!($e['allday'] === 'allday') ))  {  
 			// not an all day
+			$start = amr_get_googletime ($e['EventDate']);
 			if (isset ($e['EndDate'])) {
 				$end = '/'.amr_get_googletime ($e['EndDate']);
 				
 			}
-			else $e = ''; // no end date
+			else $end = '/'.$start; // no end date
 		
-			$start = amr_get_googletime ($e['EventDate']);
+			
 		
 		}
 		else { // it is an all day
@@ -261,14 +262,14 @@ NOTE: must all be in UTC!!
 			$start = amr_get_googledate ($e['EventDate']);
 			if (isset ($e['EndDate'])) {
 				if ($e['EndDate'] == $e['EventDate']) 
-					$end = '';
+					$end = '/'.$start;
 				else {	
 					$ics_enddate = clone($e['EndDate']);
 					date_modify($ics_enddate,'+1 day');
 					$end = '/'.amr_get_googledate ($ics_enddate);
 				}
 			}
-			else $end = ''; // no end date
+			else $end = '/'.$start; // no end date
 		}
 	}
 	

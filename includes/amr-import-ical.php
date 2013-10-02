@@ -152,7 +152,7 @@ function amr_cache_url($url, $cache=ICAL_EVENTS_CACHE_TTL) {
 			
 			}
 			else $data = $check['body'];  // from the http request		
-
+			
 			if (!amr_check_start_of_file ($data)) {			
 
 					$text .= '&nbsp;'.sprintf(__('Error getting calendar file with htpp or curl %s','amr-ical-events-list'), $url);
@@ -176,6 +176,8 @@ function amr_cache_url($url, $cache=ICAL_EVENTS_CACHE_TTL) {
 					return (false);
 				}
 			else If (ICAL_EVENTS_DEBUG) { echo '<br />We have vcalendar in start of file';}
+	
+			$data = apply_filters('amr-ics-input-file', 'amr-ics-conversion', $data, $url);  // **** provisionally inserted
 	
 			if ($data) { /* now save it as a cached file */
 				if ($dest = fopen($cachedfile, 'w')) {

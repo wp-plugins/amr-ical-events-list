@@ -205,7 +205,6 @@ global $ical_timezone, $amr_formats;
 	return ($rule);
 
 	}
-
 /* --------------------------------------------------------- */
 function amr_format_bookmark ($text) {
 	return ('<a id="'.$text.'"></a>');  /* ***/

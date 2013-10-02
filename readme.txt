@@ -3,8 +3,8 @@ Contributors: anmari
 Tags: event, events, event calendar, events calendar, event manager, diary, schedule, ical, ics, ics calendar, ical feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, agenda, happenings, shows, concerts, conferences, courses, timetable, schedule
 
 Requires at least: 2.8
-Tested up to: 3.5.2
-Version: 4.3
+Tested up to: 3.6.1
+Version: 4.4
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, combine multiple ics files, handles any recurring event according to the ical spec. Very customisable listings or box calendars.  This version uses ics as input. Upgrade option for ics feed generation, taxonomies etc.  
@@ -89,6 +89,9 @@ amr-events has much additional functionality, including a taxonomy widget.
 
 
 == Changelog ==
+
+= Version 4.4 =
+*  Fix:  20131002 - fix to the single event 'add to google calendar' for one day events.  Google used to accept events without end dates in the link.  It now wants an enddate, so this has been added.  Thanks to Kevin for identifying this.
 
 = Version 4.3 =
 *  Fix:  20130922 - minor fix for multisite users.  Removed a debug function.

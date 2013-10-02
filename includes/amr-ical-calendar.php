@@ -10,7 +10,6 @@
  * @param bool $initial Optional, default is true. Use initial calendar names.
  * @param bool $echo Optional, default is true. Set to false for return.
  */
- 
 // ----------------------------------------------------------------------------------------
 function amr_get_events_in_months_format ($events, $months, $start) {
 

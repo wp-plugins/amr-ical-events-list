@@ -727,8 +727,7 @@ if (!function_exists('amr_derive_summary')) {
 		global $amr_liststyle;
 	/* If there is a event url, use that as href, else use icsurl, use description as title */
 	
-	
-	if (($e['type'] == 'VFREEBUSY') ) {
+	if (isset($e['type']) and ($e['type'] == 'VFREEBUSY') ) {
 		$e['excerpt'] = $e['SUMMARY'];
 		$e['DESCRIPTION'] = $e['SUMMARY'];
 		if (!empty($amr_options['freebusymessage'])) 
@@ -749,7 +748,7 @@ if (!function_exists('amr_derive_summary')) {
 			$e['excerpt'] = (amr_just_flatten_array ($e['excerpt'] ));
 		}
 		if (isset($e['SUMMARY'])) $e['SUMMARY'] = (amr_just_flatten_array ($e['SUMMARY'] ));
-	//	if (isset($e['SUMMARY'])) $e['SUMMARY'] = htmlspecialchars(amr_just_flatten_array ($e['SUMMARY'] ));
+		//if (isset($e['SUMMARY'])) $e['SUMMARY'] = htmlspecialchars(amr_just_flatten_array ($e['SUMMARY'] ));
 		else return ('');
 		if (isset($e['URL'])) 
 			$e_url = amr_just_flatten_array($e['URL']);
