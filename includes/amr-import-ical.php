@@ -177,7 +177,8 @@ function amr_cache_url($url, $cache=ICAL_EVENTS_CACHE_TTL) {
 				}
 			else If (ICAL_EVENTS_DEBUG) { echo '<br />We have vcalendar in start of file';}
 	
-			$data = apply_filters('amr-ics-input-file', 'amr-ics-conversion', $data, $url);  // **** provisionally inserted
+			// somebody wanted to pre process ics files that were not well generated?
+			// A filter could be added here, but I'm not keen - could add to support load?
 	
 			if ($data) { /* now save it as a cached file */
 				if ($dest = fopen($cachedfile, 'w')) {

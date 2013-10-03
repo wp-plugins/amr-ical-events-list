@@ -4,7 +4,7 @@ Tags: event, events, event calendar, events calendar, event manager, diary, sche
 
 Requires at least: 2.8
 Tested up to: 3.6.1
-Version: 4.4
+Version: 4.5
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, combine multiple ics files, handles any recurring event according to the ical spec. Very customisable listings or box calendars.  This version uses ics as input. Upgrade option for ics feed generation, taxonomies etc.  
@@ -89,6 +89,9 @@ amr-events has much additional functionality, including a taxonomy widget.
 
 
 == Changelog ==
+
+= Version 4.5 =
+*  removed a filter line that should NOT have been in that update and was not picked up in testing due to cacheing
 
 = Version 4.4 =
 *  Fix:  20131002 - fix to the single event 'add to google calendar' for one day events.  Google used to accept events without end dates in the link.  It now wants an enddate, so this has been added.  Thanks to Kevin for identifying this.
