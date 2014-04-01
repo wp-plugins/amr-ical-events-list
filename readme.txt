@@ -31,6 +31,7 @@ Group events by month/week/day or many other for presentation and styling. Offer
 
 Many thanks to the following people for the translations.  Note that I am unable to verify these and they may be out of date with the current version.:
 
+*   Spanish from Andrew at webhostinghub
 *   Italian by Andrea aka sciamannikoo
 *   Lithuanian by Nata Strazda from Web Hub
 *   Polish by Kasia
@@ -89,6 +90,8 @@ amr-events has much additional functionality, including a taxonomy widget.
 
 
 == Changelog ==
+= Version 4.6 =
+*  made nl2br2 a pluggable function so folks cann add =0D-0A replacement checks.
 
 = Version 4.5 =
 *  removed a filter line that should NOT have been in that update and was not picked up in testing due to cacheing
