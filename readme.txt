@@ -96,6 +96,7 @@ amr-events has much additional functionality, including a taxonomy widget.
 *  made nl2br2 a pluggable function so folks can add =0D-0A replacement checks.
 *  cleaned up how custom language files were accessed.  You can still store them in WP_LANG_DIR / languages / plugindomain.locale.mo.   They will be loaded first, then any files in the plugin lang folder. 
 *  cleaned up some strings and their text domain assignment
+*  fixed a language bug where saved text strings were overwriting translated strings.
 
 = Version 4.5 =
 *  removed a filter line that should NOT have been in that update and was not picked up in testing due to cacheing
