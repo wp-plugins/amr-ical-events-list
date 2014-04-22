@@ -139,9 +139,9 @@ global 	$amr_freq,
 		$ofthefreq = '';
 		// change to accomodate dutch having different artcles for month and year de or het
 		if ($rule['FREQ'] == 'MONTHLY')
-			$ofthefreq = __(' of the month','eg: last day of the month', 'amr-ical-events-list');
+			$ofthefreq = _x(' of the month','eg: last day of the month', 'amr-ical-events-list');
 		else if ($rule['FREQ'] == 'YEARLY')
-			$ofthefreq = __(' of the year','eg: last day of the year','amr-ical-events-list');	
+			$ofthefreq = _x(' of the year','eg: last day of the year','amr-ical-events-list');	
 		if (isset ($nbyday) and isset ($byday)) $c .= $nbyday.__(' and ','amr-ical-events-list').$byday.$ofthefreq;
 		else { if (isset ($byday)) $c .= $byday.$ofthefreq;
 			if (isset ($nbyday)) $c .= $nbyday.$ofthefreq;

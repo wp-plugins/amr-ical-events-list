@@ -349,11 +349,28 @@ function amr_set_defaults() {
 			'feed_css' => true,
 			'cssfile' => ICALSTYLEURL,//'icallist.css',
 			'date_localise' => 'amr',
+			// do NOT translate here, else either saved texts overwrite translations or saved translations prevent default text being translated.
+			'noeventsmessage' => 'No events found within criteria',
+			'lookmoremessage' => 'Look for more',
+			'lookprevmessage' => 'Look for previous','amr-ical-events-list',
+			'resetmessage' => 'Reset','amr-ical-events-list'
+			);
+			
+		// if they don't have the gettext function the translation scanners will not pick the strings up for inclusion in the .pot/.po file	
+	$fakeforautolangtranslation = array (
 			'noeventsmessage' => __('No events found within criteria','amr-ical-events-list'),
 			'lookmoremessage' => __('Look for more','amr-ical-events-list'),
 			'lookprevmessage' => __('Look for previous','amr-ical-events-list'),
-			'resetmessage' => __('Reset','amr-ical-events-list')
-			);
+			'resetmessage' => __('Reset','amr-ical-events-list'),	
+			__("Year",'amr-ical-events-list'),
+			__("Quarter",'amr-ical-events-list'),
+			__("Astronomical Season",'amr-ical-events-list') ,
+			__("Traditional Season",'amr-ical-events-list'),
+			__("Western Zodiac",'amr-ical-events-list'),
+			__("Month",'amr-ical-events-list'),
+			__("Week",'amr-ical-events-list') ,
+			__("Day",'amr-ical-events-list')
+			);		
 
 
 	if (defined('AMR_ICAL_VERSION'))	
@@ -385,16 +402,6 @@ function amr_set_defaults() {
 	//		"VTIMEZONE" => false /* special handling required if we want to process this - for now we are going to use the php definitions rather */
 			);
 
-	$fakeforautolangtranslation = array (
-			__("Year",'amr-ical-events-list'),
-			__("Quarter",'amr-ical-events-list'),
-			__("Astronomical Season",'amr-ical-events-list') ,
-			__("Traditional Season",'amr-ical-events-list'),
-			__("Western Zodiac",'amr-ical-events-list'),
-			__("Month",'amr-ical-events-list'),
-			__("Week",'amr-ical-events-list') ,
-			__("Day",'amr-ical-events-list')
-			);
 			
 			
 	$amr_groupings = amr_define_possible_groupings();

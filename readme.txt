@@ -3,8 +3,8 @@ Contributors: anmari
 Tags: event, events, event calendar, events calendar, event manager, diary, schedule, ical, ics, ics calendar, ical feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, agenda, happenings, shows, concerts, conferences, courses, timetable, schedule
 
 Requires at least: 2.8
-Tested up to: 3.6.1
-Version: 4.5
+Tested up to: 3.9
+Version: 4.6
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, combine multiple ics files, handles any recurring event according to the ical spec. Very customisable listings or box calendars.  This version uses ics as input. Upgrade option for ics feed generation, taxonomies etc.  
@@ -51,9 +51,10 @@ php datetime class must be enabled (standard in php 5.2)
 
 == Installation ==
 
-1. Download and activate as per usual in wordpress
-2. Create some events in your calendar application in a public calendar (eg: google calendar, facebook, ical.me.com ).  Find the public ics url for the calendar.  NB The url MUST be publicly accessible when not logged in - check by pasting the url into another browsers url field. If you cannot access it in a browser without being logged in, then the plugin will not be able to access it either.
-2. Create a page for your calendar or agenda and enter one of the  shortcodes (preferably using the html view of the wp editor) .  EG:
+1.  Download and activate as per usual in wordpress
+2.  Create some events in your calendar application in a public calendar (eg: google calendar, facebook, ical.me.com ).  
+3.  Find the public ics url for the calendar.  NB The url MUST be publicly accessible when not logged in - check by pasting the url into another browsers url field. If you cannot access it in a browser without being logged in, then the plugin will not be able to access it either.
+4. Create a page for your calendar or agenda and enter one of the  shortcodes (preferably using the html view of the wp editor) .  EG:
 
 
 [iCal yoururl.ics]
@@ -91,7 +92,10 @@ amr-events has much additional functionality, including a taxonomy widget.
 
 == Changelog ==
 = Version 4.6 =
-*  made nl2br2 a pluggable function so folks cann add =0D-0A replacement checks.
+*  Tested with version 3.0.12 of amr-ical-events-list
+*  made nl2br2 a pluggable function so folks can add =0D-0A replacement checks.
+*  cleaned up how custom language files were accessed.  You can still store them in WP_LANG_DIR / languages / plugindomain.locale.mo.   They will be loaded first, then any files in the plugin lang folder. 
+*  cleaned up some strings and their text domain assignment
 
 = Version 4.5 =
 *  removed a filter line that should NOT have been in that update and was not picked up in testing due to cacheing

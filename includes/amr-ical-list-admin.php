@@ -343,7 +343,7 @@ function amrical_groupingsoption($i) {
 	 echo '</a></h4><div class="toggle_container">';
 	
 
-	echo '<table><tr><th>'.__('Possible Groupings').'</th><th align=center>'.__('Level').' 1</th><th align=center> '.__('Level').' 2</th></tr>';
+	echo '<table><tr><th>'.__('Possible Groupings', 'amr-ical-events-list').'</th><th align=center>'.__('Level','amr-ical-events-list').' 1</th><th align=center> '.__('Level','amr-ical-events-list').' 2</th></tr>';
 	$nolevel1 = false;
 	$nolevel2 = false;	
 	if (empty($listtype['grouping'])) { echo 'No groupings ?';
@@ -355,7 +355,7 @@ function amrical_groupingsoption($i) {
 		}
 
 
-	echo '<tr><td>'.__('No grouping').'</td>';
+	echo '<tr><td>'.__('No grouping','amr-ical-events-list').'</td>';
 	$sel = checked($nolevel1,true, false);
 	echo "<td align=center><input type='radio' name='level[1]' value='none' "
 			. $sel."/></td>";
@@ -364,7 +364,7 @@ function amrical_groupingsoption($i) {
 			. $sel."/></td>";
 	echo '</tr>';	
 	
-	echo '<tr><th>'.__('Taxonomies').'</th><td colspan="2"><em>'.__('(Requires amr-events)').'</em></td></tr>';
+	echo '<tr><th>'.__('Taxonomies','amr-ical-events-list').'</th><td colspan="2"><em>'.__('(Requires amr-events)','amr-ical-events-list').'</em></td></tr>';
 	foreach ( $taxonomies as $i => $taxonomy ) {
 		$taxo = get_taxonomy($taxonomy);
 		$c = $taxo->label; 
@@ -383,7 +383,7 @@ function amrical_groupingsoption($i) {
 		echo '</tr>';
 		
 	}
-	echo '<tr><th>'.__('Date based').'</th><td colspan="2"><em>'.__('(See also date and time formats)').'</em></td></tr>';
+	echo '<tr><th>'.__('Date based','amr-ical-events-list').'</th><td colspan="2"><em>'.__('(See also date and time formats)','amr-ical-events-list').'</em></td></tr>';
 	foreach ( $groupings as $c => $tmp ) {
 		if (in_array($c,$taxonomies )) continue;  // don't repeat
 		if (!empty($listtype['grouping'][$c])) 
@@ -515,6 +515,9 @@ function amrical_validate_manage_listings()  {
 				$calendar_preview_url  = $sticky_url ;
 			update_option('amr-ical-calendar_preview_url', $calendar_preview_url);
 		}
+	}
+	else {
+		update_option('amr-ical-calendar_preview_url', '');
 	}
 
 //----- list numbers
@@ -1064,7 +1067,7 @@ function amrical_other_form ($i) {
 			<option value="smallcalendar" <?php if ($style==='smallcalendar') echo 'selected="selected" '; ?>><?php _e('Small box calendar', 'amr-ical-events-list'); ?></option>
 			<option value="largecalendar" <?php if ($style==='largecalendar') echo 'selected="selected" '; ?>><?php _e('Large box calendar', 'amr-ical-events-list'); ?></option>
 			<option value="weekscalendar" <?php if ($style==='weekscalendar') echo 'selected="selected" '; ?>><?php _e('Weeks calendar', 'amr-ical-events-list'); ?></option>
-			<option value="list" <?php if ($style==='list') echo 'selected="selected" '; ?>><?php _e('Lists for rows', 'amr-ical-events-list'); _e(' *Avoid - deprecated'); ?></option>
+			<option value="list" <?php if ($style==='list') echo 'selected="selected" '; ?>><?php _e('Lists for rows', 'amr-ical-events-list'); _e(' *Avoid - deprecated','amr-ical-events-list'); ?></option>
 			<option value="tableoriginal" <?php if ($style==='tableoriginal') echo 'selected="selected" '; ?>><?php _e('Table with lists in cells (original)', 'amr-ical-events-list'); ?></option>
 
 		</select><br />	<br />
@@ -1125,6 +1128,7 @@ function amr_ical_general_form() {
 		$styletext = __('Styling and Images', 'amr-ical-events-list');
 		$advtext = __('Advanced','amr-ical-events-list');
 		$managetext = __('Manage Event List Types','amr-ical-events-list');
+		
 		echo '<div>
 		<a title="'.$gentext .'" href="#amrglobal">'
 		.$gentext.'</a> | '
@@ -1151,8 +1155,11 @@ function amr_ical_general_form() {
 			<?php _e('Look for more events message: ', 'amr-ical-events-list');
 			?></label><br />
 			<input class="wide regular-text" type="text" id="lookmoremessage" name="lookmoremessage"
-			<?php if (isset($amr_options['lookmoremessage']) and ($amr_options['lookmoremessage']))
-				{echo 'value="'.$amr_options['lookmoremessage'].'"';}?>/>
+			<?php 
+			if (isset($amr_options['lookmoremessage']) and ($amr_options['lookmoremessage']))
+				{echo 'value="'
+				.$amr_options['lookmoremessage']
+				.'"';}?>/>
 			<br />
 			<label for="lookprevmessage">
 			<?php _e('Look for previous events message: ', 'amr-ical-events-list');

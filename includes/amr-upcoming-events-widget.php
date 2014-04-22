@@ -18,9 +18,11 @@ class amr_ical_widget extends WP_widget {
 	$amr_calendar_url,
 	$amr_ical_am_doing,
 	$change_view_allowed,
-	$widget_icalno; /* used to give each ical widget a unique id on a page */
+	$widget_icalno, /* used to give each ical widget a unique id on a page */
+	$amr_been_here;  /* used to detect if we are looping somehow - reset at the end of each widget or shortcode. */
 //
-	
+	if (amr_a_nested_event_shortcode ()) return (false); //someone entered an event shortcode into event content - causing a loop of events lists inside event lists
+		
 	amr_ical_load_text(); // do we have to reload all over theplace ?  wp does not always seem to have the translations
 	$change_view_allowed = false;
 	$amr_ical_am_doing = 'listwidget';
@@ -82,6 +84,9 @@ class amr_ical_widget extends WP_widget {
 
 	echo $content;
 	echo $after_widget;
+	
+	/* we made it out the other end without looping ?*/
+	$amr_been_here = false;
 
 	}
 /* ============================================================================================== */
@@ -193,9 +198,11 @@ class amr_icalendar_widget extends WP_widget {
 	global $amr_listtype;
 	global $change_view_allowed;
 	global $widget_icalno; /* used to give each ical widget a unique id on a page */
-	global $amr_calendar_url;
-
-	$criteria 	= amr_get_params ($args);  /* this may update listtype, limits  etc */
+	global $amr_calendar_url,
+	$amr_been_here;
+	
+	// don't check becuase it checks in the shortcode function we call
+	// 20140209  redundant - done in the shortcode function too $criteria 	= amr_get_params ($args);  /* this may update listtype, limits  etc */
 	amr_ical_load_text(); // do we have to reload all over theplace ?  wp does not always seem to have the translations
 
 	$change_view_allowed = false;
@@ -235,6 +242,9 @@ class amr_icalendar_widget extends WP_widget {
 	echo $content;
 	if (!empty($after_widget)) echo $after_widget;
 	if (isset ($savedays)) $amr_limits['days'] = $savedays;
+	
+	/* we made it out the other end without looping ?*/
+	$amr_been_here = false;
 	}
 /* ============================================================================================== */
 	function update($new_instance, $old_instance) {  /* this does the update / save */

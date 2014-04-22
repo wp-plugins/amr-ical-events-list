@@ -1,4 +1,33 @@
 <?php //comonly useful functions
+function amr_a_nested_event_shortcode () {
+	global $amr_been_here;
+	
+	
+	if (ICAL_EVENTS_DEBUG) {
+		echo '<br />....Checking Loop Flag';
+	}	
+	if (empty($amr_been_here) or (!($amr_been_here))) { 
+		$amr_been_here = true;
+		if (ICAL_EVENTS_DEBUG) echo '<br />....Setting Loop Flag. ';
+		return false;
+		}
+	else {	
+		echo '<hr />Event List Execution halted - looping detected. Did some one enter an event list shortcode into event content?  That will cause a loop for sure.';
+		return true;
+		}
+}
+/* -------------------------------------------------------------------------------------------*/
+function amr_convert_date_string_to_object ($a) {
+global $amr_globaltz;
+	if (checkdate(substr($a,4,2), /* month */
+			substr($a,6,2), /* day*/
+			substr($a,0,4)) /* year */ )
+			$e = date_create($a,$amr_globaltz);
+	else {
+		_e('Invalid Event Date', 'amr-ical-events-list');
+		}
+	return ($e);				
+}
 /* -------------------------------------------------------------------------------------------*/
 function amr_tell_admin_the_error ($text) {
 	// only report the error to admin if logged in ?
@@ -152,11 +181,16 @@ function amr_allowed_html () {
 	/* ---------------------------------------------------------------------- */
 function amr_make_sticky_url($url) {
 
-	$page_id = url_to_postid($url);
+	$page_id = url_to_postid($url); // doesnt work on homepage - returns 0;
+	
+	if ($page_id == 0) {// must be static homepage? so force finding the id
+		$page_id = get_option('page_on_front');
+	}
 
 	if (!$page_id) return false ;
-	else {
-		$sticky_url  = add_query_arg('page_id',$page_id, get_bloginfo('url'));
+	else {  
+		$sticky_url  = add_query_arg('p',$page_id, get_bloginfo('url'));
+		//p safer than page_id - wp 'keeps' the p, but forces pageid to base home if is front page
 		return( $sticky_url) ;
 	}
 }
@@ -216,7 +250,7 @@ function amr_request_acknowledgement () {
 	echo ' <a title="home of both plugins" href="http://icalevents.com" >icalevents.com</a></b>';
 	echo '</span>';
 	echo '<ul><li>&#10004; ';
-	_e('Keep all these settings and lists');
+	_e('Keep all these settings and lists','amr-ical-events-list');
 	echo '</li><li>&#10004; ';
 	_e('Offers many additional benefits.','amr-ical-events-list');
 	echo '<a title="description of benefits and differences" href="http://icalevents.com/amr-events/">'.__('Find out more','amr-ical-events-list').'</a>';
@@ -266,7 +300,7 @@ function amrical_mimic_meta_box($id, $title, $callback , $toggleable = true) {
 		echo '<div id="' . $id . '" class="postbox ' ;
 		if ($toggleable) { echo 'if-js-closed' ;}
 		echo '">' . "\n";
-		echo '<div class="handlediv" title="' . __('Click to toggle') . '"><br /></div>';
+		echo '<div class="handlediv" title="' . __('Click to toggle','amr-ical-events-list') . '"><br /></div>';
 
 		echo "<h3 class='hndle'><span>".$title."</span></h3>\n";
 		echo '<div class="inside">' . "\n";

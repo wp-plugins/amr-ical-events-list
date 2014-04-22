@@ -1,5 +1,21 @@
 <?php /* Pluggable functions that need to be loaded after the theme so that a theme functions.php can override
 */
+/* --------------------------------------------------  */
+
+if (!function_exists("nl2br2")) {
+	function nl2br2($string) {
+
+	$s2 = str_replace(array('\n\n','\r\n'), '<br /><br />', $string);
+
+	$s2 = str_replace(array( '\r', '\n'), '<br />', $string);
+	
+	// optionally add // $s2 str_replace("=0D=0A", '<br />', $string);
+	// or use a wordpress content filter
+
+	return($s2);
+	}
+}
+// ---------------------------------------------------------------
 if (!function_exists('amr_events_sort_later_events_first')) {
 	function amr_events_sort_later_events_first($constrained) {
 		$constrained = amr_reverse_sort_by_key($constrained , 'EventDate');
@@ -29,12 +45,13 @@ if (!function_exists('amr_handle_no_events')) {
 	function amr_handle_no_events () {
 		global $amr_options,
 		$amr_limits;
-
+		
 		$thecal = '';
 		if (!empty($amr_options['noeventsmessage'])) {
 			$thecal .=  '<a class="noeventsmessage" style="cursor:help;" href="" title="'
 			.amr_echo_parameters().'"> '
-			.$amr_options['noeventsmessage'].'</a>';
+			/* translators: ignore this and translate the string found earlier " No events..." */
+			.__($amr_options['noeventsmessage'],'amr-ical-events-list').'</a>';
 
 			if ((isset($amr_limits['show_look_more'])) and ($amr_limits['show_look_more'])) {
 					$thecal .= amr_show_look_more();
@@ -303,7 +320,7 @@ function amr_semi_paginate() {
 		$showmuchless = htmlentities (add_query_arg (array(
 				'hours' => max (1, round($amr_limits['hours']/20))
 				)));
-		$explaint =  ' '.__('hours','amr-events');
+		$explaint =  ' '.__('hours','amr-ical-events-list');
 		}
 	else
 	if (isset ($amr_limits['months'])) {
@@ -323,7 +340,7 @@ function amr_semi_paginate() {
 		$showmuchless = htmlentities (add_query_arg (array(
 				'months' => round($amr_limits['months']/4)
 				)));
-		$explaint =  ' '.__('months','amr-events');
+		$explaint =  ' '.__('months','amr-ical-events-list');
 		}
 	else if (isset ($amr_limits['days'])) {
 		$goback = htmlentities (add_query_arg (array ('start'=>$gobackd, 'startoffset'=> -$amr_limits['days'])));
@@ -339,7 +356,7 @@ function amr_semi_paginate() {
 		$showmuchless = htmlentities (add_query_arg (array(
 				'days' => max (1,round($amr_limits['days']/10))
 				)));
-		$explaint =  ' '.__('days','amr-events');
+		$explaint =  ' '.__('days','amr-ical-events-list');
 	}
 
 	$show10   = htmlentities (add_query_arg (array('events'=> 10)));
@@ -347,17 +364,17 @@ function amr_semi_paginate() {
 	$show100  = htmlentities (add_query_arg (array('events'=> 100)));
 //	$explaint = ' - '.amr_explain_limits();
 
-	$prevt    = __('show past events'  ,'amr-events');
-	$lesst    = __('show less' ,'amr-events').$explaint;
-	$moret    = __('show more' ,'amr-events').$explaint;
-	$muchlesst    = __('show much less' ,'amr-events').$explaint;
-	$muchmoret    = __('show much more' ,'amr-events').$explaint;
-//	$lesstt   = __('show less' ,'amr-events').$explaint;
-//	$morett   = __('show more' ,'amr-events').$explaint;
-	$nextt    = __('show future events'   ,'amr-events');
-	$eventnum10t= __('show maximum 10 events if available' ,'amr-events').$explaint;
-	$eventnum50t= __('show maximum 50 events if available' ,'amr-events').$explaint;
-	$eventnum100t= __('show maximum 100 events if available' ,'amr-events').$explaint;
+	$prevt    = __('show past events'  ,'amr-ical-events-list');
+	$lesst    = __('show less' ,'amr-ical-events-list').$explaint;
+	$moret    = __('show more' ,'amr-ical-events-list').$explaint;
+	$muchlesst    = __('show much less' ,'amr-ical-events-list').$explaint;
+	$muchmoret    = __('show much more' ,'amr-ical-events-list').$explaint;
+//	$lesstt   = __('show less' ,'amr-ical-events-list').$explaint;
+//	$morett   = __('show more' ,'amr-ical-events-list').$explaint;
+	$nextt    = __('show future events'   ,'amr-ical-events-list');
+	$eventnum10t= __('show maximum 10 events if available' ,'amr-ical-events-list').$explaint;
+	$eventnum50t= __('show maximum 50 events if available' ,'amr-ical-events-list').$explaint;
+	$eventnum100t= __('show maximum 100 events if available' ,'amr-ical-events-list').$explaint;
 	return (
 		'<div id="icalnavs" class="icalnav" >'
 		.'<a rel="next" id="icalback" class="icalnav symbol" title="'.$prevt
@@ -636,7 +653,7 @@ if (!function_exists('amr_format_taxonomy_link') ) {  //problem ics file categor
 		$name = $term->name;
 		$link2 = add_query_arg ($tax_name, $term->slug, $link);
 		$title = sprintf(__('View events in %s %s','amr-ical-events-list'),
-				__($tax_name,'amr-events'), $term->name);
+				__($tax_name,'amr-ical-events-list'), $term->name);
 	}
 	$html = '<a href="'.htmlspecialchars($link2)
 		.'" title="'.$title
@@ -1359,23 +1376,26 @@ function amr_show_look_more() {
 	// NB MUST increase the number of events otherwise one can get caught in a situation where if num of events less than events in a day, one can never get past that day.
 
 	if (empty($amr_options['lookmoremessage']))
-		$moret    =  __('Look for more', 'amr-events');
+		$moret    =  __('Look for more', 'amr-ical-events-list');
 	else
-		$moret    = $amr_options['lookmoremessage'];
+	/* translators: ignore, the text appears for translation eslewhere */
+		$moret    = __($amr_options['lookmoremessage'],'amr-ical-events-list');
 
-	$morett    = sprintf( __('Look for more from %s' ,'amr-events'),$amr_last_date_time->format($amr_formats['Day']));
+	$morett    = sprintf( __('Look for more from %s' ,'amr-ical-events-list'),$amr_last_date_time->format($amr_formats['Day']));
 
 
 	if (!empty($_REQUEST['start'])) {
 		if (empty($amr_options['lookprevmessage']))
 			$prevt    =  '';
 		else
-			$prevt    = $amr_options['lookprevmessage'];
+		/* translators: ignore, the text appears for translation eslewhere */
+			$prevt    = __($amr_options['lookprevmessage'],'amr-ical-events-list');
 
 		if (empty($amr_options['resetmessage']))
 			$reset = '';  // allow it to be blanked out
 		else
-			$reset = $amr_options['resetmessage'];
+		/* translators: ignore, the text appears for translation eslewhere */
+			$reset = __($amr_options['resetmessage'],'amr-ical-events-list');
 	}
 	else {  // if we on first page, do not show
 		$reset = '';
@@ -1385,12 +1405,12 @@ function amr_show_look_more() {
 	if (!empty ($reset) ) {
 		$reseturl = remove_query_arg(array('start','startoffset','events','days','months','hours','weeks'));
 		$reset ='<a id="icalareset"  title="'
-		.__('Go back to initial view' ,'amr-events')
+		.__('Go back to initial view' ,'amr-ical-events-list')
 		.'" href="'.esc_attr($reseturl).'">'.$reset.'</a>';
 	}
 	if (!empty ($prevt) ) {
 		$prevt ='<a rel="prev" id="icalaprev"  title="'
-		.__('Go back to previous events' ,'amr-events')
+		.__('Go back to previous events' ,'amr-ical-events-list')
 		.'" href="'.esc_attr($prevurl).'">'.$prevt.'</a>';
 	}
 	return (

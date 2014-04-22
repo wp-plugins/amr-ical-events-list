@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.5');
+define('AMR_ICAL_LIST_VERSION', '4.6');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -454,14 +454,7 @@ function amr_same_time ($d1, $d2) {
 	if ($d1->format('YmdHis') === $d2->format('YmdHis')) return (true);  //v 4.0.9  maybe should check whole day ?
 	else return (false);
 }
-/* --------------------------------------------------  */
-function nl2br2($string) {
-$s2 = str_replace(array('\n\n','\r\n'), '<br /><br />', $string);
 
-$s2 = str_replace(array( '\r', '\n'), '<br />', $string);
-return($s2);
-
-}
 /* --------------------------------------------------  */
 function amr_amp ($content) { //trying to avoid double ?
 	return (str_replace('&','&amp;',str_replace('&amp;','&',$content) ));
@@ -665,10 +658,17 @@ global $amr_globaltz;
 
 	if (isset($e['EventDate'])) { 
 		if (isset($_REQUEST['tzdebug'])) {echo '<br /> date='; var_dump($e['EventDate']);}
+		// 20140209 somehow events have eventdate stored in db
+		if (!is_object($e['EventDate'])) {
+			$e['EventDate'] = amr_convert_date_string_to_object($e['EventDate']);
+		}
 		date_timezone_set($e['EventDate'],$amr_globaltz );
 	}
 	if (!isset($e['Classes'])) $e['Classes'] = '';
 	if (isset($e['EndDate'])) {
+		if (!is_object($e['EndDate'])) {
+			$e['EndDate'] = amr_convert_date_string_to_object($e['EndDate']);
+		}
 		date_timezone_set($e['EndDate'],$amr_globaltz );
 		if (amr_is_before($e['EndDate'], $now)) $e['Classes'] .= ' history';
 		}
@@ -798,9 +798,13 @@ function amr_make_excerpt_from_description ($e) {
 		}
 		else $desc = '';
 
-		$excerpt = substr( $desc,0, // start
-				apply_filters('excerpt_length', 55))
-				.'...'; //length
+		$length = apply_filters('excerpt_length', 55); // in case a filter returns garbage;
+		if (!is_int($length))  $length = 55;
+		$excerpt = substr( 
+				$desc,
+				0, // start
+				$length) //length
+				.'...'; 
 
 		return ($excerpt);
 	}
@@ -1519,6 +1523,8 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 						$events[$i] = amr_parse_unparsed($event);
 						$event 		= amr_parseRepeats($event);
 					}
+					if (ICAL_EVENTS_DEBUG) { echo '<br>Events from posts now parsed. Try make calendar';}
+					
 					$icals = amr_make_ical_from_posts($events, $criteria);
 
 					if (ICAL_EVENTS_DEBUG) { echo '<br>Got calendars from posts :'.count($icals).' events='.count($events).'<br>'; }
@@ -1597,7 +1603,9 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 				$amr_one_page_events_cache[$key]['components'] = $components;
 				$amr_one_page_events_cache[$key]['icals'] = $icals;
 		}
-if (isset($_REQUEST['debug'])) {echo '<hr/>Is end set Before list - 1? '; var_dump($amr_limits['end']);}		
+
+		
+		if (isset($_REQUEST['debug'])) {echo '<hr/>Is end set Before list - 1? '; var_dump($amr_limits['end']);}		
 		amrical_mem_debug('Before listing');
 		if (isset ($icals) and is_array($icals)) {
 /* amr here is the main html  code  *** */
@@ -1611,15 +1619,12 @@ if (isset($_REQUEST['debug'])) {echo '<hr/>Is end set Before list - 1? '; var_du
 				$thecal =  amr_list_properties ($icals, $tid, $class);		/* list the calendar properties if requested */
 			}
 			else $thecal = '';
+			
 if (isset($_REQUEST['debug'])) {echo '<hr/>Is end set Before list - 0? '; var_dump($amr_limits['end']);}
+			
 			if ((!amr_doing_box_calendar())
 			and empty($components) ) {
 				$thecal .= amr_handle_no_events ();
-//			and (!empty($amr_options['noeventsmessage']))) {
-//				$thecal .=  '<a class="noeventsmessage" style="cursor:help;" href="" title="'
-//				.amr_echo_parameters().'"> '
-//				.$amr_options['noeventsmessage'].'</a>';
-//				$thecal .= amr_semi_paginate();
 			}
 			else {
 				$tid 	= '';
@@ -1658,7 +1663,6 @@ global $amr_last_date_time;
 	
 // else will not save a last date.
 }
-
 /* -------------------------------------------------------------------------*/
 function amr_get_params ($attributes=array()) {
 /*  We are passed the widget or shortcode attributes,
@@ -1677,6 +1681,9 @@ function amr_get_params ($attributes=array()) {
 	$change_view_allowed,
 	$amr_calendar_url,
 	$amrW; // indicates if widget, 
+	
+
+
 
 //	if (!empty ($amrW) ) //must be empty not isset  ??nlr - default listtype should be set in attributes
 //		$amr_listtype='4';
@@ -1800,8 +1807,9 @@ function amr_get_params ($attributes=array()) {
 	// save the global list type first
 	if (!empty($shortcode_params['listtype'])) {
 		$amr_listtype = $shortcode_params['listtype'];
+		if (ICAL_EVENTS_DEBUG) {echo '<br />Listtype from shortcode: '.$amr_listtype; echo '<br />shortcode params'; var_dump($shortcode_params);}
 		unset($shortcode_params['listtype']);
-		if (ICAL_EVENTS_DEBUG) {echo '<br />Listtype from shortcode: '.$amr_listtype;}
+		
 	}
 	
 
@@ -2069,6 +2077,11 @@ global $amr_limits,
 /* Allow multiple urls and only one listtype */
 /*  merge atts with this array, so we will have a default list */
 
+global $amr_been_here;
+/*  Test because if some numbskull puts the ical or events shortcodes IN an event.
+*/	
+	if (amr_a_nested_event_shortcode ()) return (false); //someone entered an event shortcode into event content - causing a loop of events lists inside event lists
+	
 	$change_view_allowed = true;
 	$amr_ical_am_doing = 'list';
 	$defaults['listtype'] = 1;
@@ -2092,16 +2105,21 @@ global $amr_limits,
 
 	$id = amr_get_id_for_shortcode();
 	$html = '<div '.$id.' >'.$content.'</div>';
+	
+	/* we made it out the other end with out looping ?*/
+	$amr_been_here = false;
+	
   return ($html);
 
 }
 /* -------------------------------------------------------------------------*/
 function amr_do_smallcal_shortcode ($attributes) {
 global $amr_limits,
- $amr_listtype,
- $change_view_allowed,
- $amr_icalno,
- $amr_ical_am_doing;
+	$amr_listtype,
+	$change_view_allowed,
+	$amr_icalno,
+	$amr_ical_am_doing,
+	$amr_been_here;
 // treat as widget anyway to avoid view changes etc
 // This is the main function.  It replaces [iCal URL]'s with events. Each as a separate list   if no listtype set it to 8
 /* Allow multiple urls and only one listtype */
@@ -2113,6 +2131,8 @@ global $amr_limits,
 	$defaults['months'] = 1;
 	$defaults['show_views'] = 0;
 	$defaults['ignore_query'] = 0;
+	
+	if (amr_a_nested_event_shortcode ()) return (false); //someone entered an event shortcode into event content - causing a loop of events lists inside event lists
 
 	if (empty($attributes)) $attributes = array();
 
@@ -2137,6 +2157,8 @@ global $amr_limits,
 
 	$html = '<div '.$id.' >'.$content.'</div>';
 
+	/* we made it out the other end with out looping ?*/
+	$amr_been_here = false;
   return ($html);
 
 }
@@ -2146,10 +2168,14 @@ global $amr_limits,
  $amr_listtype,
  $change_view_allowed,
  $amr_ical_am_doing,
- $amr_icalno;/* used to give each ical  table a unique id on a page or post */
+ $amr_icalno,
+ $amr_been_here;
+ ;/* used to give each ical  table a unique id on a page or post */
 // This is the main function.  It replaces [iCal URL]'s with events. Each as a separate list   if no listtype set it to 8
 /* Allow multiple urls and only one listtype */
 /*  merge atts with this array, so we will have a default list */
+
+	if (amr_a_nested_event_shortcode ()) return (false); //someone entered an event shortcode into event content - causing a loop of events lists inside event lists
 
 	$change_view_allowed = true;
 	$amr_ical_am_doing = 'largecalendar';
@@ -2176,7 +2202,8 @@ global $amr_limits,
 
 
 	$html = '<div '.$id.' >'.$content.'</div>';
-
+	/* we made it out the other end with out looping ?*/
+	$amr_been_here = false;
   return ($html);
 
 }
@@ -2186,10 +2213,12 @@ global $amr_limits,
  $amr_listtype,
  $change_view_allowed,
  $amr_ical_am_doing,
- $amr_icalno;/* used to give each ical  table a unique id on a page or post */
+ $amr_icalno,
+ $amr_been_here;/* used to give each ical  table a unique id on a page or post */
 // This is the main function.  It replaces [iCal URL]'s with events. Each as a separate list   if no listtype set it to 8
 /* Allow multiple urls and only one listtype */
 /*  merge atts with this array, so we will have a default list */
+	if (amr_a_nested_event_shortcode ()) return (false); //someone entered an event shortcode into event content - causing a loop of events lists inside event lists
 
 	$change_view_allowed = true;
 	$amr_ical_am_doing = 'weekscalendar';
@@ -2222,15 +2251,18 @@ global $amr_limits,
 
 	$html = '<div '.$id.' >'.$content.'</div>';
 
+	/* we made it out the other end with out looping ?*/
+	$amr_been_here = false;
   return ($html);
 
 }
 // ----------------------------------------------------------------------------------------
 function amr_first_available_listtype() {
 	global $amr_options;
-	if (isset ($amr_options['listtypes']['4'])) return('4');  // use the widget list type if still there as least offensive general purpose list type
+	if (isset ($amr_options['listtypes']['4'])) 
+		return('4');  // use the widget list type if still there as least offensive general purpose list type
 	$keys = array_keys($amr_options['listtypes']);
-	return (array_pop($keys));
+	return (array_shift($keys));
 }
 // ----------------------------------------------------------------------------------------
 function amr_get_set_start_for_nav () {  // gets or sets a date object to the begiinging of the curremt month, or the passed date
@@ -2247,27 +2279,23 @@ function amr_get_set_start_for_nav () {  // gets or sets a date object to the be
 	}
 	return ($start);
 }
-/* -------------------------------------------------------------------------------------------------------------*/
-if (!function_exists('amr_load_custom_text') ) { // for filter
-	function amr_load_custom_text( $mofile, $domain='' ) {
-	//only do for the plugins/themes you want
-	if (!in_array($domain, array('amr-ical-events-list', 'amr-events')))
-        return $mofile;
+/* --------------------------------------------------------------------------------------------------*/
+function amr_ical_load_text() { 
+// allows for a custom language file in WP_LANG_DIR as per prior versions
+// note NOT in WP_LANG_DIR/plugins as that will be used by wp language pack feature
 
-    $pathinfo = pathinfo($mofile);
-	$custom_mofile = WP_CONTENT_DIR."/languages/" . $pathinfo["basename"];
-	if (file_exists($custom_mofile))
-			return ($custom_mofile);
-	else
-			return $mofile;
-    }
+    $domain = 'amr-ical-events-list';
+    // The "plugin_locale" filter is also used in load_plugin_textdomain()
+    $locale = apply_filters('plugin_locale', get_locale(), $domain);
+	// if custom language file allowed for in prior versions exists, then load it first
+    $result = load_textdomain($domain, WP_LANG_DIR.'/'.$domain.'-'.$locale.'.mo');
+
+// wp (see l10n.php) will check wp-content/languages/plugins if nothing found in plugin dir
+
+	$result = load_plugin_textdomain($domain, false/* nlr */, $domain.'/lang/');
+	//default is languages, maybe change in future?
 }
-add_filter ('load_textdomain_mofile','amr_load_custom_text',10,2 );
-/* -------------------------------------------------------------------------------------------------------------*/
-function amr_ical_load_text() {
-	$result = load_plugin_textdomain('amr-ical-events-list', false/* nlr */, 'amr-ical-events-list/lang');
-}
-/* -------------------------------------------------------------------------------------------------------------*/
+/* -----------------------------------------------------------------------------------------------*/
 function amr_ical_widget_init() {
 	register_widget('amr_ical_widget');
 	register_widget('amr_icalendar_widget');
@@ -2303,9 +2331,8 @@ function amr_notice_listtypes_converted () {  // from version < 4.0 to version 4
 		.__('Your existing saved list types have been converted.  If you wish to return to the earlier version of the plugin, you will have to reset the list types and reapply your changes. Or use your DB backup to set the amr-ical-events-list option back to previous version. You do have regular backups right? ','amr-ical-events-list').'<br />');
 		echo '</div>';
  }
- /* ------------------------------------------------------------------------------------------------ */
-
- function amr_ical_include_scripts() {  // only load js if requested
+/* ------------------------------------------------------------------------------------------------ */
+function amr_ical_include_scripts() {  // only load js if requested
  global $amr_listtype,$amr_options,$amr_doing_icallist;
  // csss required for widgets etc, so allow general load
 	
@@ -2316,14 +2343,13 @@ function amr_notice_listtypes_converted () {  // from version < 4.0 to version 4
 	wp_enqueue_script( 'amr-ical', $url, array( 'jquery'), false, true);  // true for in footer
 
  }
- 
  function amr_ical_load_frontend_scripts() {  // only load js if requested
  // csss required for widgets etc, so allow general load
 	wp_enqueue_script('jquery');
 
  }
- /* ------------------------------------------------------------------------------------------------------ */
-	/**
+/* ------------------------------------------------------------------------------------------------------ */
+ /**
 	Adds a links directly to the settings page from the plugin page
 	*/
 function amr_plugin_links($links, $file) {
@@ -2337,7 +2363,6 @@ function amr_plugin_links($links, $file) {
 		}
 		return $links;
 	} // end plugin_links()
-	
 
 /* ------------------------------------------------------------------------------------------------------ */
 	set_exception_handler('amr_ical_exception_handler');
@@ -2355,10 +2380,10 @@ function amr_plugin_links($links, $file) {
 	}
 
 	add_action('widgets_init'           , 'amr_ical_widget_init');
-//	amr_ical_load_text();  // only load if required
 
 	add_action('plugins_loaded'         , 'amr_ical_load_text' );
-	add_action( 'init'             		, 'amr_ical_load_text' );
+	// as per ottos post for language packs
+	//add_action( 'init'             		, 'amr_ical_load_text' );
 	add_shortcode('iCal'                , 'amr_do_ical_shortcode');
 	add_shortcode('ical'                , 'amr_do_ical_shortcode'); // in case people make mistake
 	add_shortcode('smallcalendar'       , 'amr_do_smallcal_shortcode');

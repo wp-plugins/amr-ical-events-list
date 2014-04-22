@@ -143,9 +143,9 @@ if (!class_exists('amrical_plugin_admin')) {
 		 * Create a "plugin like" box.
 		 */
 		function plugin_like() {
-			$content = '<p>'.__('Why not do any or all of the following:','amrplugin').'</p>';
+			$content = '<p>'.__('Why not do any or all of the following:','amr-ical-events-list').'</p>';
 			$content .= '<ul>';
-			$content .= '<li><a href="'.$this->homepage.'">'.__('Link to it so other folks can find out about it.','amrplugin').'</a></li>';
+			$content .= '<li><a href="'.$this->homepage.'">'.__('Link to it so other folks can find out about it.','amr-ical-events-list').'</a></li>';
 			$content .= '</ul>';
 			$this->postbox($this->hook.'like', 'Like this plugin?', $content);
 		}			
@@ -153,7 +153,7 @@ if (!class_exists('amrical_plugin_admin')) {
 		 * Info box with link to the support forums.
 		 */
 		function plugin_support() {
-			$content = '<p>'.__('If you have any problems with this plugin or good ideas for improvements or new features, please talk about them in the','amrplugin').' <a href="http://wordpress.org/tags/'.$this->hook.'">'.__("Support forums",'amrplugin').'</a>.</p>';
+			$content = '<p>'.__('If you have any problems with this plugin or good ideas for improvements or new features, please talk about them in the','amr-ical-events-list').' <a href="http://wordpress.org/tags/'.$this->hook.'">'.__("Support forums",'amr-ical-events-list').'</a>.</p>';
 			$this->postbox($this->hook.'support', 'Need support?', $content);
 		}
 		/**
