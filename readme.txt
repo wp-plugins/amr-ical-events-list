@@ -3,7 +3,7 @@ Contributors: anmari
 Tags: event, events, event calendar, events calendar, event manager, diary, schedule, ical, ics, ics calendar, ical feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, agenda, happenings, shows, concerts, conferences, courses, timetable, schedule
 
 Requires at least: 2.8
-Tested up to: 3.9
+Tested up to: 3.9.1
 Version: 4.6
 Stable tag: trunk
 
@@ -36,13 +36,15 @@ Many thanks to the following people for the translations.  Note that I am unable
 *   Lithuanian by Nata Strazda from Web Hub
 *   Polish by Kasia
 *   French by fxbenard aka 3emeOeil
+*   Dutch by Fred Onis
 *   Danish by Georg feom blogso.dk
-*   German by Simon Betschmann
 *   Belorussian by Alexander Ovsov from webhostinggeeks.com/science
+*   Romainian by webgeek
 *   Russian (partial) by ghost (antsar.info)
 *   Hindi translation  by Ashish J. of Outshine solutions
+*   Ukranian translation by Michael Yunat of getvoip.com/blog
 
-If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me both the .mo and .po files for your language.
+If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me both the .mo and .po files for your language for quicker upload.
 
 Requirements:
 

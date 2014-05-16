@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: amr events calendar or lists with ical files v4.5\n"
+"Project-Id-Version: amr events calendar or lists with ical files v4.6\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/amr-ical-events-list\n"
 "POT-Creation-Date: 2011-05-31 11:48:02+00:00\n"
-"PO-Revision-Date: 2014-04-21 18:04:54+1000\n"
+"PO-Revision-Date: 2014-05-16 21:27:41+1000\n"
 "Last-Translator: \n"
 "Language-Team: Web Geek\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Textdomain-Support: yes"
 
-#: includes/amr-ical-events-list-main.php:2364
+#: includes/amr-ical-events-list-main.php:2360
 #: includes/amr-ical-list-admin.php:16
 #: includes/amr-ical-plugin-form-html.php:48
 #@ amr-ical-events-list
@@ -587,7 +587,7 @@ msgstr "Dupa"
 msgid "Column Headings:"
 msgstr "Coloana Titluri:"
 
-#: includes/amr-ical-events-list-main.php:2366
+#: includes/amr-ical-events-list-main.php:2362
 #: includes/amr-ical-list-admin.php:27
 #@ amr-ical-events-list
 msgid "Documentation"
@@ -1435,27 +1435,27 @@ msgstr "Invalid URL-ul% s ical"
 msgid "Invalid Start Date"
 msgstr "Data de incepere nevalid"
 
-#: includes/amr-ical-events-list-main.php:2327
+#: includes/amr-ical-events-list-main.php:2323
 #@ amr-ical-events-list
 msgid "Uncaught exception: "
 msgstr "Uncaught exceptie:"
 
-#: includes/amr-ical-events-list-main.php:2328
+#: includes/amr-ical-events-list-main.php:2324
 #@ amr-ical-events-list
 msgid "<br /><br />An error in the input data may prevent correct display of this page.  Please advise the administrator as soon as possible."
 msgstr "pagina. Va rugam sa consilieze administratorul cat mai curand posibil. "
 
-#: includes/amr-ical-events-list-main.php:2335
+#: includes/amr-ical-events-list-main.php:2331
 #@ amr-ical-events-list
 msgid "Your existing saved list types have been converted.  If you wish to return to the earlier version of the plugin, you will have to reset the list types and reapply your changes. Or use your DB backup to set the amr-ical-events-list option back to previous version. You do have regular backups right? "
 msgstr "optiune lista inapoi la versiunea anterioara. Aveti copii de siguranta regulate dreptul? "
 
-#: includes/amr-ical-events-list-main.php:2362
+#: includes/amr-ical-events-list-main.php:2358
 #@ amr-ical-events-list
 msgid "General listing Settings"
 msgstr "Setari generale listare"
 
-#: includes/amr-ical-events-list-main.php:2365
+#: includes/amr-ical-events-list-main.php:2361
 #@ amr-ical-events-list
 msgid "List Type Settings"
 msgstr "Tipul lista Setari"
@@ -1974,12 +1974,6 @@ msgstr "anmari"
 msgid "http://anmari.com/"
 msgstr "http://anmari.com/"
 
-#. translators: plugin header field 'Version'
-#: amr-ical-events-list.php:0
-#@ amr-ical-events-list
-msgid "4.5"
-msgstr ""
-
 #: includes/amr-ical-calendar.php:48
 #@ amr-ical-events-list
 msgid "Go to events for this day only"
@@ -2125,37 +2119,37 @@ msgid "Preview the list using a calendar page."
 msgstr ""
 
 #: includes/amr-ical-list-admin.php:346
-#@ default
+#@ amr-ical-events-list
 msgid "Possible Groupings"
 msgstr ""
 
 #: includes/amr-ical-list-admin.php:346
-#@ default
+#@ amr-ical-events-list
 msgid "Level"
 msgstr ""
 
 #: includes/amr-ical-list-admin.php:358
-#@ default
+#@ amr-ical-events-list
 msgid "No grouping"
 msgstr ""
 
 #: includes/amr-ical-list-admin.php:367
-#@ default
+#@ amr-ical-events-list
 msgid "Taxonomies"
 msgstr ""
 
 #: includes/amr-ical-list-admin.php:367
-#@ default
+#@ amr-ical-events-list
 msgid "(Requires amr-events)"
 msgstr ""
 
 #: includes/amr-ical-list-admin.php:386
-#@ default
+#@ amr-ical-events-list
 msgid "Date based"
 msgstr ""
 
 #: includes/amr-ical-list-admin.php:386
-#@ default
+#@ amr-ical-events-list
 msgid "(See also date and time formats)"
 msgstr ""
 
@@ -2185,7 +2179,7 @@ msgid "After that, cut and paste from the list type closest to what you want to 
 msgstr ""
 
 #: includes/amr-ical-list-admin.php:1070
-#@ default
+#@ amr-ical-events-list
 msgid " *Avoid - deprecated"
 msgstr ""
 
@@ -2429,7 +2423,7 @@ msgid "Upgrade to amr-events at "
 msgstr ""
 
 #: includes/functions.php:253
-#@ default
+#@ amr-ical-events-list
 msgid "Keep all these settings and lists"
 msgstr ""
 
@@ -2444,7 +2438,7 @@ msgid "Find out more"
 msgstr ""
 
 #: includes/functions.php:303
-#@ default
+#@ amr-ical-events-list
 msgid "Click to toggle"
 msgstr ""
 
@@ -2461,5 +2455,11 @@ msgstr ""
 #: uninstall.php:34
 #@ amr-ical-events-list
 msgid "Css files may also exist.  They and the css folder have not been deleted as they have been shared with other plugins."
+msgstr ""
+
+#. translators: plugin header field 'Version'
+#: amr-ical-events-list.php:0
+#@ amr-ical-events-list
+msgid "4.6"
 msgstr ""
 
