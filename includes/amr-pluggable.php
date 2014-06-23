@@ -147,12 +147,12 @@ function amr_week_links ($start,$weeks) { // returns array ($nextlink, $prevlink
 	global $wpdb, $wp_locale;
 
 	// Get the next and previous month and year
-	$prev = new Datetime();
+	$prev = new Datetime(); //if cloning dont need tz
 	$prev = clone $start;
 	date_modify($prev, '-'.($weeks*7).' days');   //may need later on if we are going to show multiple boxes on one page
 	$prevstring = $prev->format('Ymd');
 	$prevstring2 = amr_date_i18n('jS F',$prev);
-	$next     = new Datetime();
+	$next     = new Datetime(); //if cloning dont need tz
 	$next     = clone $start;
 	date_modify($next, '+'.($weeks*7).' days');
 	$nextstring = $next->format('Ymd');
@@ -184,12 +184,12 @@ function amr_month_year_links ($start,$months) { // returns array ($nextlink, $p
 	global $wpdb, $wp_locale;
 
 	// Get the next and previous month and year
-	$previous = new Datetime();
+	$previous = new Datetime(); //if cloning dont need tz
 	$previous = clone $start;
 	date_modify($previous, '-1 month');   //may need later on if we are going to show multiple boxes on one page
 	$prevmonth = $previous->format('m');
 	$prevyear = $previous->format('Y');
-	$next     = new Datetime();
+	$next     = new Datetime(); //if cloning dont need tz
 	$next     = clone $start;
 	date_modify($next, '+'.$months.' month');
 	$nextmonth  = $next->format('m');
@@ -223,13 +223,13 @@ function amr_month_year_links ($start,$months) { // returns array ($nextlink, $p
 // ----------------------------------------------------------------------------------------
 if (!function_exists('amr_monthyeardrop_down')) {
 function amr_monthyeardrop_down($current_start) {
-global $wp_locale, $amr_globaltz;
+global $wp_locale;
 
 //	$m = isset($_GET['m']) ? (int)$_GET['m'] : 0;  // actually yyyymm
-	$startobj = new datetime();
+	$startobj = amr_newDateTime();
 	$ym = $startobj->format('Ym');
-	$y = $startobj->format('Y');
-	$m = $startobj->format('m');
+	$y  = $startobj->format('Y');
+	$m  = $startobj->format('m');
 	$startobj->setDate($y,$m,'01');
 //	$ym = (int) substr($start, 0, 6);
 //	$m  = (int) substr($start, 4, 2);
@@ -294,7 +294,7 @@ function amr_semi_paginate() {
 	
 	if ($amrW) return ('');
 
-	$next = new datetime();   
+	$next = new Datetime(); //if cloning dont need tz 
 	$next = clone $amr_limits['end'];
 	$next->modify('+1 second');
 	$nextd = $next->format("Ymd");
@@ -552,16 +552,21 @@ if (!function_exists('amr_format_attach'))  {
 // check for  title, type = audio/... video/.. etc
 				if ($typeparts[0] === 'image') {  // only include if NOT already in the content
 
-					if (!empty($event['DESCRIPTION'])) {
+					/* if (false and !empty($event['DESCRIPTION'])) {  // desc is an array
+						//var_dump($event['DESCRIPTION']);
 						if (stristr($event['DESCRIPTION'], $item['url']))
-						return;  // if=gnore it if already in content
+						return;  // ignore it if already in content
 						if ((!empty($item['thumb'])) and
-							(stristr($event['DESCRIPTION'], $item['thumb']))) return;
+							(stristr($event['DESCRIPTION'], $item['thumb']))) 
+						return;
 					}
-					else if (!empty($item['thumb'])) {
+					else */
+					if (!empty($item['thumb'])) {  // only do thumb?
 						$item_title = '<img alt="'.$item_title
 						.'" src="'.esc_url($item['thumb']).'" />';
 					}
+					else $item_title = '<img alt="'.$item_title
+						.'" src="'.esc_url($item['url']).'" />';
 				}
 				else if ($typeparts[0] === 'text') { }
 // do not do others for now - may not make sense to do , other than text
@@ -570,8 +575,9 @@ if (!function_exists('amr_format_attach'))  {
 
 			if (!empty($item['url'])) {
 
-				$tmp = apply_filters('amr_attachment_title', array('title'=>$item_title , 'event'=>$event));
-				$item_title =$tmp['title'];
+				$tmp = apply_filters('amr_attachment_title', 
+					array('title'=>$item_title , 'event'=>$event));
+				$item_title = $tmp['title'];
 
 				$hrefhtml .= '<a class="ics_attachment" href="'
 				.$item['url']
@@ -1228,10 +1234,10 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 	else $views = '';
 	/* -- show month year nav options or not  ----------------NOT IN USE - need to lift code out for reuse --------------------------*/
 
-	$start    = new Datetime('now',$amr_globaltz);
-	if (empty($amr_limits['start'])) 
-		$start = date_create('now');
-	else	
+	$start    = amr_newDateTime('now');
+	if (!empty($amr_limits['start'])) 
+		//$start = amr_newDateTime('now');
+	//else	
 		$start    = clone $amr_limits['start'];
 	$navigation = '';
 	if ((isset($amr_limits['show_month_nav']))
@@ -1341,9 +1347,10 @@ function amr_show_look_more() {
  	global $amr_limits,
 	$amr_options,
 	$amr_formats,
+	$amr_globaltz,
 	$amr_last_date_time;
 
-	$next = new datetime();
+	$next = new datetime('',$amr_globaltz);
 	if (!empty($amr_last_date_time)) {
 		$next = clone $amr_last_date_time; // get  last used event date
 	}
@@ -1661,7 +1668,7 @@ what about all day?
 if (!function_exists('amr_wp_format_date')) {
 function amr_wp_format_date( $format, $datestamp, $gmttf) { /* want a  integer timestamp or a date object  */
 global $amr_options, $wp_locale;
-/* Need to get rid the unnecessary dat logic - should only be using date objects for now */
+/* Need to get rid the unnecessary date logic - should only be using date objects for now */
 
 	if (is_object($datestamp))	{
 		$offset = $datestamp->getOffset();
@@ -1669,7 +1676,7 @@ global $amr_options, $wp_locale;
 			echo '<br />Want to format '.$datestamp->format('Ymd His').' in '.$format.' like this '.$datestamp->format($format).' but localised';
 //			echo '<br />Add offset '.$offset/(60*60).' back to Unix timestamp to force correct localised date ';
 			}
-		$dateInt = $datestamp->format('U') /* + $offset */;
+		$dateInt = $datestamp->format('U') + $offset;  //to get the time in right timezone
 		}
 	else if (is_integer ($datestamp)) $dateInt = $datestamp;
 	else return(false);
@@ -1677,14 +1684,14 @@ global $amr_options, $wp_locale;
 	if (stristr($format, '%') ) return (strftime( $format, $dateInt ));  /* keep this for compatibility!  will not localise though */
 	else {
 		$text = date_i18n($format, $dateInt, $gmttf); /*  should  be false, otherwise we get the utc/gmt time.   */
-/*		If (isset ($_REQUEST['tzdebug']))
+		If (isset ($_REQUEST['tzdebug']))
 			{
 				echo '<br />Localised with gmt=false: '.$text.'<br />';
 				$text2 = date_i18n($format, $dateInt, false);
 				echo 'Localised with gmt=true:  '.$text2.'<br />';
 				$text3 = amr_date_i18n ('D, F j, Y g:i a', $datestamp);
 				echo 'Localised with amr date obj fn: '.$text3.'<br />';
-			} */
+			} 
 		return ($text); //
 		}
 }
@@ -1725,9 +1732,12 @@ global 	$amr_options,
 
 	if (isset($_GET['tzdebug'])) echo  '<br />'.$datestamp->format('c');
 
-	if ($method === 'wp') return amr_wp_format_date ( $format, $datestamp, false);
-	else if ($method === 'wpgmt') return amr_wp_format_date ( $format, $datestamp, true);
-	else if ($method === 'amr') return amr_date_i18n ( $format, $datestamp);
+	if ($method === 'wp') 
+		return amr_wp_format_date ( $format, $datestamp, false);
+	else if ($method === 'wpgmt') 
+		return amr_wp_format_date ( $format, $datestamp, true);
+	else if ($method === 'amr') 
+		return amr_date_i18n ( $format, $datestamp);
 	else {
 		if (stristr($format, '%') ) return (strftime( $format, $datestamp->format('U') ));  /* keep this for compatibility!  will not localise though */
 		else return ($datestamp->format($format));

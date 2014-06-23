@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.6');
+define('AMR_ICAL_LIST_VERSION', '4.7');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -145,7 +145,7 @@ global  $wp_locale;
 /* --------------------------------------------------  */
 function amr_dayofyear2date( $year, $DayInYear ) { /* Year if format YYYY, Day in year 1 to 366 */
 
-	$d = new DateTime($year.'-01-01');
+	$d = amr_newDateTime($year.'-01-01');
 	date_modify($d, '+'.($DayInYear-1).' days');
 
 return ($d);
@@ -153,8 +153,9 @@ return ($d);
 }
 /* --------------------------------------------------  */
 function amr_get_week_no_with_wkst ($date, $wkst) { /* only copes with WKST MO, SU, SA. returns 0 if in l ast year  */
+
 	$yearday 	= $date->format('z')+1;
-	$jan1c		= new DateTime($date->format('Y').'-01-01');
+	$jan1c		= amr_newDateTime($date->format('Y').'-01-01');
 	/* GET week 1 day 1 for our week start ============================================== */
 	$dw = $jan1c->format('w') + 1; /* 0 (for Sunday) through 6 (for Saturday)  change to => 1 to 7 */
 	if ($wkst === 'MO')  		$dw = $dw-1;
@@ -162,7 +163,7 @@ function amr_get_week_no_with_wkst ($date, $wkst) { /* only copes with WKST MO, 
 	if ($dw == 0) 	$dw=7;
 	if ($dw <=4) 	$adj = -$dw + 1;
 	else 			$adj = -$dw + 8;
-	$w1d1 = new DateTime();
+	$w1d1 = new Datetime(); //if cloning dont need tz
 	$w1d1 = clone $jan1c;
 	if (!($adj == 0)) date_modify($w1d1,$adj.' days' );
 	/* So now we have w1d1 ?============================================== */
@@ -202,14 +203,16 @@ global $amr_globaltz;
 	// if (isset($_GET['rdebug'])) {echo '<hr>in parse repeats'; var_dump($event['RRULE'] );}
 
 	if (!empty($event['RRULE'])) /* and is_string($event['RRULE'])) */
-	$event['RRULE'] 	= amr_parseRRULE($event['RRULE']);
+		$event['RRULE'] 	= amr_parseRRULE($event['RRULE']);
 
 	if (!empty($event['EXRULE'])) /* and is_string($event['EXRULE']))	*/
-	$event['EXRULE'] 	= amr_parseRRULE($event['EXRULE']);
-	if (!empty($event['RDATE'])) /*and is_string($event['RDATE'])) */
-	$event['RDATE'] 	= amr_parseRDATE($event['RDATE'],$amr_globaltz );
+		$event['EXRULE'] 	= amr_parseRRULE($event['EXRULE']);
+	if (!empty($event['RDATE'])) {/*and is_string($event['RDATE'])) */
+		$event['RDATE'] 	= amr_parseRDATE($event['RDATE'],$amr_globaltz );
+		$event['RDATE'][] = $event['DTSTART'];  // must inclde DTSTART in RDATE
+	}
 	if (!empty($event['EXDATE'])) /*and is_string($event['EXDATE']))*/
-	$event['EXDATE'] 	= amr_parseRDATE($event['EXDATE'],$amr_globaltz );
+		$event['EXDATE'] 	= amr_parseRDATE($event['EXDATE'],$amr_globaltz );
 
     // if (isset($_GET['rdebug'])) {echo '<hr>in parse repeats'; var_dump($event['RRULE'] );}
 	return ($event);
@@ -443,7 +446,8 @@ function ical_get_weekstart() {
 }
 /* -----------------------------------------------------------------------------------------------------*/
 function get_oldweekdays ($d) { /* Looks like it works compared to http://www.searchforancestors.com/utility/dayofweek.html and if not, an aproximation is better than nothing !*/
-		$dummy = new DateTime();
+
+		$dummy = new Datetime(); //if cloning dont need tz
 		$dummy = clone ($d);
 		date_modify($dummy,'+91500 weeks'); /* a guess from when the date started breaking, plus some extra*/
 		$w = $dummy->format('w');
@@ -550,7 +554,7 @@ function amr_calc_duration ( $start, $end) { /* assume in same timezone , ics dt
 	return ($duarray);
 }
 /* ---------------------------------------------------------------------- */
-/*  Return true iff the two times span exactly a multiple of 24 hours, from midnight one day to midnight the next.   But what if multi day ??
+/*  Return true iff the two times span exactly a multiple of 24 hours, from midnight one day to midnight the next.   But what if multi day over daylight saving ?? 
  */
 function amr_is_all_day($d1, $d2) {
 	if (!(is_object($d1) and (is_object($d2)))) return(false);
@@ -629,7 +633,7 @@ function amr_derive_dates (&$e) {
 	if (is_array($e['DTSTART'])) $e['DTSTART'] = $e['DTSTART'][0];
 	if (isset($e['DTEND']) and is_array($e['DTEND'])) $e['DTEND'] = $e['DTEND'][0];
 	if ((isset ($e['DURATION'])) and (empty ($e['DTEND'])))  {  /*** an array of the duration values, calc the end date or time */
-		$e['DTEND'] = new DateTime();
+		$e['DTEND'] = new Datetime(); //if cloning dont need tz
 		$e['DTEND'] = clone ($e['DTSTART']);
 		$e['DTEND'] = amr_add_duration_to_date ($e['DTEND'], $e['DURATION']);
 	}
@@ -638,11 +642,11 @@ function amr_derive_dates (&$e) {
 			$e['DURATION'] = amr_calc_duration ( $e['DTSTART'], $e['DTEND']);		/* calc the duration from the original values*/
 		}
 	}
-	if (isset ($e['DTEND']) ) {
+	if (isset ($e['DTEND']) and is_object($e['DTEND']) ) {
 		if (!isset($e['allday']) and amr_is_all_day($e['DTSTART'], $e['DTEND'])) // only chcek if not done
 			$e['allday'] = 'allday';
 	/* set EndDate as human version instead of technical DTEND */
-		$e['EndDate'] = new DateTime();
+		$e['EndDate'] = new Datetime(); //if cloning dont need tz
 		$e['EndDate'] = clone ($e['DTEND']);
 		if ((isset($e['allday']) and ($e['allday'] == 'allday')))
 			date_modify($e['EndDate'],'-1 day'); // for human view
@@ -1034,7 +1038,7 @@ global $amr_globaltz;
 	/* for a single event, handle the repeats as much as is possible */
 	$repeats = array();
 	$exclusions = array();
-	$repeatstart = new DateTime();
+	$repeatstart = new Datetime(); //if cloning dont need tz
 	$repeatstart = clone $event['DTSTART'];
 	$event = amr_parseRepeats($event);
 
@@ -1148,7 +1152,7 @@ function amr_create_enddate (&$e) {
 	/* if the necessary data exist, then create the end date for a possibly repeated event.  - note this is NOT the DTEND */
 	if (isset ($e['DURATION'])) {/* if not just an alarm */
 		if (isset ($e['EventDate'])) {
-			$e['EndDate'] = new DateTime();
+			$e['EndDate'] = new Datetime(); //if cloning dont need tz
 			$e['EndDate'] = clone ($e['EventDate']);
 			$e['EndDate'] = amr_add_duration_to_date ($e['EndDate'], $e['DURATION']);
 			//check here whether all day or not  - human expects 1 day less, DTEND expects next day - keep it so
@@ -1198,7 +1202,7 @@ function amr_generate_repeats(&$event, $astart, $aend, $limit) { /* takes an eve
 			if (isset ($_GET['debugexc'])) {echo '<br />RECURRENCE-ID:'; var_dump($event['RECURRENCE-ID']);}
 			if (is_array($event['RECURRENCE-ID'])) { /* just take first, should only be one */
 				$recdateobj = $event['RECURRENCE-ID'][0];
-				$recdate = $recdateobj->format('YmdHis');   // purely identifies specifc instances of a repeating rule are affected by the exception/modification
+				$recdate = $recdateobj->format('YdHis');   // purely identifies specifc instances of a repeating rule are affected by the exception/modification
 				if (isset ($_GET['debugexc'])) {echo '<br /> Flag recurrence modification for '.$recdate; }
 			}
 			else if (is_object($event['RECURRENCE-ID'])) {  /* Then it is a date instance which has been modified .  We need to overwrite the appropriate repeating dates.  This is done later? *** */
@@ -1217,7 +1221,7 @@ function amr_generate_repeats(&$event, $astart, $aend, $limit) { /* takes an eve
 				) /* OR the new date is in our display range, */{
 				$key = $event['UID'].' '.$recdate.' '.$seq.'999';  /* By virtue of being a recurrence id it should override a non recurrence (ie normal) even if they have the same sequence */
 				$newevents[$key] = $event;  /* so we drop the old events used to generate the repeats */
-				$newevents[$key]['EventDate'] = new DateTime();
+				$newevents[$key]['EventDate'] = new Datetime(); //if cloning dont need tz
 				$newevents[$key]['EventDate'] = clone ($dtstart);
 				if (!(amr_create_enddate($newevents[$key]))) {if (ICAL_EVENTS_DEBUG) echo ' ** No end date - is it an alarm? ';};
 			}
@@ -1246,7 +1250,7 @@ function amr_generate_repeats(&$event, $astart, $aend, $limit) { /* takes an eve
 								// error_log('Unexpected Duplication of Repeating Event '.$repkey.' - error in ical file or error in plugin?'); // only happened on weird rrule - may be valid anyway so as not to miss anything
 							}
 							$newevents[$repkey] = $event;  // copy the event data over - note objects will point to same object unless we clone   Use duration or new /clone Enddate
-							$newevents[$repkey]['EventDate'] = new DateTime();
+							$newevents[$repkey]['EventDate'] = new Datetime(); //if cloning dont need tz
 							$newevents[$repkey]['EventDate'] = clone ($r);
 //							if (ICAL_EVENTS_DEBUG) {echo '<br>Created '.$newevents[$repkey]['EventDate']->format('YmdHis l');	}
 							if (!amr_create_enddate($newevents[$repkey])) {
@@ -1258,7 +1262,7 @@ function amr_generate_repeats(&$event, $astart, $aend, $limit) { /* takes an eve
 				else {
 					$key = $event['UID'].' '.$dt.' '.$seq;  /* No Recurrence id and no RRULE or RDATE */
 					$newevents[$key] = $event;  // copy the event data over - note objects will point to same object - is this an issue?   Use duration or new /clone Enddate
-					$newevents[$key]['EventDate'] = new DateTime();
+					$newevents[$key]['EventDate'] = new Datetime(); //if cloning dont need tz
 					$newevents[$key]['EventDate'] = clone ($dtstart);
 					if (isset ($newevents[$key]['DURATION'] )) {
 						amr_create_enddate ($newevents[$key]);  //changed because EndDate not same as DTEND if all day
@@ -2031,7 +2035,7 @@ function amr_get_params ($attributes=array()) {
 
 	}
 //	now find our end date  - may get overridden if calendar
-	$amr_limits['end'] = new DateTime();
+	$amr_limits['end'] = new Datetime(); //if cloning dont need tz
 	$amr_limits['end'] = clone ($amr_limits['start']);
 
 	if (!empty($amr_limits['months']))
@@ -2266,13 +2270,14 @@ function amr_first_available_listtype() {
 }
 // ----------------------------------------------------------------------------------------
 function amr_get_set_start_for_nav () {  // gets or sets a date object to the begiinging of the curremt month, or the passed date
+
 	if (isset($_REQUEST['start'])) {
 		$starttxt = intval ($_REQUEST['start']);
 		$starttxt = substr($starttxt,0,4).'-'.substr($starttxt,4,2).'-'.substr($starttxt,6,2);
-		$start = new datetime($starttxt);
+		$start = amr_newDateTime($starttxt);
 		}
 	else {
-		$start = new datetime();	// must always set to first of month for dropdown to work
+		$start = amr_newDateTime('');	// must always set to first of month for dropdown to work
 		$y = $start->format('Y');
 		$m = $start->format('m');
 		$start->setDate($y,$m,'01');

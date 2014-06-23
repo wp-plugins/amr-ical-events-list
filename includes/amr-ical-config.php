@@ -306,7 +306,7 @@ function amr_set_defaults_for_datetime() {
 
 		if (($a_tz = get_option ('timezone_string') ) and (!empty($a_tz))) {
 				$amr_globaltz = timezone_open($a_tz);
-				date_default_timezone_set($a_tz);
+				//date_default_timezone_set($a_tz);
 				If (isset($_REQUEST['tzdebug'])) {	echo '<br />Tz string:'.$a_tz;}
 			}
 		else {
@@ -314,7 +314,7 @@ function amr_set_defaults_for_datetime() {
 			if (($gmt_offset = get_option ('gmt_offset')) and (!(is_null($gmt_offset))) and (is_numeric($gmt_offset))) {
 				$a_tz = amr_getTimeZone($gmt_offset);
 				$amr_globaltz = timezone_open($a_tz);
-				date_default_timezone_set($a_tz);
+				//date_default_timezone_set($a_tz);
 				if (isset($_REQUEST['tzdebug'])) {	echo '<h2>Found gmt offset in wordpress options:'.$gmt_offset.'</h2>';}
 			}
 			else {
@@ -1006,7 +1006,7 @@ function date_season ($type='Meteorological',$D) {
 	/* Receives ($Dateobject and returns a string with the Meterological season by default*/
 	/* Note that the limits must be defined on backwards order with a seemingly repeated entry at the end to catch all */
 
-	if (!(isset($D))) $D =  date_create();
+	if (!(isset($D))) $D =  amr_newDateTime();
 	$Y = amr_format_date('Y',$D);
  $limits ['Quarter']=array(
 

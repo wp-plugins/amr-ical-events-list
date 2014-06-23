@@ -52,7 +52,7 @@ function amr_get_date_parts ($dateobj) { /* breaks date into the parts */
 	$parts['hour'] 		= $dateobj->format('G');
 	$parts['minute'] 	= $dateobj->format('i');
 	$parts['second'] 	= $dateobj->format('s');
-	$parts['date'] 		= new datetime();
+	$parts['date'] 		= new Datetime(); //if cloning dont need tz
 	$parts['date'] 		= clone $dateobj; /* save a cope so we don't have to recreate */
 	return ($parts);
 }
@@ -266,6 +266,8 @@ function amr_limit (&$datearray, $pby, $type) { /* array of y,m,d,h,m,s, and arr
 }
 /* --------------------------------------------------------------------------------------------------- */
 function amr_special_expand_by_day_of_week_and_yearly (&$datearray, $pbys, $tz) { /* note 2 */
+global $amr_globatz;
+
 	if (isset($_GET['rdebug'])) { echo '<hr>'.'starting special expand by day of week and yearly ';	print_r($pbys); print_date_array($datearray);}
 	/* For each date array - take the year and the month - get the first of the month, then the get the first day with that day of week, then get them all or the nbyday  */
 	if (isset($pbys['BYDAY']))  $pbyday = $pbys['BYDAY'];
@@ -279,7 +281,7 @@ function amr_special_expand_by_day_of_week_and_yearly (&$datearray, $pbys, $tz) 
 		$d['day']	= 31;
 		$d['month'] = 12;
 		$last 		= amr_create_date_from_parts ($d, $tz);
-		$dateobj 	= new DateTime();
+		$dateobj 	= new DateTime('',$amr_globaltz);
 		if (isset($_GET['rdebug'])) echo '<br />Starting from '.$first->format('Ymd l').' till '.$last->format('Ymd l');
 		foreach ($pbyday as $byday => $bool ) { /* get the first day that is that day of week */
 			$firstbyday  = amr_goto_byday ($first, $byday, '+'); /* so we should have the first 'byday' of the year */
@@ -323,6 +325,7 @@ function amr_special_expand_by_day_of_week_and_yearly (&$datearray, $pbys, $tz) 
 }
 /* --------------------------------------------------------------------------------------------------- */
 function amr_expand_by_day_of_week_for_weekly (&$datearray, $pbys, $tz, $wkst) { /* Note 1 in monthly frequency only  */
+global $amr_globaltz;
 	if (isset($_GET['rdebug'])) { echo '<hr><b>starting special expand by day of week in weekly with wkst:'.$wkst.' </b>';
 		var_dump($pbys);
 		print_date_array($datearray);
@@ -331,7 +334,7 @@ function amr_expand_by_day_of_week_for_weekly (&$datearray, $pbys, $tz, $wkst) {
 	else if (isset($pbys['NBYDAY']))  $pbyday = $pbys['NBYDAY'];
 	else return ($datearray);
 	/* For each date array -  get the first day with that day of week, then get the next byday  */
-	$dateobj = new DateTime();
+	$dateobj = new DateTime('',$amr_globaltz);
 	foreach ($datearray as $i=> $datea) {
 		$day 	= amr_create_date_from_parts ($datea, $tz);
 		if (is_object($day)) {
@@ -351,7 +354,9 @@ function amr_expand_by_day_of_week_for_weekly (&$datearray, $pbys, $tz, $wkst) {
 	else return (null);
 }
 /* -------------------------------------------------------------------------------------------------------------- */
-function amr_special_expand_by_day_of_week_and_month_note2 (&$datearray, $pbys, $tz) { /* Note 2 First and Last are relative to the year and the month is a check */
+function amr_special_expand_by_day_of_week_and_month_note2 (&$datearray, $pbys, $tz) { 
+
+/* Note 2 First and Last are relative to the year and the month is a check */
 	if (isset($_GET['rdebug'])) { echo '<hr><b>starting special expand by day of week and month in year freq </b>';	print_date_array($datearray);}
 		if (isset($pbys['BYDAY']))  $pbyday = $pbys['BYDAY'];
 	else if (isset($pbys['NBYDAY']))  $pbyday = $pbys['NBYDAY'];
@@ -365,7 +370,7 @@ function amr_special_expand_by_day_of_week_and_month_note2 (&$datearray, $pbys, 
 		$d['day'] = 31;
 		$d['month'] = 12;
 		$lastdayofyear = amr_create_date_from_parts ($d, $tz);
-		$dateobj = new DateTime();
+		$dateobj = amr_newDateTime();
 		foreach ($pbyday as $byday => $bool ) {
 			if (isset($_GET['rdebug'])) echo '<br />'.$byday.' ';
 			if (is_array($bool)) {/* then have numeric - possibly many */
@@ -408,6 +413,7 @@ function amr_special_expand_by_day_of_week_and_month_note2 (&$datearray, $pbys, 
 }
 /* --------------------------------------------------------------------------------------------------- */
 function amr_special_expand_by_day_of_week_and_month_note1 (&$datearray, $pbys, $tz) { /* Note 1 in monthly frequency only  */
+global $amr_globaltz;
 	if (isset($_GET['rdebug'])) {
 		echo '<hr><b>starting special expand by day of week in monthly </b>';
 		print_date_array($datearray);
@@ -420,7 +426,7 @@ function amr_special_expand_by_day_of_week_and_month_note1 (&$datearray, $pbys, 
 	else 
 		return ($datearray);
 	/* For each date array - take the year and the month - get the first of the month, then the get the first day with that day of week, then get them all or the nbyday  */
-	$dateobj = new DateTime();
+	$dateobj = amr_newDateTime();
 	foreach ($datearray as $i=> $datea) {
 		$d = $datea;
 		$d['day'] = 1;
@@ -558,7 +564,7 @@ function amr_create_date_from_parts ($d, $tz) { /* create a date object from the
 }
 /* --------------------------------------------------------------------------------------------------- */
 function amr_get_a_closer_start ($start, $astart, $int) { // Note can only do this if no COUNT or BYSETPOS, else we break the rule
-	$closerstart = new datetime();
+	$closerstart = new datetime();  // if cloning ok, dont need tz
 	$closerstart = clone $start;
 	if (isset($_GET['rdebug'])) {echo '<br />Start was set at '.$start->format('c');}
 	while ($closerstart < $astart ) {
@@ -624,8 +630,8 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 		
 	if (isset($_GET['cdebug'])) echo '<br />Limiting the repeats to '.$count;
 	
-	$until = new dateTime();
-	$original_until = new dateTime();	
+	$until = amr_newDateTime();
+	$original_until = amr_newDateTime();	
 	if (!isset($p['UNTIL']))  {
 		$until = clone $aend;
 		$original_until = clone $aend;
@@ -1067,7 +1073,7 @@ function amr_goto_byday ($dateobj, $byday, $sign)	{
 		if ($adjustment == 7)  $adjustment = 0;	 // else will skip the first one if it matches
 		
 		if (isset ($_GET['rdebug'])) echo '<br />Adj = '.	$adjustment;
-		$d2 = new DateTime();
+		$d2 = new DateTime();  // if cloning ok dont need tz
 		$d2 = clone ($dateobj);
 		date_modify ($d2,$adjustment.' days');
 		if (isset ($_GET['rdebug'])) echo ' Got date = '.	$d2->format('Ymd l');

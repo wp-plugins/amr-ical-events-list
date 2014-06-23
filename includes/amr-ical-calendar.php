@@ -15,7 +15,7 @@ function amr_get_events_in_months_format ($events, $months, $start) {
 
 	$bunchesofevents= array();
 // prepare the months array so we show a calendar even if no events 
-	$dummydate = new Datetime();
+	$dummydate = new Datetime(); //if cloning dont need tz
 	$dummydate = clone $start ;
 // prepare the containers one per day 
 	for ($i = 1; $i <= $months; $i++) {
@@ -75,14 +75,14 @@ function amr_prepare_day_titles ($titles, $liststyle) {
 }
 // ----------------------------------------------------------------------------------------
 function amr_get_events_in_weeks_format ($events, $weeks, $start) {  // should be using dummmyYMD?
-
+	global $amr_globaltz;
 	$wkst = ical_get_weekstart(); // get the wp start of week 
 	
 	if (isset($_GET['debugwks'])) { echo '<br />Separate '.count($events).' events into weeks for '.$weeks.' weeks using wkst: '.$wkst;}
 		
 	$weeksofevents= array();
 // prepare the months array so we show a calendar even if no events 
-	$dummydate = new Datetime();
+	$dummydate = new Datetime(); //if cloning dont need tz
 	$dummydate = clone $start ;
 	$dummydate = amr_get_human_start_of_week($dummydate,$wkst);
 	for ($i = 0; $i < $weeks; $i++) {
@@ -167,7 +167,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 	//$weeks = 2;		// need weeks =2 else miss early ones
 	// Let's figure out when we are
 
-	$start    		= new Datetime();
+	$start    		= amr_newDateTime();
 	$today_day 		= $start->format('j');
 	$today_month 	= $start->format('m');
 	$today_year 	= $start->format('Y');
@@ -372,7 +372,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 			if (isset($_GET['debugwks'])) echo '<br />Day 1= '.$day1;
 		
 			$newrow = false;
-			$nextdate = new Datetime();
+			$nextdate = new Datetime(); //if cloning dont need tz
 			$nextdate = clone($start);
 		
 //			for ( $day = $day1; $day <= $daysinbunch; ++$day ) {	
@@ -578,11 +578,12 @@ return ($link);
 function amr_calendar_colheaders ($liststyle, $start) {
 global $wp_locale,
 	$amr_options,
+	$amr_globaltz,
 	$amr_listtype;
 	// week_begins = 0 stands for Sunday
 	$week_begins= intval(get_option('start_of_week'));
 	$format = 	$amr_options['listtypes'][$amr_listtype]['format']['Day'];
-	$dummydate = new Datetime();
+	$dummydate = new Datetime(); //if cloning dont need tz
 	$dummydate = clone $start ;// so as not to overwrite start 
 	
 	$myweek = array();
@@ -679,6 +680,8 @@ function amr_sort_by_two_cols ($col1, $col2, &$data) {  // sorts by two columns 
 }
 // ----------------------------------------------------------------------------------------
 function amr_sort_by_three_cols ($col1, $col2, $col3, &$data) {  // sorts by two columns ascending
+global $amr_globaltz;
+
 	// Obtain a list of columns
 	foreach ($data as $key => $row) {
 		// if col1 is an object ? 
@@ -722,10 +725,10 @@ global $amr_globaltz;
 					$events[$m]['Classes'] .= ' firstday ';	// already have first day
 					$events[$m]['dummyYMD'] = $event['EventDate']->format('Ymd'); //numerical so do not need amr_date_format
 					$events[$m]['MultiDay'] = $day; 
-					$tempdate = new DateTime;  // create new obect so we do not update the same object
+					//$tempdate = amr_newDateTime();  // create new obect so we do not update the same object
 					while ($day < ($days)) {   // must not be <= because we are plus one anyway - and original is first anyway
 						if (isset($_GET['debugmulti'])) echo '<br /> Do day = '.$day;
-						$tempdate = new DateTime();
+						$tempdate = new Datetime(); //if cloning dont need tz
 						$tempdate = clone $event['EventDate']; // copy the current event date		
 						date_modify ($tempdate,'+'.$day.' days');  // adjust days to currenmt midddle date if necessary
 						// must do like above in case we go over a month 

@@ -1385,7 +1385,6 @@ function() {
 /* -------------------------------------------------------------------------------------------------*/
 function amrical_formats ($i) {
 	global $amr_options;
-	global $amr_globaltz;
 
 	?><fieldset id="formats<?php echo $i; ?>" class="formats" >
 	<h4 class="trigger"><a href="#" >
@@ -1405,7 +1404,7 @@ function amrical_formats ($i) {
 	;?></em></p><?php
 		if (! isset($amr_options['listtypes'][$i]['format'])) echo 'No formats set';
 		else
-		{	$date = new DateTime();
+		{	$date = amr_newDateTime();
 			echo '<ul>';
 			foreach ( $amr_options['listtypes'][$i]['format'] as $c => $v ) {
 				$l = str_replace(' ','', $c).$i;

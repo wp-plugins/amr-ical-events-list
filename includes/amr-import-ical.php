@@ -98,13 +98,13 @@ function amr_cache_url($url, $cache=ICAL_EVENTS_CACHE_TTL) {
 		if ( file_exists($cachedfile) ) {
 			$c = filemtime($cachedfile);
 			if ($c) 
-				$amr_lastcache = date_create(strftime('%c',$c));
+				$amr_lastcache = amr_newDateTime(strftime('%c',$c));
 			else 
 				$amr_lastcache = '';
 		}
 		else {
 			$c = false;
-			$amr_lastcache = date_create(strftime('%c',0));
+			$amr_lastcache = amr_newDateTime(strftime('%c',0));
 			}
 		// must we refresh ?
 		if ( isset($_REQUEST['nocache']) or isset($_REQUEST['refresh'])
@@ -184,7 +184,7 @@ function amr_cache_url($url, $cache=ICAL_EVENTS_CACHE_TTL) {
 				if ($dest = fopen($cachedfile, 'w')) {
 					if (!(fwrite($dest, $data))) die ('Error writing cache file'.$dest);
 					fclose($dest);
-					$amr_lastcache = date_create (date('Y-m-d H:i:s'));
+					$amr_lastcache = amr_newDateTime (date('Y-m-d H:i:s'));
 				}
 				else  {
 					echo '<br />Error opening or creating the cached file <br />'.$cachedfile;
@@ -192,7 +192,7 @@ function amr_cache_url($url, $cache=ICAL_EVENTS_CACHE_TTL) {
 				}
 			}
 			else {	echo '<br>Error opening remote file for refresh '.$url;	return false;}
-			if (!isset($amr_lastcache))	$amr_lastcache = date_create (date('Y-m-d H:i:s'), $amr_globaltz);
+			if (!isset($amr_lastcache))	$amr_lastcache = amr_newDateTime (date('Y-m-d H:i:s'));
 		}
 		else {}// no need to refresh, use the cached file
 
@@ -502,7 +502,7 @@ function amr_parseVALUE($VALUE, $text, $tzobj)	{
 	
 	
 		if (empty($text)) {
-			if (ICAL_EVENTS_DEBUG) {echo 'For value: '.$VALUE.' text is blank';}
+			if (ICAL_EVENTS_DEBUG) {echo '<br />For value: '.$VALUE.' text is blank';}
 			return (false);
 			}
 
@@ -601,6 +601,7 @@ function amr_parseRDATE ($string, $tzobj ) {
 
  could be multiple dates after : */
 
+	if (empty($string)) return false; 
 	if (is_object($string)) {/* already parsed */  return($string); }
 
 	if (is_array($string) ) {
@@ -613,7 +614,7 @@ function amr_parseRDATE ($string, $tzobj ) {
 				$rdate = amr_parseRDATE ($rdatestring, $tzobj );
 
 			}
-			$rdatearray = array_merge ($rdatearray, $rdate);
+			if (is_array($rdate)) $rdatearray = array_merge ($rdatearray, $rdate);
 		}
 
 		//if (isset($_GET['debugexc'])) {echo '<br />*** Array of r or exdate '; var_dump($rdatearray); }
@@ -752,6 +753,7 @@ or could be DTEND;TZID=America/New_York;VALUE=DATE-TIME:     and the date 201107
 global $amr_globaltz;
 	//if (isset($_REQUEST['debugcustom'])) {echo '<br />Enter parse property'; var_dump($parts);}
 
+	if (empty($parts[1])) return false; // we got crap
 	$tzobj = $amr_globaltz;  /* Because if there is no timezone specified in any way for the date time then it must a floating value, and so should be created in the global timezone.*/
 //	if (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) {echo '<br /> Property : '.$parts[0];}
 	$p0 = explode (';', $parts[0]);  /* Looking for ; VALUE = something...;   or TZID=... or both, or more than one anyway ???*/
@@ -796,7 +798,11 @@ global $amr_globaltz;
 			else {
 				$date = amr_parseSingleDate('DATE-TIME', $parts[1], $tzobj);
 			}
-			if (($prop === 'LAST-MODIFIED') or ($prop === 'CREATED')) amr_track_last_mod($date);
+			
+			if (is_object($date) and 
+				(($prop === 'LAST-MODIFIED') or ($prop === 'CREATED')))  {
+				amr_track_last_mod($date);
+			}
 			return ($date);
 		case 'ALARM':
 		case 'RECURRENCE-ID':  /* could also have range ?*/
@@ -872,7 +878,8 @@ function amr_parse_component($type)	{	/* so we know we have a vcalendar at lines
 				if (in_array ($parts[1], $amr_validrepeatablecomponents)) {
 					$subarray[$parts[1]][] = amr_parse_component($parts[1]);
 				}
-				else { $subarray[$parts[1]] = amr_parse_component($parts[1]);
+				else { 
+					$subarray[$parts[1]] = amr_parse_component($parts[1]);
 				}
 			}
 			else {
@@ -1067,10 +1074,11 @@ else return (false);
 }
 /* ---------------------------------------------------------------------- */
 function amr_track_last_mod($date) {
-global $amr_last_modified;
-if (empty ($amr_last_modified)) $amr_last_modified = date_create('0000-00-00 00:00:01');
-if ($date->format('c') > $amr_last_modified->format('c')) {
-	$amr_last_modified = clone ($date);
-	}
+global $amr_last_modified; $amr_globaltz;
+	if (empty ($amr_last_modified)) 
+		$amr_last_modified = amr_newDateTime('0000-00-00 00:00:01');
+	if ($date->format('c') > $amr_last_modified->format('c')) {
+		$amr_last_modified = clone ($date);
+		}
 }
 

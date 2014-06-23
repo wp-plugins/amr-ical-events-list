@@ -1,4 +1,12 @@
 <?php //comonly useful functions
+function amr_newDateTime($text='') {  // create new datetime object with the global timezone
+// because wordpress insists that the php default must stay as UTC
+global $amr_globaltz;
+	$d = new DateTime($text,$amr_globaltz);
+	return ($d);
+
+}
+/* -------------------------------------------------------------------------------------------*/
 function amr_a_nested_event_shortcode () {
 	global $amr_been_here;
 	
@@ -18,11 +26,11 @@ function amr_a_nested_event_shortcode () {
 }
 /* -------------------------------------------------------------------------------------------*/
 function amr_convert_date_string_to_object ($a) {
-global $amr_globaltz;
+
 	if (checkdate(substr($a,4,2), /* month */
 			substr($a,6,2), /* day*/
 			substr($a,0,4)) /* year */ )
-			$e = date_create($a,$amr_globaltz);
+			$e = amr_newDateTime($a);
 	else {
 		_e('Invalid Event Date', 'amr-ical-events-list');
 		}
