@@ -4,7 +4,7 @@ Tags: event, events, event calendar, events calendar, event manager, diary, sche
 
 Requires at least: 2.8
 Tested up to: 3.9.1
-Version: 4.7
+Version: 4.8
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, combine multiple ics files, handles any recurring event according to the ical spec. Very customisable listings or box calendars.  This version uses ics as input. Upgrade option for ics feed generation, taxonomies etc.  
@@ -93,6 +93,11 @@ amr-events has much additional functionality, including a taxonomy widget.
 
 
 == Changelog ==
+= Version 4.8 =
+*  added more trapping of datetime exceptions to avoid fatal errors in some installs
+*  fixed bug when recurring weekly with some days of week. 
+*  ensured that rdates (specific recurring dates) are properly sorted if displayed in a wp event
+
 = Version 4.7 =
 *  removed use of php's date_default_timezone_set() as wordpress wants everything to stay in UTC (despite having timezone in settings).  Checked and updated all DateTime create calls to ensure that they either cloned existing dates & ths their zones, or explicitly used a global timezone got from the saved wordspress timezone.
 *  fix: small bug where if rdates (specific recurrence dates not due to rules) existed, then DTSTART was not propoerly included.

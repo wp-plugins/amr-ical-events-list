@@ -996,17 +996,7 @@ function amr_parse_ical ( $cal_file ) {
 			}
 
 }
-//------------------------------------------------------------------------------------------------
-function amr_create_date_time ($datetimestring, $tzobj) { // date time create with exception trap to avoid fatal errors
-
-		try {	$dt = new DateTime($datetimestring,	$tzobj); }
-		catch(Exception $e) {
-			$text = '<br />Unable to create DateTime object from '.$datetimestring.' <br />'.$e->getMessage();
-			amr_tell_admin_the_error ($text);
-			return (false);
-		}
-	return ($dt);
-}		
+	
 /* ---------------------------------------------------------------------- */
 function amr_deal_with_tzpath_in_date ( $tzstring )	{
    /* Receive something like   /mozilla.org/20070129_1/Europe/Berlin

@@ -330,11 +330,13 @@ global $amr_globaltz;
 		var_dump($pbys);
 		print_date_array($datearray);
 	}
-	if (isset($pbys['BYDAY']))  $pbyday = $pbys['BYDAY'];
-	else if (isset($pbys['NBYDAY']))  $pbyday = $pbys['NBYDAY'];
+	if (isset($pbys['BYDAY']))  
+		$pbyday = $pbys['BYDAY'];
+	else if (isset($pbys['NBYDAY']))  
+		$pbyday = $pbys['NBYDAY'];
 	else return ($datearray);
 	/* For each date array -  get the first day with that day of week, then get the next byday  */
-	$dateobj = new DateTime('',$amr_globaltz);
+	$dateobj = new DateTime('now',$amr_globaltz);
 	foreach ($datearray as $i=> $datea) {
 		$day 	= amr_create_date_from_parts ($datea, $tz);
 		if (is_object($day)) {
@@ -614,7 +616,9 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 	$tz = date_timezone_get($start);
 	
 	if (isset($_GET['rdebug'])) {
-		echo '<br />&nbsp;start='.$start->format('c').' <br />astart='.$astart->format('c') .'<br /> parameter passed: ';
+		echo '<br />&nbsp;start='.$start->format('c')
+		.' <br />astart='.$astart->format('c') 
+		.'<br /> parameter passed: ';
 		if (is_array($p))
 			foreach ($p as $k => $i) { 
 				echo $k. ' '; 
@@ -632,6 +636,7 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 	
 	$until = amr_newDateTime();
 	$original_until = amr_newDateTime();	
+
 	if (!isset($p['UNTIL']))  {
 		$until = clone $aend;
 		$original_until = clone $aend;
@@ -639,11 +644,18 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 	else {
 		$until = clone $p['UNTIL'];
 		$original_until = clone $p['UNTIL'];
-		if ($until > $aend)	$until = clone $aend;
+		if ($until > $aend)	
+			$until = clone $aend;
 	}
-	if (amr_is_before ($until, $astart )) { return(false); }/* if it ends before our overall start, then skip */
+	// 2014 07 09
+	$original_start = amr_newDateTime();
+	$original_start = clone $start;
+	
+	if (amr_is_before ($until, $astart )) { 
+		return(false); 
+		}/* if it ends before our overall start, then skip */
 
-	/* now prepare out "intervales array for date incrementing eg: p[monthly] = 2 etc... Actualy there should only be 1 */
+	/* now prepare out "intervals array for date incrementing eg: p[monthly] = 2 etc... Actualy there should only be 1 */
 	if (isset($p['FREQ'])) { /* so know yearly, daily or weekly etc  - setup increments eg 2 yearsly or what */
 		if (!isset ($p['INTERVAL'])) $p['INTERVAL'] = 1;
 		switch ($p['FREQ']) {
@@ -831,13 +843,14 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 		foreach ($repeats as $i=> $d) { /* check if it is within date limits  */
 			if (isset ($_GET['rdebug'])) {
 				echo '<br>*** Check for this rrule - original until. '
-				.'<br />-------start='.$astart->format('c')
-				.'<br />instancedate='.$d->format('c')
-				.'<br />originaluntil='.$original_until->format('c')
+				.'<br />-------astart = '.$astart->format('c')
+				.'<br />original start = '.$original_start->format('c')
+				.'<br />instancedate = '.$d->format('c')
+				.'<br />originaluntil= '.$original_until->format('c')
 				.'<br />';
 			}
 		
-			if 	(!(($d <= $original_until) and ($d >= $astart))) { //note these are rrule limits, not the overall limits
+			if 	(!(($d <= $original_until) and ($d >= $original_start))) { //note these are rrule limits, not the overall limits
 				unset($repeats[$i]);
 				if (isset ($_GET['rdebug'])) 
 					echo '<br>Event instance not within rrule limits - <b>removed</b> '.$d->format('Y m d h:i').'<br />';
@@ -952,13 +965,15 @@ function amr_get_human_start_of_week (&$dateobj, $wkst) { // WORKS !
 function amr_get_start_of_week (&$dateobj, $wkst) { // is it right - is it just ics terms or is it wrong
 /* get the start of the week in ics terms, not ours necessarily according to the wkst parameter (Sat/Sun/Mon), returns new dat object  */
 	global  $amr_day_of_week_no;
+	
 	$wkst_no = $amr_day_of_week_no[$wkst];	/* from 1=Mo to 7=SU */
 	
 	$dayofweek = $dateobj->format('w');
 	
 	//if (isset($_GET['debugwks'])) echo '<br/>dayofweek= '.$dayofweek.' wkst '.$wkst_no;
 	
-	if ($dayofweek == '-1') $dayofweek = get_oldweekdays($dateobj); /* php seems to break around year 1760   */
+	if ($dayofweek == '-1') 
+		$dayofweek = get_oldweekdays($dateobj); /* php seems to break around year 1760   */
 	if ($dayofweek < $wkst_no)
 		$adj = $wkst_no - $dayofweek;
 	else

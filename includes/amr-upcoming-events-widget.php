@@ -68,7 +68,8 @@ class amr_ical_widget extends WP_widget {
 
 	if (!(isset($widget_icalno)))
 		$widget_icalno = 0;
-	else $widget_icalno= $widget_icalno + 1;
+	else 
+		$widget_icalno= $widget_icalno + 1;
 
 	$content = amr_process_icalspec($criteria,
 		$amr_limits['start'], $amr_limits['end'], $amr_limits['events'], $widget_icalno);

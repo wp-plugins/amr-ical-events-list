@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.7');
+define('AMR_ICAL_LIST_VERSION', '4.8');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -209,7 +209,8 @@ global $amr_globaltz;
 		$event['EXRULE'] 	= amr_parseRRULE($event['EXRULE']);
 	if (!empty($event['RDATE'])) {/*and is_string($event['RDATE'])) */
 		$event['RDATE'] 	= amr_parseRDATE($event['RDATE'],$amr_globaltz );
-		$event['RDATE'][] = $event['DTSTART'];  // must inclde DTSTART in RDATE
+		$event['RDATE'][] = $event['DTSTART'];  // 201406 must include DTSTART in RDATE
+		
 	}
 	if (!empty($event['EXDATE'])) /*and is_string($event['EXDATE']))*/
 		$event['EXDATE'] 	= amr_parseRDATE($event['EXDATE'],$amr_globaltz );
@@ -1237,7 +1238,7 @@ function amr_generate_repeats(&$event, $astart, $aend, $limit) { /* takes an eve
 			if (isset($dtstart) ) {
 				if ( amr_is_before ($dtstart, $aend) ) {  /* If the start is after our end limit, then skip this event */
 				if (isset($event['RRULE']) or (isset($event['RDATE']))) {
-							/* if have, must use dtstart in case we are dependent on it's characteristics,. We can exclude too early dates later on */
+					/* if have, must use dtstart in case we are dependent on it's characteristics,. We can exclude too early dates later on */
 					$repeats = amr_repeat_anevent($event, $astart, $aend, $limit );  /**** try for a more efficient start? */
 					if (isset($_REQUEST['rdebug']) or ICAL_EVENTS_DEBUG) {
 						if (count($repeats) > 0)	echo '<br>Create repeats: '.count($repeats);

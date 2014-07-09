@@ -7,9 +7,12 @@ return ('<em>'.sprintf(__('Weeks start on %s','amr-ical-events-list'), amr_get_w
 /* --------------------------------------------------  */
 function amr_prettyprint_r_ex_date ($rdate) { /* rrule or exrule */
 global $amr_formats;  /* amr check that this get set to the chosen list type */
+// 201407 nor rdates include dtstart - should dtstart be reversed out here, or the text changed ?
 
 //	$df = pref_date_entry_format_string();
 	if (is_array($rdate)) {
+	// 20140709 resort the array
+		sort($rdate);
 		foreach ($rdate as $i => $d) {
 			if (is_object($d))
 				$html[] = amr_format_date ($amr_formats['Day'], $d);
@@ -21,7 +24,7 @@ global $amr_formats;  /* amr check that this get set to the chosen list type */
 }
 /* --------------------------------------------------  */
 function amr_prettyprint_byday ($b) {
-	$fulldayofweek = amr_fulldaytext(); /* MO, TU= etc*/
+	$fulldayofweek = amr_fulldaytext(); /* MO, TU= etsc*/
 	$h = array();
 	$html = '';
 	if (is_array($b)) {

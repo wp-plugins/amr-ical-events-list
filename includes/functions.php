@@ -1,8 +1,21 @@
 <?php //comonly useful functions
+//------------------------------------------------------------------------------------------------
+function amr_create_date_time ($datetimestring, $tzobj) { // date time create with exception trap to avoid fatal errors
+
+		try {	$dt = new DateTime($datetimestring,	$tzobj); }
+		catch(Exception $e) {
+			$text = '<br />Unable to create DateTime object from '.$datetimestring.' <br />'.$e->getMessage();
+			amr_tell_admin_the_error ($text);
+			return (false);
+		}
+	return ($dt);
+}	
+//------------------------------------------------------------------------------------------------
 function amr_newDateTime($text='') {  // create new datetime object with the global timezone
 // because wordpress insists that the php default must stay as UTC
 global $amr_globaltz;
-	$d = new DateTime($text,$amr_globaltz);
+	//$d = new DateTime($text,$amr_globaltz);
+	$d = amr_create_date_time($text,$amr_globaltz);  // traps exceptions
 	return ($d);
 
 }
