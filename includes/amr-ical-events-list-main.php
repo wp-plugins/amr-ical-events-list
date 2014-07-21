@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.8');
+define('AMR_ICAL_LIST_VERSION', '4.9');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -1203,7 +1203,8 @@ function amr_generate_repeats(&$event, $astart, $aend, $limit) { /* takes an eve
 			if (isset ($_GET['debugexc'])) {echo '<br />RECURRENCE-ID:'; var_dump($event['RECURRENCE-ID']);}
 			if (is_array($event['RECURRENCE-ID'])) { /* just take first, should only be one */
 				$recdateobj = $event['RECURRENCE-ID'][0];
-				$recdate = $recdateobj->format('YdHis');   // purely identifies specifc instances of a repeating rule are affected by the exception/modification
+				$recdate = $recdateobj->format('YmdHis');   // purely identifies specifc instances of a repeating rule are affected by the exception/modification
+				//20140721 - lost the month in ymd somehow - added back
 				if (isset ($_GET['debugexc'])) {echo '<br /> Flag recurrence modification for '.$recdate; }
 			}
 			else if (is_object($event['RECURRENCE-ID'])) {  /* Then it is a date instance which has been modified .  We need to overwrite the appropriate repeating dates.  This is done later? *** */
@@ -1277,7 +1278,7 @@ function amr_generate_repeats(&$event, $astart, $aend, $limit) { /* takes an eve
 				$newevents[$key]['EventDate'] = '';
 				}
 		}
-
+		if (ICAL_EVENTS_DEBUG) {echo '<br />number of newevents = '.count($newevents);}
 		return ($newevents);
 	}
 /* ------------------------------------------------------------------------------------*/
@@ -1344,8 +1345,10 @@ function amr_process_icalevents($events, $astart, $aend, $limit) {
 		foreach ($events as $i=> $event) {
 			amr_derive_dates ($event); /* basic clean up only - removing unnecessary arrays etc */
 			$more = amr_generate_repeats($event, $astart, $aend, $limit);
+			if (ICAL_EVENTS_DEBUG) {echo '<br />'.$i.' number of more events = '.count($more);}
 			if (is_array($more)) 
 				$dates = array_merge ($dates,$more) ;
+			if (ICAL_EVENTS_DEBUG) {echo '<br />number of dates = '.count($dates);}	
 			//amrical_mem_debug('before unset '.$i);
 			//unset($more);
 			//amrical_mem_debug('After event '.$i);

@@ -4,7 +4,7 @@ Tags: event, events, event calendar, events calendar, event manager, diary, sche
 
 Requires at least: 2.8
 Tested up to: 3.9.1
-Version: 4.8
+Version: 4.9
 Stable tag: trunk
 
 Event Calendar or Agenda list, add tab views, combine multiple ics files, handles any recurring event according to the ical spec. Very customisable listings or box calendars.  This version uses ics as input. Upgrade option for ics feed generation, taxonomies etc.  
@@ -93,6 +93,9 @@ amr-events has much additional functionality, including a taxonomy widget.
 
 
 == Changelog ==
+= Version 4.9 =
+*  fixed a typo bug hopefully only recently introduced.  It affected recurring events with modified instances.
+
 = Version 4.8 =
 *  added more trapping of datetime exceptions to avoid fatal errors in some installs
 *  fixed bug when recurring weekly with some days of week. 
