@@ -145,10 +145,8 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 
 	$empty = '&nbsp;';
 
-	if (!empty($amr_calendar_url))  
-		$link = $amr_calendar_url;
-	else 
-		$link = amr_clean_link();
+	$link = amr_get_day_link_stem(); // get the daylink stem
+
 		
 // ---  Note that if months set, then events will have started from beg of month */
 
@@ -290,6 +288,11 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 		$titles = array();
 		$eventsfortheday = array();
 		$dayswithevents = array();
+		
+		$bunchevents = amr_sort_by_two_cols ('dummytime','MultiDay', $bunchevents); //20140805
+		
+		
+		
 		if (!empty ($bunchevents)) { // NOTE SINGULAR month
 		// get the titles and events for each day
 			
@@ -322,9 +325,9 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 			}
 		}
 
-
 		if (isset($dayswithevents)) 
 			$dayswithevents = array_unique ($dayswithevents);
+				
 			
 		if (!($liststyle === 'smallcalendar') or !function_exists('amr_events_customisable_small_calendar_daytitles') ) 
 			$daytitles = amr_prepare_day_titles ($titles, $liststyle);   // for large hover?
@@ -484,7 +487,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 	$html .= $multi_output;
 	return($html);
 }
-
+// ----------------------------------------------------------------------------------------
 function amr_list_one_days_events($events, $columns) { /* for the large calendar */
 	global $amr_options,
 		$amr_limits,
@@ -504,7 +507,7 @@ function amr_list_one_days_events($events, $columns) { /* for the large calendar
 		$groupedhtml = '';
 		
 		// need to resort in case we have messed the timing up, keep the multi days to the top, hopefully in the order that they were in before.
-		$events = amr_sort_by_two_cols ('dummytime','MultiDay', $events);
+		// done earlier // $events = amr_sort_by_two_cols ('dummytime','MultiDay', $events); //20140805
 		
 		foreach ($events as $i => $e) { /* for each event, loop through the properties and see if we should display */
 	
@@ -546,16 +549,38 @@ function amr_list_one_days_events($events, $columns) { /* for the large calendar
 return ($html);
 }
 // ----------------------------------------------------------------------------------------
-function amr_get_day_link($thisyear, $thismonth, $thisday, &$link) { /* the start date object  and the months to show */
-	global $amr_limits,
-	$amr_listtype;
-		
-	if (!empty ($amr_limits['agenda']))   // do not want listtype unless requested?
-		$agenda = $amr_limits['agenda'];		
+function amr_get_day_link_stem() {
+	global $amr_calendar_url, $amr_limits;
+	
+	if (!empty($amr_calendar_url))  
+	// if they have defined a url to use for these sorts of links, then use it
+		$link = $amr_calendar_url;
 	else 
+	// else get a clean version of the current url
+		$link = amr_clean_link();	
+			
+	// how do we know whether to force a listtype or not ?
+	// we must if in large calendar or small calendar
+	// and it should be the agenda one
+	// If they have specified a url, then that page should either already be
+	// in a suitable listtype, or the url should have a listtype passed to it.
+	
+	if (!empty ($amr_limits['agenda'])) {  
+	// do not want listtype unless requested?
+		$agenda = $amr_limits['agenda'];	
+	}	
+	else 	
 		$agenda = 1;
 	
-	//$link = add_query_arg( 'listtype', $agenda ,$link); // no ? - they must just do something sensible when they set up the  page
+	$link = add_query_arg( 'listtype', $agenda ,$link); 
+	
+	return ($link);
+}
+// ----------------------------------------------------------------------------------------
+function amr_get_day_link($thisyear, $thismonth, $thisday, &$link) { /* the start date object  and the months to show */
+
+	// old comment as to why the linktype add in was commented out : what does it mean?:
+	//no ? - they must just do something sensible when they set up the  page
 	
 	$link = add_query_arg( 'days', '1' ,$link);
 	$link = add_query_arg( 'months', '0' ,$link);  // else existing months will override days 

@@ -1,25 +1,28 @@
 === amr ical events lists ===
 Contributors: anmari
 Tags: event, events, event calendar, events calendar, event manager, diary, schedule, ical, ics, ics calendar, ical feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, agenda, happenings, shows, concerts, conferences, courses, timetable, schedule
-
 Requires at least: 2.8
 Tested up to: 3.9.1
-Version: 4.9
+Version: 4.10
 Stable tag: trunk
 
-Event Calendar or Agenda list, add tab views, combine multiple ics files, handles any recurring event according to the ical spec. Very customisable listings or box calendars.  This version uses ics as input. Upgrade option for ics feed generation, taxonomies etc.  
+Event Calendar or Agenda list, combine multiple ics files, handles recurring events. Very customisable.
 
 == Description ==
 
 Display event lists, big box calendars, upcoming events widgets or small calendar widgets. Encourage viewers to subscribe to or bookmark your events on their calendars.  This plugin offers a thorough Ical calendar parser - copes with all the ical recurrence possibilities, and a large part of the rest of the spec. The free version accepts one or many ical urls for ics files.  It produces a very stylable list of events, notes, todo's or freebusy info.
 
-Test with your calendar's ics file at the demo site:
+**Demo**
 
-[Demo site](http://test.icalevents.com)
+Test with your calendar's ics file at the [Demo site](http://test.icalevents.com)
+
+**Events in wordpress**
 
 If you also want a complete "inhouse" solution where you can create events in wordpress with multiple event classification options, and produce your own ics feeds from those, please see [events plugin home page](http://icalevents.com). amr-events is an extension of amr-ical-events-list and will use any configuration from it.
 
 For more information, please see [plugin home page](http://icalevents.com)
+
+**Features**
 
 Displays events from multiple calendars in out the box or with customised grouping, formatting and styling. Multiple pages or post or widget or both.
 
@@ -29,6 +32,7 @@ List upcoming recurring or single events, notes, journal, freebusy information f
 
 Group events by month/week/day or many other for presentation and styling. Offers your viewers the option to subscribe or add the events or the whole calendar to their calendars (google or other).
 
+**Translations**
 Many thanks to the following people for the translations.  Note that I am unable to verify these and they may be out of date with the current version.:
 
 *   Spanish from Andrew at webhostinghub
@@ -46,10 +50,10 @@ Many thanks to the following people for the translations.  Note that I am unable
 
 If anyone would like to offer some translations, please do.  The Code Styling Localisation Plugin is very useful for this.  PLease send me both the .mo and .po files for your language for quicker upload.
 
-Requirements:
+**Requirements:**
 
 PHP 5 > 5.20
-php datetime class must be enabled (standard in php 5.2)
+php datetime class must be enabled (standard in php 5.2).  This is essential to provide robust timezone usage.
 
 == Installation ==
 
@@ -74,7 +78,7 @@ Optional:
 
 That's it!
 
-For the widgets (calendar and list)
+**For the widgets (calendar and list)**
 
 1.  Drag one of the events widgets to the chosen sidebar
 2.  Enter http://yoururl.ics in the widgets input area, Save
@@ -93,6 +97,11 @@ amr-events has much additional functionality, including a taxonomy widget.
 
 
 == Changelog ==
+
+= Version 4.10 =
+*  event titles in small calendar daylinks will now be sorted by time with all day events first.
+*  daylinks in small and large calendar had lost the listype and/or ability to use an agenda list type passed in the shortcode. This is fixed.  Note: links from the day of month will pass an agenda listype and day parameters back to same page to show just events for that day in agenda format.  If you want to use another page, then configure another calendar page and enter that url in the shortcode [largecalendar more_url=yourotherurl]
+
 = Version 4.9 =
 *  fixed a typo bug hopefully only recently introduced.  It affected recurring events with modified instances.
 
