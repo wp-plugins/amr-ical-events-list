@@ -901,6 +901,7 @@ if (!function_exists('amr_list_properties')) {
 		$amr_listtype;
 /* --- setup the html tags ---------------------------------------------- */
 
+	//if (ICAL_EVENTS_DEBUG) var_dump($icals);
 
 	if ($amr_liststyle === 'custom') {  // get the stored file uirl, if it does not exist, set to table
 		$custom_htmlstyle_file = amr_get_htmlstylefile();
@@ -956,15 +957,14 @@ if (!function_exists('amr_list_properties')) {
 
 	$columns = prepare_order_and_sequence  ($amr_options['listtypes'][$amr_listtype]['calprop']);
 	if (!($columns)) return;
+	//if (ICAL_EVENTS_DEBUG) var_dump($columns);
 
 //	if (!($order)) return;
 	foreach ($icals as $i => $p)	{ /* go through the options list and list the properties */
 		amr_derive_calprop_further ($icals[$i]);
 
+		$rowhtml = '';  //20140806 col 1 of cal properties were being overwritten - fix
 		foreach ($columns as $col => $data) {
-
-//			echo '<br />'.$col.' '; var_dump($data);
-
 			$cprop = '';
 			foreach ($data as $k => $v) {
 				if (!empty ($icals[$i][$k])) {/*only take the fields that are specified in options  */
@@ -976,10 +976,11 @@ if (!function_exists('amr_list_properties')) {
 			if (!empty($d))  // if we have a td type html to bracket the column with
 				$cprop = $d.' class="col'.$col.'">'.$cprop.$dc;
 			$cprop .= AMR_NL;
-
-
+			$rowhtml .= $cprop;
 		} // end of columns for one calendar
-		$html .= $r.$cprop.$rc.AMR_NL;
+
+		$html .= $r.$rowhtml.$rc.AMR_NL;
+		
 	} // end of calendars
 
 	if (!(empty($html)) ) {
@@ -1491,178 +1492,178 @@ function amr_format_repeatable_property ($content, $k, $event, $before='', $afte
 }
 /* --------------------------------------------------------- */
 if (!function_exists('amr_format_value')) {
-function amr_format_value ($content, $k, $event, $before='', $after='') { /* include the event so we can check for things like all day */
-/*  Format each Ical value for our presentation purposes
-Note: Google does toss away the html when editing the text, but it is there if you add but don't edit.
-what about all day?
-*/
-	global $amr_formats;  /* amr check that this get set to the chosen list type */
-	global $amr_options;
-	global $amr_listtype;
-	global $eventtaxonomies;
+	function amr_format_value ($content, $k, $event, $before='', $after='') { /* include the event so we can check for things like all day */
+	/*  Format each Ical value for our presentation purposes
+	Note: Google does toss away the html when editing the text, but it is there if you add but don't edit.
+	what about all day?
+	*/
+		global $amr_formats;  /* amr check that this get set to the chosen list type */
+		global $amr_options;
+		global $amr_listtype;
+		global $eventtaxonomies;
 
-//	echo '<br >'.$k;
-	if (empty($content)) return('');
+	//	echo '<br >'.$k;
+		if (empty($content)) return('');
 
-	if ($k == 'ORGANIZER') 	{ // it is an array but a parsed one, not repeatable
-		$htmlcontent = amr_format_organiser ($content);
-		}
-	elseif ($k == 'ATTENDEE') 	{
-		$htmlcontent = amr_format_attendees ($content);
-		}
-	else if (is_object($content)) {
-		switch ($k){
-			case 'EventDate': {
-				$htmlcontent = ('<abbr class="dtstart" title="'
-//					.amr_format_date ('l jS F Y, H:i e ', $content).'">'
-					.amr_format_date ('c', $content).'">' //must be ISO 8601 date for microformats to work
-					.amr_format_date ($amr_formats['Day'], $content)
-					.'</abbr>'
-					);
-				break;
+		if ($k == 'ORGANIZER') 	{ // it is an array but a parsed one, not repeatable
+			$htmlcontent = amr_format_organiser ($content);
 			}
-			case 'EndDate': {
-				$days = amr_event_is_multiday($event);
-				if ( $days > 1)
-					$htmlcontent = ('<abbr class="dtend" title="'
-					.amr_format_date ('c', $content).'">'  //must be ISO 8601 date
-					.amr_format_date ($amr_formats['Day'], $content)
-					.'</abbr>'
-					);
-				else $htmlcontent = '';
-				break;
+		elseif ($k == 'ATTENDEE') 	{
+			$htmlcontent = amr_format_attendees ($content);
 			}
-			case 'EndTime':
-			case 'StartTime':{
-				if (isset($event['allday']) and ($event['allday'] === 'allday'))
-					$htmlcontent = '';
-				else
-					$htmlcontent = amr_format_time ($amr_formats['Time'], $content);
-				break;
-			}
-			case 'DTSTART':
-			case 'DTEND':
-			case 'UNTIL': {
-				$htmlcontent = amr_format_date ($amr_formats['Day'], $content);
-				if (empty($event['allday']) or !($event['allday'] == 'allday'))
-					$htmlcontent  .= ' '.amr_format_time ($amr_formats['Time'], $content);
-				break;
+		else if (is_object($content)) {
+			switch ($k){
+				case 'EventDate': {
+					$htmlcontent = ('<abbr class="dtstart" title="'
+	//					.amr_format_date ('l jS F Y, H:i e ', $content).'">'
+						.amr_format_date ('c', $content).'">' //must be ISO 8601 date for microformats to work
+						.amr_format_date ($amr_formats['Day'], $content)
+						.'</abbr>'
+						);
+					break;
 				}
-			case 'X-WR-TIMEZONE': { /* amr  need to add code to reformat the timezone as per admin entry.  Also only show if timezone different ? */
-				$htmlcontent = amr_format_tz(timezone_name_get($content));
-				break;
-			}
-			case 'TZID': { /* amr  need to add code to reformat the timezone as per admin entry.  Also only show if timezone different ? */
-				$htmlcontent = amr_format_tz (timezone_name_get($content));
-				break;
-			}
-			default: 	/* should not be any */
-				$htmlcontent = amr_format_date ($amr_formats['DateTime'], $content);
-		}
-	}
-	elseif (is_array($content)) {
-
-		if ($k === 'DURATION') {
-			$htmlcontent = amr_format_duration ($content);
-		}
-		elseif (($k === 'RRULE') or ($k === 'EXRULE')) {
-			$htmlcontent = amr_format_rrule($content);
-			}
-		elseif (($k === 'RDATE') or ($k === 'EXDATE')) {
-			$htmlcontent = amr_prettyprint_r_ex_date ($content);
-			}
-		elseif ($k=== 'CATEGORIES') {  // umm - what if ics category
-				$htmlcontent = amr_format_taxonomies ('category', $content);
-
-			}
-		elseif ($k=== 'post_tag' ) {
-				$htmlcontent = amr_format_taxonomies ('post_tag', $content);
-
-			}
-		elseif ($k == 'ATTACH') {
-			if (isset($content[0]['type'] ))	{
-				// then we are at the top level of the array, so can ask to handled repetaed values
-				return ( amr_format_repeatable_property ($content, $k, $event, $before, $after));
-			}
-			else
-				$htmlcontent = amr_format_attach ($content, $event);
-		}
-		else {  /* simple array don't think we need to list the items separately eg: multiple comments or descriptions - just line  */
-			if (!empty( $eventtaxonomies) and in_array( $k, $eventtaxonomies)) {
-					$htmlcontent = amr_format_taxonomies ($k, $content);
+				case 'EndDate': {
+					$days = amr_event_is_multiday($event);
+					if ( $days > 1)
+						$htmlcontent = ('<abbr class="dtend" title="'
+						.amr_format_date ('c', $content).'">'  //must be ISO 8601 date
+						.amr_format_date ($amr_formats['Day'], $content)
+						.'</abbr>'
+						);
+					else $htmlcontent = '';
+					break;
 				}
-			else
-				return( amr_format_repeatable_property ($content, $k, $event, $before, $after));
-			}
-		}
-
-	elseif (is_null($content) OR ($content === ''))
-		$htmlcontent = '';
-	else {
-		if (function_exists ('amr_format_'.$k)) {
-			$htmlcontent =(call_user_func('amr_format_'.$k, $content));
-		}
-		else 
-		switch ($k){
-			case 'COMMENT':
-			case 'DESCRIPTION': {
-				$htmlcontent = html_entity_decode(amr_click_and_trim(nl2br2(amr_amp($content))));
-				break;
-			}
-			case 'SUMMARY':
-			case 'icsurl':
-			case 'addtogoogle':
-			case 'addevent':
-			case 'subscribeevent':
-			case 'subscribeseries':
-			case 'map':
-			case 'refresh':
-			case 'attending_event': {
-				$htmlcontent = $content; /* avoid hyperlink as we may have added url already */
-				break;
-			}
-			case 'URL': /* assume valid URL, should not need to validate here, then format it as such */
-				$htmlcontent = amr_format_url($content);
-				break;
-			case 'LOCATION': {
-				$htmlcontent = (amr_click_and_trim(nl2br2(amr_amp($content))));
-				break;
-			}
-
-			case 'X-WR-TIMEZONE':{	/* not parsed as object - since it is cal attribute, not property attribue */
-				$htmlcontent = (amr_format_tz ($content));
-				break;
-			}
-			case 'allday': {
-				$htmlcontent =(amr_format_allday($content));
-				break;
-			}
-
-
-			default: 	/* Convert any newlines to html breaks */
-
-				if (!empty( $eventtaxonomies) and in_array( $k, $eventtaxonomies)) {
-					$htmlcontent = amr_format_taxonomies ($k, $content);
+				case 'EndTime':
+				case 'StartTime':{
+					if (isset($event['allday']) and ($event['allday'] === 'allday'))
+						$htmlcontent = '';
+					else
+						$htmlcontent = amr_format_time ($amr_formats['Time'], $content);
+					break;
 				}
-				else {
-					$func = 'amr_format_'.str_replace('-','_',$k);
-
-					if (function_exists($func))		{	
-						$htmlcontent = call_user_func ($func, $content);
-
+				case 'DTSTART':
+				case 'DTEND':
+				case 'UNTIL': {
+					$htmlcontent = amr_format_date ($amr_formats['Day'], $content);
+					if (empty($event['allday']) or !($event['allday'] == 'allday'))
+						$htmlcontent  .= ' '.amr_format_time ($amr_formats['Time'], $content);
+					break;
 					}
-					$htmlcontent = str_replace("\n", "<br />", $content);
-				}	
-
+				case 'X-WR-TIMEZONE': { /* amr  need to add code to reformat the timezone as per admin entry.  Also only show if timezone different ? */
+					$htmlcontent = amr_format_tz(timezone_name_get($content));
+					break;
+				}
+				case 'TZID': { /* amr  need to add code to reformat the timezone as per admin entry.  Also only show if timezone different ? */
+					$htmlcontent = amr_format_tz (timezone_name_get($content));
+					break;
+				}
+				default: 	/* should not be any */
+					$htmlcontent = amr_format_date ($amr_formats['DateTime'], $content);
+			}
 		}
-		
+		elseif (is_array($content)) {
+
+			if ($k === 'DURATION') {
+				$htmlcontent = amr_format_duration ($content);
+			}
+			elseif (($k === 'RRULE') or ($k === 'EXRULE')) {
+				$htmlcontent = amr_format_rrule($content);
+				}
+			elseif (($k === 'RDATE') or ($k === 'EXDATE')) {
+				$htmlcontent = amr_prettyprint_r_ex_date ($content);
+				}
+			elseif ($k=== 'CATEGORIES') {  // umm - what if ics category
+					$htmlcontent = amr_format_taxonomies ('category', $content);
+
+				}
+			elseif ($k=== 'post_tag' ) {
+					$htmlcontent = amr_format_taxonomies ('post_tag', $content);
+
+				}
+			elseif ($k == 'ATTACH') {
+				if (isset($content[0]['type'] ))	{
+					// then we are at the top level of the array, so can ask to handled repetaed values
+					return ( amr_format_repeatable_property ($content, $k, $event, $before, $after));
+				}
+				else
+					$htmlcontent = amr_format_attach ($content, $event);
+			}
+			else {  /* simple array don't think we need to list the items separately eg: multiple comments or descriptions - just line  */
+				if (!empty( $eventtaxonomies) and in_array( $k, $eventtaxonomies)) {
+						$htmlcontent = amr_format_taxonomies ($k, $content);
+					}
+				else {
+					return( amr_format_repeatable_property ($content, $k, $event, $before, $after));
+				}
+			}
+		}
+		elseif (is_null($content) OR ($content === ''))
+			$htmlcontent = '';
+		else {
+			if (function_exists ('amr_format_'.$k)) {
+				$htmlcontent =(call_user_func('amr_format_'.$k, $content));
+			}
+			else 
+			switch ($k){
+				case 'COMMENT':
+				case 'DESCRIPTION': {
+					$htmlcontent = html_entity_decode(amr_click_and_trim(nl2br2(amr_amp($content))));
+					break;
+				}
+				case 'SUMMARY':
+				case 'icsurl':
+				case 'addtogoogle':
+				case 'addevent':
+				case 'subscribeevent':
+				case 'subscribeseries':
+				case 'map':
+				case 'refresh':
+				case 'attending_event': {
+					$htmlcontent = $content; /* avoid hyperlink as we may have added url already */
+					break;
+				}
+				case 'URL': /* assume valid URL, should not need to validate here, then format it as such */
+					$htmlcontent = amr_format_url($content);
+					break;
+				case 'LOCATION': {
+					$htmlcontent = (amr_click_and_trim(nl2br2(amr_amp($content))));
+					break;
+				}
+
+				case 'X-WR-TIMEZONE':{	/* not parsed as object - since it is cal attribute, not property attribue */
+					$htmlcontent = (amr_format_tz ($content));
+					break;
+				}
+				case 'allday': {
+					$htmlcontent =(amr_format_allday($content));
+					break;
+				}
+
+
+				default: 	/* Convert any newlines to html breaks */
+
+					if (!empty( $eventtaxonomies) and in_array( $k, $eventtaxonomies)) {
+						$htmlcontent = amr_format_taxonomies ($k, $content);
+					}
+					else {
+						$func = 'amr_format_'.str_replace('-','_',$k);
+
+						if (function_exists($func))		{	
+							$htmlcontent = call_user_func ($func, $content);
+
+						}
+						$htmlcontent = str_replace("\n", "<br />", $content);
+					}	
+
+			}
+			
+		}
+
+		if (empty ($htmlcontent) ) 
+			return;
+		return ($before.$htmlcontent.$after);
+
 	}
-
-	if (empty ($htmlcontent) ) 
-		return;
-	return ($before.$htmlcontent.$after);
-
-}
 }
 /* ------------------------------------------------------------------------------------*/
 if (!function_exists('amr_wp_format_date')) {

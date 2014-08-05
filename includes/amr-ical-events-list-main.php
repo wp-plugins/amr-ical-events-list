@@ -1,5 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.10');
+define('AMR_ICAL_LIST_VERSION', '4.11');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 global $amr_options;
@@ -2352,6 +2352,7 @@ function amr_ical_include_scripts() {  // only load js if requested
 	wp_enqueue_script( 'amr-ical', $url, array( 'jquery'), false, true);  // true for in footer
 
  }
+/* ------------------------------------------------------------------------------------------------ */
  function amr_ical_load_frontend_scripts() {  // only load js if requested
  // csss required for widgets etc, so allow general load
 	wp_enqueue_script('jquery');

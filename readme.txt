@@ -3,7 +3,7 @@ Contributors: anmari
 Tags: event, events, event calendar, events calendar, event manager, diary, schedule, ical, ics, ics calendar, ical feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, agenda, happenings, shows, concerts, conferences, courses, timetable, schedule
 Requires at least: 2.8
 Tested up to: 3.9.1
-Version: 4.10
+Version: 4.11
 Stable tag: trunk
 
 Event Calendar or Agenda list, combine multiple ics files, handles recurring events. Very customisable.
@@ -20,7 +20,7 @@ Test with your calendar's ics file at the [Demo site](http://test.icalevents.com
 
 If you also want a complete "inhouse" solution where you can create events in wordpress with multiple event classification options, and produce your own ics feeds from those, please see [events plugin home page](http://icalevents.com). amr-events is an extension of amr-ical-events-list and will use any configuration from it.
 
-For more information, please see [plugin home page](http://icalevents.com)
+For more information, please see [plugin home page](http://icalevents.com) 
 
 **Features**
 
@@ -68,13 +68,13 @@ php datetime class must be enabled (standard in php 5.2).  This is essential to 
 [smallcalendar yoururl.ics]  
 [weekscalendar yoururl.ics]  
 
+ NB (Enter the Ics url NOT As a hyperlink - it must be plain text.  Enter it in the html view, not the visual view of the editor.)
 
 Optional:
 
-[expandall] - if using collapsing groups
+[expandall] - if using collapsing groups. Enter this shortcode BEFORE the [events] or [ical] shortcodes.  Remember to tick 'use js to collapse groups' in the listing events styling settings and of course define a grouping for your list type.  See http://icalevents.com/4447-groupings-of-events-expanding-and-collapsing-the-groupings/
 
 
- NB (Ics url NOT As a hyperlink, must be plain text.  Enter in the html view, not the visual view of the editor.)
 
 That's it!
 
@@ -97,6 +97,9 @@ amr-events has much additional functionality, including a taxonomy widget.
 
 
 == Changelog ==
+
+= Version 4.11 =
+*  Fixed a bug in the calendar properties section.  Column 1 was never showing - whoops. If you are now seeing your ics calendar name and you didn't want to.  Go to list type settings, calendar properties and assign a column of '0' to the X-WR-CALNAME.  Note not all ics files have a X-WR-CALNAME, so you may not see anything anyway.
 
 = Version 4.10 =
 *  event titles in small calendar daylinks will now be sorted by time with all day events first.
