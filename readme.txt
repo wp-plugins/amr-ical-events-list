@@ -2,7 +2,7 @@
 Contributors: anmari
 Tags: event, events, event calendar, events calendar, event manager, diary, schedule, ical, ics, ics calendar, ical feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, agenda, happenings, shows, concerts, conferences, courses, timetable, schedule
 Requires at least: 2.8
-Tested up to: 3.9.1
+Tested up to: 4.0
 Version: 4.11
 Stable tag: trunk
 
