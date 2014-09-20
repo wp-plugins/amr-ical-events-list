@@ -19,6 +19,7 @@
  *	http://www.ietf.org/rfc/rfc2445.txt
  *
  */
+include 'timezones/amr-windows-zones.php';
 /* ---------------------------------------------------------------------- */
 /* Return the full path to the cache file for the specified URL.*/
 function get_cache_file($url) {
@@ -397,16 +398,10 @@ function amr_parseTZDate ($value, $tzid) {
 		else return ($d);
 	}
 	/* ------------------------------------------------------------------ */
-/* ------------------------------------------------------------------ */
-function amr_parseTZID($text)    {
-   global $amr_globaltz;
-   /* take a string that may have a olson tz object and try to return a tz object */
-   /* accept long and short TZ's, --- assume website tz if not valid eg Zimbra's: GMT+01.00/+02.00 */
-		$icstzid = trim($text,'"=' ); /* check for enclosing quotes like zimbra issues */
+function amr_deduceTZID($icstzid)    { 
+// we have something that php didn't like, so we will try work something out
+   global $amr_globaltz, $globaltzstring;
 
-		$globaltzstring = timezone_name_get($amr_globaltz);
-		if (!($globaltzstring == $icstzid	)) {/* if the timezone matches the wordpress or shortcode time zone, then we are cool ! */
-			/* else try figure the timezone out */
 //			$strip = array ('(',' ');
 //			$icstzid = str_replace($strip,'',$icstzid);
 			$gmtend = stripos($icstzid,')'); /* do we have a brackedt GMT ? */
@@ -426,11 +421,15 @@ function amr_parseTZID($text)    {
 					$icstzcities = array_merge($icstzcities, $temp3);
 					}
 				}
-			foreach ($icstzcities as $i=>$icscity) $icstzcities[$i] = trim($icscity,' ');
+			foreach ($icstzcities as $i=>$icscity) {
+				$icstzcities[$i] = trim($icscity,' ');
+			}	
 			//if (isset ($_REQUEST['tzdebug'])) { echo '<br />Do we have a City? <br />';print_r($icstzcities);}
 			$globalcontcity = explode ('/',$globaltzstring);
-			if (isset ($globalcontcity[1]) ) $globalcity = $globalcontcity[1];
-			else $globalcity = $globalcontcity[0];
+			if (isset ($globalcontcity[1]) ) 
+				$globalcity = $globalcontcity[1];
+			else 
+				$globalcity = $globalcontcity[0];
 //			if (isset ($_REQUEST['tzdebug'])) {	echo '<hr> text = '.$text.'<br/>icstzid = '.$icstzid.' and wp tz = '.$globalcity.' <br >'; print_r($icstzcities);		}
 			if (in_array($globalcity, $icstzcities)) { /* if one of the cities in the tzid matches ours, again we can use the matched one */
 				$tzname = $globaltzstring;
@@ -441,45 +440,107 @@ function amr_parseTZID($text)    {
 					$tzname = $icstzid;
 				}
 				else {
+					
 					foreach ($icstzcities as $i=>$c) {
 						if (isset ($alltzcities[$c] )) { /* try each of the cities if we have mutiple */
 							$tzname = $alltzcities[$c];
 							break;
 						}
 					}
+					if (isset ($_REQUEST['tzdebug'])) {echo '<br/>No match to known cities'; }
 				}
 			}
 			/* */
-		}
-		else $tzname = $icstzid;
+	
 		if (!isset ($tzname)) { /* see if we do it with GMT after all ? */
 			if (isset($icstzcities[0])) {
 				$tryoffset = str_replace('GMT','',$icstzcities[0]);
-				$tzname = amr_getTimeZone($tryoffset);
+				if (empty($tryoffset) or (is_int($tryoffset))) {
+					$tzname = amr_getTimeZone($tryoffset);
+					if (isset ($_REQUEST['tzdebug'])) 
+						{echo '<br/>Try see if offset:'.$tryoffset. ' gave '.$tzname; }
+				}
+				else {
+					$tzname = amr_unknown_timezone($icstzid, $globaltzstring);
+				}
 			}
 			else {
-				$tzname = $globaltzstring;
-				$emessage = 'Unable to deal with timezone like this: '.$text;
-				echo '<!-- '.$emessage.' -->';
-				if (isset ($_REQUEST['tzdebug']) or ICAL_EVENTS_DEBUG) {
-					echo  '<b>'.$emessage.'</b>';
-					echo '- Making an assumption! Using '.$tzname.'<br />';
-				}
+				$tzname = amr_unknown_timezone($icstzid, $globaltzstring);
 			}
 		}
 		if (isset ($_REQUEST['tzdebug'])) echo '<br /><b>Timezone must be: </b> '.$tzname.'<br />';
+		$tz = amr_try_timezone ($tzname);
+		if (!$tz) $tz = $amr_globaltz;
+	return ($tz);
+}
+/* ------------------------------------------------------------------ */
+function amr_parseTZID($text)    {
+   global $amr_globaltz,
+	$globaltzstring,
+	$icsfile_tzname, 
+	$icsfile_tz;
+   /* take a string that may have a olson tz object and try to return a tz object */
+   /* accept long and short TZ's, --- assume website tz if not valid eg Zimbra's: GMT+01.00/+02.00 */
+		$icstzid = trim($text,'"=' ); /* check for enclosing quotes like zimbra issues */
+		if (!empty($icsfile_tzname) and ($icsfile_tzname == $icstzid )) {
+			if (isset ($_REQUEST['tzdebug'])) echo '<br />'.$icstzid.' Matches previously parsed tz.'; 
+			return ($icsfile_tz);
+		}	
+		if (empty($globaltzstring)) $globaltzstring = timezone_name_get($amr_globaltz);	
+		if ($globaltzstring == $icstzid	) {/* if the timezone matches the wordpress or shortcode time zone, then we are cool ! */
+			$tzname = $icstzid;
+			if (isset ($_REQUEST['tzdebug'])) echo '<br />'.$icstzid.' Matches wordpress tz.'; 
+		}
+		else {
+			if (isset ($_REQUEST['tzdebug'])) {echo '<br/>Timezone '.$icstzid.' does not match wp:'.$globaltzstring; }
+			// let us see if php likes it
+			$tzid = apply_filters('amr-timezoneid-filter',$icstzid);
+			
+			try {	set_error_handler(function() { /* ignore errors */ });
+					$tz =  timezone_open($tzid);
+					restore_error_handler();
+					if ($tz) { 
+						$tzname = $tzid;
+						if (isset ($_REQUEST['tzdebug'])) {echo '<br/>Php liked:'.$tzid; }
+					}
+					else $tz = amr_deduceTZID($tzid) ;
+				}
+			catch(Exception $e) {/* we tried but php did't like, so lets try fix it */
+			/* else try figure the timezone out */
+				$tz = amr_deduceTZID($tzid) ;
+			}
+			
+		}
+		if (empty($icsfile_tzname))	{
+			$icsfile_tzname = $icstzid; // what was actually in the file
+			$icsfile_tz = $tz; // this is the php tz we ended up with 
+			}
+		return ( $tz);
+}	
+	/* ------------------------------------------------------------------ */
+function amr_try_timezone ($tzname) {	
 		try {
 				$tz =  timezone_open($tzname);
 			}
-			catch(Exception $e) {
+		catch(Exception $e) {
 				$text = 'Unable to create Time zone object., Using wp default.<br />'.$e->getMessage();
-				amr_tell_admin_the_error ($text);
-				
+				amr_tell_admin_the_error ($text);			
 				//echo '<br />Unable to create Time zone object., Using wp default.<br />'.$e->getMessage();
 				return ($amr_globaltz);
 			}
-		return ( $tz);
-    }
+	return ($tz);
+}
+/* ------------------------------------------------------------------ */
+function amr_unknown_timezone ($text, $tzname) {	
+	$emessage = 'Unable to deal with timezone like this: '.$text;
+//	echo '<!-- '.$emessage.' -->';
+//	if (isset ($_REQUEST['tzdebug']) or ICAL_EVENTS_DEBUG) {
+	if (is_super_admin()) {
+		echo  '<br />Message to logged-in admin only: <b>'.$emessage.'</b>';
+		echo '- Making an assumption! Using '.$tzname.'<br />';
+	}
+	return ($tzname);
+}
 /* ------------------------------------------------------------------ */
 function amr_parseSingleDate($VALUE='DATE-TIME', $text, $tzobj)	{
    /* used for those properties that should only have one value - since many other dates can have multiple date specs, the parsing function returns an array
@@ -718,7 +779,6 @@ ATTACH;FMTTYPE=application/msword:http://example.com/
 	return($newattach);
 }
 /* ---------------------------------------------------------------------- */
-/* -------------------------------------------------------- */
 function amr_parseDefault($prop, $parts) {
 
 			$func = 'amr_parse'.str_replace('-','_',$prop);
@@ -943,12 +1003,14 @@ function amr_parse_component($type)	{	/* so we know we have a vcalendar at lines
 // Parse the ical file and return an array ('Properties' => array ( name & params, value), 'Items' => array(( name & params, value), )
 function amr_parse_ical ( $cal_file ) {
 /* we will try to continue as much as possible, ignore lines that are problems */
-	global $amr_lines;
-	global $amr_totallines;
-	global $amr_n;
-	global $amr_validrepeatablecomponents;
-	global $amr_last_modified;
+	global $icsfile_tzname,
+		$amr_lines,
+		$amr_totallines,
+		$amr_n,
+		$amr_validrepeatablecomponents,
+		$amr_last_modified;
 
+	$icsfile_tzname = '';
     $line = 0;
     $event = '';
 	//If (ICAL_EVENTS_DEBUG) { echo '<br />Calfile = '; var_dump($cal_file);echo '<br />';}

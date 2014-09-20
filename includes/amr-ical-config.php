@@ -319,7 +319,7 @@ function amr_set_defaults_for_datetime() {
 			}
 			else {
 				if (isset($_REQUEST['tzdebug'])) {	echo '<h2>Using php default for timezone</h2>';}
-				$amr_globaltz = timezone_open(date_default_timezone_get());
+				$amr_globaltz = timezone_open(date_default_timezone_get()); // this will give UTC as wordpres  ALWAYS uses UTC
 			}
 		}
 	if (empty($amr_globaltz)) {

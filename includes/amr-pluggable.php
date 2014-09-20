@@ -856,7 +856,7 @@ if (!function_exists('add_event_to_google')) {
 		$details = amr_just_flatten_array ($e['DESCRIPTION']); //var_dump($details);
 		if (!empty($details)) $details ='&amp;details='.rawurlencode(strip_tags($details));
 
-	/* adds a button to add the current calemdar link to the users google calendar */
+	/* adds a button to add the current calendar link to the users google calendar */
 		$html = '<a class= "amr-bling hrefaddtogoogle" href="http://www.google.com/calendar/event?action=TEMPLATE'
 		.'&amp;text='.str_replace(' ','%20',esc_html(strip_tags(amr_just_flatten_array ($e['SUMMARY']))))
 		/* dates and times need to be in UTC */

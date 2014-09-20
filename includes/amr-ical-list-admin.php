@@ -21,6 +21,7 @@ function amr_plugin_action($links, $file) {
 /* ---------------------------------------------------------------------*/
 function amr_ical_support_links () {
 
+
 	echo '<div class="postbox" style="padding:1em 2em; width: 600px;">
 	<p>
 	<a href="http://icalevents.com/amr-events/amr-ical-events-list/" title="documentation for amr-ical-events-list and amr-events">';

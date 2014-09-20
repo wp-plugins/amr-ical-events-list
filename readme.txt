@@ -3,7 +3,7 @@ Contributors: anmari
 Tags: event, events, event calendar, events calendar, event manager, diary, schedule, ical, ics, ics calendar, ical feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, agenda, happenings, shows, concerts, conferences, courses, timetable, schedule
 Requires at least: 2.8
 Tested up to: 4.0
-Version: 4.11
+Version: 4.12
 Stable tag: trunk
 
 Event Calendar or Agenda list, combine multiple ics files, handles recurring events. Very customisable.
@@ -97,6 +97,12 @@ amr-events has much additional functionality, including a taxonomy widget.
 
 
 == Changelog ==
+= Version 4.12 =
+*  Added ability to map windows zones in ics files to real timezones (IANA, php and Ohlson)
+*  Added a timezone filter to facilitate any other mappings that may be required. apply_filters('amr-timezoneid-filter',$icstzid);
+*  File included to update the mapping from the unicode.org xml file should it ever change. See timezones folder. rename the .txt to .php, execute.  
+*  Changed default timezone if a timezone id cannot be parsed (maybe because some other application is doing ity's own weird thing). Will now be your wordpress php timezone, not php or UTC.
+*  Cleaned up translation loading a little
 
 = Version 4.11 =
 *  Fixed a bug in the calendar properties section.  Column 1 was never showing - whoops. If you are now seeing your ics calendar name and you didn't want to.  Go to list type settings, calendar properties and assign a column of '0' to the X-WR-CALNAME.  Note not all ics files have a X-WR-CALNAME, so you may not see anything anyway.

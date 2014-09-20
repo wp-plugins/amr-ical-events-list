@@ -1945,8 +1945,8 @@ function amr_get_params ($attributes=array()) {
 
 	If (isset($_REQUEST['tzdebug'])) {
 
-		echo '<h4>Plugin Timezone:'.timezone_name_get($amr_globaltz);
-		echo ', current offset is '.$amr_globaltz->getOffset(date_create('now',$amr_globaltz))/(60*60).'</h4>';
+		echo '<p>Plugin/Wordpress Timezone:'.timezone_name_get($amr_globaltz);
+		echo ', current offset is '.$amr_globaltz->getOffset(date_create('now',$amr_globaltz))/(60*60).'</p>';
 		}
 //-------------------------------
 	$pos_int_options = array("options"=> array("min_range"=>1, "max_range"=>1000));
@@ -2288,22 +2288,7 @@ function amr_get_set_start_for_nav () {  // gets or sets a date object to the be
 	}
 	return ($start);
 }
-/* --------------------------------------------------------------------------------------------------*/
-function amr_ical_load_text() { 
-// allows for a custom language file in WP_LANG_DIR as per prior versions
-// note NOT in WP_LANG_DIR/plugins as that will be used by wp language pack feature
-
-    $domain = 'amr-ical-events-list';
-    // The "plugin_locale" filter is also used in load_plugin_textdomain()
-    $locale = apply_filters('plugin_locale', get_locale(), $domain);
-	// if custom language file allowed for in prior versions exists, then load it first
-    $result = load_textdomain($domain, WP_LANG_DIR.'/'.$domain.'-'.$locale.'.mo');
-
-// wp (see l10n.php) will check wp-content/languages/plugins if nothing found in plugin dir
-
-	$result = load_plugin_textdomain($domain, false/* nlr */, $domain.'/lang/');
-	//default is languages, maybe change in future?
-}
+/* 
 /* -----------------------------------------------------------------------------------------------*/
 function amr_ical_widget_init() {
 	register_widget('amr_ical_widget');
@@ -2391,7 +2376,7 @@ function amr_plugin_links($links, $file) {
 
 	add_action('widgets_init'           , 'amr_ical_widget_init');
 
-	add_action('plugins_loaded'         , 'amr_ical_load_text' );
+
 	// as per ottos post for language packs
 	//add_action( 'init'             		, 'amr_ical_load_text' );
 	add_shortcode('iCal'                , 'amr_do_ical_shortcode');

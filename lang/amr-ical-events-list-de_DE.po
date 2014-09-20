@@ -1,16 +1,16 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: amr events calendar or lists with ical files v4.12\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-09-20 11:36:23+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"Project-Id-Version: amr events calendar or lists with ical files v4.11\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/amr-ical-events-list\n"
+"POT-Creation-Date: 2014-04-21 05:50:36+00:00\n"
+"PO-Revision-Date: 2014-09-19 10:38:31+0000\n"
+"Last-Translator: Joerg Knoerchen <webmaster@sensorgrafie.de>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%100/10==1 ? 2 : n%10==1 ? 0 : (n+9)%10>3 ? 2 : 1;\n"
-"X-Generator: CSL v1.x\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 1.6.5\n"
 "X-Poedit-Language: \n"
 "X-Poedit-Country: \n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -20,277 +20,129 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Textdomain-Support: yes"
 
-#: includes/amr-ical-list-admin.php:1392
-#@ amr-ical-events-list
-msgid " Define date and time formats:"
-msgstr "определить формат даты и времени"
-
-#: includes/amr-pluggable.php:852
-#@ amr-ical-events-list
-msgid "Add event to google"
-msgstr "добавить событие в google"
-
-#: includes/amr-ical-list-admin.php:252
-#@ amr-ical-events-list
-msgid "Calendar properties"
-msgstr "свойства календаря"
-
-#: includes/amr-ical-config.php:599
-#@ amr-ical-events-list
-msgid "Class"
-msgstr "класс"
-
-#: includes/amr-ical-config.php:598
-#@ amr-ical-events-list
-msgid "Date"
-msgstr "дата"
-
-#: includes/amr-ical-list-admin.php:343
-#@ amr-ical-events-list
-msgid "Define grouping:"
-msgstr "определить группирование:"
-
-#: includes/amr-ical-list-admin.php:439
-#@ amr-ical-events-list
-msgid "Define maximums:"
-msgstr "определить мксимальный:"
-
-#: includes/amr-ical-config.php:582
-#@ amr-ical-events-list
-msgid "Description"
-msgstr "описание"
-
-#: includes/amr-ical-config.php:600
-#@ amr-ical-events-list
-msgid "Room"
-msgstr "комната"
-
-#: includes/amr-ical-list-admin.php:414
-#@ amr-ical-events-list
-msgid "Select components to show:"
-msgstr "выбрать компанентыдля показа:"
-
-#: includes/amr-ical-config.php:552
-#: includes/amr-pluggable.php:506
-#@ amr-ical-events-list
-msgid "Show in Google map"
-msgstr "показать в карте google"
-
-#: includes/amr-ical-config.php:559
-#: includes/amr-pluggable.php:513
-#@ amr-ical-events-list
-msgid "Show location in Google Maps"
-msgstr "показать места в картах google"
-
-#: includes/amr-upcoming-events-widget.php:141
-#: includes/amr-upcoming-events-widget.php:281
-#@ amr-ical-events-list
-msgid "Title"
-msgstr "название"
-
-#: includes/amr-ical-list-admin.php:133
-#@ amr-ical-events-list
-msgid "Uninstall"
-msgstr "модифицировать"
-
-#: includes/amr-upcoming-events-widget.php:9
-#: includes/amr-upcoming-events-widget.php:117
-#: includes/amr-upcoming-events-widget.php:187
-#: includes/amr-upcoming-events-widget.php:270
-#@ amr-ical-events-list
-msgid "Upcoming Events"
-msgstr "предстоящие события"
-
-#: includes/amr-ical-list-admin.php:126
-#@ amr-ical-events-list
-msgid "Update"
-msgstr "обновить"
-
-#: includes/amr-ical-config.php:581
-#@ amr-ical-events-list
-msgid "Venue"
-msgstr "место проведения"
-
-#: includes/amr-pluggable.php:1013
-#, php-format
-#@ amr-ical-events-list
-msgid "Week  %u"
-msgstr "наделя %u"
-
-#: includes/amr-ical-config.php:411
-#@ amr-ical-events-list
-msgid "What"
-msgstr "что"
-
-#: includes/amr-ical-config.php:410
-#@ amr-ical-events-list
-msgid "When"
-msgstr "когда"
-
-#: includes/amr-ical-config.php:412
-#@ amr-ical-events-list
-msgid "Where"
-msgstr "где"
-
-#. translators: plugin header field 'Name'
-#: amr-ical-events-list.php:0
-#@ amr-ical-events-list
-msgid "amr events calendar or lists with ical files"
-msgstr ""
-
-#. translators: plugin header field 'PluginURI'
-#: amr-ical-events-list.php:0
-#@ amr-ical-events-list
-msgid "http://icalevents.com"
-msgstr ""
-
-#. translators: plugin header field 'Description'
-#: amr-ical-events-list.php:0
-#@ amr-ical-events-list
-msgid "Display simple or highly customisable and styleable list of events.  Handles all types of recurring events, notes, journals, freebusy etc. Offers links to add events to viewers calendar or subscribe to whole calendar.  Write Calendar Page</a>  and put [iCal http://yoururl.ics ] where you want the list of events of an ics file and [events] to get internal events.      To tweak: <a href=\"admin.php?page=manage_amr_ical\">Manage Settings Page</a>,  <a href=\"widgets.php\">Manage Widget</a>."
-msgstr ""
-
-#. translators: plugin header field 'Author'
-#: amr-ical-events-list.php:0
-#@ amr-ical-events-list
-msgid "anmari"
-msgstr ""
-
-#. translators: plugin header field 'AuthorURI'
-#: amr-ical-events-list.php:0
-#@ amr-ical-events-list
-msgid "http://anmari.com/"
-msgstr ""
-
-#. translators: plugin header field 'Version'
-#: amr-ical-events-list.php:0
-#@ amr-ical-events-list
-msgid "4.12"
-msgstr ""
-
 #: includes/amr-ical-calendar.php:48
 #@ amr-ical-events-list
 msgid "Go to events for this day only"
-msgstr ""
+msgstr "Gehe zu Veranstaltungen für diesen Tag\t"
 
 #: includes/amr-ical-config.php:141
 #: includes/amr-ical-list-admin.php:294
 #@ amr-ical-events-list
 msgid "Column"
-msgstr ""
+msgstr "Spalte"
 
 #: includes/amr-ical-config.php:142
 #: includes/amr-ical-list-admin.php:297
 #@ amr-ical-events-list
 msgid "Order"
-msgstr ""
+msgstr "Reihenfolge\t"
 
 #: includes/amr-ical-config.php:143
 #: includes/amr-ical-list-admin.php:298
 #@ amr-ical-events-list
 msgid "Before"
-msgstr ""
+msgstr "Vorher"
 
 #: includes/amr-ical-config.php:144
 #: includes/amr-ical-list-admin.php:299
 #@ amr-ical-events-list
 msgid "After"
-msgstr ""
+msgstr "Nachher"
 
 #: includes/amr-ical-config.php:202
 #@ amr-ical-events-list
 msgid "A link to allow user to add the whole calendar to their google calendar."
-msgstr ""
+msgstr "Link der es erlaubt Benutzer den Kalender in ihren Google Kalender zu integrieren. "
 
 #: includes/amr-ical-config.php:203
 #@ amr-ical-events-list
 msgid "A link to allow user to refetch an ics file"
-msgstr ""
+msgstr "Link der es erlaubt Benutzer eine ICS Datei zu laden"
 
 #: includes/amr-ical-config.php:204
 #@ amr-ical-events-list
 msgid "The time the ics file was last modified"
-msgstr ""
+msgstr "Zeitpunkt zu dem die ICS Datei zuletzt bearbeitet wurde"
 
 #: includes/amr-ical-config.php:206
 #@ amr-ical-events-list
 msgid "WordPress post title or ICS SUMMARY"
-msgstr ""
+msgstr "WordPress Beitragstitel für ICS Zusammenfassung"
 
 #: includes/amr-ical-config.php:207
 #@ amr-ical-events-list
 msgid "WordPress content or ICS description"
-msgstr ""
+msgstr "WordPress Inhalt oder ICS Beschreibung"
 
 #: includes/amr-ical-config.php:208
 #@ amr-ical-events-list
 msgid "WordPress excerpt"
-msgstr ""
+msgstr "WordPress Zusammenfassung"
 
 #: includes/amr-ical-config.php:209
 #@ amr-ical-events-list
 msgid "WordPress post thumbnail"
-msgstr ""
+msgstr "Wordpress Beitragsbild"
 
 #: includes/amr-ical-config.php:210
 #@ amr-ical-events-list
 msgid "Address"
-msgstr ""
+msgstr "Adresse"
 
 #: includes/amr-ical-config.php:211
 #@ amr-ical-events-list
 msgid "Link to map"
-msgstr ""
+msgstr "Link zur Karte"
 
 #: includes/amr-ical-config.php:212
 #@ amr-ical-events-list
 msgid "Link to add event to a google calendar"
-msgstr ""
+msgstr "Link zum Hinzufügen eines Termins in einen Google Kalender"
 
 #: includes/amr-ical-config.php:213
 #@ amr-ical-events-list
 msgid "Link to single event ics file"
-msgstr ""
+msgstr "Link für eine Einzelveranstaltung als ICS Datei"
 
 #: includes/amr-ical-config.php:214
 #@ amr-ical-events-list
 msgid "Link to recurring event series ics file"
-msgstr ""
+msgstr "Link für eine Veranstaltungsserie als ICS Datei"
 
 #: includes/amr-ical-config.php:215
 #@ amr-ical-events-list
 msgid "The latitude and longitude"
-msgstr ""
+msgstr "Die Koordinaten"
 
 #: includes/amr-ical-config.php:216
 #@ amr-ical-events-list
 msgid "Links to specified ATTACHMENTS (ics)"
-msgstr ""
+msgstr "Links zu angegebenen Dateianhängen (ICS)"
 
 #: includes/amr-ical-config.php:218
 #@ amr-ical-events-list
 msgid "WordPress or ics file categories "
-msgstr ""
+msgstr "WordPress oder ICS Datei Kategorie"
 
 #: includes/amr-ical-config.php:219
 #@ amr-ical-events-list
 msgid "ics class"
-msgstr ""
+msgstr "ICS Klasse"
 
 #: includes/amr-ical-config.php:220
 #@ amr-ical-events-list
 msgid "ics comment"
-msgstr ""
+msgstr "ICS Kommentar"
 
 #: includes/amr-ical-config.php:222
 #@ amr-ical-events-list
 msgid "ics event priority"
-msgstr ""
+msgstr "ICS Terminpriorität"
 
 #: includes/amr-ical-config.php:224
 #@ amr-ical-events-list
 msgid "ics event status"
-msgstr ""
+msgstr "ICS Termin Satus"
 
 #: includes/amr-ical-config.php:225
 #@ amr-ical-events-list
@@ -470,23 +322,33 @@ msgstr ""
 #: includes/amr-ical-config.php:361
 #@ amr-ical-events-list
 msgid "No events found within criteria"
-msgstr ""
+msgstr "Keine Termine für diese Kriterien gefunden"
 
 #: includes/amr-ical-config.php:362
 #: includes/amr-pluggable.php:1387
 #@ amr-ical-events-list
 msgid "Look for more"
-msgstr ""
+msgstr "Schaue nach weiteren"
 
 #: includes/amr-ical-config.php:363
 #@ amr-ical-events-list
 msgid "Look for previous"
-msgstr ""
+msgstr "Schaue nach zurückliegenden"
 
 #: includes/amr-ical-config.php:364
 #: includes/amr-ical-config.php:1156
 #@ amr-ical-events-list
 msgid "Reset"
+msgstr "Zurücksetzen"
+
+#: includes/amr-ical-config.php:386
+#@ amr-ical-events-list
+msgid "Default"
+msgstr "Standard"
+
+#: includes/amr-ical-config.php:387
+#@ amr-ical-events-list
+msgid "A default calendar list. This one set to tables with lists in the cells.  Usually needs the css file enabled. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. "
 msgstr ""
 
 #: includes/amr-ical-config.php:365
@@ -529,14 +391,19 @@ msgstr ""
 msgid "Day"
 msgstr ""
 
-#: includes/amr-ical-config.php:386
+#: includes/amr-ical-config.php:410
 #@ amr-ical-events-list
-msgid "Default"
+msgid "When"
 msgstr ""
 
-#: includes/amr-ical-config.php:387
+#: includes/amr-ical-config.php:411
 #@ amr-ical-events-list
-msgid "A default calendar list. This one set to tables with lists in the cells.  Usually needs the css file enabled. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. "
+msgid "What"
+msgstr ""
+
+#: includes/amr-ical-config.php:412
+#@ amr-ical-events-list
+msgid "Where"
 msgstr ""
 
 #: includes/amr-ical-config.php:459
@@ -549,6 +416,18 @@ msgstr ""
 msgid " to"
 msgstr ""
 
+#: includes/amr-ical-config.php:552
+#: includes/amr-pluggable.php:506
+#@ amr-ical-events-list
+msgid "Show in Google map"
+msgstr ""
+
+#: includes/amr-ical-config.php:559
+#: includes/amr-pluggable.php:513
+#@ amr-ical-events-list
+msgid "Show location in Google Maps"
+msgstr ""
+
 #: includes/amr-ical-config.php:572
 #@ amr-ical-events-list
 msgid "On Tour"
@@ -559,6 +438,16 @@ msgstr ""
 msgid "Default setting uses the original table with lists in the cells. It is grouped by month. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. "
 msgstr ""
 
+#: includes/amr-ical-config.php:581
+#@ amr-ical-events-list
+msgid "Venue"
+msgstr ""
+
+#: includes/amr-ical-config.php:582
+#@ amr-ical-events-list
+msgid "Description"
+msgstr ""
+
 #: includes/amr-ical-config.php:586
 #@ amr-ical-events-list
 msgid "Timetable"
@@ -567,6 +456,21 @@ msgstr ""
 #: includes/amr-ical-config.php:587
 #@ amr-ical-events-list
 msgid "Default setting uses the original table with lists in the cells. It is grouped by day. If you configure it, I suggest changing this description to aid your memory of how/why it is configured the way that it is. "
+msgstr ""
+
+#: includes/amr-ical-config.php:598
+#@ amr-ical-events-list
+msgid "Date"
+msgstr ""
+
+#: includes/amr-ical-config.php:599
+#@ amr-ical-events-list
+msgid "Class"
+msgstr ""
+
+#: includes/amr-ical-config.php:600
+#@ amr-ical-events-list
+msgid "Room"
 msgstr ""
 
 #: includes/amr-ical-config.php:605
@@ -1069,9 +973,19 @@ msgstr ""
 msgid "Save the settings"
 msgstr ""
 
+#: includes/amr-ical-list-admin.php:126
+#@ amr-ical-events-list
+msgid "Update"
+msgstr ""
+
 #: includes/amr-ical-list-admin.php:131
 #@ amr-ical-events-list
 msgid "Uninstall the plugin and delete the options from the database."
+msgstr ""
+
+#: includes/amr-ical-list-admin.php:133
+#@ amr-ical-events-list
+msgid "Uninstall"
 msgstr ""
 
 #: includes/amr-ical-list-admin.php:138
@@ -1139,6 +1053,11 @@ msgstr ""
 msgid "Column Headings:"
 msgstr ""
 
+#: includes/amr-ical-list-admin.php:252
+#@ amr-ical-events-list
+msgid "Calendar properties"
+msgstr ""
+
 #: includes/amr-ical-list-admin.php:278
 #@ amr-ical-events-list
 msgid "Specify fields to show:"
@@ -1172,6 +1091,11 @@ msgstr ""
 #: includes/amr-ical-list-admin.php:295
 #@ amr-ical-events-list
 msgid "(0 to hide)"
+msgstr ""
+
+#: includes/amr-ical-list-admin.php:343
+#@ amr-ical-events-list
+msgid "Define grouping:"
 msgstr ""
 
 #: includes/amr-ical-list-admin.php:347
@@ -1209,9 +1133,19 @@ msgstr ""
 msgid "(See also date and time formats)"
 msgstr ""
 
+#: includes/amr-ical-list-admin.php:414
+#@ amr-ical-events-list
+msgid "Select components to show:"
+msgstr ""
+
 #: includes/amr-ical-list-admin.php:416
 #@ amr-ical-events-list
 msgid "Wikipedia entry describing components"
+msgstr ""
+
+#: includes/amr-ical-list-admin.php:439
+#@ amr-ical-events-list
+msgid "Define maximums:"
 msgstr ""
 
 #: includes/amr-ical-list-admin.php:442
@@ -1726,6 +1660,11 @@ msgstr ""
 msgid "Test decode"
 msgstr ""
 
+#: includes/amr-ical-list-admin.php:1392
+#@ amr-ical-events-list
+msgid " Define date and time formats:"
+msgstr ""
+
 #: includes/amr-ical-list-admin.php:1394
 #@ amr-ical-events-list
 msgid "Define the formats for the day (eg: Event date, End Date) and time (eg: Start time, End Time) fields. You can actually use any of these to display a full Date time string too. Use the Event date for event instances - the DTSTART field is the first startdate of a recurring event sequence."
@@ -1860,18 +1799,6 @@ msgstr ""
 msgid "on %s "
 msgstr ""
 
-#: includes/amr-ical-pretty-print.php:145
-#@ amr-ical-events-list
-msgctxt "eg: last day of the month"
-msgid " of the month"
-msgstr ""
-
-#: includes/amr-ical-pretty-print.php:147
-#@ amr-ical-events-list
-msgctxt "eg: last day of the year"
-msgid " of the year"
-msgstr ""
-
 #: includes/amr-ical-pretty-print.php:152
 #, php-format
 #@ amr-ical-events-list
@@ -1890,59 +1817,53 @@ msgstr ""
 msgid "at the %s second"
 msgstr ""
 
-#: includes/amr-import-ical.php:37
+#: includes/amr-import-ical.php:36
 #, php-format
 #@ amr-ical-events-list
 msgid "Your cache directory %s has been created"
 msgstr ""
 
-#: includes/amr-import-ical.php:40
+#: includes/amr-import-ical.php:39
 #, php-format
 #@ amr-ical-events-list
 msgid "Error creating cache directory %s. Please check permissions"
 msgstr ""
 
-#: includes/amr-import-ical.php:68
+#: includes/amr-import-ical.php:67
 #@ amr-ical-events-list
 msgid "Unexpected data contents. Please tell administrator."
 msgstr ""
 
-#: includes/amr-import-ical.php:69
+#: includes/amr-import-ical.php:68
 #@ amr-ical-events-list
 msgid "See comments in source for response received from ics server."
 msgstr ""
 
-#: includes/amr-import-ical.php:159
+#: includes/amr-import-ical.php:158
 #, php-format
 #@ amr-ical-events-list
 msgid "Error getting calendar file with htpp or curl %s"
 msgstr ""
 
-#: includes/amr-import-ical.php:163
+#: includes/amr-import-ical.php:162
 #, php-format
 #@ amr-ical-events-list
 msgid "Using File last cached at %s"
 msgstr ""
 
-#: includes/amr-import-ical.php:165
+#: includes/amr-import-ical.php:164
 #@ amr-ical-events-list
 msgid "File last cached time not available"
 msgstr ""
 
-#: includes/amr-import-ical.php:167
+#: includes/amr-import-ical.php:166
 #@ amr-ical-events-list
 msgid "Warning: Events may be out of date. "
 msgstr ""
 
-#: includes/amr-import-ical.php:173
+#: includes/amr-import-ical.php:172
 #@ amr-ical-events-list
 msgid "No cached ical file for events"
-msgstr ""
-
-#. translators: ignore this and translate the string found earlier " No events...
-#: includes/amr-pluggable.php:54
-#@ amr-ical-events-list
-msgid "noeventsmessage"
 msgstr ""
 
 #: includes/amr-pluggable.php:69
@@ -1988,12 +1909,6 @@ msgstr ""
 #: includes/amr-pluggable.php:138
 #@ amr-ical-events-list
 msgid "Go to date"
-msgstr ""
-
-#: includes/amr-pluggable.php:139
-#@ amr-ical-events-list
-msgctxt "Submit button for month and year navigation.  Use translation to replace with words if you want."
-msgid "&raquo;&raquo;"
 msgstr ""
 
 #: includes/amr-pluggable.php:168
@@ -2046,57 +1961,51 @@ msgstr ""
 #: includes/amr-pluggable.php:367
 #@ amr-ical-events-list
 msgid "show past events"
-msgstr ""
+msgstr "zeige vergangene Termine"
 
 #: includes/amr-pluggable.php:368
 #@ amr-ical-events-list
 msgid "show less"
-msgstr ""
+msgstr "zeige weniger"
 
 #: includes/amr-pluggable.php:369
 #@ amr-ical-events-list
 msgid "show more"
-msgstr ""
+msgstr "zeige mehr"
 
 #: includes/amr-pluggable.php:370
 #@ amr-ical-events-list
 msgid "show much less"
-msgstr ""
+msgstr "zeige noch weniger"
 
 #: includes/amr-pluggable.php:371
 #@ amr-ical-events-list
 msgid "show much more"
-msgstr ""
+msgstr "zeige viel mehr"
 
 #: includes/amr-pluggable.php:374
 #@ amr-ical-events-list
 msgid "show future events"
-msgstr ""
+msgstr "zeige zukünftige Termine"
 
 #: includes/amr-pluggable.php:375
 #@ amr-ical-events-list
 msgid "show maximum 10 events if available"
-msgstr ""
+msgstr "zeige maximal 10 Termine falls verfügbar"
 
 #: includes/amr-pluggable.php:376
 #@ amr-ical-events-list
 msgid "show maximum 50 events if available"
-msgstr ""
+msgstr "zeige maximal 50 Termine falls verfügbar"
 
 #: includes/amr-pluggable.php:377
 #@ amr-ical-events-list
 msgid "show maximum 100 events if available"
-msgstr ""
+msgstr "zeige maximal 100 Termine falls verfügbar"
 
 #: includes/amr-pluggable.php:585
 #@ amr-ical-events-list
 msgid "Event attachment"
-msgstr ""
-
-#: includes/amr-pluggable.php:625
-#@ amr-ical-events-list
-msgctxt "when an event runs for full days, note the &nbsp; prevents the text wrappping in a table."
-msgid "all&nbsp;day"
 msgstr ""
 
 #: includes/amr-pluggable.php:654
@@ -2116,19 +2025,9 @@ msgstr ""
 msgid "Total events: "
 msgstr ""
 
-#: includes/amr-pluggable.php:698
-#@ amr-ical-events-list
-msgid "X-WR-CALDESC"
-msgstr ""
-
 #: includes/amr-pluggable.php:701
 #@ amr-ical-events-list
 msgid "No description available"
-msgstr ""
-
-#: includes/amr-pluggable.php:704
-#@ amr-ical-events-list
-msgid "X-WR-CALNAME"
 msgstr ""
 
 #: includes/amr-pluggable.php:709
@@ -2156,6 +2055,11 @@ msgstr ""
 #: includes/amr-pluggable.php:836
 #@ amr-ical-events-list
 msgid "Add to google"
+msgstr ""
+
+#: includes/amr-pluggable.php:852
+#@ amr-ical-events-list
+msgid "Add event to google"
 msgstr ""
 
 #: includes/amr-pluggable.php:876
@@ -2190,33 +2094,16 @@ msgstr ""
 msgid "Click to refresh"
 msgstr ""
 
-#: includes/amr-pluggable.php:1287
+#: includes/amr-pluggable.php:1013
+#, php-format
 #@ amr-ical-events-list
-msgid "listtypesheading"
-msgstr ""
-
-#. translators: ignore, the text appears for translation eslewhere
-#: includes/amr-pluggable.php:1390
-#@ amr-ical-events-list
-msgid "lookmoremessage"
+msgid "Week  %u"
 msgstr ""
 
 #: includes/amr-pluggable.php:1392
 #, php-format
 #@ amr-ical-events-list
 msgid "Look for more from %s"
-msgstr ""
-
-#. translators: ignore, the text appears for translation eslewhere
-#: includes/amr-pluggable.php:1400
-#@ amr-ical-events-list
-msgid "lookprevmessage"
-msgstr ""
-
-#. translators: ignore, the text appears for translation eslewhere
-#: includes/amr-pluggable.php:1406
-#@ amr-ical-events-list
-msgid "resetmessage"
 msgstr ""
 
 #: includes/amr-pluggable.php:1416
@@ -2241,7 +2128,6 @@ msgid "%u year"
 msgid_plural "%u years"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #: includes/amr-pluggable.php:1766
 #, php-format
@@ -2250,7 +2136,6 @@ msgid "%u month "
 msgid_plural "%u months "
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #: includes/amr-pluggable.php:1771
 #, php-format
@@ -2259,7 +2144,6 @@ msgid "%u week "
 msgid_plural "%u weeks"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #: includes/amr-pluggable.php:1776
 #, php-format
@@ -2268,7 +2152,6 @@ msgid "%u day"
 msgid_plural "%u days"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #: includes/amr-pluggable.php:1782
 #, php-format
@@ -2277,7 +2160,6 @@ msgid "%u hour"
 msgid_plural "%u hours"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #: includes/amr-pluggable.php:1787
 #, php-format
@@ -2286,7 +2168,6 @@ msgid "%u minute"
 msgid_plural "%u minutes"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #: includes/amr-pluggable.php:1792
 #, php-format
@@ -2295,7 +2176,6 @@ msgid "%u second"
 msgid_plural "%u seconds"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
 
 #: includes/amr-pluggable.php:1811
 #@ amr-ical-events-list
@@ -2308,6 +2188,14 @@ msgstr ""
 msgid "Timezone: %s, Click for %s"
 msgstr ""
 
+#: includes/amr-upcoming-events-widget.php:9
+#: includes/amr-upcoming-events-widget.php:117
+#: includes/amr-upcoming-events-widget.php:187
+#: includes/amr-upcoming-events-widget.php:270
+#@ amr-ical-events-list
+msgid "Upcoming Events"
+msgstr ""
+
 #: includes/amr-upcoming-events-widget.php:10
 #@ amr-ical-events-list
 msgid "Upcoming Events List"
@@ -2316,6 +2204,12 @@ msgstr ""
 #: includes/amr-upcoming-events-widget.php:138
 #@ amr-ical-events-list
 msgid "See plugin website for more details"
+msgstr ""
+
+#: includes/amr-upcoming-events-widget.php:141
+#: includes/amr-upcoming-events-widget.php:281
+#@ amr-ical-events-list
+msgid "Title"
 msgstr ""
 
 #: includes/amr-upcoming-events-widget.php:147
@@ -2399,11 +2293,6 @@ msgstr ""
 msgid " Examples: listtype=8 events=10 days=60 start=yymmdd startoffset=-2... )"
 msgstr ""
 
-#: includes/functions.php:48
-#@ amr-ical-events-list
-msgid "Invalid Event Date"
-msgstr ""
-
 #: includes/functions.php:220
 #: includes/functions.php:224
 #@ amr-ical-events-list
@@ -2468,5 +2357,109 @@ msgstr ""
 #: uninstall.php:34
 #@ amr-ical-events-list
 msgid "Css files may also exist.  They and the css folder have not been deleted as they have been shared with other plugins."
+msgstr ""
+
+#. translators: plugin header field 'Name'
+#: amr-ical-events-list.php:0
+#@ amr-ical-events-list
+msgid "amr events calendar or lists with ical files"
+msgstr ""
+
+#. translators: plugin header field 'PluginURI'
+#: amr-ical-events-list.php:0
+#@ amr-ical-events-list
+msgid "http://icalevents.com"
+msgstr ""
+
+#. translators: plugin header field 'Description'
+#: amr-ical-events-list.php:0
+#@ amr-ical-events-list
+msgid "Display simple or highly customisable and styleable list of events.  Handles all types of recurring events, notes, journals, freebusy etc. Offers links to add events to viewers calendar or subscribe to whole calendar.  Write Calendar Page</a>  and put [iCal http://yoururl.ics ] where you want the list of events of an ics file and [events] to get internal events.      To tweak: <a href=\"admin.php?page=manage_amr_ical\">Manage Settings Page</a>,  <a href=\"widgets.php\">Manage Widget</a>."
+msgstr ""
+
+#. translators: plugin header field 'Author'
+#: amr-ical-events-list.php:0
+#@ amr-ical-events-list
+msgid "anmari"
+msgstr ""
+
+#. translators: plugin header field 'AuthorURI'
+#: amr-ical-events-list.php:0
+#@ amr-ical-events-list
+msgid "http://anmari.com/"
+msgstr ""
+
+#. translators: plugin header field 'Version'
+#: amr-ical-events-list.php:0
+#@ amr-ical-events-list
+msgid "4.11"
+msgstr ""
+
+#: includes/amr-ical-pretty-print.php:145
+#@ amr-ical-events-list
+msgctxt "eg: last day of the month"
+msgid " of the month"
+msgstr ""
+
+#: includes/amr-ical-pretty-print.php:147
+#@ amr-ical-events-list
+msgctxt "eg: last day of the year"
+msgid " of the year"
+msgstr ""
+
+#. translators: ignore this and translate the string found earlier " No events...
+#: includes/amr-pluggable.php:54
+#@ amr-ical-events-list
+msgid "noeventsmessage"
+msgstr ""
+
+#: includes/amr-pluggable.php:139
+#@ amr-ical-events-list
+msgctxt "Submit button for month and year navigation.  Use translation to replace with words if you want."
+msgid "&raquo;&raquo;"
+msgstr ""
+
+#: includes/amr-pluggable.php:625
+#@ amr-ical-events-list
+msgctxt "when an event runs for full days, note the &nbsp; prevents the text wrappping in a table."
+msgid "all&nbsp;day"
+msgstr ""
+
+#: includes/amr-pluggable.php:698
+#@ amr-ical-events-list
+msgid "X-WR-CALDESC"
+msgstr ""
+
+#: includes/amr-pluggable.php:704
+#@ amr-ical-events-list
+msgid "X-WR-CALNAME"
+msgstr ""
+
+#: includes/amr-pluggable.php:1287
+#@ amr-ical-events-list
+msgid "listtypesheading"
+msgstr ""
+
+#. translators: ignore, the text appears for translation eslewhere
+#: includes/amr-pluggable.php:1390
+#@ amr-ical-events-list
+msgid "lookmoremessage"
+msgstr ""
+
+#. translators: ignore, the text appears for translation eslewhere
+#: includes/amr-pluggable.php:1400
+#@ amr-ical-events-list
+msgid "lookprevmessage"
+msgstr ""
+
+#. translators: ignore, the text appears for translation eslewhere
+#: includes/amr-pluggable.php:1406
+#@ amr-ical-events-list
+msgid "resetmessage"
+msgstr ""
+
+#: includes/functions.php:48
+#@ amr-ical-events-list
+msgid "Invalid Event Date"
 msgstr ""
 

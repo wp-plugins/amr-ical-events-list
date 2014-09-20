@@ -4,9 +4,9 @@ Plugin Name: amr events calendar or lists with ical files
 Author: anmari
 Author URI: http://anmari.com/
 Plugin URI: http://icalevents.com
-Version: 4.11
+Version: 4.12
 Text Domain: amr-ical-events-list
-Domain Path:  /lang
+Domain Path: /lang
 
 Description: Display simple or highly customisable and styleable list of events.  Handles all types of recurring events, notes, journals, freebusy etc. Offers links to add events to viewers calendar or subscribe to whole calendar.  Write Calendar Page</a>  and put [iCal http://yoururl.ics ] where you want the list of events of an ics file and [events] to get internal events.      To tweak: <a href="admin.php?page=manage_amr_ical">Manage Settings Page</a>,  <a href="widgets.php">Manage Widget</a>.
 
@@ -40,4 +40,23 @@ define( 'AMR_BASENAME', plugin_basename( __FILE__ ) );
 if (is_admin()	) {  // are we in admin territory
 	require_once('includes/amr-ical-list-admin.php');
 }
+/*--------------------------------------------------------------------------------------------------*/
+function amr_ical_load_text() { 
+// allows for a custom language file in WP_LANG_DIR as per prior versions
+// note NOT in WP_LANG_DIR/plugins as that will be used by wp language pack feature
+
+    $domain = 'amr-ical-events-list';
+    // The "plugin_locale" filter is also used in load_plugin_textdomain()
+    $locale = apply_filters('plugin_locale', get_locale(), $domain);
+	//var_dump($locale);
+	// if custom language file allowed for in prior versions exists, then load it first
+    $result = load_textdomain($domain, WP_LANG_DIR.'/'.$domain.'-'.$locale.'.mo');
+
+// wp (see l10n.php) will check wp-content/languages/plugins if nothing found in plugin dir
+
+	//default is languages, maybe change in future?
+	$result = load_plugin_textdomain( $domain, false, dirname( plugin_basename( __FILE__ ) ) . '/lang/' );
+	//var_dump($result);
+}
+	add_action('plugins_loaded'         , 'amr_ical_load_text' );
 ?>
