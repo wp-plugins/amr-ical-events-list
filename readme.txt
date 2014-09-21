@@ -3,7 +3,7 @@ Contributors: anmari
 Tags: event, events, event calendar, events calendar, event manager, diary, schedule, ical, ics, ics calendar, ical feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, agenda, happenings, shows, concerts, conferences, courses, timetable, schedule
 Requires at least: 2.8
 Tested up to: 4.0
-Version: 4.12
+Version: 4.13
 Stable tag: trunk
 
 Event Calendar or Agenda list, combine multiple ics files, handles recurring events. Very customisable.
@@ -97,6 +97,9 @@ amr-events has much additional functionality, including a taxonomy widget.
 
 
 == Changelog ==
+= Version 4.13 =
+*  For sites on php versions < 5.3. Removed use of anonymous function for error handler on line 499 on amr-import-ical.php
+
 = Version 4.12 =
 *  Added ability to map windows zones in ics files to real timezones (IANA, php and Ohlson)
 *  Added a timezone filter to facilitate any other mappings that may be required. apply_filters('amr-timezoneid-filter',$icstzid);

@@ -474,6 +474,9 @@ function amr_deduceTZID($icstzid)    {
 	return ($tz);
 }
 /* ------------------------------------------------------------------ */
+function amr_tz_error_handler () { //cannot have anonymous function in php < 5.3
+}
+/* ------------------------------------------------------------------ */
 function amr_parseTZID($text)    {
    global $amr_globaltz,
 	$globaltzstring,
@@ -496,7 +499,7 @@ function amr_parseTZID($text)    {
 			// let us see if php likes it
 			$tzid = apply_filters('amr-timezoneid-filter',$icstzid);
 			
-			try {	set_error_handler(function() { /* ignore errors */ });
+			try {	set_error_handler( 'amr_tz_error_handler'); /* ignore errors */ 
 					$tz =  timezone_open($tzid);
 					restore_error_handler();
 					if ($tz) { 
