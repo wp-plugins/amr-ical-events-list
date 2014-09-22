@@ -12,7 +12,7 @@ include ('WindowsZonesToTimeZones.txt');
 		//$first = current($wz[$icstzid]);	
 		return ($wz[$icstzid]);
 	}
-	else return false;
+	else return $icstzid;
 
 	
 }

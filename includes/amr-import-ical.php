@@ -400,6 +400,7 @@ function amr_parseTZDate ($value, $tzid) {
 	/* ------------------------------------------------------------------ */
 function amr_deduceTZID($icstzid)    { 
 // we have something that php didn't like, so we will try work something out
+// Not great, really should use the filter function rather
    global $amr_globaltz, $globaltzstring;
 
 //			$strip = array ('(',' ');
@@ -435,6 +436,7 @@ function amr_deduceTZID($icstzid)    {
 				$tzname = $globaltzstring;
 			}
 			else {
+			
 				$alltzcities = amr_get_timezone_cities ();
 				if (isset($alltzcities[$icstzid])) { /* then it is a normal php timezone we know about, so we can proceed */
 					$tzname = $icstzid;
@@ -478,28 +480,48 @@ function amr_tz_error_handler () { //cannot have anonymous function in php < 5.3
 }
 /* ------------------------------------------------------------------ */
 function amr_parseTZID($text)    {
-   global $amr_globaltz,
-	$globaltzstring,
-	$icsfile_tzname, 
-	$icsfile_tz;
+   global $amr_globaltz, // the main timezone object
+	$globaltzstring, // the string for the timezone object
+	$icsfile_tzname, // the timexone name string in the ics file
+	$icsfile_tz;  // the ics timezone object that we last parsed and ended up with (often it's all the same
+	
    /* take a string that may have a olson tz object and try to return a tz object */
    /* accept long and short TZ's, --- assume website tz if not valid eg Zimbra's: GMT+01.00/+02.00 */
+
 		$icstzid = trim($text,'"=' ); /* check for enclosing quotes like zimbra issues */
+		//-----------------------------------
+
+ //----------------------------------- is it same as wordpress ?  		
+		if (empty($globaltzstring)) 
+			$globaltzstring = timezone_name_get($amr_globaltz);	
+			
+		if ($globaltzstring == $icstzid	) {/* if the timezone matches the wordpress or shortcode time zone, then we are cool ! */
+			$icsfile_tzname = $icstzid; // set the global
+			$icsfile_tz = $amr_globaltz;
+			if (isset ($_REQUEST['tzdebug'])) echo '<br />'.$icstzid.' Matches wordpress tz.'; 
+			return ($amr_globaltz);
+		}
+//----------------------------------- is it same as previously parsed ? if yes, go with that
+
 		if (!empty($icsfile_tzname) and ($icsfile_tzname == $icstzid )) {
-			if (isset ($_REQUEST['tzdebug'])) echo '<br />'.$icstzid.' Matches previously parsed tz.'; 
+			if (isset ($_REQUEST['tzdebug'])) echo '<br />'.$icstzid.' Matches previously parsed tz.' ; 
 			return ($icsfile_tz);
 		}	
-		if (empty($globaltzstring)) $globaltzstring = timezone_name_get($amr_globaltz);	
-		if ($globaltzstring == $icstzid	) {/* if the timezone matches the wordpress or shortcode time zone, then we are cool ! */
-			$tzname = $icstzid;
-			if (isset ($_REQUEST['tzdebug'])) echo '<br />'.$icstzid.' Matches wordpress tz.'; 
+
+//-----------------------------------	is it a valid php timezone ?		
+		$timezone_identifiers = (DateTimeZone::listIdentifiers());
+		//foreach ($timezone_identifiers as $i=> $z) {echo '<br />'.$i; var_dump($z);}
+	    if (in_array($icstzid,$timezone_identifiers, false)) { // we now have a valid php timezone
+			if (isset ($_REQUEST['tzdebug'])) {echo '<br/>Php should like:'.$icstzid; }
+			$tz = amr_try_timezone ($icstzid); // this shoul work else simething weird going on
+			if (!empty($tz)) return($tz);
 		}
-		else {
-			if (isset ($_REQUEST['tzdebug'])) {echo '<br/>Timezone '.$icstzid.' does not match wp:'.$globaltzstring; }
-			// let us see if php likes it
-			$tzid = apply_filters('amr-timezoneid-filter',$icstzid);
+
+//-----------------------------------	if not already a valid php timezone, can we make it a valid zone ?	
+		$tzid = apply_filters('amr-timezoneid-filter',$icstzid);  //apply filters like for windows zones etc
+		// let us see if php likes it		
 			
-			try {	set_error_handler( 'amr_tz_error_handler'); /* ignore errors */ 
+		try {	set_error_handler( 'amr_tz_error_handler'); /* ignore errors , just giveit a go*/ 
 					$tz =  timezone_open($tzid);
 					restore_error_handler();
 					if ($tz) { 
@@ -508,13 +530,16 @@ function amr_parseTZID($text)    {
 					}
 					else $tz = amr_deduceTZID($tzid) ;
 				}
-			catch(Exception $e) {/* we tried but php did't like, so lets try fix it */
+			catch(Exception $e) {/* we tried the filter but php did't like, so lets try fix it */
 			/* else try figure the timezone out */
 				$tz = amr_deduceTZID($tzid) ;
 			}
 			
-		}
-		if (empty($icsfile_tzname))	{
+		if (empty($tz)) {
+			if (isset ($_REQUEST['tzdebug'])) {echo '<br/>Giving up on timezone: '.$icstzid; }
+			return false; // we couldn't figure it out	
+		}	
+		if (empty($icsfile_tzname))	{  // if this is the first time we parsed, lets save the hard work
 			$icsfile_tzname = $icstzid; // what was actually in the file
 			$icsfile_tz = $tz; // this is the php tz we ended up with 
 			}
@@ -1080,8 +1105,9 @@ function amr_deal_with_tzpath_in_date ( $tzstring )	{
 		return ($tzobj);
 	}
 /* ---------------------------------------------------------------------- */	
-function amr_get_timezone_cities () {
-	    $timezone_identifiers = DateTimeZone::listIdentifiers();
+function amr_get_timezone_cities () { //
+$timezone_identifiers = DateTimeZone::listIdentifiers();
+	    
 /* Africa/Abidjan
 
 Africa/Accra
@@ -1098,11 +1124,13 @@ Africa/Asmara
 			$c = explode("/",$value);//obtain continent,city
 			$tzcities[$value]['continent'] = $c[0];
 
-	        if (isset($c[1])) $tzcities[$c[1]] = $value;
-			else $tzcities[$c[0]] = $value;
+	        if (isset($c[1])) 
+				$tzcities[$c[1]] = $value;
+			else 
+				$tzcities[$c[0]] = $value;
 
 	     }
-		//print_r($tzcities);
+		
 		return ($tzcities);
 	}
 /* ---------------------------------------------------------------------- */
