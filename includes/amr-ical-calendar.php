@@ -289,13 +289,12 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 		$eventsfortheday = array();
 		$dayswithevents = array();
 		
-		$bunchevents = amr_sort_by_two_cols ('dummytime','MultiDay', $bunchevents); //20140805
 		
-		
-		
+		if (ICAL_EVENTS_DEBUG) echo '<br />Bunch events count='.count($bunchevents);
 		if (!empty ($bunchevents)) { // NOTE SINGULAR month
-		// get the titles and events for each day
-			
+		// get the titles and events for each day		
+			$bunchevents = amr_sort_by_two_cols ('dummytime','MultiDay', $bunchevents); //20140805
+					
 			foreach ($bunchevents as $event) {
 			// convert eventdate to display timezone now for day of month assignment, other dates will be
 			// converted to display timezone at display time.
@@ -698,6 +697,8 @@ function amr_sort_by_two_cols ($col1, $col2, &$data) {  // sorts by two columns 
 			$column2[$key]  = '-999';
 
 	}
+	
+	if (empty ($column1) or empty ($column2)) return $data;  
 	
 	array_multisort($column1, SORT_ASC, $column2, SORT_DESC,   $data);
 

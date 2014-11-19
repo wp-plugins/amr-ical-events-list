@@ -468,7 +468,7 @@ function amr_set_defaults() {
 			),
 			$eventtaxonomiesprop),
 			'Date and Time' => array (
-			'EventDate' => 		array ('Column' => 1, 'Order' => 1, 'Before' => '', 'After' => ''), /* the instnace of a repeating date */
+			'EventDate' => 		array ('Column' => 1, 'Order' => 1, 'Before' => '', 'After' => ''), /* the instance of a repeating date */
 			'StartTime' => 		array('Column' => 1, 'Order' => 2, 'Before' => ' ', 'After' => ' '),
 			'EndDate' => 		array('Column' => 1, 'Order' => 3, 'Before' => __(' to','amr-ical-events-list').'&nbsp;', 'After' => ''),
 			'EndTime' => 		array('Column' => 1, 'Order' => 4, 'Before' => ' ', 'After' => ''),
