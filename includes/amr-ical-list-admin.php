@@ -764,7 +764,8 @@ function amr_ical_validate_general_options(){
 				'noeventsmessage',
 				'lookmoremessage',
 				'lookprevmessage',
-				'resetmessage'
+				'resetmessage',
+				'freebusymessage'   // was missing 20141119
 				) as $message) {
 				if (isset($_POST[$message])) 	
 					$amr_options[$message] =  $_POST[$message];

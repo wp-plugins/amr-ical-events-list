@@ -3,7 +3,7 @@ Contributors: anmari
 Tags: event, events, event calendar, events calendar, event manager, diary, schedule, ical, ics, ics calendar, ical feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, agenda, happenings, shows, concerts, conferences, courses, timetable, schedule
 Requires at least: 2.8
 Tested up to: 4.0
-Version: 4.15
+Version: 4.16
 Stable tag: trunk
 
 Event Calendar or Agenda list, combine multiple ics files, handles recurring events. Very customisable.
@@ -97,6 +97,10 @@ amr-events has much additional functionality, including a taxonomy widget.
 
 
 == Changelog ==
+= Version 4.16 =
+*  Fix: re VFREEBUST - Changes to the freebusy text were not saving, kept reverting to blank or the red cross.  It will now update.  If blanked out then the text found in the ics file will be used 'Busy' and translated if translation text is available.
+*  Fix: a situation that most of you will never ever use - the pretty printing of the WKST ina recurrence rule (eg in the testing list type 10)
+
 = Version 4.15 =
 *  Better Checking for empty data sets in calendar formats, before trying to do array multi sort
 

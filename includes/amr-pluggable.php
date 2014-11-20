@@ -749,13 +749,24 @@ if (!function_exists('amr_derive_summary')) {
 		global $amr_calendar_url;
 		global $amr_liststyle;
 	/* If there is a event url, use that as href, else use icsurl, use description as title */
-	
-	if (isset($e['type']) and ($e['type'] == 'VFREEBUSY') ) {
-		$e['excerpt'] = $e['SUMMARY'];
-		$e['DESCRIPTION'] = $e['SUMMARY'];
-		if (!empty($amr_options['freebusymessage'])) 
-			$e['SUMMARY'] = $amr_options['freebusymessage'];
-	}	
+
+
+		if (isset($e['SUMMARY'])) 
+			$e['SUMMARY'] = (amr_just_flatten_array ($e['SUMMARY'] ));
+		else 
+			return ('');
+			
+		if (!empty($e['excerpt'])) {
+				$e['excerpt'] = (amr_just_flatten_array ($e['excerpt'] ));
+		}
+		
+		if (isset($e['type']) and ($e['type'] == 'VFREEBUSY') ) {
+			$e['SUMMARY'] = __($e['SUMMARY'],'amr-ical-events-list');  // if busy - will be the translation of it
+			$e['excerpt'] = $e['SUMMARY'];  // the translated summary
+			$e['DESCRIPTION'] = $e['excerpt'];	
+			if (!empty($amr_options['freebusymessage']))  // might be a red X, don't want the description and excerpt to be that 
+				$e['SUMMARY'] = __($amr_options['freebusymessage'],'amr-ical-events-list');
+		}	
 	
 		if (in_array($amr_liststyle, array('smallcalendar', 'largecalendar','weekscalendar')))
 			$hoverdesc = false;
@@ -767,12 +778,7 @@ if (!function_exists('amr_derive_summary')) {
 			else $hoverdesc ='maybe';
 		}
 
-		if (!empty($e['excerpt'])) {
-			$e['excerpt'] = (amr_just_flatten_array ($e['excerpt'] ));
-		}
-		if (isset($e['SUMMARY'])) $e['SUMMARY'] = (amr_just_flatten_array ($e['SUMMARY'] ));
-		//if (isset($e['SUMMARY'])) $e['SUMMARY'] = htmlspecialchars(amr_just_flatten_array ($e['SUMMARY'] ));
-		else return ('');
+
 		if (isset($e['URL'])) 
 			$e_url = amr_just_flatten_array($e['URL']);
 		else $e_url = '';

@@ -1,8 +1,13 @@
 <?php
 function amr_prettyprint_weekst ($wkst) {
-global $amr_day_of_week_no, $wp_locale;
-if (empty($wkst)) return '';
-return ('<em>'.sprintf(__('Weeks start on %s','amr-ical-events-list'), amr_get_weekday_from1($amr_day_of_week_no[$wkst])).'</em>');
+global $amr_day_of_week_no, $wp_locale,
+		$amr_day_of_week_from_no,
+		$amr_day_of_week;
+	if (empty($wkst)) return '';
+
+	return ('<em>'.sprintf(__('Weeks start on %s','amr-ical-events-list'), 
+		$amr_day_of_week[$wkst]
+		).'</em> '.$wkst);
 }
 /* --------------------------------------------------  */
 function amr_prettyprint_r_ex_date ($rdate) { /* rrule or exrule */

@@ -1,7 +1,5 @@
 <?php
-define('AMR_ICAL_LIST_VERSION', '4.14');
-define('AMR_PHPVERSION_REQUIRED', '5.2.0');
-/*  these are  globals that we do not want easily changed -others are in the config file */
+
 global $amr_options;
 global $amrW;  /* set to W if running as widget, so that css id's will be different */
 $amrW = '';
@@ -343,10 +341,14 @@ global $amr_listtype;
 	if ($amr_options = get_option ('amr-ical-events-list')) {  //if we have stored options
 
 		if ((isset ($amr_options['own_css'])) and !($amr_options['own_css'])) {
-			if (empty($amr_options['cssfile'])) $icalstyleurl = ICALSTYLEURL;
+			if (empty($amr_options['cssfile'])) 
+				$icalstyleurl = ICALSTYLEURL;
 			else {/* check if old saved option */
-				if (stristr($amr_options['cssfile'],'http://')) $icalstyleurl = $amr_options['cssfile'];
-				else $icalstyleurl = ICALLISTPLUGINURL.'css/'.$amr_options['cssfile'];
+				if (stristr($amr_options['cssfile'],'http://')
+					or stristr($amr_options['cssfile'],'https://')) //what if https
+					$icalstyleurl = $amr_options['cssfile'];
+				else 
+					$icalstyleurl = ICALLISTPLUGINURL.'css/'.$amr_options['cssfile'];
 			}
 			wp_register_style('amr-ical-events-list', $icalstyleurl, array( ), 1.0 , 'all' );
 			wp_enqueue_style('amr-ical-events-list' );

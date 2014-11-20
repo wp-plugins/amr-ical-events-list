@@ -353,7 +353,8 @@ function amr_set_defaults() {
 			'noeventsmessage' => 'No events found within criteria',
 			'lookmoremessage' => 'Look for more',
 			'lookprevmessage' => 'Look for previous','amr-ical-events-list',
-			'resetmessage' => 'Reset','amr-ical-events-list'
+			'resetmessage' => 'Reset','amr-ical-events-list',
+			'freebusymessage' => '&#10006;'
 			);
 			
 		// if they don't have the gettext function the translation scanners will not pick the strings up for inclusion in the .pot/.po file	
@@ -362,6 +363,7 @@ function amr_set_defaults() {
 			'lookmoremessage' => __('Look for more','amr-ical-events-list'),
 			'lookprevmessage' => __('Look for previous','amr-ical-events-list'),
 			'resetmessage' => __('Reset','amr-ical-events-list'),	
+			'freebusymessage' => __('Busy','amr-ical-events-list'),
 			__("Year",'amr-ical-events-list'),
 			__("Quarter",'amr-ical-events-list'),
 			__("Astronomical Season",'amr-ical-events-list') ,
@@ -1160,7 +1162,7 @@ global $amr_options;
 	}	
 	if (version_compare ($prev_version,'4.0.29','<')) {
 		if (!isset($amr_options['freebusymessage']) ) { // can be empty later
-			$amr_options['freebusymessage'] = __('Busy','amr-ical-events-list'); // for translation 
+			$amr_options['freebusymessage'] = __('Busy','amr-ical-events-list'); // force translation to be recorded 
 			$amr_options['freebusymessage'] = '&#10006;';
 		}
 		

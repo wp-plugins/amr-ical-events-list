@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: amr events calendar or lists with ical files v4.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-04-22 22:47:39+1000\n"
+"PO-Revision-Date: 2014-11-19 23:59:47+0000\n"
 "Last-Translator: anmari <anmari@anmari.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -644,7 +644,7 @@ msgstr "Look for previous events (custom translation)"
 #: includes/amr-ical-config.php:1163
 #@ amr-ical-events-list
 msgid "Busy"
-msgstr ""
+msgstr "Unavailable"
 
 #: includes/amr-ical-config.php:1186
 #@ amr-ical-events-list

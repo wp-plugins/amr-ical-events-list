@@ -91,6 +91,23 @@ function amr_cache_url($url, $cache=ICAL_EVENTS_CACHE_TTL) {
 		// if any args are sent then all must be sent - use wp defaults more or less
 		// so better to use filters		
 		add_filter( 'http_request_timeout', 'amr_set_http_timeout' );	
+		//add_filter( 'http_request_redirection_count', 'amr_' );	
+		//'httpversion' => apply_filters( 'http_request_version', '1.0' ),  //or 1.1 
+		/*
+			curl_setopt($c, CURLOPT_RETURNTRANSFER, true);  // just says to return rather than echo
+			curl_setopt($c, CURLOPT_USERAGENT, 'PHP/'.PHP_VERSION);
+			curl_setopt($c, CURLOPT_ENCODING, '');
+			if( strstr( $resource, 'https' ) !== FALSE ) {
+				curl_setopt($c, CURLOPT_SSLVERSION, 3);
+				curl_setopt($c, CURLOPT_SSL_VERIFYPEER, false);
+				curl_setopt($c, CURLOPT_SSL_VERIFYHOST, 2);
+			}
+			curl_setopt($c, CURLOPT_COOKIESESSION, true);
+			curl_setopt($c, CURLOPT_HEADER, true);
+			if( !ini_get('safe_mode') ){
+				curl_setopt($c, CURLOPT_FOLLOWLOCATION, true);
+			}
+		*/
 		
 //		If (ICAL_EVENTS_DEBUG) echo '<hr />url before decode: '.$url.'<br />';
 		$url = html_entity_decode($url);
