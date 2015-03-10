@@ -199,8 +199,12 @@ function amr_cache_url($url, $cache=ICAL_EVENTS_CACHE_TTL) {
 			// A filter could be added here, but I'm not keen - could add to support load?
 	
 			if ($data) { /* now save it as a cached file */
+			
+				$data = apply_filters('amr-ics-filter', $data, $url);
+			
 				if ($dest = fopen($cachedfile, 'w')) {
-					if (!(fwrite($dest, $data))) die ('Error writing cache file'.$dest);
+					if (!(fwrite($dest, $data))) 
+						die ('Error writing cache file'.$dest);
 					fclose($dest);
 					$amr_lastcache = amr_newDateTime (date('Y-m-d H:i:s'));
 				}
@@ -804,7 +808,7 @@ ATTACH;FMTTYPE=application/msword:http://example.com/
 					}
 				else { // must be htpp or ftp
 					$newattach['type'] = 'url';
-					$newattach['url'] = esc_url_raw($parts[1]);
+					$newattach['url'] = esc_url_raw	(rawurldecode($parts[1]));
 				}
 
 			}

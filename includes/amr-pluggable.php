@@ -540,7 +540,8 @@ if (!function_exists('amr_format_attach'))  {
 //	---- handle url, prepare title
 			if (empty($item['title'])) {  // make a title somehow
 				if ( !empty($item['url']))   // this will only be  there if it is an internal event
-					$item_title = esc_url($item['url']);
+					$item_title = //esc_url($item['url']);
+					__('Event attachment','amr-ical-events-list');  // 2015 03 9
 				else
 					$item_title = '&nbsp;';
 			}
@@ -577,6 +578,7 @@ if (!function_exists('amr_format_attach'))  {
 
 				$tmp = apply_filters('amr_attachment_title', 
 					array('title'=>$item_title , 'event'=>$event));
+					
 				$item_title = $tmp['title'];
 
 				$hrefhtml .= '<a class="ics_attachment" href="'
@@ -919,7 +921,7 @@ if (!function_exists('amr_list_properties')) {
 	case 'list' :
 		$d ='<span ';
 		$dc='</span>';
-		$r   = '<div>';
+		$r   = '<div ';
 		$rc  = '</div>';
 		$htm['box'] = '<div';
 		$htm['boxc']= '</div>';
@@ -927,7 +929,7 @@ if (!function_exists('amr_list_properties')) {
 	case 'breaks' :
 		$d ='<span ';
 		$dc ='</span>';
-		$r   = '<span>';
+		$r   = '<span ';
 		$rc  = '</span>';
 		$htm['box'] = '<div';
 		$htm['boxc']= '</div>';
@@ -936,7 +938,7 @@ if (!function_exists('amr_list_properties')) {
 	case 'HTML5table':  // still using a table, so columns will work  but with html5 elements too
 		$d 	='<td';
 		$dc	='</td>';
-		$r   = '<tr> ';
+		$r   = '<tr';
 		$rc  = '</tr> ';
 		$htm['box'] = '<table';
 		$htm['boxc']= '</table>';
@@ -944,7 +946,7 @@ if (!function_exists('amr_list_properties')) {
 	case 'HTML5':
 		$htm['box'] 	= '<section';
 		$htm['boxc']	= '</section>';
-		$r   	= '<header><h2>';
+		$r   	= '<header><h2';
 		$rc  	= '</h2></header> ';
 		$d 		=''; 
 		$dc 	='';
@@ -954,7 +956,8 @@ if (!function_exists('amr_list_properties')) {
 		include ($custom_htmlstyle_file);
 		break;
 	default:  /* the old way or tableoriginal*/
-		$r   = '<tr> ';  $d ='<td';
+		$r   = '<tr';
+		$d ='<td';
 		$rc  = '</tr> '; $dc='</td>';
 		$htm['box'] = '<table';
 		$htm['boxc']= '</table>';
@@ -978,14 +981,15 @@ if (!function_exists('amr_list_properties')) {
 						$icals[$i], $v['Before'], $v['After'] );
 				}
 			}
-			if (empty($cprop)) $cprop = '&nbsp;';
+			if (empty($cprop)) 
+				$cprop = '&nbsp;';
 			if (!empty($d))  // if we have a td type html to bracket the column with
 				$cprop = $d.' class="col'.$col.'">'.$cprop.$dc;
 			$cprop .= AMR_NL;
 			$rowhtml .= $cprop;
 		} // end of columns for one calendar
 
-		$html .= $r.$rowhtml.$rc.AMR_NL;
+		$html .= $r.' class="cal'.$i.'" >'.$rowhtml.$rc.AMR_NL;
 		
 	} // end of calendars
 

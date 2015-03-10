@@ -14,10 +14,32 @@ You can always refer back to the default css in the plugin folder for the latest
 }
 /*----------------------------------------------- */
 /* html5 code */
-	article, aside, figure, footer, header, hgroup, menu, nav, section { 
+	#events_wrap article, 
+	#events_wrap article span.summary, 
+	#events_wrap article span.description, 
+	#events_wrap aside,
+	#events_wrap figure,
+	#events_wrap footer,
+	#events_wrap header, 
+	#events_wrap hgroup, 
+	#events_wrap menu, 
+	#events_wrap nav, 
+	#events_wrap section { 
 	/* for browsers  that are not up to html5 yet, except will not work on IE  */
 		display: block;
 	}
+	/* html5 code */
+	#events_wrap article, 
+    #events_wrap article span.description, 
+	#events_wrap aside,
+	#events_wrap figure,
+	#events_wrap section { 
+	/* for browsers  that are not up to html5 yet, except will not work on IE  */
+		margin: 10px 0 10px 0;
+	}
+	#events_wrap article {
+		margin-bottom: 20px;
+		}
 /* Optional - for grouping collapseability  */
  .master th.level0  { font-weight: bold; background-color: #ddd; }
  .master th.group .termdesc  {  font-weight: normal; text-transform: none; }
@@ -28,6 +50,7 @@ You can always refer back to the default css in the plugin folder for the latest
 tr.level0 {
 	background: #ccc;
 }	
+
 /*----------------------------------------------- */
 #events_wrap {  
 	word-wrap: break-word; /* make sure that any very long words do not cause overflow*/
@@ -411,3 +434,23 @@ table.largecalendar tbody td:hover div.day { /* and then use this to see the day
 	border-left: solid 5px red;
 }
  */
+ /*----------------------------------------------- */
+/* for multiple calendars, to check what events come from where */
+
+.col1, .amrcol1 { /* the first cell */
+	padding-left: 2px;
+}
+.cal0  {
+	 border-left: medium solid transparent;  /*default colour*/
+}
+
+.cal1 {
+	 border-left: medium solid LightGray;
+	 }
+	 
+.cal2 {
+	 border-left: medium solid Gray;
+	 } 
+.cal3 {
+	 border-left: medium solid DarkGray;
+	 }
