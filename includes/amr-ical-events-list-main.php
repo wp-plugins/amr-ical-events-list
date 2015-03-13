@@ -242,40 +242,41 @@ http://support.google.com/calendar/bin/answer.py?hl=en&answer=2476685 are wrong 
 Testing shows one can also leave enddate blank for single day events. No more - now need an enddate
 NOTE: must all be in UTC!!
  */
-
+	
 	if (!isset ($e['EventDate'] )) 
 		return (''); /* we have no start date or start time */
 	else { 
 		// we have a start date
-		if (isset ($e['allday']) and (!($e['allday'] === 'allday') ))  {  
+		if (!isset ($e['allday']) or (!($e['allday'] === 'allday') ))  {  //201503 - all day not always set
 			// not an all day
-			$start = amr_get_googletime ($e['EventDate']);
+			
+			$gstart = amr_get_googletime ($e['EventDate']);
 			if (isset ($e['EndDate'])) {
-				$end = '/'.amr_get_googletime ($e['EndDate']);
+				$gend = '/'.amr_get_googletime ($e['EndDate']);
 				
 			}
-			else $end = '/'.$start; // no end date
+			else $gend = '/'.$gstart; // no end date
 		
 			
 		
 		}
 		else { // it is an all day
 			
-			$start = amr_get_googledate ($e['EventDate']);
+			$gstart = amr_get_googledate ($e['EventDate']);
 			if (isset ($e['EndDate'])) {
 				if ($e['EndDate'] == $e['EventDate']) 
-					$end = '/'.$start;
+					$gend = '/'.$gstart;
 				else {	
 					$ics_enddate = clone($e['EndDate']);
 					date_modify($ics_enddate,'+1 day');
-					$end = '/'.amr_get_googledate ($ics_enddate);
+					$gend = '/'.amr_get_googledate ($ics_enddate);
 				}
 			}
-			else $end = '/'.$start; // no end date
+			else $gend = '/'.$gstart; // no end date
 		}
 	}
 	
-	return ($start.$end);
+	return ($gstart.$gend);
 
 
    }
@@ -874,6 +875,8 @@ function amr_get_htmlstylefile() {
 		return false;
 	else
 		$custom_htmlstyle_file = $uploads['basedir'].$custom_htmlstyle_file ;
+		
+	//var_dump($custom_htmlstyle_file);	
 	return($custom_htmlstyle_file);
 }
 /* --------------------------------------------------  */
@@ -1306,6 +1309,8 @@ global $amr_limits;
 			echo '<br>Sorted  '.count($newevents).' events';
 			echo '<br>first '.$newevents[0]['EventDate']->format('c');
 			echo '<br>last '.$newevents[count($newevents)-1]['EventDate']->format('c');
+			echo '<br>start '.$start->format('c');
+			echo '<br>end   '.$end->format('c');
 			echo '<br>Now constrain them...<br> ';
 		}
 		$constrained = array();
@@ -1317,14 +1322,24 @@ global $amr_limits;
 					(isset($event['EndDate']) and
 						(amr_falls_between($event['EndDate'], $start, $end) OR  /* end date will catch those all day ones that are untimed or those that h ave not yet finished !! */
 						(amr_falls_between($start, $event['EventDate'], $event['EndDate'])))) ) /* catch those that start before our start and end after our start */
-					{
+				{
 					$constrained[] = $event;
 					if (isset($_REQUEST['debugall'])) {
 						echo '<br>Choosing no: '.$k.' '. $event['EventDate']->format('c').' ending '. (isset($event['EndDate'])? $event['EndDate']->format('c'): ' no end');		}
 					++$count;
 				}
+				if (isset($_REQUEST['debugall'])) {
+						echo '<br>Not choosing?'.$k.' '
+						. $event['EventDate']->format('c').' ending '
+						. (isset($event['EndDate'])? $event['EndDate']->format('c'): ' no end');		
+				}
 			}
-			else $constrained[] = $event;
+			else {
+				$constrained[] = $event;
+				if (isset($_REQUEST['debugall'])) {
+						echo '<br>Whats happening?'; var_dump( $event);		
+				}
+			}	
 			if ($count >= $limit) break;
 		}
 
@@ -1342,7 +1357,9 @@ global $amr_limits;
 		 For ease of processing the repeat arrays will initially be ISO 8601 date (added in PHP 5)  eg:	2004-02-12T15:19:21+00:00
 		 we will then convert them to date time objects
 		 */
-function amr_process_icalevents($events, $astart, $aend, $limit) {
+function amr_process_icalevents($events, $l_start, $aend, $limit) {
+		$astart = amr_newdatetime();  // l_start was getting overwritten somewhere which messed up recurring logic
+		$astart = clone ($l_start);
 		$dates = array();
 		foreach ($events as $i=> $event) {
 			amr_derive_dates ($event); /* basic clean up only - removing unnecessary arrays etc */
@@ -1488,7 +1505,7 @@ function amr_set_cached_events_from_db($criteria, $events) {
 	return true;
 }
 /* -------------------------------------------------------------------------*/
-function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
+function amr_process_icalspec($criteria, $l_start, $end, $no_events, $icalno=0) {
 /*  parameters - an array of urls, an array of limits (actually in amr_limits)  */
 	global $amr_options,
 		$amr_limits,
@@ -1598,10 +1615,10 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 			If (isset($_REQUEST['debug'])) echo '<br />Got x events '.count($components);
 			
 			amrical_mem_debug('Before process');
-			$components = amr_process_icalevents($components, $start, $end, $no_events);
+			$components = amr_process_icalevents($components, $l_start, $end, $no_events);
 			amrical_mem_debug('Before constrain');
 			$amrtotalevents = count($components);
-			$components = amr_constrain_components($components, $start, $end, $no_events);
+			$components = amr_constrain_components($components, $l_start, $end, $no_events);
 			$amr_last_date_time = amr_save_last_event_date($components);
 			If (ICAL_EVENTS_DEBUG) {
 				echo '<br />After constrain No dates:'.count($components).' and last event date time is: ';
@@ -1630,7 +1647,7 @@ function amr_process_icalspec($criteria, $start, $end, $no_events, $icalno=0) {
 			}
 			else $thecal = '';
 			
-if (isset($_REQUEST['debug'])) {echo '<hr/>Is end set Before list - 0? '; var_dump($amr_limits['end']);}
+			if (isset($_REQUEST['debug'])) {echo '<hr/>Is end set Before list - 0? '; var_dump($amr_limits['end']);}
 			
 			if ((!amr_doing_box_calendar())
 			and empty($components) ) {
@@ -2280,15 +2297,15 @@ function amr_get_set_start_for_nav () {  // gets or sets a date object to the be
 	if (isset($_REQUEST['start'])) {
 		$starttxt = intval ($_REQUEST['start']);
 		$starttxt = substr($starttxt,0,4).'-'.substr($starttxt,4,2).'-'.substr($starttxt,6,2);
-		$start = amr_newDateTime($starttxt);
+		$nstart = amr_newDateTime($starttxt);
 		}
 	else {
-		$start = amr_newDateTime('');	// must always set to first of month for dropdown to work
-		$y = $start->format('Y');
-		$m = $start->format('m');
-		$start->setDate($y,$m,'01');
+		$nstart = amr_newDateTime('');	// must always set to first of month for dropdown to work
+		$y = $nstart->format('Y');
+		$m = $nstart->format('m');
+		$nstart->setDate($y,$m,'01');
 	}
-	return ($start);
+	return ($nstart);
 }
 /* 
 /* -----------------------------------------------------------------------------------------------*/
@@ -2343,7 +2360,7 @@ function amr_ical_include_scripts() {  // only load js if requested
  function amr_ical_load_frontend_scripts() {  // only load js if requested
  // csss required for widgets etc, so allow general load
 	wp_enqueue_script('jquery');
-
+	// later amr_ical_load_date_picker();
  }
 /* ------------------------------------------------------------------------------------------------------ */
  /**

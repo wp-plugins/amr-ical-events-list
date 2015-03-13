@@ -854,15 +854,22 @@ if (!function_exists('add_event_to_google')) {
 	global $amr_options;
 
 		if (!isset($e['EventDate'])) return('');
-		if (isset($e['LOCATION'])) $l = 	'&amp;location='.esc_html(strip_tags(str_replace(' ','%20',($e['LOCATION'] ))));
-		else $l = '';
-		if (!isset($e['DESCRIPTION'])) $e['DESCRIPTION'] = '';
+		if (isset($e['LOCATION'])) 
+			$l = 	'&amp;location='.esc_html(strip_tags(str_replace(' ','%20',($e['LOCATION'] ))));
+		else 
+			$l = '';
+		if (!isset($e['DESCRIPTION'])) 
+			$e['DESCRIPTION'] = '';
 		$t = __("Add event to google" , 'amr-ical-events-list');
 
-		if (isset ($amr_options['no_images']) and $amr_options['no_images']) $t2 = $t;
-		else $t2 = '<img src="'.IMAGES_LOCATION.ADDTOGOOGLEIMAGE.'" alt="'.$t.'" class="amr-bling"/>';
+		if (isset ($amr_options['no_images']) and $amr_options['no_images']) 
+			$t2 = $t;
+		else 
+			$t2 = '<img src="'.IMAGES_LOCATION.ADDTOGOOGLEIMAGE.'" alt="'.$t.'" class="amr-bling"/>';
+			
 		$details = amr_just_flatten_array ($e['DESCRIPTION']); //var_dump($details);
-		if (!empty($details)) $details ='&amp;details='.rawurlencode(strip_tags($details));
+		if (!empty($details)) 
+			$details ='&amp;details='.rawurlencode(strip_tags($details));
 
 	/* adds a button to add the current calendar link to the users google calendar */
 		$html = '<a class= "amr-bling hrefaddtogoogle" href="http://www.google.com/calendar/event?action=TEMPLATE'
@@ -1683,7 +1690,7 @@ global $amr_options, $wp_locale;
 
 	if (is_object($datestamp))	{
 		$offset = $datestamp->getOffset();
-		If (isset ($_REQUEST['tzdebug'])) {
+		If (false and isset ($_REQUEST['tzdebug'])) {
 			echo '<br />Want to format '.$datestamp->format('Ymd His').' in '.$format.' like this '.$datestamp->format($format).' but localised';
 //			echo '<br />Add offset '.$offset/(60*60).' back to Unix timestamp to force correct localised date ';
 			}
@@ -1695,7 +1702,7 @@ global $amr_options, $wp_locale;
 	if (stristr($format, '%') ) return (strftime( $format, $dateInt ));  /* keep this for compatibility!  will not localise though */
 	else {
 		$text = date_i18n($format, $dateInt, $gmttf); /*  should  be false, otherwise we get the utc/gmt time.   */
-		If (isset ($_REQUEST['tzdebug']))
+		If (false and isset ($_REQUEST['tzdebug']))
 			{
 				echo '<br />Localised with gmt=false: '.$text.'<br />';
 				$text2 = date_i18n($format, $dateInt, false);
@@ -1736,8 +1743,6 @@ global 	$amr_options,
 		$method = $amr_options ['date_localise'];
 	else
 		$method = 'wp';  // v4.0.9 was none
-
-	if (isset($_GET['tzdebug'])) echo  '<br />set tz for: '.$datestamp->format('c');
 
 	date_timezone_set ($datestamp, $amr_globaltz);  /* Converting here, but then some derivations wrong eg: unsetting of end date */
 
@@ -1831,7 +1836,7 @@ global $amr_globaltz, $amr_options;
 }
 }
 /* ------------------------------------------------------------------------------------*/
-if (!function_exists('adebug')) {  // we are loading late, so hope fully this should be fine - don'twant top long a name
+if (!function_exists('adebug')) {  // we are loading late, so hope fully this should be fine - don't want top long a name
 	function adebug( $text, $whattodebug=true) {
 		if ((isset ($_REQUEST['debug']) ) and ($_REQUEST['debug'] == $whattodebug))
 			echo $text;

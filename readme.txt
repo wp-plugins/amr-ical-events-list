@@ -3,7 +3,7 @@ Contributors: anmari
 Tags: event, events, event calendar, events calendar, event manager, diary, schedule, ical, ics, ics calendar, ical feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, agenda, happenings, shows, concerts, conferences, courses, timetable, schedule
 Requires at least: 2.8
 Tested up to: 4.1.1
-Version: 4.17
+Version: 4.18
 Stable tag: trunk
 
 Event Calendar or Agenda list, combine multiple ics files, handles recurring events. Very customisable.
@@ -97,6 +97,10 @@ amr-events has much additional functionality, including a taxonomy widget.
 
 
 == Changelog ==
+= Version 4.18 =
+*  Fix: A weird bug in weekday weekly recurrences - events in partial weeks at start of recurrence within viewing period were being ignored.  This varied by the start of week setting, so was a tad confusing to debug. Thanks to allenconquest for flushing this out.
+*  Fix: Add to google for non all day events of ics files was not passing time. Is now.
+
 = Version 4.17 =
 *  Add: class to calendar properties so one can style the ics files properties as well as the events. Use class cal0, cal1, cal2 etc
 *  Add: cope with google labs experimental calendar attachements having encoded urls (RFC 5545 does not)

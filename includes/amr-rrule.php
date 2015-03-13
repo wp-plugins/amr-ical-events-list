@@ -565,20 +565,32 @@ function amr_create_date_from_parts ($d, $tz) { /* create a date object from the
 	return ($possdate );
 }
 /* --------------------------------------------------------------------------------------------------- */
-function amr_get_a_closer_start ($start, $astart, $int) { // Note can only do this if no COUNT or BYSETPOS, else we break the rule
+function amr_get_a_closer_start ($start, // the DTSTART
+	$astart, // the overall start
+	$int) { // Note can only do this if no COUNT or BYSETPOS, else we break the rule
+	
 	$closerstart = new datetime();  // if cloning ok, dont need tz
 	$closerstart = clone $start;
-	if (isset($_GET['rdebug'])) {echo '<br />Start was set at '.$start->format('c');}
+	$one_interval_before = new datetime();  // if cloning ok, dont need tz
+	$one_interval_before = clone $start;
+	if (isset($_GET['rdebug'])) {echo '<br />Start was set at '.$closerstart->format('c');}
+	if (isset($_GET['rdebug'])) {echo '<br />Overall Start at '.$astart->format('c');}
 	while ($closerstart < $astart ) {
 //		if (isset($_GET['rdebug'])) { echo '<br />Main start= '. $astart->format('c'). ' '. $closerstart->format('c');}
 		$closerstart = amr_increment_datetime ($closerstart, $int) ;
-		if ($closerstart < $astart) $start = $closerstart;
+		if ($closerstart < $astart) {
+			$one_interval_before = $closerstart;  // start at least one interval before, so we don't miss any BYDAYS
+		}
+		else {
+			$one_interval_before = $start;
+		}		
 	}
 	if (isset($_GET['rdebug'])) {
-		echo '<br />Closer start is '.$start->format('c').' after adding iterations <br />';
+		echo '<br />Better start is '.$one_interval_before->format('c').' after adding iterations <br />';
 	}
 	unset($closerstart);
-	return ($start);
+	return ($one_interval_before);
+
 }
 /* --------------------------------------------------------------------------------------------------- */
 function amr_limit_occurences ($repeats, $count) { 
@@ -650,6 +662,8 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 	// 2014 07 09
 	$original_start = amr_newDateTime();
 	$original_start = clone $start;
+	$next_start = amr_newDateTime();
+	$next_start = clone $start;
 	
 	if (amr_is_before ($until, $astart )) { 
 		return(false); 
@@ -672,7 +686,7 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 	/* NOTE we can only do this if we do not have the count or a bysetpos !!!!   */
 //	if (empty($int)) var_dump($p);
 	if (empty($p['COUNT']) and empty($p['BYSETPOS'])) {
-		$start = amr_get_a_closer_start($start, $astart, $int);				
+		$next_start = amr_get_a_closer_start($next_start, $astart, $int);				
 	}	
 	// 20110301 the nbydays, especially the negs, require that one initially consider a wider valid range so as not to unintentionally exclude a date before the expand/contract has beeen applied .  Ie we might iterate to 28th and exclude, but actually once one has applied the -2Mo or some such rule, the date would have contracted into the valid range.  So apply restrictions later.	
 
@@ -693,11 +707,11 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 		else $p['BYDAY'] = $p['NBYDAY'];
 		unset ($p['NBYDAY']);
 	}
-	while ($start <= $until) {	 /* don't check astart here - may miss some */
+	while ($next_start <= $until) {	 /* don't check astart here - may miss some */
 
-		$datearray[] = amr_get_date_parts($start);
+		$datearray[] = amr_get_date_parts($next_start);
 		if (isset($_GET['rdebug'])) { 
-			echo '<hr>Checked start against extra until (1 extra iteration to allow for negativebydays) etc '.$start->format('c').' '.$until->format('c');
+			echo '<hr>Checked start against extra until (1 extra iteration to allow for negativebydays) etc '.$next_start->format('c').' '.$until->format('c');
 			echo '<br />date array = '; var_dump($datearray);
 		}
 		
@@ -824,16 +838,16 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 		
 		unset ($datearray);
 		/* now get next start */
-		$start = amr_increment_datetime ($start, $int);
+		$next_start = amr_increment_datetime ($next_start, $int);
 		
-		if (isset ($_GET['rdebug'])) echo '<hr>Next start data after incrementing = '.$start->format('Y m d l h:i:s');
+		if (isset ($_GET['rdebug'])) echo '<hr>Next start data after incrementing = '.$next_start->format('Y m d l h:i:s');
 	} /* end while*/
 	//-----------------------------------------------------------------------
 	if (isset($_GET['rdebug'])) { 
 			echo '<hr>Stop now..checked start against extra until <br>start='
-			.$start->format('c')
+			.$next_start->format('c')
 			.'<br>until='.$until->format('c').' the extra until!';
-			if ($start > $until) echo '<br /><b>php says start > extra until </b>';
+			if ($next_start > $until) echo '<br /><b>php says start > extra until </b>';
 		}
 
 	if (!empty ($repeats)) {
@@ -870,6 +884,7 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 			echo '<hr/>Need use debugexc to check exclusion logic';
 			}
 	}
+
 	if (empty ($repeats)) return(null);
 	return ($repeats);
 
