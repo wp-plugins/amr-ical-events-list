@@ -319,13 +319,13 @@ function amr_set_defaults_for_datetime() {
 			}
 			else {
 				if (isset($_REQUEST['tzdebug'])) {	echo '<h2>Using php default for timezone</h2>';}
-				$amr_globaltz = timezone_open(date_default_timezone_get()); // this will give UTC as wordpres  ALWAYS uses UTC
+				$amr_globaltz = timezone_open(date_default_timezone_get()); // this will give UTC as wordpress  ALWAYS uses UTC
 			}
 		}
 	if (empty($amr_globaltz)) {
 		echo '<br />Error getting and setting global timezone either from wp or the default php  ';
 	}
-	$ical_timezone = $amr_globaltz;  // usedin amr-events apparently - can we rationalise sometime?
+	$ical_timezone = $amr_globaltz;  // usedin amr-events aand to save the global tz if it changes do to event timezone use
 }
 /* ---------------------------------------------------------------------------*/
 function amr_set_defaults() {
@@ -479,7 +479,8 @@ function amr_set_defaults() {
 			'DTEND'=> 		$dfalse,
 			'DUE'=> 		$dfalse,
 			'DURATION'=> 	array('Column' => 0, 'Order' => 50, 'Before' => '', 'After' => ''),
-			'allday' => 	array('Column' => 1, 'Order' => 4, 'Before' => '', 'After' => ''),
+			'allday' => 	array('Column' => 1, 'Order' => 4, 'Before' => '&nbsp;', 'After' => ''),
+			'timezone'=> 	$dfalse,
 			'COMPLETED'=> 	$dfalse,
 			'FREEBUSY'=> 	$dfalse,
 			'TRANSP'=> 		$dfalse),
@@ -899,7 +900,7 @@ function customise_listtype($i)	{ /* sets up some variations of the default list
 			$amr_options['listtypes'][$i]['compprop']['Date and Time']['StartTime']
 			= array('Column' => 1, 'Order' => 5, 'Before' => '', 'After' => '');
 			$amr_options['listtypes'][$i]['compprop']['Date and Time']['allday']
-			= array('Column' => 1, 'Order' => 6, 'Before' => '', 'After' => '');
+			= array('Column' => 1, 'Order' => 6, 'Before' => '&nbsp;', 'After' => '');
 			$amr_options['listtypes'][$i]['compprop']['Descriptive']['SUMMARY']
 			= array('Column' => 2, 'Order' => 20, 'Before' => '', 'After' => '');
 			$amr_options['listtypes'][$i]['compprop']['Descriptive']['excerpt']

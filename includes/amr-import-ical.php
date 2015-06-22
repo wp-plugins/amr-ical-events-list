@@ -224,13 +224,6 @@ function amr_cache_url($url, $cache=ICAL_EVENTS_CACHE_TTL) {
 /* ---------------------------------------------------------------------- */
 function amr_parseAttendees	($arraybycolon)    { /* receive full string parsed to array  */
 /*
-ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=Anna-m
-
- arie Redpath;X-NUM-GUESTS=0:mailto:annamarieredpath@gmail.com
-
-ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;CN=an
-
- drew@pahlman.com;X-NUM-GUESTS=0:mailto:andrew@pahlman.com
  
 ATTENDEE;X-NUM-GUESTS=0:mailto:1bfb88li8v385q41k6s7fnl9ls@group.calendar.go
  ogle.com 
@@ -253,8 +246,8 @@ NOT USING FOR NOW - INTERNAL ATTENDEES ONLY
 				$email = amr_parseMailto($next);
 			}
 		}
-		$attendee['mailto'] = $email;
-		//
+		if (is_email($email)) $attendee['mailto'] = $email;
+		// some files issue mailto's with an email address
 		//ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=Common Name;X-NUM-GUESTS=0
 		$parameters = explode (';',$properties);
 
@@ -503,7 +496,7 @@ function amr_tz_error_handler () { //cannot have anonymous function in php < 5.3
 function amr_parseTZID($text)    {
    global $amr_globaltz, // the main timezone object
 	$globaltzstring, // the string for the timezone object
-	$icsfile_tzname, // the timexone name string in the ics file
+	$icsfile_tzname, // the timezone name string in the ics file
 	$icsfile_tz;  // the ics timezone object that we last parsed and ended up with (often it's all the same
 	
    /* take a string that may have a olson tz object and try to return a tz object */
@@ -742,7 +735,8 @@ function amr_parseRDATE ($string, $tzobj ) {
 			$rdate =  explode(',',$rdatestring[1]); /* that' sall we are doing for now */
 //			if (isset($_GET['rdebug'])) {echo '<br />Parsing value=date...<br/> '; var_dump($rdate);}
 			foreach ($rdate as $i => $r)  {
-					$dates[$i] = array_shift(amr_parseValue ('DATE', $r, $tzobj));
+					$temp = amr_parseValue ('DATE', $r, $tzobj);  //amr 20150622 only variables by reference
+					$dates[$i] = array_shift($temp);
 					/*returns array, but there should only be 1 value */
 			}
 			return($dates);
@@ -976,7 +970,7 @@ function amr_parse_component($type)	{	/* so we know we have a vcalendar at lines
 
 
 	while (($amr_n < $amr_totallines)	)	{
-		//if (ICAL_EVENTS_DEBUG) {echo '<br/>*** '.$type.' '.$amr_lines[$amr_n];}
+		//if (ICAL_EVENTS_DEBUG) {echo '<br/>parsing *** '.$type.' '.$amr_lines[$amr_n];}
 		$amr_n++;
 		$parts = explode (':', $amr_lines[$amr_n],2 ); /* explode faster than the preg, just split first : */
 		if ((!$parts) or ($parts === $amr_lines[$amr_n])) {
@@ -1025,11 +1019,25 @@ function amr_parse_component($type)	{	/* so we know we have a vcalendar at lines
 					else {
 						$subarray [$basepart[0]] = amr_parse_property($parts);
 						if (($basepart[0] === 'DTSTART') and (isset($basepart[1]))) {
-							if (amr_is_untimed($basepart[1])) { /* ie has VALUE=DATE */
-								//$subarray ['Untimed'] = true; // removed v4.0.28
-								//$subarray ['allday'] = true;  // v4.0.17
-								$subarray ['allday'] = 'allday';  // v4.0.28
+							// we have a DTSTART
+							// save the timezone separately in case we want to show events in event timezone
+							if (is_array($subarray['DTSTART'])) {
+								$subarray['DTSTART'] = $subarray['DTSTART'][0];
 							}
+							if (is_object($subarray['DTSTART'])) {
+								$subarray['timezone'] = $subarray['DTSTART']->getTimezone();
+								if (isset($_REQUEST['debugtz']))  { echo '<br />check tz';
+									var_dump($subarray['DTSTART']);
+									var_dump($subarray['timezone']);
+								}	
+
+								if (amr_is_untimed($basepart[1])) { /* ie has VALUE=DATE */
+									//$subarray ['Untimed'] = true; // removed v4.0.28
+									//$subarray ['allday'] = true;  // v4.0.17
+									$subarray ['allday'] = 'allday';  // v4.0.28
+								}
+							}
+							//else return false;
 						}
 						else if (($basepart[0] === 'X-MOZ-GENERATION') and (!isset( $subarray ['SEQUENCE']))) {
 							$subarray ['SEQUENCE'] = $subarray ['X-MOZ-GENERATION'] ;
@@ -1046,6 +1054,7 @@ function amr_parse_component($type)	{	/* so we know we have a vcalendar at lines
 			}
 		}
 	}
+	//if (ICAL_EVENTS_DEBUG) var_dump($subarray);
 	return ($subarray);	/* return the possibly nested component */
 }
 /* ---------------------------------------------------------------------- */

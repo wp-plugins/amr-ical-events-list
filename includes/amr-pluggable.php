@@ -650,6 +650,8 @@ if (!function_exists('amr_format_taxonomy_link') ) {  //problem ics file categor
 	}	
 	$term = get_term($tax_term, $tax_name, OBJECT);
 	
+	//var_dump($term);
+	
 	if (!isset($term->name)) {  // if it is not a wordpress taxonomy ?
 		$name = $tax_term;
 		$link2 = add_query_arg ('category', $tax_term, $link);
@@ -1249,7 +1251,8 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 	and ($amr_limits['show_views']) and $change_view_allowed) {
 		$views = amrical_calendar_views();
 	}
-	else $views = '';
+	else 
+		$views = '';
 	/* -- show month year nav options or not  ----------------NOT IN USE - need to lift code out for reuse --------------------------*/
 
 	$start    = amr_newDateTime('now');
@@ -1260,8 +1263,10 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 	$navigation = '';
 	if ((isset($amr_limits['show_month_nav']))
 	and ($amr_limits['show_month_nav']) ) {
-		if (isset ($amr_limits['months']))	$months = $amr_limits['months'];
-		else $months = 1;
+		if (isset ($amr_limits['months']))	
+			$months = $amr_limits['months'];
+		else 
+			$months = 1;
 //		$start    = new Datetime('now',$amr_globaltz);
 //		$start    = clone $amr_limits['start'];
 		$navigation = amr_calendar_navigation($start, $months, 0, $amr_liststyle); // include month year dropdown	with links
@@ -1296,7 +1301,8 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 		$docolheading=false;
 		if (ICAL_EVENTS_DEBUG) {echo '<br />Headings? '; var_dump($amr_options['listtypes'][$amr_listtype]['heading']);}
 		foreach ($amr_options['listtypes'][$amr_listtype]['heading'] as $i => $h) {
-			if (!empty($h)) $docolheading=true;
+			if (!empty($h)) 
+				$docolheading=true;
 		}
 		if ($docolheading) {
 			foreach ($columns as $i => $col) {
@@ -1492,7 +1498,6 @@ if (!function_exists('amr_parseModifiers')) {
 
     }
 }	
-	
 /* -------------------------------------------------------- */
 if (!function_exists('amr_format_repeatable_property')) {
 function amr_format_repeatable_property ($content, $k, $event, $before='', $after='') {
@@ -1572,6 +1577,10 @@ if (!function_exists('amr_format_value')) {
 				}
 				case 'TZID': { /* amr  need to add code to reformat the timezone as per admin entry.  Also only show if timezone different ? */
 					$htmlcontent = amr_format_tz (timezone_name_get($content));
+					break;
+				}
+				case 'timezone': { /* amr  need to add code to reformat the timezone as per admin entry.  Also only show if timezone different ? */
+					$htmlcontent = amr_format_timezone ($content);
 					break;
 				}
 				default: 	/* should not be any */
@@ -1685,7 +1694,7 @@ if (!function_exists('amr_format_value')) {
 /* ------------------------------------------------------------------------------------*/
 if (!function_exists('amr_wp_format_date')) {
 function amr_wp_format_date( $format, $datestamp, $gmttf) { /* want a  integer timestamp or a date object  */
-global $amr_options, $wp_locale;
+
 /* Need to get rid the unnecessary date logic - should only be using date objects for now */
 
 	if (is_object($datestamp))	{
@@ -1714,11 +1723,37 @@ global $amr_options, $wp_locale;
 		}
 }
 }
-/* -------------------------------------------------------------------------------------------*/
+/* ------------------------------------------------------------------------------------*/
+if (!function_exists('amr_show_in_events_timezone')) {
+	function amr_show_in_events_timezone( $amr_globaltz, $e) {  
+	// if we are here, then we want to change global tz to this events tz, change for each event if the event has a tz
+	global $ical_timezone;
+		
+	if (isset($_REQUEST['debugtz'])) {
+		echo '<br /> applying tz filter';
+		var_dump($e);	
+	}	
+	if (!empty($e['timezone']) and is_object($e['timezone']))
+		$amr_globaltz = $e['timezone'];
+	else 
+		$amr_globaltz = $ical_timezone; // must reset it else will just use last events timezone - bad for local floating events
+	
+	return ($amr_globaltz);	
+	}
+}
+/* ------------------------------------------------------------------------------------*/
+if (!function_exists('amr_decide_display_timezone')) {
+	function amr_decide_display_timezone($e) {  // if we want to display event timezones only, then set the global tz here for each event
+	global $amr_globaltz;	
+	// timezone will only be altered if filter has been applied
+		$amr_globaltz = apply_filters('amr_show_in_events_timezone', $amr_globaltz, $e, 2);
+	}
+}
+/* ------------------------------------------------------------------------------------*/	
+
 if (!function_exists('amr_format_time')) {
 function amr_format_time( $format, $datestamp) { /* want a  integer timestamp or a date object  */
-global 	$amr_options,
-		$amr_globaltz;
+global 	$amr_globaltz;
 
 	date_timezone_set ($datestamp, $amr_globaltz);  /* Converting here, but then some derivations wrong eg: unsetting of end date */
 	// check for midnight, midday, noon etc
@@ -1755,8 +1790,10 @@ global 	$amr_options,
 	else if ($method === 'amr') 
 		return amr_date_i18n ( $format, $datestamp);
 	else {
-		if (stristr($format, '%') ) return (strftime( $format, $datestamp->format('U') ));  /* keep this for compatibility!  will not localise though */
-		else return ($datestamp->format($format));
+		if (stristr($format, '%') ) 
+			return (strftime( $format, $datestamp->format('U') ));  /* keep this for compatibility!  will not localise though */
+		else 
+			return ($datestamp->format($format));
 		}
 }
 }
@@ -1811,7 +1848,7 @@ function amr_format_duration ($arr) {
 	}
 }
 /* --------------------------------------------------------- */
-if (!function_exists('amr_format_tz')) {
+if (!function_exists('amr_format_tz')) {  // this is the change timezone icon in the header
 function amr_format_tz ($tzstring) {
 global $amr_globaltz, $amr_options;
 
@@ -1833,6 +1870,18 @@ global $amr_globaltz, $amr_options;
 	return ('<a class="timezone amr-bling" href="'
 		.htmlentities(add_querystring_var($url,'tz',$tz2)).'" title="'
 		.$text2.'" >'.$t3.' </a>');
+}
+}
+/* --------------------------------------------------------- */
+if (!function_exists('amr_format_timezone')) {  // this is the change timezone icon in the header
+function amr_format_timezone ($tzobj) {
+global $amr_options;
+
+	if (is_object($tzobj))
+		$tzstring = timezone_name_get($tzobj);
+	else 
+		$tzstring = $tzobj;
+	return ($tzstring);
 }
 }
 /* ------------------------------------------------------------------------------------*/

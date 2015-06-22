@@ -25,7 +25,7 @@ if (!(class_exists('DateTime'))) {
   }
   
 amr_set_defaults_for_datetime();  // needed all over the place
-/*----------------------------------------------------------------------------------------*/
+/*-------------------------------------------------------------- */
 //add_action ('after_setup_theme','amr_load_pluggables');
 //add_action ('wp','amr_load_pluggables', 10);	//move it later, No not good , plugins that apply the filters will nothave it then, so will fail
 add_action ('plugins_loaded','amr_load_pluggables', 99);	//move it later, No not good , plugins that apply the filters will nothave it then
@@ -33,7 +33,7 @@ add_action ('plugins_loaded','amr_load_pluggables', 99);	//move it later, No not
 function amr_load_pluggables() {
 	require_once('amr-pluggable.php');
 }
-/*----------------------------------------------------------------------------------------*/
+/*-------------------------------------------------------------- */
 function amr_ical_events_list_record_version() {
 	global $amr_options;
 	if (empty($amr_options['amr-ical-events-list-version'])) 
@@ -70,7 +70,7 @@ function ical_ordinalize( $num ){
 	}
 
 }
-/*----------------------------------------------------------------------------------------*/
+/*-------------------------------------------------------------- */
 function ical_ordinalize_words( $i ){
 
 	if 		($i == 1) 	return( __('the first','amr-ical-events-list'));
@@ -84,7 +84,7 @@ function ical_ordinalize_words( $i ){
 	else 				return ( sprintf (__('the %s', 'amr-ical-events-list'), ical_ordinalize( $i )));
 
 }
-/*----------------------------------------------------------------------------------------*/
+/*-------------------------------------------------------------- */
 function amr_fulldaytext () {
 global  $wp_locale;
 	$fulldayofweek = array (
@@ -111,7 +111,7 @@ global  $wp_locale;
 		}
 	return ($fulldayofweek);
 }
-/*----------------------------------------------------------------------------------------*/
+/*-------------------------------------------------------------- */
 function amr_weekdayabbr () {
 global  $wp_locale;
 
@@ -193,7 +193,7 @@ function amr_output_icalduration ($duarray) {
 	if (!empty($t)) $t = 'T'.$t;
 	return ('P'.$d.$t);
 }
-/* ----------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------ */
 function amr_parseRepeats (&$event) {
 
 global $amr_globaltz;
@@ -217,7 +217,7 @@ global $amr_globaltz;
 	return ($event);
 
 }
-/* -------------------------------------------------------------------------*/
+/* ----------------------------------------------- */
 function amr_get_googletime($time)   {
 	if (!(is_object($time))) return($time);
 	$t = clone ($time);  /* if you get a parse error, then you are not on PHP 5! */
@@ -227,7 +227,7 @@ function amr_get_googletime($time)   {
     return ($text);
 
    }
-/*--------------------------------------------------------------------------------*/
+/*------------------------------------------------------ */
 function amr_get_googledate($time)   {
 	if (!(is_object($time))) return($time);
 	$t = clone ($time);
@@ -235,7 +235,7 @@ function amr_get_googledate($time)   {
     return ($t->format("Ymd"));
 
    }
-/*--------------------------------------------------------------------------------*/
+/*------------------------------------------------------ */
 function amr_get_googleeventdate($e) { 
 /* google has updated functioning to use ics end date for all day events (note instructions at
 http://support.google.com/calendar/bin/answer.py?hl=en&answer=2476685 are wrong - they show same date for end date for 1 day event.
@@ -280,7 +280,7 @@ NOTE: must all be in UTC!!
 
 
    }
-/* ---------------------------------------------------------------------- */
+/* ----------------------------------------------- */
 function amr_get_css_url_choices () {
 	$dir = amr_get_css_path();
 	$css_url = ICAL_EVENTS_CSS_URL;
@@ -291,7 +291,7 @@ function amr_get_css_url_choices () {
 	$files[] = 	ICALLISTPLUGINURL.'css/icallist.css';
 	return($files);
 }
-/* ---------------------------------------------------------------------- */
+/* ----------------------------------------------- */
 function amr_get_css_path() { /** Attempt to create  a css directory if it doesn't exist.
 	 * Return the path if successful.*/
 		$css_path = ICAL_EVENTS_CSS_DIR;
@@ -316,7 +316,7 @@ function amr_get_css_path() { /** Attempt to create  a css directory if it doesn
 		}
 		return $css_path;
 	}
-/* ---------------------------------------------------------------------- */
+/* ----------------------------------------------- */
 function amr_copy_file( $from, $to) {
    if ( !copy($from ,$to ) ) {
 
@@ -332,7 +332,7 @@ function amr_copy_file( $from, $to) {
 
 	chmod($to, 0644);
 }
-/*--------------------------------------------------------------------------------*/
+/*------------------------------------------------------ */
 function amr_ical_events_style()  /* check if there is a style spec, and file exists */{
 global $amr_options;
 global $amr_listtype;
@@ -448,7 +448,7 @@ function ical_get_weekstart() {
 	return ($wkst);
 
 }
-/* -----------------------------------------------------------------------------------------------------*/
+/* --------------------------------------------------------------------------- */
 function get_oldweekdays ($d) { /* Looks like it works compared to http://www.searchforancestors.com/utility/dayofweek.html and if not, an aproximation is better than nothing !*/
 
 		$dummy = new Datetime(); //if cloning dont need tz
@@ -557,7 +557,7 @@ function amr_calc_duration ( $start, $end) { /* assume in same timezone , ics dt
 
 	return ($duarray);
 }
-/* ---------------------------------------------------------------------- */
+/* ----------------------------------------------- */
 /*  Return true iff the two times span exactly a multiple of 24 hours, from midnight one day to midnight the next.   But what if multi day over daylight saving ?? 
  */
 function amr_is_all_day($d1, $d2) {
@@ -573,7 +573,7 @@ function amr_is_all_day($d1, $d2) {
 		return (false);
 	}
 }
-/* ---------------------------------------------------------------------- */
+/* ----------------------------------------------- */
 /* return true if the event is untimed and the end is one day after the start */
 function amr_is_an_ical_single_day($d1, $d2) {
 //	If (ICAL_EVENTS_DEBUG) echo '<br>check if ical single day<br>'.$d1->format('c').'<br>'.$d2->format('c');
@@ -586,16 +586,16 @@ function amr_is_an_ical_single_day($d1, $d2) {
 		}
 	return (false);
 	}
-/* --------------------------------------------------------------------------------------*/
+/* ------------------------------------------------------------ */
 function amr_is_same_day($d1, $d2) { /** Return true iff the two specified times fall on the same day. */
 		return (	$d1->format('Ymd') === 	$d2->format('Ymd'));
 		}
-/* --------------------------------------------------------------------------------------*/
+/* ------------------------------------------------------------ */
 function amr_is_before($d1, $d2) {	/* Return true if the first date is earlier than the second date */
 		if ($d1 < $d2 ) return (true);
 		else return (false);
 	}
-/* --------------------------------------------------------- */
+/* ---------------------------------- */
 function amr_add_duration_to_date (&$e, $d) {
 /* NOTE: some date modify installations cannot cope with 0 durations, or just a +, so do not pass that ! */
 /* adjust the signs  of the duration array as necessary to that date modify can handle it */
@@ -630,12 +630,13 @@ function amr_add_duration_to_date (&$e, $d) {
 	if ((!empty($dmod)) and (strlen($dmod) > 1)) date_modify ($e, $dmod );
 	return ($e);
   }
- /* ------------------------------------------------------------------------------------*/
+ /* ---------------------------------------------------------- */
 function amr_derive_dates (&$e) {
 /* Derive basic date dependent data  - called early on before repeating */
 	if (!isset($e['DTSTART']) ) return (false);
 	if (is_array($e['DTSTART'])) $e['DTSTART'] = $e['DTSTART'][0];
 	if (isset($e['DTEND']) and is_array($e['DTEND'])) $e['DTEND'] = $e['DTEND'][0];
+	if (!is_object($e['DTSTART'])) {echo '<p class="error">Error: Event with no date:'; var_dump($e); echo '</p>'; return($e); }
 	if ((isset ($e['DURATION'])) and (empty ($e['DTEND'])))  {  /*** an array of the duration values, calc the end date or time */
 		$e['DTEND'] = new Datetime(); //if cloning dont need tz
 		$e['DTEND'] = clone ($e['DTSTART']);
@@ -658,7 +659,7 @@ function amr_derive_dates (&$e) {
 
 	return($e);
 }
-/* ------------------------------------------------------------------------------------*/
+/* ---------------------------------------------------------- */
 function amr_derive_eventdates_further (&$e) {
 global $amr_globaltz;
 /* Derive any date dependent data - requires EventDate at least to have been set */
@@ -721,15 +722,30 @@ global $amr_globaltz;
 
 	return($e);
 }
-/* ------------------------------------------------------------------------------------*/
+/* ---------------------------------------------------------- */
+function amr_show_in_events_timezones (&$e) { // only change at last minute before display, 
+//else you may mess up ordering and recurring calculations
+global $amr_options;
+	var_dump($amr_options);
+	if (!empty($e['timezone'])) { // do we have an event timezone stored ?
+		if (is_obj($e['timezone'])) {
+			//$e[] //*** amr
+		}
+	}
+
+	return ($e);
+}
+/* ---------------------------------------------------------- */
 function amr_derive_component_further (&$e) {
+global $amr_globaltz;
 $e = amr_derive_for_list_or_eventinfo ($e); // order nb - otherwise summary have link when we do not want it to
 $e = amr_derive_info_for_list_only ($e);
+//$e = amr_decide_display_timezone($e);  // amr *** rather put at each display point ?
 
 return ($e);
 
 }
-/* ------------------------------------------------------------------------------------*/
+/* ---------------------------------------------------------- */
 function amr_derive_for_list_or_eventinfo (&$e) {  // should only derive the ones we need
 	if (isset ($e['GEO'])) {
 		$e['map'] = amr_ical_showmap($e['GEO']);
@@ -758,7 +774,7 @@ function amr_derive_for_list_or_eventinfo (&$e) {  // should only derive the one
 	return ($e);
 
 }
-/* ------------------------------------------------------------------------------------*/
+/* ---------------------------------------------------------- */
 function amr_derive_info_for_list_only (&$e) {
 
 	/* Do not call this from eventinfo shortcode - it will cause an infinite loop! */
@@ -895,7 +911,7 @@ function amr_do_a_headercell_html($htm, $i, $colhead) {
 			.((!empty($htm['hcellc'])) ? $htm['hcellc'] : '');
 return $html;
 }
-/* -------------------------------------------------------------------------------------------*/
+/* ------------------------------------------ */
 function amr_do_column_header_html($htm, $i, $headhtml) {
 	$html =	$htm['head']
 			.(!empty($htm['row']) ? ($htm['row'].'>'): '')
@@ -904,7 +920,7 @@ function amr_do_column_header_html($htm, $i, $headhtml) {
 			.$htm['headc'];
 return $html;
 }
-/* -------------------------------------------------------------------------------------------*/
+/* ------------------------------------------------------------------- */
 		/** Sort the specified associative array by the specified key.
 		 * Originally from
 		 * http://us2.php.net/manual/en/function.usort.php.
@@ -918,7 +934,7 @@ function amr_sort_by_key($data, $key) {
 			usort($data, $compare);
 			return $data;
 		}
-/* ------------------------------------------------------------------------------------*/
+/* ------------------------------------------ */
 function amr_reverse_sort_by_key($data, $key) {
 	if (!(is_array($data)) ) return ($data);
 			// Reverse sort
@@ -938,7 +954,7 @@ function amr_falls_between($eventdate, $astart, $aend) {
 			($eventdate >= $astart)) return ( true);
 		else return (false);
 		}
-/* ------------------------------------------------------------------------------------*/
+/* ------------------------------- */
 function amr_event_should_be_shown($event, $astart, $aend) {
 		/*
 		 Return true if the specified event should be shown.  This could be due to a number of situations:
@@ -985,7 +1001,7 @@ function amr_event_should_be_shown($event, $astart, $aend) {
 
 		}
 }
-/* ------------------------------------------------------------------------------------*/
+/* ----------------------------------------- */
 function amr_arrayobj_unique2 (&$arr) { 	/* Process an array of datetime objects and remove duplicates 		 */
 		/* 	Duplicates can arise from edit's of ical events - these will have different sequence numbers and possibly differnet details - delete one with lower sequence,
 			Also there maybe? the possobility of complex recurring rules generating duplicates - these will have same sequence no's and should have same details - delete one
@@ -1286,7 +1302,7 @@ function amr_generate_repeats(&$event, $astart, $aend, $limit) { /* takes an eve
 		if (ICAL_EVENTS_DEBUG) {echo '<br />number of newevents = '.count($newevents);}
 		return ($newevents);
 	}
-/* ------------------------------------------------------------------------------------*/
+/* ---------------------------------------------------------- */
 	/*
 	 * Constrain the list of COMPONENTS to those which fall between the
 	 * specified start and end time, up to the specified number of
@@ -1379,7 +1395,7 @@ function amr_process_icalevents($events, $l_start, $aend, $limit) {
 		}
 		return ($dates) ;
 	}
-/* -------------------------------------------------------------------------*/
+/* ----------------------------------------------- */
 function process_icalurl($url) {
 global $amr_limits;
 /* cache the url if necessary, and then parse it into basic nested structure */
@@ -1401,7 +1417,7 @@ global $amr_limits;
 
 	return ($ical);
 }
-/* -------------------------------------------------------------------------*/
+/* ----------------------------------------------- */
 function amr_echo_parameters() {
 global $amr_limits;
 	foreach ($amr_limits as $i=> $v) {
@@ -1422,12 +1438,12 @@ global $amr_limits;
 	$text = implode (', ',$t);
 	return ($text);
 }
-/* -------------------------------------------------------------------------*/
+/* ----------------------------------------------- */
 function amr_string($s) {
 /* Maybe check for a calendar name and if it exists, then use it for styling? - NOt NOW  */
 	return(str_replace(array (' ','.','-',',','"',"'"), '', $s));
 }
-/* -------------------------------------------------------------------------*/
+/* ----------------------------------------------- */
 function suggest_other_icalplugin($featuretext) {
 ?>
 	<br/><?php echo $featuretext.' - '.__('This feature requires the plugin amr-events','amr-ical-events-list');
@@ -1436,7 +1452,7 @@ function suggest_other_icalplugin($featuretext) {
 
 }
 
-/* -------------------------------------------------------------------------*/
+/* ----------------------------------------------- */
 function amr_get_events_cache_key ($criteria) {
 	global $amr_limits;
 	$string = '';
@@ -1460,7 +1476,7 @@ function amr_get_events_cache_key ($criteria) {
 	$key = md5( $string );
 	return ($key);
 }
-/* -------------------------------------------------------------------------*/
+/* ----------------------------------------------- */
 function amr_get_cached_events_from_db($criteria) {
 	global $amr_limits;
 
@@ -1488,7 +1504,7 @@ function amr_get_cached_events_from_db($criteria) {
 		return false;
 	}
 }
-/* -------------------------------------------------------------------------*/
+/* ----------------------------------------------- */
 function amr_set_cached_events_from_db($criteria, $events) {
 	global $amr_options;  /***  nb when we get back to this -when hosts are on 5.3 or for some other reason, fetch in hours eventscache */
 	global $amr_limits;
@@ -1504,7 +1520,7 @@ function amr_set_cached_events_from_db($criteria, $events) {
 	if (isset($_REQUEST['debugcache']))  echo ('<h3>cache set  '.$key.'</h3>');
 	return true;
 }
-/* -------------------------------------------------------------------------*/
+/* ----------------------------------------------- */
 function amr_process_icalspec($criteria, $l_start, $end, $no_events, $icalno=0) {
 /*  parameters - an array of urls, an array of limits (actually in amr_limits)  */
 	global $amr_options,
@@ -1529,6 +1545,8 @@ function amr_process_icalspec($criteria, $l_start, $end, $no_events, $icalno=0) 
 		if (ICAL_EVENTS_DEBUG)   echo ('<h3>Grabbing the one page events cache  '.$key.'</h3>');
 		}
 	else { 
+		if (!empty($criteria['show_in_events_timezone']))  // if we want event timezones, not website timezone
+			add_filter ('amr_show_in_events_timezone', 'amr_show_in_events_timezone', 10, 2);
 		if (!empty($criteria['exclude_in_progress']))
 			add_filter ('amr_events_after_sort_and_constrain', 'amr_events_exclude_in_progress');
 		if (!empty($criteria['sort_later_events_first']))
@@ -1671,7 +1689,7 @@ function amr_process_icalspec($criteria, $l_start, $end, $no_events, $icalno=0) 
 	return ($thecal);
 	
 	}
-/* -------------------------------------------------------------------------*/
+/* ----------------------------------------------- */
 function amr_save_last_event_date($events) { // must have been sorted
 global $amr_last_date_time;
 	if (is_array($events)) {
@@ -1690,7 +1708,7 @@ global $amr_last_date_time;
 	
 // else will not save a last date.
 }
-/* -------------------------------------------------------------------------*/
+/* ----------------------------------------------- */
 function amr_get_params ($attributes=array()) {
 /*  We are passed the widget or shortcode attributes,
       check them, get what we can there, then check for passed parameters (form or query string )
@@ -2082,7 +2100,7 @@ function amr_get_params ($attributes=array()) {
 	If (isset($_GET['debugq']))  {echo '<hr> Left in params to pass to wp query?: <br />'; var_dump($shortcode_params); }
 	return ($shortcode_params);  // only return params needed for wp query ?
 }
-/* -------------------------------------------------------------------------*/
+/* ----------------------------------------------- */
 function amr_get_id_for_shortcode () {  // allows for the possibility of multiple shortcodes in one page.
 global $amr_icalno;
 
@@ -2095,7 +2113,7 @@ global $amr_icalno;
 
 	return ($id);
 }
-/* -------------------------------------------------------------------------*/
+/* ----------------------------------------------- */
 function amr_do_ical_shortcode ($attributes, $content = null) {
 global $amr_limits,
 	$change_view_allowed,
@@ -2117,9 +2135,11 @@ global $amr_been_here;
 	$defaults['show_month_nav'] = 0;
 	$defaults['headings'] = 0;
 
-	if (empty($attributes)) $atts = $defaults;
-
-	else $atts = array_merge( $defaults, $attributes ) ;
+	if (empty($attributes)) 
+		$atts = $defaults;
+	else 
+		$atts = array_merge( $defaults, $attributes ) ;
+		
 	$criteria =	amr_get_params ($atts);  /* strip out and set any other attstributes  - they will set the limits table */
 	/* separate out the other possible variables like list type, then just have the urls */
 
@@ -2139,7 +2159,7 @@ global $amr_been_here;
   return ($html);
 
 }
-/* -------------------------------------------------------------------------*/
+/* ----------------------------------------------- */
 function amr_do_smallcal_shortcode ($attributes) {
 global $amr_limits,
 	$amr_listtype,
@@ -2189,7 +2209,7 @@ global $amr_limits,
   return ($html);
 
 }
-/* -------------------------------------------------------------------------*/
+/* ----------------------------------------------- */
 function amr_do_largecal_shortcode ($attributes, $content = null) {
 global $amr_limits,
  $amr_listtype,
@@ -2234,7 +2254,7 @@ global $amr_limits,
   return ($html);
 
 }
-/* -------------------------------------------------------------------------*/
+/* ----------------------------------------------- */
 function amr_do_weekscal_shortcode ($attributes, $content = null) {
 global $amr_limits,
  $amr_listtype,
@@ -2308,17 +2328,17 @@ function amr_get_set_start_for_nav () {  // gets or sets a date object to the be
 	return ($nstart);
 }
 /* 
-/* -----------------------------------------------------------------------------------------------*/
+/* --------------------------------------------------------------------- */
 function amr_ical_widget_init() {
 	register_widget('amr_ical_widget');
 	register_widget('amr_icalendar_widget');
 }
-/* ------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------- */
 function amrical_add_scripts() {
  	wp_enqueue_script('jquery');
 	wp_enqueue_script('jquery-ui-core');
 }
-/* ------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------- */
 function amrical_add_adminstyle() {
 	if ((stristr ($_SERVER['QUERY_STRING'],'manage_amr_ical'))
 	or (stristr ($_SERVER['QUERY_STRING'],'manage_event_listing')))   {
@@ -2330,21 +2350,21 @@ function amrical_add_adminstyle() {
         }
 	}
 }
-/* ------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------- */
 function amr_ical_exception_handler($exception) {
 	
   echo __("Uncaught exception: ", 'amr-ical-events-list') , $exception->getMessage(), "\n";
   _e('<br /><br />An error in the input data may prevent correct display of this page.  Please advise the administrator as soon as possible.', 'amr-ical-events-list');
 
 }
-/* ------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------- */
 function amr_notice_listtypes_converted () {  // from version < 4.0 to version 4.0
 
 		echo ('<div class="updated fade">'
 		.__('Your existing saved list types have been converted.  If you wish to return to the earlier version of the plugin, you will have to reset the list types and reapply your changes. Or use your DB backup to set the amr-ical-events-list option back to previous version. You do have regular backups right? ','amr-ical-events-list').'<br />');
 		echo '</div>';
  }
-/* ------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------- */
 function amr_ical_include_scripts() {  // only load js if requested
  global $amr_listtype,$amr_options,$amr_doing_icallist;
  // csss required for widgets etc, so allow general load
@@ -2356,13 +2376,13 @@ function amr_ical_include_scripts() {  // only load js if requested
 	wp_enqueue_script( 'amr-ical', $url, array( 'jquery'), false, true);  // true for in footer
 
  }
-/* ------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------- */
  function amr_ical_load_frontend_scripts() {  // only load js if requested
  // csss required for widgets etc, so allow general load
 	wp_enqueue_script('jquery');
 	// later amr_ical_load_date_picker();
  }
-/* ------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------- */
  /**
 	Adds a links directly to the settings page from the plugin page
 	*/
@@ -2378,7 +2398,7 @@ function amr_plugin_links($links, $file) {
 		return $links;
 	} // end plugin_links()
 
-/* ------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------- */
 	set_exception_handler('amr_ical_exception_handler');
 	//amr_ical_initialise ();   // setup all basic settings, like globals and constants etc
 	add_action('plugins_loaded'         , 'amr_ical_initialise' ); // so can check debug
@@ -2394,8 +2414,6 @@ function amr_plugin_links($links, $file) {
 	}
 
 	add_action('widgets_init'           , 'amr_ical_widget_init');
-
-
 	// as per ottos post for language packs
 	//add_action( 'init'             		, 'amr_ical_load_text' );
 	add_shortcode('iCal'                , 'amr_do_ical_shortcode');

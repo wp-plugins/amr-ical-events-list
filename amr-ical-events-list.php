@@ -4,7 +4,7 @@ Plugin Name: amr events calendar or lists with ical files
 Author: anmari
 Author URI: http://anmari.com/
 Plugin URI: http://icalevents.com
-Version: 4.18
+Version: 4.20
 Text Domain: amr-ical-events-list
 Domain Path: /lang
 
@@ -23,7 +23,7 @@ Description: Display simple or highly customisable and styleable list of events.
 */
 //  NB Change version in code too define('AMR_ICAL_LIST_VERSION', '3.0.1');
 
-define('AMR_ICAL_LIST_VERSION', '4.18');
+define('AMR_ICAL_LIST_VERSION', '4.20');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 define( 'AMR_BASENAME', plugin_basename( __FILE__ ) );
@@ -43,6 +43,26 @@ define( 'AMR_BASENAME', plugin_basename( __FILE__ ) );
 
 if (is_admin()	) {  // are we in admin territory
 	require_once('includes/amr-ical-list-admin.php');
+	include('admin/add-ons.php');
+	include('admin/updates-page.php');
+	include('admin/class-amr-license-handler.php');
+}
+/*----------------------------------------------------------------------------------------*/
+function amr_ical_updates_menu($parent_slug) {
+//$parent_slug, $page_title, $menu_title, $capability, $menu_slug, $function
+	$amr_pluginpage['add-ons'] = add_submenu_page($parent_slug, 
+			__('Add ons','amr-events'), 
+			__('Add ons','amr-events'), 
+			'manage_options',
+			'add-ons', 'amre_add_ons_page');
+			
+	$page = add_submenu_page($parent_slug,        // parent slug
+	'amr events add-on licensed updates'          // page title
+	,'+ updates'     			// menu title
+	,'manage_options'				//capability required
+	,'amr_events_updates_page'             // menu slug
+	,'amr_events_license_page' );   // function
+	
 }
 /*--------------------------------------------------------------------------------------------------*/
 function amr_ical_load_text() { 
@@ -62,5 +82,6 @@ function amr_ical_load_text() {
 	$result = load_plugin_textdomain( $domain, false, dirname( plugin_basename( __FILE__ ) ) . '/lang/' );
 	//var_dump($result);
 }
+
 	add_action('plugins_loaded'         , 'amr_ical_load_text' );
 ?>

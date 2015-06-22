@@ -24,25 +24,26 @@ function amr_ical_support_links () {
 
 	echo '<div class="postbox" style="padding:1em 2em; width: 600px;">
 	<p>
-	<a href="http://icalevents.com/amr-events/amr-ical-events-list/" title="documentation for amr-ical-events-list and amr-events">';
+	<a href="http://icalevents.com/documentation" title="documentation for amr-ical-events-list and amr-events">';
 	_e('Documentation', 'amr-ical-events-list');
 	echo '</a>&nbsp;&nbsp;
 	<a href="http://icalevents.com/support/" title="Support Forum">';
 	_e('Support', 'amr-ical-events-list');
-	echo '</a>&nbsp;&nbsp;
+/*	echo '</a>&nbsp;&nbsp;
 	<a href="http://icalevents.com/videos" title="Events plugin videos">';
 	_e('Videos', 'amr-ical-events-list');
+	*/
 	echo '</a>&nbsp;&nbsp;
-	<a href="http://wordpress.org/tags/amr-ical-events-list" title="If you like it rate it...">';
-	_e('Rate it at WP', 'amr-ical-events-list');
+	<a href="https://wordpress.org/support/plugin/amr-ical-events-list" title="If you like it rate it...">';
+	_e('Rate or Review', 'amr-ical-events-list');
 	echo '</a>&nbsp;&nbsp;<a href="http://icalevents.com/feed/">';
 	_e('Plugin feed', 'amr-ical-events-list');
-	echo '</a><img src="';
+	echo '</a>&nbsp;<img src="';
 	echo includes_url(); 
 	echo 'images/rss.png" alt="Rss icon" style="vertical-align:middle;" />&nbsp;&nbsp;
-	<a href="http://forum.anmari.com/rss.php?id=1">';
+	<a href="http://icalevents.com/forums/feed">';
 	_e('Forum feed', 'amr-ical-events-list');
-	echo '</a><img src="';
+	echo '</a>&nbsp;<img src="';
 	echo includes_url(); 
 	echo 'images/rss.png" alt="Rss icon" style="vertical-align:middle;" /></p>';
 	echo '</div>';
@@ -741,7 +742,7 @@ function amrical_add_options_panel() {
 		$page_title = __('iCal Events Lists', 'amr-ical-events-list');
 		$menu_title = __('List types', 'amr-ical-events-list');
 		add_submenu_page( $parent_slug, $page_title, $menu_title,$capability, $menu_slug, $function);
-
+		amr_ical_updates_menu($parent_slug);
 }
 //build admin interface =======================================================
 function amr_ical_validate_general_options(){
