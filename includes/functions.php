@@ -20,16 +20,11 @@ global $amr_globaltz;
 
 }
 /* -------------------------------------------------------------------------------------------*/
-function amr_a_nested_event_shortcode () {
+function amr_a_nested_event_shortcode () { // in case we have a dummy - yes truly
 	global $amr_been_here;
 	
-	
-	if (ICAL_EVENTS_DEBUG) {
-		echo '<br />....Checking Loop Flag';
-	}	
 	if (empty($amr_been_here) or (!($amr_been_here))) { 
 		$amr_been_here = true;
-		if (ICAL_EVENTS_DEBUG) echo '<br />....Setting Loop Flag. ';
 		return false;
 		}
 	else {	

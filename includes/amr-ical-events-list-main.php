@@ -198,8 +198,6 @@ function amr_parseRepeats (&$event) {
 
 global $amr_globaltz;
 
-	// if (isset($_GET['rdebug'])) {echo '<hr>in parse repeats'; var_dump($event['RRULE'] );}
-
 	if (!empty($event['RRULE'])) /* and is_string($event['RRULE'])) */
 		$event['RRULE'] 	= amr_parseRRULE($event['RRULE']);
 
@@ -213,7 +211,6 @@ global $amr_globaltz;
 	if (!empty($event['EXDATE'])) /*and is_string($event['EXDATE']))*/
 		$event['EXDATE'] 	= amr_parseRDATE($event['EXDATE'],$amr_globaltz );
 
-    // if (isset($_GET['rdebug'])) {echo '<hr>in parse repeats'; var_dump($event['RRULE'] );}
 	return ($event);
 
 }
@@ -1090,25 +1087,25 @@ global $amr_globaltz;
 		if (isset($_GET['rdebug'])) { echo '<br>Got '.count($repeats). ' after RRULE';}
 	}
 	if (!empty($event['RDATE']))	{
-		if (ICAL_EVENTS_DEBUG) { echo '<br>Processing RDATES...';}
+
 		foreach ($event['RDATE'] as $i => $rdate) {
 					$reps = amr_process_RDATE  ($rdate, $repeatstart, $aend, $limit);
 					if (is_array($reps) and count($reps) > 0) {
 						$repeats  = array_merge($repeats , $reps);
 					}
 				}
-				if (ICAL_EVENTS_DEBUG) { echo '<br>Got '.count($repeats). ' after RDATE';}
+				
 		}
 
 	if (!empty($event['EXRULE']))	{
-			if (isset($_REQUEST['debugexc'])) { echo '<br><h3>Have EXRULE </h3>';var_dump($event['EXRULE']);}
+			//if (isset($_REQUEST['debugexc'])) { echo '<br><h3>Have EXRULE </h3>';var_dump($event['EXRULE']);}
 			foreach ($event['EXRULE'] as $i => $exrule) {
 				$reps = amr_process_RRULE($exrule, $repeatstart, $astart, $aend, $limit);
 				if (is_array($reps) and count($reps) > 0) {
 					$exclusions  = $reps;
 				}
 			}
-			if (isset($_REQUEST['debugexc'])) { echo '<br><h3>Got '.count($exclusions). ' after EXRULE</h3>';}
+			//if (isset($_REQUEST['debugexc'])) { echo '<br><h3>Got '.count($exclusions). ' after EXRULE</h3>';}
 		}
 
 	if (!empty($event['EXDATE']))	{
@@ -1317,6 +1314,8 @@ global $amr_limits;
 		if ((count($newevents) < 1) or (!is_array($newevents)))	
 			return (false);
 			
+		$newevents = apply_filters('amr_events_before_sort', $newevents);  // used for example to exclude private events 
+	
 		$newevents = amr_sort_by_key($newevents , 'EventDate');
 
 		$newevents = apply_filters('amr_events_after_sort', $newevents);
@@ -1641,16 +1640,14 @@ function amr_process_icalspec($criteria, $l_start, $end, $no_events, $icalno=0) 
 			If (ICAL_EVENTS_DEBUG) {
 				echo '<br />After constrain No dates:'.count($components).' and last event date time is: ';
 				if (is_object($amr_last_date_time)) echo $amr_last_date_time->format('c');
-				var_dump($amr_last_date_time);
+				//var_dump($amr_last_date_time);
 			}
 		}
 		if (!isset ($amr_one_page_events_cache[$key])) {
 				$amr_one_page_events_cache[$key]['components'] = $components;
 				$amr_one_page_events_cache[$key]['icals'] = $icals;
 		}
-
-		
-		if (isset($_REQUEST['debug'])) {echo '<hr/>Is end set Before list - 1? '; var_dump($amr_limits['end']);}		
+	
 		amrical_mem_debug('Before listing');
 		if (isset ($icals) and is_array($icals)) {
 /* amr here is the main html  code  *** */
@@ -1665,8 +1662,6 @@ function amr_process_icalspec($criteria, $l_start, $end, $no_events, $icalno=0) 
 			}
 			else $thecal = '';
 			
-			if (isset($_REQUEST['debug'])) {echo '<hr/>Is end set Before list - 0? '; var_dump($amr_limits['end']);}
-			
 			if ((!amr_doing_box_calendar())
 			and empty($components) ) {
 				$thecal .= amr_handle_no_events ();
@@ -1674,7 +1669,7 @@ function amr_process_icalspec($criteria, $l_start, $end, $no_events, $icalno=0) 
 			else {
 				$tid 	= '';
 				$class 	= ' ical ';
-				if (isset($_REQUEST['debug'])) {echo '<hr/>Is end set Before list? '; var_dump($amr_limits['end']);}
+				
 				$thecal .= amr_list_events($components, $tid, $class, $show_views=true);
 			}
 
@@ -1852,7 +1847,6 @@ function amr_get_params ($attributes=array()) {
 	// save the global list type first
 	if (!empty($shortcode_params['listtype'])) {
 		$amr_listtype = $shortcode_params['listtype'];
-		if (ICAL_EVENTS_DEBUG) {echo '<br />Listtype from shortcode: '.$amr_listtype; echo '<br />shortcode params'; var_dump($shortcode_params);}
 		unset($shortcode_params['listtype']);
 		
 	}
@@ -1909,8 +1903,6 @@ function amr_get_params ($attributes=array()) {
 	// then get the limits for that list type
 
 	$amr_limits = $amr_options['listtypes'][$amr_listtype]['limit']; /* get the default limits */
-	If (isset($_REQUEST['debug'])) {echo '<hr>Defaults limits before we change them<br />'; var_dump($amr_limits ); }
-	
 	
 	if ($amr_liststyle === 'weekscalendar') {
 		$amr_limits['weeks'] = 2; // default for horizontal calendar
@@ -1919,7 +1911,6 @@ function amr_get_params ($attributes=array()) {
 		if (empty($amr_limits['months'])) $amr_limits['months'] = 1; // default for horizontal calendar
 	}  
 
-	If (isset($_REQUEST['debugall'])) {echo '<hr>limits before we change them<br />'; var_dump($amr_limits ); }
 // now check groupings
 	$gg = '';
 	if (!empty($shortcode_params['grouping']))
@@ -2015,8 +2006,6 @@ function amr_get_params ($attributes=array()) {
 		 /*  else all is okay - we have default date of now */
 		}
 	}
-
-	If (ICAL_EVENTS_DEBUG) {echo '<hr> Check limits for listtype:'.$amr_listtype.' <br />'; var_dump($amr_limits); }
 
 	if (!empty( $shortcode_params['daysoffset'])) { /* keeping startoffset for old version compatibility, but allowing for daysoffset for compatibility with other offsets */
 
@@ -2398,6 +2387,19 @@ function amr_plugin_links($links, $file) {
 		return $links;
 	} // end plugin_links()
 
+function amr_exclude_private_events($events) { // may later want to change this to show if owner is logged in?
+	
+	foreach ($events as $i => $event) {
+		
+		if (!empty($event['CLASS']) and (
+			(($event['CLASS'] ==='PRIVATE') or $event['CLASS'] ==='CONFIDENTIAL') )) {
+			unset ($events[$i]);
+			if (ICAL_EVENTS_DEBUG) echo '<br/>Private event excluded';
+		}
+		
+	}
+	return ($events);
+}
 /* ------------------------------------------------------------------------------- */
 	set_exception_handler('amr_ical_exception_handler');
 	//amr_ical_initialise ();   // setup all basic settings, like globals and constants etc
@@ -2425,6 +2427,7 @@ function amr_plugin_links($links, $file) {
 
 	register_activation_hook(__FILE__, 'amr_ical_events_list_record_version');
 	add_filter('plugin_row_meta', 'amr_plugin_links', 10, 2);
+	add_filter('amr_events_before_sort', 'amr_exclude_private_events',10,1);
 	//add_action('plugins_loaded', 'amr_debug_time');  // removed for now - 'only' a debug function wrt to load times and somehow functionnotfound in mutisite. 
 
 ?>

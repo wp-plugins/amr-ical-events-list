@@ -168,7 +168,7 @@ function amr_produce_tree_from_array ($terms, $parent=0) {
 			
 		}
 	}
-	if (WP_DEBUG) {echo '<br /> The tree: ';  var_dump($tree);}
+	//if (WP_DEBUG) {echo '<br /> The tree: ';  var_dump($tree);}
 	return ($tree);
 }
 /* --------------------------------------------------  */

@@ -493,7 +493,7 @@ function amr_deduceTZID($icstzid)    {
 function amr_tz_error_handler () { //cannot have anonymous function in php < 5.3
 }
 /* ------------------------------------------------------------------ */
-function amr_parseTZID($text)    {
+function amr_parseTZID($text)    { //also used when editing an event
    global $amr_globaltz, // the main timezone object
 	$globaltzstring, // the string for the timezone object
 	$icsfile_tzname, // the timezone name string in the ics file
@@ -527,7 +527,7 @@ function amr_parseTZID($text)    {
 		//foreach ($timezone_identifiers as $i=> $z) {echo '<br />'.$i; var_dump($z);}
 	    if (in_array($icstzid,$timezone_identifiers, false)) { // we now have a valid php timezone
 			if (isset ($_REQUEST['tzdebug'])) {echo '<br/>Php should like:'.$icstzid; }
-			$tz = amr_try_timezone ($icstzid); // this shoul work else simething weird going on
+			$tz = amr_try_timezone ($icstzid); // this should work else simething weird going on
 			if (!empty($tz)) return($tz);
 		}
 
@@ -948,10 +948,6 @@ global $amr_globaltz;
 			}
 		case 'CATEGORIES': {
 			$cats = amr_parse_CATEGORIES($parts[1]);
-			If (ICAL_EVENTS_DEBUG) {
-				var_dump($parts[1]);
-				echo '<br />catreturned  :<br />'.print_r($cats ,true);
-			}	
 			return($cats );
 			}
 		default:{

@@ -97,37 +97,41 @@ padding: 0 3px;
 /* Calendar Widget  - styles to look like the post calendar widget */
 /* Note this works for 2011 theme to override default table settings and achieve compatibility with the wpcalendar widget .
   You need to find out what works for your theme */
-.widget_calendar .smallcalendar  caption,
-.widget_calendar .smallcalendar td,
-.widget_calendar .smallcalendarp th {
-	text-align: center;
+#events_wrap .smallcalendar,  
+#multismallcalendar .smallcalendar {
+	border-collapse: separate;
+	border-spacing: 0px;
+} 
+
+/* for some reason firefox does not apply css if we use events*/
+#multismallcalendar tr.dayheaders th,
+#multismallcalendar tr.week th,
+#multismallcalendar tr.week td,
+#multismallcalendar td.pad,
+#events_wrap .smallcalendar  td ,  
+#events_wrap .smallcalendar  th , 
+#events_wrap .smallcalendar  td div,
+#events_wrap1 .smallcalendar  td ,/* for small plus agenda*/
+#events_wrap1 .smallcalendar  th , 
+#events_wrap1 .smallcalendar  td div {
+	margin: 0;
+	border: 0;
+	padding: 0;
+	border: 0px none;
+	outline: 0px none;
 }
-.widget_calendar .smallcalendar {
-	color: #555;
-	text-align: center;
-	width: 100%;
+
+#multismallcalendar  a.daylink,
+#multismallcalendar  a,
+#events_wrap .smallcalendar  a.daylink {
+	text-decoration: none;
 }
-.widget_calendar .smallcalendar caption {
-	font-size: 11px;
-	font-weight: 500;
-	padding: 5px 0 3px 0;
-	text-transform: uppercase;
-}
-.widget_calendar .smallcalendar th {
-	background: #f4f4f4;
-	border-top: 1px solid #ccc;
-	border-bottom: 1px solid #ccc;
-	font-weight: bold;
-}
-.widget_calendar .smallcalendar tfoot td {
-	background: #f4f4f4;
-	border-top: 1px solid #ccc;
-	border-bottom: 1px solid #ccc;
-}	
+
 
 /*-----------------------------------boxcalendar days------------ */
-
-#events_wrap table td {
+#multismallcalendar td,
+#multismallcalendar th,
+#events_wrap td {
 	vertical-align: top;
 }
 .smallcalendar td.day1, 
@@ -166,11 +170,11 @@ table.largecalendar td.today a {
 	color: #111;
 }	
 table.smallcalendar td.hasevents{
-	/* background: green; */  /* enter a colour code here to have days with events stand out - maybe for availability */
+	/* background: green; */  
+	/* enter a colour code here to have days with events stand out - maybe for availability */
 }
 table.smallcalendar,
 #events_wrap  table.smallcalendar {
-
 	max-width: 200px;
 	border: 0;
 	margin: 0 auto;
@@ -178,16 +182,17 @@ table.smallcalendar,
 #events_wrap  table.smallcalendar tbody td {
 /*	background: #f5f5f5; */
 /*	border: 1px solid #fff; */
-	padding: 3px 0 2px;
-	text-align: center;	
+/*	padding: 3px 0 2px;  dont use - doesn't look like wp calendar then*/  
+/*	text-align: center;	 */
 }
 
 #events_wrap table.largecalendar tbody td {
-	height:100px; /* it will expand if necessary */
+	height:80px; /* it will expand if necessary */
 }
+
 #events_wrap  table tbody td .event { /* use something like this if you want to force each event to take one line only */
  /*     overflow: hidden;
-	  height: 20px;  /* need a height for th eoverflow to work and still to keep table flexible ? */  
+	  height: 20px;  /* need a height for the overflow to work and still to keep table flexible ? */  
 	  }
 #events_wrap  table tbody td .firstday,	  
 #events_wrap  table tbody td .middleday,  
@@ -197,11 +202,10 @@ table.smallcalendar,
 /* must be after multiday */
 #events_wrap .smallcalendar td.hasevents:hover,
 #events_wrap table.largecalendar td.today ,
-#multismallcalendar td.today,
-table.smallcalendar td.selected,
+#multismallcalendar td.today ,
+table.smallcalendar td.selected ,
 table.smallcalendar td.today {
-	background: #777;
-	color: #fff;
+	font-weight: bold;
 }	 
 	 
 /* to override Multi day styling  */	
@@ -215,7 +219,7 @@ table.smallcalendar td.today {
      }
 	 
 /* unfortunately we need to use divs to hide the details if we want to allow html in details and keep html valid */
-/* ------------------------------ In Box Calendar-- hide the details until we want them -----------*/
+/* ------------------------------ In Box Calendar-- hide the details until we want them  */
 #events_wrap table.ical td .event div.details2{ /* hide column 2 */
 	display: none;
 }
@@ -238,7 +242,8 @@ table.smallcalendar td.today {
 #events_wrap table.ical .event:hover  div.details2 img {
 	width: 200px;  /* make any images smaller */
          }	
-#events_wrap table.ical td.endweek .event:hover  div.details2 {  /* shift the last column right side over a bit so it fits on the page*/
+#events_wrap table.ical td.endweek .event:hover  div.details2 {  
+/* shift the last column right side over a bit so it fits on the page*/
 		margin-left: -110px;
         }	
 	
@@ -293,7 +298,7 @@ table.smallcalendar td.today {
 #calendar_views a {
 	text-decoration: none;
 }
-/* -------------------------------------------------if you have a bunch of small calendars-----------------*/
+/* -------------------------------------------------if you have a bunch of small calendars */
 #multismallcalendar {
 /*	margin: 0 auto;
 	text-align: center; */
@@ -301,10 +306,10 @@ table.smallcalendar td.today {
 #multismallcalendar	table {
 	padding: 0; 
 	float: left; /* chrome browser will not float - why?? */
-	width: 32%; 
+	/*width: 32%; */
 	max-width: 200px;
 	min-width: 150px;  
-	margin:1%;
+	margin:2%;
 	text-align: center; 
 	table-layout: fixed;  
 	font-size: small;

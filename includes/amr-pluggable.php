@@ -100,7 +100,7 @@ function amrical_calendar_views () {
 	if ($agenda) {
 		$agendaviewlink = remove_query_arg('months',$link );
 		$agendaviewlink = add_query_arg(array('agenda'=>$agenda),$agendaviewlink );
-		$agendaviewlink = '<a class="agendalink button" href="'
+		$agendaviewlink = '<a class="agendalink" href="'
 		. htmlentities($agendaviewlink)
 		. '" title="' . __('Go to agenda or list view', 'amr-ical-events-list'). '">'.__('Agenda', 'amr-ical-events-list').'</a>';
 	}
@@ -860,6 +860,10 @@ if (!function_exists('add_event_to_google')) {
 			$l = 	'&amp;location='.esc_html(strip_tags(str_replace(' ','%20',($e['LOCATION'] ))));
 		else 
 			$l = '';
+			
+		if (!isset($e['SUMMARY'])) 
+			$e['SUMMARY'] = '';
+			
 		if (!isset($e['DESCRIPTION'])) 
 			$e['DESCRIPTION'] = '';
 		$t = __("Add event to google" , 'amr-ical-events-list');
@@ -1224,8 +1228,7 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 		
 	if (ICAL_EVENTS_DEBUG) {
 		echo '<br />Peak Memory So far :'.amr_memory_convert(memory_get_usage(true));
-		echo '<h2>Now Listing, and locale = '.$locale.' and list type = '.$amr_listtype.'</h2>';
-		echo '<br />Limits = '; var_dump($amr_limits);
+		echo '<br />Now Listing, and locale = '.$locale.' and list type = '.$amr_listtype.'</h2>';
 	}
 
 	if (!defined('AMR_NL')) define('AMR_NL','PHP_EOL');
@@ -1286,7 +1289,6 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 
 /* -- heading and footers code ------------------------------------------*/
 
-	if (ICAL_EVENTS_DEBUG) {echo '<br />Limit parameters '; var_dump($amr_limits);}
 	if (isset($amr_limits['headings'])) 
 		$doheadings = $amr_limits['headings'];
 	else 

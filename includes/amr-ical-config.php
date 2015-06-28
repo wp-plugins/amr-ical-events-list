@@ -106,7 +106,7 @@ $amr_wkst = ical_get_weekstart();
 $amr_validrepeatablecomponents = array ('VEVENT', 'VTODO', 'VJOURNAL', 'VFREEBUSY', 'VTIMEZONE');
 $amr_validrepeatableproperties = array (   // properties that may have multiple entries either in the meta or the icsfile
 		'ATTACH', 'ATTENDEE',
-		'CATEGORIES','COMMENT','CONTACT','CLASS' ,
+		'CATEGORIES','COMMENT','CONTACT',
 		'DESCRIPTION', 'DAYLIGHT',
 		'EXDATE','EXRULE',
 		'FREEBUSY',
