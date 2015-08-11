@@ -21,7 +21,9 @@ function amr_list_event_subset ($htm, $columns, $subset, $events) { // now a fla
 		amr_decide_display_timezone($e); // determine timezone that this event should be shown in
 		if (!empty($e['Classes']))
 			$classes = strtolower($e['Classes']);
-		else $classes = '';
+		else 
+			$classes = '';
+			
 		$eprop = ''; /*  each event on a new list */
 		$prevcol = 0;
 		$colcount = 0;
@@ -45,6 +47,7 @@ function amr_list_event_subset ($htm, $columns, $subset, $events) { // now a fla
 				if (!empty($selector)) 	$selector .=' class="'.strtolower($k).'">';
 				
 				if (!empty($v)) { // some custom eg: TRUMBA fields may have empty or no  values
+					 
 					$eprop .= $selector
 						.amr_format_value($v, $k, $e,$kv['Before'],$kv['After'] )
 						.$selectorend;
@@ -133,11 +136,11 @@ function amr_list_events_in_groupings ($htm, $id='', $columns, $groupedevents, $
 				}
 				$html .= $htm['body'].' class="toggle_container" >'.$hhtml;  // cannot have multiple thead
 			}
-			//if (isset($_GET['debugg']))  echo '<br />Do event subset';
+			
 			$html = $html.amr_list_event_subset ($htm, $columns, $nextlevel['events'], $events).$htm['bodyc'];
 		}
 		else {  
-			if (isset($_GET['debugg']))  echo '<br />No titles ? is that no grouping ?';
+			
 			$html .= amr_list_events_in_groupings ($htm, $id, $columns, $nextlevel, $events);
 		}
 		

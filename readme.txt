@@ -2,15 +2,15 @@
 Contributors: anmari
 Tags: event, events, event calendar, events calendar, event manager, diary, schedule, ical, ics, ics calendar, ical feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, agenda, happenings, shows, concerts, conferences, courses, timetable, schedule
 Requires at least: 2.8
-Tested up to: 4.2.2
-Version: 4.21
+Tested up to: 4.3
+Version: 4.22
 Stable tag: trunk
 
 Event Calendar or Agenda list, combine multiple ics files, handles recurring events. Very customisable.
 
 == Description ==
 
-Display event lists, big box calendars, upcoming events widgets or small calendar widgets. Encourage viewers to subscribe to or bookmark your events on their calendars.  This plugin offers a thorough Ical calendar parser - copes with all the ical recurrence possibilities, and a large part of the rest of the spec. The free version accepts one or many ical urls for ics files.  It produces a very stylable list of events, notes, todo's or freebusy info.
+Display event lists, big box calendars, upcoming events widgets or small calendar widgets. Encourage viewers to subscribe to or bookmark your events on their calendars.  This plugin offers a thorough Ical calendar parser - copes with all the ical recurrence possibilities, and a large part of the rest of the spec. The free version accepts one or many ical urls for ics files.  It produces a very stylable list of events, notes, todo's or freebusy info.  Tested on 4.3 beta with php 5.4.3
 
 **Demo**
 
@@ -98,6 +98,12 @@ amr-events has much additional functionality, including a taxonomy widget.
 
 
 == Changelog ==
+
+= Version 4.22 =
+*  Fix: changed code for recently (wp 4.3) deprecated widget calling
+*  Fix: better handling of dodgy ics files with dodgy contact fields
+*  Add: basic attendee handling and attendee stats - addons possible for greater functionality
+*  Add: A settings page to choose the fields you want to work with.  This will reduce the list you see in the list configuration.
 
 = Version 4.21 =
 *  Add: automatically exclude events with a CLASS:PRIVATE

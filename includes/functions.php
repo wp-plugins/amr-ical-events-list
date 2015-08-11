@@ -1,7 +1,16 @@
-<?php //comonly useful functions
+<?php //commonly useful functions
+
+function amr_need_this_field($field) {
+	global $amr_options;
+	global $amr_listtype;
+	
+	if (isset($amr_options['listtypes'][$amr_listtype]['compprop'][$field]))
+		return true;
+	else 
+		return false;
+}
 //------------------------------------------------------------------------------------------------
 function amr_create_date_time ($datetimestring, $tzobj) { // date time create with exception trap to avoid fatal errors
-
 		try {	$dt = new DateTime($datetimestring,	$tzobj); }
 		catch(Exception $e) {
 			$text = '<br />Unable to create DateTime object from '.$datetimestring.' <br />'.$e->getMessage();
@@ -19,7 +28,7 @@ global $amr_globaltz;
 	return ($d);
 
 }
-/* -------------------------------------------------------------------------------------------*/
+ 
 function amr_a_nested_event_shortcode () { // in case we have a dummy - yes truly
 	global $amr_been_here;
 	
@@ -32,7 +41,7 @@ function amr_a_nested_event_shortcode () { // in case we have a dummy - yes trul
 		return true;
 		}
 }
-/* -------------------------------------------------------------------------------------------*/
+ 
 function amr_convert_date_string_to_object ($a) {
 
 	if (checkdate(substr($a,4,2), /* month */
@@ -44,7 +53,7 @@ function amr_convert_date_string_to_object ($a) {
 		}
 	return ($e);				
 }
-/* -------------------------------------------------------------------------------------------*/
+ 
 function amr_tell_admin_the_error ($text) {
 	// only report the error to admin if logged in ?
 	// else report with comment
@@ -58,7 +67,11 @@ function amr_tell_admin_the_error ($text) {
 		echo '<!--'.$text.'-->'; // give some notification at least rather than just failing silently
 	
 	}
-/* -------------------------------------------------------------------------------------------*/
+	
+function amr_tell_error ($text) {
+	echo '<br /><p><b>'.$text.'</b><p>';
+	}	
+ 
 function amr_external_url ($url) {
 	// if it is an external url, then open in new window
 		if (stristr( $url, get_bloginfo('url'))) {
@@ -66,7 +79,7 @@ function amr_external_url ($url) {
 		}
 		else	return(true);
 	}
-/* ------------------------------------------------------------------------------------------------------ */
+ 
 function amr_debug_time () {  // track php runtime if debugging
 	global $amr_start_time_track,$amr_last_time_track;
 	if (isset($_GET['debugtime'])) {
@@ -76,7 +89,7 @@ function amr_debug_time () {  // track php runtime if debugging
 		echo '<br />Note: measuring runtime may affect the runtime too, as will debug messages.  if using ics file, check timing on refresh &refresh';
 	}
 }
- /* ------------------------------------------------------------------------------------------------------ */
+ 
 function amr_track_run_time ($text='') {  // track php runtime if debugging
 	global $amr_start_time_track;
 	global $amr_last_time_track;
@@ -91,12 +104,12 @@ function amr_track_run_time ($text='') {  // track php runtime if debugging
 
 	}
 }	
-/* -------------------------------------------------------------------------------------------*/
+ 
 function amr_memory_convert($size) {
     $unit=array('b','kb','mb','gb','tb','pb');
     return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
  }
- /* -------------------------------------------------------------------------------------------*/
+  
 function amrical_mem_debug($text) {
 	if (isset($_GET['memdebug'])) {
 		$mem = memory_get_usage (true);
@@ -106,13 +119,13 @@ function amrical_mem_debug($text) {
 	}
 	if (isset($_GET['debugtime'])) { amr_track_run_time($text);}	
  }
-// ----------------------------------------------------------------------------------------
+ 
 if (!function_exists('esc_textarea') ) {
 	function esc_textarea( $text ) {
 	$safe_text = htmlspecialchars( $text, ENT_QUOTES );
 	}
 }
-// ----------------------------------------------------------------------------------------
+ 
  function amr_check_for_wpml_lang_parameter ($link) {
  	if (isset($_REQUEST['lang'])) {
 		$lang = $_REQUEST['lang'];
@@ -121,7 +134,7 @@ if (!function_exists('esc_textarea') ) {
 		}
 	return ($link);
 }
-// ----------------------------------------------------------------------------------------
+ 
 function array_merge_recursive_distinct ( array &$array1, array &$array2 ) { /* array 2 will replace array 1*/
   $merged = $array1;
 
@@ -135,10 +148,15 @@ function array_merge_recursive_distinct ( array &$array1, array &$array2 ) { /* 
   }
   return $merged;
 }
-/* ---------------------------------------------------------------------*/
+ 
 function amr_clean_link() { /* get cleaned up version of current url remove other parameters */
 global $page_id;
+global $wp;
 
+	$link = add_query_arg( $wp->query_string, '', home_url( $wp->request ) ); //from https://kovshenin.com/2012/current-url-in-wordpress/
+
+	
+/*	
 	$link = remove_query_arg(array(
 	'months',
 	'hours',
@@ -150,7 +168,7 @@ global $page_id;
 	'calendar',
 	'agenda',
 	'eventmap'));
-
+*/
 	/* not sure if we still need, but some folks with main eventlist on home page with other weird stuff on frontpage  had problems before, so keeping for now  */
 	if (is_front_page() and (!empty($page_id))) {  /* don't use if page_id = 0  v4.0.28*/
 		// use page_id not $post->id, because if have a post on home page too $post gets overwritten
@@ -159,7 +177,7 @@ global $page_id;
 
 	return ($link);
 }
-/* ---------------------------------------------------------------------*/
+ 
 function amr_allowed_html () {
 //	return ('<p><br /><hr /><h2><h3><<h4><h5><h6><strong><em>');
 	return (array(
@@ -194,7 +212,7 @@ function amr_allowed_html () {
 		'img' => array('src' => array(),'title' => array(),'alt' => array())  // not sure whether his is a good idea - rather use a pluggable format function.
 		));
 	}
-	/* ---------------------------------------------------------------------- */
+	 
 function amr_make_sticky_url($url) {
 
 	$page_id = url_to_postid($url); // doesnt work on homepage - returns 0;
@@ -210,21 +228,21 @@ function amr_make_sticky_url($url) {
 		return( $sticky_url) ;
 	}
 }
-/* ---------------------------------------------------------------------- */
+ 
 function amr_invalid_url() {
 ?><div class="error fade"><?php	_e('Invalid Url','amr-ical-events-list');?></div><?php
 }
-/* ---------------------------------------------------------------------- */
+ 
 function amr_invalid_file() {
 ?><div class="error fade"><?php	_e('Invalid Url','amr-ical-events-list');?></div><?php
 }
-/* --------------------------------------------------  */
+ 
 function amr_click_and_trim($text) { /* Copy code from make_clickable so we can trim the text */
 	$text = make_clickable($text);
 	amr_trim_url($text);
 	return $text;
 }
-/* --------------------------------------------------  */
+ 
 function amr_trim_url(&$ret) { /* trim urls longer than 30 chars, but not if the link text does not have http */
 	$links = explode('<a', $ret);
     $countlinks = count($links);
@@ -252,7 +270,7 @@ function amr_trim_url(&$ret) { /* trim urls longer than 30 chars, but not if the
 	}
    	return ($ret);
 }
-/* ---------------------------------------------------------------------*/
+ 
 function amr_request_acknowledgement () {
 
 	echo '<div class="postbox" style="padding:1em 2em; width: 600px;">	<p style="border-width: 1px;">';
@@ -274,7 +292,7 @@ function amr_request_acknowledgement () {
 	echo '</p></div>';
 
 }
-/* -------------------------------------------------------------------------------------------------------------*/
+
 if (!function_exists('amr_simpledropdown')) {
 	function amr_simpledropdown($name, $options, $selected) {
 //
@@ -288,7 +306,7 @@ if (!function_exists('amr_simpledropdown')) {
 		return ($html);
 	}
 }
-/* -------------------------------------------------------------------------------------------------------------*/
+
 function amr_ngiyabonga() {
 		/* The credit text styling is designed to be as subtle as possible (small font size with leight weight text, and right aligned, and at the bottom) and fit in within your theme as much as possible by not styling colours etc */
 		/* You may however style it more gently, and/or subtly to fit in within your theme.  It is good manners to donate if you remove it */
@@ -305,6 +323,7 @@ global $amr_options;
 		.'</a></span>'
 		);
 }
+
 function amrical_mimic_meta_box($id, $title, $callback , $toggleable = true) {
 	global $screen_layout_columns;
 
@@ -324,12 +343,14 @@ function amrical_mimic_meta_box($id, $title, $callback , $toggleable = true) {
 		echo "</div></div></div></div></div>";
 
 	}
+
 function amr_check_set_debug() {  // obfuscate a bit so only admin or developer can run debug
 	if (isset($_REQUEST["debug"]) )   /* for debug and support - calendar data is public anyway, so no danger*/
 			define('ICAL_EVENTS_DEBUG', true);
 	else 	
 			define('ICAL_EVENTS_DEBUG', false);
 	}
+
 function amr_is_trying_to_help() {  // obfuscate a bit so only admin or developer can run debug, &isme=mmdd sydney time
 	$tz = timezone_open('Australia/Sydney');
 	$now = date_create('now',$tz );

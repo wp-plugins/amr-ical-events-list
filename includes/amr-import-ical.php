@@ -222,6 +222,57 @@ function amr_cache_url($url, $cache=ICAL_EVENTS_CACHE_TTL) {
 
 }
 /* ---------------------------------------------------------------------- */
+
+function amr_checkQuotedString($delimiter, $replace, $input) {  // rfc 5545 says colons, semicoln and quoted strings can/must be inside doublequotes
+	$t = $input;
+	if (stristr($t, '="'))  {	//if have '="' then have a quoted parameter value
+		// get the substring within double quotes
+		if (preg_match_all('/"([^"]+)"/', $t, $m)) { // then we got our string
+			//echo '<br />PREG ALL';var_dump ($m[0]);
+			foreach ($m[0] as $i=> $quotedstring) {
+				$s = str_replace($delimiter, $replace, $quotedstring);	
+				$t = str_replace($quotedstring, $s, $t); // swop colons only in the quoted string
+				//echo '<br />'.$i.$t;
+			}
+			
+		}
+			
+	}
+	return $t;
+}
+
+function amr_explodeByColon( $input ) { // rfc 5545 says colons, semicoln and quoted strings can/must be inside doublequotes
+// maybe only required for parameter values? else to much overhead - actually maybe only needed for attendee stuff
+// and then only if there are quoted strings
+// NOTE PARAMETER VALUES may NOT contain quotes, so can have ="
+// HOWEVER can have colon, semicolon or comma
+
+	$t = amr_checkQuotedString(':','%3A', $input) ;
+	$t = str_replace('mailto:', 'mailto ', $t);  //stop any other mailtos from exploding
+	//now we can explode by colon
+	$arr = explode(  ':', $t ); 	//else acn treat normally 
+	return $arr;
+}
+
+function amr_explodeBySemi( $input ) { // rfc 5545 says colons, semicoln and quoted strings can/must be inside doublequotes
+// maybe only required for parameter values? else to much overhead - actually maybe only needed for attendee stuff
+// and then only if there are quoted strings
+// NOTE PARAMETER VALUES may NOT contain quotes, so can have ="
+// HOWEVER can have colon, semicolon or comma
+
+	$t = amr_checkQuotedString(';','%3B', $input) ;
+	//now we can explode by colon
+	$arr = explode(  ';', $t ); 	//else acn treat normally 
+	return $arr;
+}
+
+function amr_parseParameters($properties) { // anything from name separated by semicolons until the ':'
+		//echo '<br />Properties:';var_dump($properties); 
+		$parameters = amr_explodeBYSemi ($properties);
+		//echo '<br />Parameters:';var_dump($parameters); 
+		return $parameters;
+}
+
 function amr_parseAttendees	($arraybycolon)    { /* receive full string parsed to array  */
 /*
  
@@ -239,33 +290,39 @@ NOT USING FOR NOW - INTERNAL ATTENDEES ONLY
 
 // the first one should start with ATTENDEE
 
-		$properties = $arraybycolon[0]; 
-		unset($arraybycolon[0]);
-		foreach ($arraybycolon as $next) {
-			if (strstr($next, 'mailto')) {
-				$email = amr_parseMailto($next);
-			}
+		$parameters = amr_parseParameters($arraybycolon[0]);
+		if ((!$parameters[0]) == 'ATTENDEE') { //garbage ?
+			echo '<br />Error: Bad attendee parameters <br />';
+			return false;
 		}
-		if (is_email($email)) $attendee['mailto'] = $email;
-		// some files issue mailto's with an email address
-		//ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=Common Name;X-NUM-GUESTS=0
-		$parameters = explode (';',$properties);
-
+		unset($parameters[0]);
 		foreach ($parameters as $param) {
-			if (!($param == 'ATTENDEE')) { // skip the first one
-				$parts = explode('=',$param);	
-				if (count($parts) == 2) {
-					$attendee[$parts[0]] = $parts[1];
-				}
+			$parts = explode('=',$param);	
+			if (count($parts) == 2) { //X-NUM-GUESTS=0, CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=Common Name;
+				$attendee[$parts[0]] = $parts[1];
 			}
+			else { // ignore it ? bad parameter ?
+				
+			}	
 		}
+
+		$email = amr_parseMailto(substr($arraybycolon[1],6)); 
+		if ((!empty($email) and is_email($email))) 
+			$attendee['mailto'] = $email;
+		// some files issue mailto's with an email address //201506 sometimes those mail addresses are not valid at all
+		//ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;CN=Common Name;X-NUM-GUESTS=0
+		else 
+			$attendee['text'] = $email;
+
+		// set default values
+		if (!isset($attendee['PARTSTAT'])) $attendee['PARTSTAT'] = 'NEEDS-ACTION';
 
 	return($attendee); // a single attendee
 }
 /* ---------------------------------------------------------------------- */
 function amr_parseMailto ($text) { //mailto:ovcweb@uoguelph.ca    return email
 		return (str_replace('mailto:','',$text));
-	} 
+} 
 /* ---------------------------------------------------------------------- */
 function amr_parseOrganiser($arraybysemicolon)    { /* receive full string parsed to array split by the semicolon
 	[0]=>ORGANIZER;SENT-BY="mailto
@@ -746,7 +803,7 @@ function amr_parseRDATE ($string, $tzobj ) {
 		 echo "<br />HELP cannot yet deal with RDATE with VALUE=PERIOD<br />"; return (false);
 			}
 		else {
-//			if (isset($_GET['debugexc'])) {echo '<br />*** Parsing RDATE date time ';	var_dump($rdatestring);}
+
 			if (($rdatestring[0] == 'VALUE=DATE-TIME') and (isset($rdatestring[1])))  {
 				$rdate =  explode(',',$rdatestring[1]);
 			}
@@ -844,7 +901,6 @@ function amr_parseDefault($prop, $parts) {
 			}
 	}
 
-//--------------------------------------------------------------------
 function amr_parse_property ($parts) {
 /* would receive something like array ('DTSTART; VALUE=DATE', '20060315')) */
 /*  NOTE: parts[0]    has the long tag eg: RDATE;TZID=US-EASTERN
@@ -854,11 +910,12 @@ or could be DTEND;TZID=America/New_York;VALUE=DATE-TIME:     and the date 201107
 		If no Z
 */
 global $amr_globaltz;
-	//if (isset($_REQUEST['debugcustom'])) {echo '<br />Enter parse property'; var_dump($parts);}
 
 	if (empty($parts[1])) return false; // we got crap
 	$tzobj = $amr_globaltz;  /* Because if there is no timezone specified in any way for the date time then it must a floating value, and so should be created in the global timezone.*/
 //	if (ICAL_EVENTS_DEBUG or isset($_REQUEST['tzdebug'])) {echo '<br /> Property : '.$parts[0];}
+
+
 	$p0 = explode (';', $parts[0]);  /* Looking for ; VALUE = something...;   or TZID=... or both, or more than one anyway ???*/
 	// the first bit will be the property like PRODID, or X_WR_TIMEZONE
 	// the next will be the modifiers
@@ -966,13 +1023,13 @@ function amr_parse_component($type)	{	/* so we know we have a vcalendar at lines
 
 
 	while (($amr_n < $amr_totallines)	)	{
-		//if (ICAL_EVENTS_DEBUG) {echo '<br/>parsing *** '.$type.' '.$amr_lines[$amr_n];}
 		$amr_n++;
-		$parts = explode (':', $amr_lines[$amr_n],2 ); /* explode faster than the preg, just split first : */
-		if ((!$parts) or ($parts === $amr_lines[$amr_n])) {
-			if (ICAL_EVENTS_DEBUG) echo ( '<br /> Error in line, skipping '.$amr_n.': with value:'.$amr_lines[$amr_n]);
+		$parts =	amr_explodeByColon($amr_lines[$amr_n]); // 201507
+	
+	if ((!$parts) or ($parts === $amr_lines[$amr_n])) { // ie no colon
+		//
 			}
-		else {
+		else { // ok
 			if ($parts[0] === 'BEGIN') { /* the we are starting a new sub component - end of the properties, so drop down */
 				if (in_array ($parts[1], $amr_validrepeatablecomponents)) {
 					$subarray[$parts[1]][] = amr_parse_component($parts[1]);

@@ -4,7 +4,7 @@
 	$amricaladmin = new amrical_plugin_admin();
 	
 	add_filter('plugin_action_links', 'amr_plugin_action', 8, 2);
-/* ---------------------------------------------------------------------*/	
+ 	
 function amr_plugin_action($links, $file) {
 	static $this_plugin;
 
@@ -18,7 +18,7 @@ function amr_plugin_action($links, $file) {
 
 	return $links;
 	} // end plugin_action()
-/* ---------------------------------------------------------------------*/
+ 
 function amr_ical_support_links () {
 
 
@@ -49,7 +49,7 @@ function amr_ical_support_links () {
 	echo '</div>';
 
 	}
-/* ---------------------------------------------------------------------*/	
+ 	
 function amr_get_files ($dir, $string) {
 	$dh  = opendir($dir);
 	while (false !== ($filename = readdir($dh))) {
@@ -59,7 +59,7 @@ function amr_get_files ($dir, $string) {
 	if (isset ($files)) return ($files);
 	else return (false);
 	}
-/* ---------------------------------------------------------------------*/
+
 function amr_check_timezonesettings () {
 
 	global $amr_globaltz;
@@ -116,10 +116,13 @@ function amr_check_timezonesettings () {
 		echo $now->format('r');
 		echo '</li></ul>';
 	}
-/* -------------------------------------------------------------------------------------------------------------*/
-function amr_ical_submit_buttons () {
 
-	echo '<fieldset id="submit" style="float: right; margin: 0 2em;">
+function amr_ical_submit_buttons ($resettext='') {
+
+	if (empty($resettext)) 
+		$resettext=__('Reset all listing options', 'amr-ical-events-list');
+
+	echo '<fieldset id="submit" style="float: right; margin: 0 10em;">
 				<input type="hidden" name="action" value="save" />
 				<input type="submit" class="button-primary" title="';
 	_e('Save the settings','amr-ical-events-list') ;
@@ -128,23 +131,21 @@ function amr_ical_submit_buttons () {
 	echo '" />';
 	if (isset($_GET['page'])	and ($_GET['page'] === 'manage_amr_ical')
 	and current_user_can('install_plugins')) {				
-					echo '<input type="submit" class="button" name="uninstall" title="';
-					_e('Uninstall the plugin and delete the options from the database.','amr-ical-events-list') ;
-					echo '" value="';
-					_e('Uninstall', 'amr-ical-events-list'); 
-					echo '" />';
-				}
-				
-				echo '<input type="submit" class="button" name="reset" title="';
-				_e('Warning: This will reset ALL the listing options immediately.','amr-ical-events-list') ;
-					
-				echo '" value="';
-				_e('Reset all listing options', 'amr-ical-events-list');
-				echo '" />
-				</fieldset>';
+		echo '<input type="submit" class="button" name="uninstall" title="';
+		_e('Uninstall the plugin and delete the options from the database.','amr-ical-events-list') ;
+		echo '" value="';
+		_e('Uninstall', 'amr-ical-events-list'); 
+		echo '" />';
+	}
+	
+	echo ' &nbsp;  &nbsp; <input type="submit" class="button" name="reset" title="';
+	_e('Warning: This will reset ALL the listing options immediately.','amr-ical-events-list') ;
+		
+	echo '" value="'.$resettext.'" />
+	</fieldset>';
 				
 }
-/* ---------------------------------------------------------------------*/
+ 
 function amrical_listing_options_page()  {
 	global $amr_options;
 	
@@ -195,7 +196,7 @@ function amrical_listing_options_page()  {
 		amrical_admin_footer();
 	}
 }	//end amrical_option_page
-/* ---------------------------------------------------------------------*/
+ 
 function amrical_delete_listings () {
 global $amr_options;
 
@@ -216,7 +217,7 @@ global $amr_options;
 	update_option('amr-ical-events-list', $amr_options);
 
 }
-/* ---------------------------------------------------------------------*/
+ 
 function amrical_col_headings($i) {
 	/* for component properties only */
 	global $amr_options;
@@ -243,7 +244,7 @@ function amrical_col_headings($i) {
 		echo "\n\t".'</div></fieldset>';
 		return;
 }
-/* ---------------------------------------------------------------------*/
+ 
 function amrical_calpropsoption($i) {
 	global $amr_options;
 	global $amr_csize;
@@ -267,12 +268,14 @@ function amrical_calpropsoption($i) {
 		echo "\n\t".'</div></fieldset>';
 		return;
 	}
-/* ---------------------------------------------------------------------*/
+ 
 function amrical_compropsoption($i) {
 	global $amr_options;
 	global $amr_csize;
 	
+		$inuse =	amr_whats_in_use();
 		$listtype = $amr_options['listtypes'][$i];
+		$desc = amr_set_helpful_descriptions();  	
 
 		echo '<fieldset id="comprop" class="props" >
 		<h4 class="trigger"><a href="#">';
@@ -302,17 +305,24 @@ function amrical_compropsoption($i) {
 		echo '<thead>'.$thead.'</thead>';
 		echo '<tfoot>'.$thead.'</tfoot>';
 		echo '<tbody>';
-		$desc = amr_set_helpful_descriptions();
+
 		
 		
 		//var_dump($listtype['compprop']);
 		$listtype['compprop'] = apply_filters('amr_ics_component_properties', $listtype['compprop']);  
 		// add arrays of field array('Column' => 0, 'Order' => 510, 'Before' => '', 'After' => '');
 		
+		foreach ($inuse as $f=> $bool) {
+			if (!isset($listtype['compprop'][$f])) { // we got a new field
+				$listtype['compprop'][$f] 
+					= array('Column' => 0, 'Order' => 510, 'Before' => '', 'After' => '');
+			}
+		}
+		
 		foreach ( $listtype['compprop']  as $p => $pv )  {/* for each specification, eg: p= SUMMARY  */
+			if (!empty($inuse[$p])) {
 				$text = '<em class="desc">'.(!empty($desc[$p])? $desc[$p] : '').'</em>';
 				echo "\n\t\t".'<tr style="border-bottom: 0; "><td style="border-bottom: 0; "><b>'.$p.'</b></th>';
-
 
 				foreach ( $pv as $s => $sv )  {/* for each specification eg  $s = column*/
 
@@ -327,11 +337,11 @@ function amrical_compropsoption($i) {
 				echo '</tr><tr ><td colspan="5" style="padding: 0 20px 20px; 0" >'.$text.'</td></tr>';
 				echo "\n\t\t".'</fieldset> <!-- end of layout -->';
 			}
-
+		}
 		echo "\n".'</tbody></table></div></fieldset>  <!-- end of compprop -->';
 		return;
 	}
-/* ---------------------------------------------------------------------*/
+ 
 function amrical_groupingsoption($i) {
 	global $amr_options;
 	$listtype = $amr_options['listtypes'][$i];
@@ -404,7 +414,7 @@ function amrical_groupingsoption($i) {
 	echo "\n\t".'</table></div></fieldset> <!-- end of grouping -->';
 	return;
 	}
-/* ---------------------------------------------------------------------*/
+ 
 function amrical_componentsoption($i) {
 	global $amr_options;
 
@@ -432,7 +442,7 @@ function amrical_componentsoption($i) {
 		echo "\n\t".'</div></fieldset>';
 	return ;
 	}
-/* ---------------------------------------------------------------------*/
+ 
 function amrical_limits($i) {
 	global $amr_options;
 	$listtype = $amr_options['listtypes'][$i];
@@ -455,24 +465,24 @@ function amrical_limits($i) {
 		echo "\n\t".'</div></fieldset>';
 	return ;
 	}
-/* ---------------------------------------------------------------------*/
+ 
 function amrical_admin_heading($title)  {
 	echo '<div class="wrap" id="amrical">
 		<div id="icon-options-general" class="icon32"><br />
 		</div>
-		<h2>'.$title.' '.AMR_ICAL_LIST_VERSION.'</h2>
+		<h2>'.$title.' v'.AMR_ICAL_LIST_VERSION.'</h2>
 		<form method="post" action="'
 //		.esc_url($_SERVER['PHP_SELF'])
 		.'">';
 		wp_nonce_field('amr-ical-events-list'); /* outputs hidden field */
 		;
 }
-/* ---------------------------------------------------------------------*/
+ 
 function amrical_admin_footer()  {
 	echo '</form>
 		</div>';
 }
-/* ---------------------------------------------------------------------*/
+ 
 function amrical_admin_navigation()  {
 	global $amr_options;
 	echo '<div id="listnav"  style="clear:both;">';
@@ -497,7 +507,7 @@ function amrical_admin_navigation()  {
 	}
 	echo '</div>';
 }
-/* ---------------------------------------------------------------------*/
+ 
 function amrical_validate_manage_listings()  {
 	global	$amr_options;
 
@@ -590,7 +600,7 @@ function amrical_validate_manage_listings()  {
 
 
 }
-/* ---------------------------------------------------------------------*/
+ 
 function amr_manage_listtypes_row ($listtype, $i) {
 global $calendar_preview_url;
 
@@ -668,7 +678,7 @@ global $calendar_preview_url;
 		
 		echo '</tr></tbody>';
 }
-/* ---------------------------------------------------------------------*/
+ 
 function amrical_option_page()  {
 	global $amr_options;
 	//$nonce = wp_create_nonce('amr-ical-events-list'); /* used for security to verify that any action request comes from this plugin's forms */	
@@ -703,7 +713,7 @@ function amrical_option_page()  {
 	amr_ical_general_form();
 	echo '</form></div>';
 }	//end amrical_option_page
-/* ----------------------------------------------------------------------------------- */
+
 function amrical_add_options_panel() {
 
 	global $wp_version,
@@ -727,7 +737,7 @@ function amrical_add_options_panel() {
 				}
 			add_submenu_page( $parent_slug, $page_title, $menu_title, $capability, $menu_slug, $function);
 			if (!(current_user_can('manage_event_settings'))) 
-			add_submenu_page( $parent_slug, $page_title, $menu_title, 'manage_options', $menu_slug, $function); // some sites need this
+				add_submenu_page( $parent_slug, $page_title, $menu_title, 'manage_options', $menu_slug, $function); // some sites need this
 		}
 
 		else {
@@ -742,8 +752,15 @@ function amrical_add_options_panel() {
 		$page_title = __('iCal Events Lists', 'amr-ical-events-list');
 		$menu_title = __('List types', 'amr-ical-events-list');
 		add_submenu_page( $parent_slug, $page_title, $menu_title,$capability, $menu_slug, $function);
+		
+		$function = 'amrical_choose_fields';
+		$menu_slug = 'manage_event_fields';
+		$page_title = __('iCal Fields', 'amr-ical-events-list');
+		$menu_title = __('Fields', 'amr-ical-events-list');
+		add_submenu_page( $parent_slug, $page_title, $menu_title, $capability, $menu_slug, $function);
 		amr_ical_updates_menu($parent_slug);
 }
+
 //build admin interface =======================================================
 function amr_ical_validate_general_options(){
 		global
@@ -821,7 +838,7 @@ function amr_ical_validate_general_options(){
 
 			return(true);
 	}
-/* ---------------------------------------------------------------------- */
+
 function amr_ical_validate_list_options($i)	{
 global $amr_options;
 
@@ -1014,7 +1031,7 @@ global $amr_options;
 	$result = update_option( 'amr-ical-events-list', $amr_options);
 	return($result);
 }
-	/* ---------------------------------------------------------------------*/
+	 
 function amrical_general_form ($i) {
 	global $amr_options;
 
@@ -1039,7 +1056,7 @@ function amrical_general_form ($i) {
 	return ;
 	}
 }
-		/* ---------------------------------------------------------------------*/
+		 
 function amrical_other_form ($i) {
 	global $amr_options;
 
@@ -1106,7 +1123,7 @@ function amrical_other_form ($i) {
 	return ;
 	}
 
-/* ---------------------------------------------------------------------*/
+ 
 function amr_ical_general_form() {
 	global $amr_csize,
 		$amr_calprop,
@@ -1302,7 +1319,7 @@ if (version_compare('5.3', PHP_VERSION, '>')) {
 	}
 
 
-/* ---------------------------------------------------------------------*/
+ 
 function amrical_manage_listings()  {
 	global $amr_options;
 	global $calendar_preview_url;
@@ -1385,7 +1402,7 @@ function() {
 	}
 
 
-/* -------------------------------------------------------------------------------------------------*/
+
 function amrical_formats ($i) {
 	global $amr_options;
 
@@ -1423,7 +1440,7 @@ function amrical_formats ($i) {
 	return ;
 	}
 
-/* -------------------------------------------------------------------------------------------------------------*/
+
 function amr_configure_list($i) {
 global $amr_options;
 

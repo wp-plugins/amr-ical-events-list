@@ -1,6 +1,32 @@
 <?php
 /* This is the amr-ical config section file */
 
+global	$gnu_freq_conv;
+$gnu_freq_conv = array (
+/* used to convert from ical FREQ to gnu relative items for date strings useed by php datetime to do maths */
+			'DAILY' => 'day',
+			'MONTHLY' => 'month',
+			'YEARLY' =>  'year',
+			'WEEKLY' => 'week',
+			'HOURLY' => 'hour',
+			'MINUTELY' => 'minute',
+			'SECONDLY' => 'second'
+			);
+
+global 	$amr_freq,
+		$amr_freq_unit;
+
+	$amr_freq['DAILY'] 			= __('Daily', 'amr-ical-events-list');
+	$amr_freq['WEEKLY'] 		= __('Weekly', 'amr-ical-events-list');
+	$amr_freq['MONTHLY']		= __('Monthly', 'amr-ical-events-list');
+	$amr_freq['YEARLY'] 		= __('Yearly', 'amr-ical-events-list');
+	$amr_freq['HOURLY'] 		= __('Hourly', 'amr-ical-events-list');
+	$amr_freq['RDATE'] 			= __('on certain dates', 'amr-ical-events-list');
+	$amr_freq_unit['DAILY'] 	= __('day', 'amr-ical-events-list');
+	$amr_freq_unit['WEEKLY'] 	= __('week', 'amr-ical-events-list');
+	$amr_freq_unit['MONTHLY']	= __('month', 'amr-ical-events-list');
+	$amr_freq_unit['YEARLY'] 	= __('year', 'amr-ical-events-list');
+	$amr_freq_unit['HOURLY'] 	= __('hour', 'amr-ical-events-list');
 
 function amr_ical_initialise () {
 
@@ -191,14 +217,14 @@ function amr_getTimeZone($offset) {
 	if (isset($timezones[$stroffset])) return ($timezones[$stroffset]);
 		else return false;
 	}
-	/* ---------------------------------------------------------------------------*/
+	 
 function amr_set_helpful_descriptions () { // used in the admin screen
 
 	$descriptions = array (
 	'X-WR-CALNAME'	=> '',
 	'X-WR-CALDESC'	=> '',
 	'X-WR-TIMEZONE'	=> '',
-	'icsurl'		=> '',
+	'icsurl'		=> __('The actual url of the ics file being used'),
 	'addtogoogle' 	=> __('A link to allow user to add the whole calendar to their google calendar.','amr-ical-events-list'),
 	'icalrefresh' 	=> __('A link to allow user to refetch an ics file','amr-ical-events-list'),
 	'LAST-MODIFIED' => __('The time the ics file was last modified','amr-ical-events-list'),
@@ -236,14 +262,14 @@ function amr_set_helpful_descriptions () { // used in the admin screen
 	'FREEBUSY'=> 	__('Show busy (translated) if the freebusy component is in use.','amr-ical-events-list'),
 
 //	'TRANSP'=> 		'',
-//	'declined' => 		__('Users who have declined.','amr-ical-events-list'),
-	'rsvp' => 			__('Users who have accepted.','amr-ical-events-list'),
 //	'rsvpwithcomment' => __('Form to rsvp with comment.','amr-ical-events-list'),
-	'register' => __('Add register button. Registration settings can be set as global defaults or per event.','amr-ical-events-list'),
-	'going_ornot_ormaybe' => __('Links to indicate if attending.','amr-ical-events-list'),
+
+
 	'CONTACT'=> 		__('The contact person if available.','amr-ical-events-list'),
 	'ORGANIZER'=> 		__('The author of the event.','amr-ical-events-list'),
-	'ATTENDEE'=> 		__('Users who are attending.','amr-ical-events-list'),
+	'ATTENDEE'=> 		__('Users who are attending.','amr-ical-events-list').' '
+	.__('Requires add-on for more than basics.','amr-ical-events-list'),
+	'Attendee-counts' => __('Totals of attending by participation status','amr-ical-events-list'),
 	'RECURRENCE-ID'=> 	__('The unique id of a recurrence instance or exception.','amr-ical-events-list'),
 	'RELATED-TO'=> 		'',
 	'URL'=> 			__('The events url as provided by ics file, or the wordpress event permalink.','amr-ical-events-list'),
@@ -264,12 +290,21 @@ function amr_set_helpful_descriptions () { // used in the admin screen
 	'VTODO'=> __('Todo Task Items in an ics file','amr-ical-events-list'),
 	'VJOURNAL'=> __('Journal notes in an ics file - no date or time','amr-ical-events-list'),
 
-);
+	);
+/*	foreach (array('TENTATIVE','DELEGATED','NEEDS_ACTION','DECLINED','COMPLETED','IN-PROCESS') as $status) {
+		$descriptions ['ATTENDEE-'.$status] =
+ 		__('Requires add-on.','amr-ical-events-list');
+	}
+*/
+	
+	$descriptions['register'] = __('Add register button. Registration settings can be set as global defaults or per event.','amr-ical-events-list').' '.__('Requires add-on.','amr-ical-events-list');	
+	$descriptions['going_ornot_ormaybe'] = __('Links to indicate if attending.','amr-ical-events-list').__('Requires add-on.','amr-ical-events-list');
 
-
+	$descriptions = apply_filters('amr-modify-possible-fields', $descriptions);
+	
 	return ($descriptions);
 }
-/* ---------------------------------------------------------------------------*/
+ 
 function amr_define_possible_groupings () {
 	$taxonomies = amr_define_possible_taxonomies ();
 	
@@ -289,7 +324,7 @@ function amr_define_possible_groupings () {
 			));
 	return ($amr_groupings);		
 }
-/* ---------------------------------------------------------------------------*/
+ 
 function amr_define_possible_taxonomies () {
 	// check if we have any taxonomies that we may wish to assign an event to
 	$taxonomies = get_taxonomies();
@@ -299,7 +334,7 @@ function amr_define_possible_taxonomies () {
 		}
 	return ($eventtaxonomies);	
 }
-/* ---------------------------------------------------------------------------*/
+ 
 function amr_set_defaults_for_datetime() {
 	global $amr_globaltz;
 	global $ical_timezone;
@@ -327,7 +362,7 @@ function amr_set_defaults_for_datetime() {
 	}
 	$ical_timezone = $amr_globaltz;  // usedin amr-events aand to save the global tz if it changes do to event timezone use
 }
-/* ---------------------------------------------------------------------------*/
+
 function amr_set_defaults() {
 	global $amr_calprop;
 	global $amr_colheading;
@@ -396,6 +431,7 @@ function amr_set_defaults() {
 			"days" 		=> 90,
 			"cache" 	=> 24, /* hours */
 			"eventscache" => 0.5);  // must not set start here
+			
 	$amr_components = array (
 			"VEVENT" 	=> true,
 			"VTODO" 	=> true,
@@ -495,8 +531,10 @@ function amr_set_defaults() {
 			'CONTACT'=> 		array('Column' => 0, 'Order' => 350, 'Before' => '', 'After' => ''),
 			'ORGANIZER'=> 		array('Column' => 0, 'Order' => 360, 'Before' => '', 'After' => ''),
 			'ATTENDEE'=> 		array('Column' => 0, 'Order' => 370, 'Before' => '', 'After' => ''),
+			'Attendee-counts'=> array('Column' => 0, 'Order' => 380, 'Before' => '', 'After' => ''),
 			'RECURRENCE-ID'=> 	$dfalse,
 			'RELATED-TO'=> 		$dfalse,
+			//'TEST' => $dfalse,
 			'URL'=> 			array('Column' => 0, 'Order' => 150,
 				'Before' => '',
 				'After' => ''),
@@ -546,22 +584,10 @@ function amr_set_defaults() {
 				$amr_options['listtypes'][$i] = customise_listtype( $i);  /* then tweak */
 			}
 	
-//		add_option('amr-ical-events-list', $amr_options);  // hmm what to do - if we autosave, then they do noyt ickup new defaults automatically
+//		add_option('amr-ical-events-list', $amr_options);  // hmm what to do - if we autosave, then they do not pickup new defaults automatically
 			
 }
-/* -------------------------------------------------------------------------------------------------------------*/
-function amr_ical_showmap ($text) { /* the address text */
-	global $amr_options;
-		$t1 = __('Show in Google map','amr-ical-events-list');
-		if (isset ($amr_options['no_images']) and $amr_options['no_images']) $t3 = $t1;
-		else $t3 = '<img src="'.IMAGES_LOCATION.MAPIMAGE.'" alt="'.	$t1	.'" class="amr-bling" />';
-	/* this is used to determine what should be done if a map is desired - a link to google behind the text ? or some thing else  */
 
-	return('<a class="hrefmap" href="http://maps.google.com/maps?q='
-		.str_replace(' ','%20',($text)).'" target="_BLANK"'   //google wants unencoded
-		.' title="'.__('Show location in Google Maps','amr-ical-events-list').'" >'.$t3.'</a>');
-	}
-/* -------------------------------------------------------------------------------------------------------------*/
 /* This is used to tailor the multiple default listing options offered.  A new listtype first gets the common default */
 function customise_listtype($i)	{ /* sets up some variations of the default list type*/
 	global $amr_options;
@@ -963,7 +989,7 @@ function customise_listtype($i)	{ /* sets up some variations of the default list
 
 	return ( $amr_options['listtypes'][$i]);
 }
-/* ---------------------------------------------------------------------*/
+ 
 function new_listtype()	{
 	global $amr_calprop,
 	$amr_colheading,
@@ -989,7 +1015,7 @@ function new_listtype()	{
 	);
 	return $amr_newlisttype;
 	}
-/* ---------------------------------------------------------------------*/
+
 function Quarter ($D)
 { 	/* Quarters can be complicated.  There are Tax and fiscal quarters, and many times the tax and fiscal year is different from the calendar year */
 	/* We could have used the function commented out for calendar quarters. However to allow for easier variation of the quarter definition. we used the limits concept instead */
@@ -1004,7 +1030,7 @@ function Traditional_Season ($D)
 {return date_season('Traditional', $D);  }
 function Western_Zodiac ($D){
 return date_season('Zodiac', $D);  }
-/* ---------------------------------------------------------------------*/
+
 function date_season ($type='Meteorological',$D) {
 	/* Receives ($Dateobject and returns a string with the Meterological season by default*/
 	/* Note that the limits must be defined on backwards order with a seemingly repeated entry at the end to catch all */
@@ -1076,20 +1102,8 @@ function date_season ($type='Meteorological',$D) {
 	   }
    }
 }
-/*----------------------------------------------------------------------------------------*/
-global	$gnu_freq_conv;
-$gnu_freq_conv = array (
-/* used to convert from ical FREQ to gnu relative items for date strings useed by php datetime to do maths */
-			'DAILY' => 'day',
-			'MONTHLY' => 'month',
-			'YEARLY' =>  'year',
-			'WEEKLY' => 'week',
-			'HOURLY' => 'hour',
-			'MINUTELY' => 'minute',
-			'SECONDLY' => 'second'
-			);
 
-/* ------------------------------------------------------------------------------------------------------ */
+
 function amr_getset_options ($reset=false) {
 	/* get the options from wordpress if in wordpress
 	if no options, then set defaults */
@@ -1112,6 +1126,7 @@ function amr_getset_options ($reset=false) {
 	else  {/* *First setup the default config  */
 /* general config */
 		$amr_options = get_option('amr-ical-events-list');
+		
 		if (!empty($amr_options)) { 
 			$alreadyhave = true;
 			//if had one global option, now split into separate ?
@@ -1138,8 +1153,7 @@ function amr_getset_options ($reset=false) {
 				_e(' Converting option key to lowercase','amr-ical-events-list');
 			}
 		}
-
-		}
+	}
 	if (!(isset($alreadyhave)) or (!$alreadyhave) ) 
 		amr_set_defaults(); 
 	
@@ -1148,7 +1162,7 @@ function amr_getset_options ($reset=false) {
 	}
 	return ($amr_options);
 	}
-//----------------------------------------------	
+
 function amr_ical_apply_version_upgrades ($prev_version) {
 global $amr_options;
 
@@ -1171,7 +1185,7 @@ global $amr_options;
 	// later delete the old multiple options and resave as one for reduced db queries 
 
 }	
-//----------------------------------------------  temp adjust
+
 function amr_remove_array_level ($compprop) {
 	$newcompprop = array();
 	foreach ($compprop as $g => $v) { // remove one level
@@ -1182,19 +1196,6 @@ function amr_remove_array_level ($compprop) {
 
 	return($newcompprop);
 }
-//---------------------------------------------- 
-	global 	$amr_freq,
-		$amr_freq_unit;
 
-	$amr_freq['DAILY'] 			= __('Daily', 'amr-ical-events-list');
-	$amr_freq['WEEKLY'] 		= __('Weekly', 'amr-ical-events-list');
-	$amr_freq['MONTHLY']		= __('Monthly', 'amr-ical-events-list');
-	$amr_freq['YEARLY'] 		= __('Yearly', 'amr-ical-events-list');
-	$amr_freq['HOURLY'] 		= __('Hourly', 'amr-ical-events-list');
-	$amr_freq['RDATE'] 			= __('on certain dates', 'amr-ical-events-list');
-	$amr_freq_unit['DAILY'] 	= __('day', 'amr-ical-events-list');
-	$amr_freq_unit['WEEKLY'] 	= __('week', 'amr-ical-events-list');
-	$amr_freq_unit['MONTHLY']	= __('month', 'amr-ical-events-list');
-	$amr_freq_unit['YEARLY'] 	= __('year', 'amr-ical-events-list');
-	$amr_freq_unit['HOURLY'] 	= __('hour', 'amr-ical-events-list');
+
 ?>

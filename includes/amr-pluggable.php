@@ -1,6 +1,6 @@
 <?php /* Pluggable functions that need to be loaded after the theme so that a theme functions.php can override
 */
-/* --------------------------------------------------  */
+ 
 
 if (!function_exists("nl2br2")) {
 	function nl2br2($string) {
@@ -15,14 +15,28 @@ if (!function_exists("nl2br2")) {
 	return($s2);
 	}
 }
-// ---------------------------------------------------------------
+
+if (!function_exists('amr_ical_showmap')) {
+	function amr_ical_showmap ($text) { /* the address text */
+		global $amr_options;
+			$t1 = __('Show in Google map','amr-ical-events-list');
+			if (isset ($amr_options['no_images']) and $amr_options['no_images']) $t3 = $t1;
+			else $t3 = '<img src="'.IMAGES_LOCATION.MAPIMAGE.'" alt="'.	$t1	.'" class="amr-bling" />';
+		/* this is used to determine what should be done if a map is desired - a link to google behind the text ? or some thing else  */
+
+		return('<a class="hrefmap" href="http://maps.google.com/maps?q='
+			.str_replace(' ','%20',($text)).'" target="_BLANK"'   //google wants unencoded
+			.' title="'.__('Show location in Google Maps','amr-ical-events-list').'" >'.$t3.'</a>');
+	}
+}
+	
 if (!function_exists('amr_events_sort_later_events_first')) {
 	function amr_events_sort_later_events_first($constrained) {
 		$constrained = amr_reverse_sort_by_key($constrained , 'EventDate');
 		return ($constrained);
 	}
 }
-// ---------------------------------------------------------------
+
 if (!function_exists('amr_events_exclude_in_progress')) {
 	function amr_events_exclude_in_progress($constrained) { // exclude any events that started before the start date
 		global $amr_limits;
@@ -34,13 +48,13 @@ if (!function_exists('amr_events_exclude_in_progress')) {
 		return ($constrained);
 	}
 }
-// ---------------------------------------------------------------
+
 if (!function_exists('amr_register_for_event')) {
 	function amr_register_for_event() {
 		return ("Register!");
 	}
 }
-// ----------------------------------------------------------------------------------------
+ 
 if (!function_exists('amr_handle_no_events')) {
 	function amr_handle_no_events () {
 		global $amr_options,
@@ -63,7 +77,7 @@ if (!function_exists('amr_handle_no_events')) {
 		return ($thecal);
 	} // end function
 }
-// ----------------------------------------------------------------------------------------
+ 
 if (!function_exists('amr_human_time')) {
 	function amr_human_time ($time) {
 		if ($time == '000000') return (__('midnight', 'amr-ical-events-list'));  // to avoid am/pm confusion, note midnight is start of day
@@ -71,7 +85,7 @@ if (!function_exists('amr_human_time')) {
 		else return ($time);
 	}
 }
-// ----------------------------------------------------------------------------------------
+ 
 if (!function_exists('amrical_calendar_views')) {
 function amrical_calendar_views () {
 	global $amr_limits;
@@ -127,7 +141,7 @@ function amrical_calendar_views () {
 		return ('');
 }
 }
-// ----------------------------------------------------------------------------------------
+ 
 if (!function_exists('amr_month_year_navigation')) {
 function amr_month_year_navigation ($start) { //note get is faster than post
 global $amr_listtype;
@@ -140,7 +154,7 @@ global $amr_listtype;
 			.'</form>');
 }
 }
-// ----------------------------------------------------------------------------------------
+ 
 if (!function_exists('amr_week_links')) {
 function amr_week_links ($start,$weeks) { // returns array ($nextlink, $prevlink,
 
@@ -177,7 +191,7 @@ function amr_week_links ($start,$weeks) { // returns array ($nextlink, $prevlink
 	return (array('prevlink'=>$prevlink,'nextlink'=>$nextlink));
 }
 }
-// ----------------------------------------------------------------------------------------
+ 
 if (!function_exists('amr_month_year_links')) {
 function amr_month_year_links ($start,$months) { // returns array ($nextlink, $prevlink, $dropdown
 
@@ -220,7 +234,7 @@ function amr_month_year_links ($start,$months) { // returns array ($nextlink, $p
 	return (array('prevlink'=>$prevlink,'nextlink'=>$nextlink));
 }
 }
-// ----------------------------------------------------------------------------------------
+ 
 if (!function_exists('amr_monthyeardrop_down')) {
 function amr_monthyeardrop_down($current_start) {
 global $wp_locale;
@@ -247,7 +261,7 @@ global $wp_locale;
 	return($html);
 }
 }
-// ----------------------------------------------------------------------------------------
+ 
 if (!function_exists('amr_calendar_navigation')) {
 function amr_calendar_navigation($start, $months, $weeks, $liststyle, $views='') {
 
@@ -273,7 +287,7 @@ function amr_calendar_navigation($start, $months, $weeks, $liststyle, $views='')
 		//------------------------end navigation-----------
 }
 }
-/* --------------------------------------------------  */
+ 
 if (!function_exists('amr_weeks_caption')) {
 	function amr_weeks_caption($start) {
 	// do not just want to use day format here, as may be too concise and week format cannot handle the start date, and there is no universal consistency on the week number logic
@@ -286,7 +300,7 @@ if (!function_exists('amr_weeks_caption')) {
 		return($calendar_caption);
 	}
 }
-/* --------------------------------------------------  */
+ 
 if (!function_exists('amr_semi_paginate')) {
 function amr_semi_paginate() {
  	global $amr_limits;
@@ -397,13 +411,13 @@ function amr_semi_paginate() {
 		);
 	}
 }
-/* -------------------------------------------------------------------------------------------*/
+
 if (!function_exists('amr_format_CID'))  {
 	function amr_format_CID ($cid, $event) {
 		return ($cid);
 	}
 }
-/* -------------------------------------------------------------------------*/
+
 if (!function_exists('amr_mimic_taxonomies')) { // only called if we have an ics file
 	function amr_mimic_taxonomies ($ical) {  // check if there is anything in the query url and only accept matches
 
@@ -435,71 +449,7 @@ if (!function_exists('amr_mimic_taxonomies')) { // only called if we have an ics
 		//foreach ($ical )
 
 }
-/* --------------------------------------------------------- */
-if (!function_exists('amr_format_attendees') ) {
-	function amr_format_attendees ($attendees) {/* receive array of hopefully attendess[] CN and MAILTO, and possibly other */
-	
-	amr_sort_by_two_cols ('PARTSTAT', 'CN', $attendees); // sort by participaton status, may include all
-	
-	$text = '';
 
-	if (is_array($attendees))
-		foreach ($attendees as $i => $attendee) {
-			$list[] = amr_format_attendee ($attendee);
-		}
-
-	if (!empty($list)) {
-		$text = implode (', ',$list);
-	}
-	return($text);
-	}
-}
-/* --------------------------------------------------------- */
-if (!function_exists('amr_format_PARTSTAT') ) {
-	function amr_format_PARTSTAT ($participation_status, $attendee) {
-		$text = '';
-		switch ($participation_status) {
-			case 'ACCEPTED': $text = $text. ' &#10004;'; break;
-			case 'DECLINED': $text = $text. ' &#10008;'; break;
-			case 'TENTATIVE': $text = $text. ' ?'; break;
-			case 'DELEGATED': $text = $text. ' &rarr;'; break;
-			case 'NEEDS-ACTION': $text = $text. ' &quest;'; break;
-			}
-		return ($text);	
-	}
-}
-/* --------------------------------------------------------- */
-if (!function_exists('amr_format_attendee') ) {
-	function amr_format_attendee ($attendee) {  // do not show emails for privacy reasons
-// array could have 
-//CUTYPE=INDIVIDUAL
-//ROLE=REQ-PARTICIPANT
-//PARTSTAT=ACCEPTED or PARTSTAT=NEEDS-ACTION  Participation status
-// "ACCEPTED" ,"DECLINED","TENTATIVE", "DELEGATED
-//X-NUM-GUESTS=0
-//CN=Common name
-//DELEGATED-FROM="mailto:bob@example.com
-//SENT-BY=mailto:jan_doe@example.com
-
-	if (!empty ($attendee['CN'])) {
-		if (!empty  ($attendee['LINK']))  // internal representation , not spec
-		$text = '<a href="'.$attendee['LINK'].'" >'.$attendee['CN'].'</a>';
-		else $text = $attendee['CN'];
-	}
-	else { // we  have no name
-		if (is_array($attendee)) 
-			$text= implode(', ', $attendee);
-		else 
-			$text = $attendee;
-	}
-	if (!empty($attendee['PARTSTAT'])) {
-		$text .= amr_format_PARTSTAT ($attendee['PARTSTAT'], $attendee);
-	}
-
-	return ($text);
-	}
-}
-/* -------------------------------------------------------------------------------------------*/
 if (!function_exists ('amr_ical_showmap')) {
 	function amr_ical_showmap ($text) { /* the address text */
 	global $amr_options;
@@ -513,14 +463,14 @@ if (!function_exists ('amr_ical_showmap')) {
 		.' title="'.__('Show location in Google Maps','amr-ical-events-list').'" >'.$t3.'</a>');
 	}
 }
-/* --------------------------------------------------------- */
-/*if (!function_exists('amr_format_allday')) {
+
+if (!function_exists('amr_format_allday')) {
 	function amr_format_allday ($content) {
 			if ($content == 'allday') return (__('all day', 'amr-ical-events-list'));
 		else return ('');
 	}
 }
-/* -------------------------------------------------------------------------------------------*/
+ 
 if (!function_exists('amr_format_attach'))  {
 	function amr_format_attach ($item, $event) {  // receive 1 attachment each being an array of type, url, binary (opt)
 
@@ -592,7 +542,7 @@ if (!function_exists('amr_format_attach'))  {
 		if (!empty($hrefhtml)) return ($hrefhtml);
 	}
 }
-/* -------------------------------------------------------------------------------------------*/
+ 
 if (!function_exists('amr_format_url'))  {
 	function amr_format_url ($url) {
 	// to be used to format the ics file event url - assumed to be valid
@@ -606,21 +556,7 @@ if (!function_exists('amr_format_url'))  {
 		return($url);
 	}
 }
-/* -------------------------------------------------------------------------------------------*/
-if (!function_exists('amr_format_binary'))  {
-	function amr_format_binary ($name,$binary) {
-// getting error - data not in recognised format in the binary, so skip for now till someone wants it
-		return null;
-				$im = imagecreatefromstring($binary);
-				$filename = ICAL_EVENTS_CACHE_LOCATION.'/ical-events-cache/'.$name.'.jpg';
-				// Save the image as 'simpletext.jpg'
-				imagejpeg($im, $filename);
-				$uploads = wp_upload_dir();
-				$url = $uploads[base_url].'/ical-events-cache/'.$name;
-				return($url);
-	}
-}
-/* --------------------------------------------------------- */
+
 if (!function_exists('amr_format_allday') ) {
 	function amr_format_allday ($content) {
 		if ($content == 'allday')
@@ -628,7 +564,7 @@ if (!function_exists('amr_format_allday') ) {
 		else return ('');
 	}
 }
-/* ------------------------------------------------------------------------------------*/
+
 if (!function_exists('amr_format_taxonomy_link') ) {  //problem ics file categories are string not array ? so skip?
 	function amr_format_taxonomy_link ($tax_name, $tax_term, $link='') {  // will receive id
 	// if in widget should link to calendar page
@@ -671,7 +607,7 @@ if (!function_exists('amr_format_taxonomy_link') ) {  //problem ics file categor
 	return ($html);
 	}
 }
-/* ------------------------------------------------------------------------------------*/
+ 
 if (!function_exists('amr_format_taxonomies') ) {  //problem ics file categories are string not array ? so skip?
 	function amr_format_taxonomies ($tax_name, $tax_array, $link='' ) {
 
@@ -691,7 +627,7 @@ if (!function_exists('amr_format_taxonomies') ) {  //problem ics file categories
 	return( $html);
 	}
 }
-/* --------------------------------------------------  */
+ 
 if (!function_exists('amr_derive_calprop_further')) {
 	function amr_derive_calprop_further (&$p) {
 		global $amr_options;
@@ -743,7 +679,7 @@ if (!function_exists('amr_derive_calprop_further')) {
 		return ($p);
 	}
 }
-/* --------------------------------------------------------- */
+ 
 if (!function_exists('amr_derive_summary')) {
 	function amr_derive_summary (&$e ) {
 		global $amr_options;
@@ -836,7 +772,7 @@ if (!function_exists('amr_derive_summary')) {
 		return( $e_summ );
 	}
 }
-/*--------------------------------------------------------------------------------*/
+ 
 if (!function_exists('add_cal_to_google')) {
 	function add_cal_to_google($cal) {
 	global $amr_options;
@@ -850,7 +786,7 @@ if (!function_exists('add_cal_to_google')) {
 		'<a class= "amr-bling addtogoogle" href="http://www.google.com/calendar/render?cid='.html_entity_decode($cal).'" target="_blank"  title="'.$text1.'">'.$text2.'</a>');
 	}
 }
-/*--------------------------------------------------------------------------------*/
+ 
 if (!function_exists('add_event_to_google')) {
 	function add_event_to_google($e) {
 	global $amr_options;
@@ -889,7 +825,7 @@ if (!function_exists('add_event_to_google')) {
 		return ($html);/* Note google only allows simple html*/
 	}
 }
-/* --------------------------------------------------  */
+ 
 if (!function_exists('amr_show_refresh_option')) {
 	function amr_show_refresh_option() {
 	global $amr_globaltz, $amr_lastcache, $amr_options, $amr_last_modified;
@@ -914,7 +850,7 @@ if (!function_exists('amr_show_refresh_option')) {
 		return ( '<a class="refresh amr-bling" href="'.htmlentities($uri).'" title="'.$text.' '.$text2.'">'.$t3.'</a>');
 	}
 }
-/* --------------------------------------------------  */
+ 
 if (!function_exists('amr_list_properties')) {
 	function amr_list_properties($icals, $tid, $class) {  /* List the calendar properties if requested in options  */
 	global $amr_options,
@@ -1016,7 +952,7 @@ if (!function_exists('amr_list_properties')) {
 	return ($html);
 }
 }
-/* -------------------------------------------------------------------------------------------*/
+/*  -------------------------------------------------------------------------------- */
 if (!function_exists('amr_format_grouping') ) {
 	function amr_format_grouping ($grouping, $datestamp) {
 	/* check what the format for the grouping should be, call functions as necessary*/
@@ -1045,7 +981,7 @@ if (!function_exists('amr_format_grouping') ) {
 		}
 	}
 }
-/* --------------------------------------------------  */
+ 
 if (!function_exists('amr_get_html_structure') ) {
 function amr_get_html_structure($amr_liststyle, $no_cols) {
 	if ($amr_liststyle === 'custom') {  // get the stored file uirl, if it does not exist, set to table
@@ -1209,7 +1145,7 @@ function amr_get_html_structure($amr_liststyle, $no_cols) {
 	return ($htm);
 }
 }
-/* --------------------------------------------------  */
+ 
 if (!function_exists('amr_list_events') ) {
 function amr_list_events($events,  $tid, $class, $show_views=true) {
 	global $wp_locale,
@@ -1358,7 +1294,7 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 	}
 
 }
-/* --------------------------------------------------  */
+ 
 if (!function_exists('amr_show_more_prev')) {
 // coming later maybe, or will mods to look more be adequate?
 // - show 'more' on page 2 onwards
@@ -1367,7 +1303,7 @@ if (!function_exists('amr_show_more_prev')) {
 	function amr_show_more_prev() {
 	 }
 }
-/* --------------------------------------------------  */
+ 
 if (!function_exists('amr_show_look_more')) {  // does a google style next
 function amr_show_look_more() {
  	global $amr_limits,
@@ -1455,29 +1391,7 @@ function amr_show_look_more() {
 		);
 	}
 }
-/* --------------------------------------------------------- */
-if (!function_exists('amr_format_organiser')) {
-	function amr_format_organiser ($org) {/* receive array of hopefully CN and MAILTO, and possibly SENTBY */
-	//	If (ICAL_EVENTS_DEBUG) {echo '<br />Organiser array:    '; var_dump($org);}
-		$text = '';
-	//	if (!(is_array($org))) $org = amr_parseOrganiser('ORGANIZER;'.$org);  // may not have been parsed yet (eg in wp events)
-	//	var_dump($org);
-		if (!empty ($org['CN'])) {
-			if (!empty  ($org['MAILTO']))
-			$text = '<a href="mailto:'.$org['MAILTO'].'" >'.$org['CN'].'</a>';
-			else $text = $org['CN'];
-		}
-		else {
-			if (!empty  ($org['MAILTO'])) $text = '<a href="mailto:'.$org['MAILTO'].'" >'.$org['MAILTO'].'</a>';
-		}
-		if (!empty ($text)) $text .= '&nbsp;';
-		if (!empty ($org['SENT-BY'])) {
-			$text .= __('Sent by ','amr-ical-events-list').'<a href="mailto:'.$org['SENT-BY'].'" >'.$org['SENT-BY'].'</a>';
-		}
-		return($text);
-	}
-}
-/* -------------------------------------------------------- */
+
 if (!function_exists('amr_parseModifiers')) {   
 	function amr_parseModifiers($text)    {  
 /* NAME="Contact Name";ID=28380;TYPE=SingleLine		
@@ -1500,7 +1414,7 @@ if (!function_exists('amr_parseModifiers')) {
 
     }
 }	
-/* -------------------------------------------------------- */
+ 
 if (!function_exists('amr_format_repeatable_property')) {
 function amr_format_repeatable_property ($content, $k, $event, $before='', $after='') {
 // for properties that can have multiple values and for which we have received an array of those values, we need to do the format routine for each value
@@ -1514,7 +1428,7 @@ function amr_format_repeatable_property ($content, $k, $event, $before='', $afte
 	return ($c);
 }
 }
-/* --------------------------------------------------------- */
+ 
 if (!function_exists('amr_format_value')) {
 	function amr_format_value ($content, $k, $event, $before='', $after='') { /* include the event so we can check for things like all day */
 	/*  Format each Ical value for our presentation purposes
@@ -1532,9 +1446,12 @@ if (!function_exists('amr_format_value')) {
 		if ($k == 'ORGANIZER') 	{ // it is an array but a parsed one, not repeatable
 			$htmlcontent = amr_format_organiser ($content);
 			}
-		elseif ($k == 'ATTENDEE') 	{
+		elseif ($k == 'ATTENDEE') 	{ // it is an array but a parsed one, not repeatable
 			$htmlcontent = amr_format_attendees ($content);
 			}
+		elseif ($k == 'Attendee-counts') 	{ // it is an array but we format the whole thing once
+			$htmlcontent = amr_format_attendee_counts ($content);
+			}	
 		else if (is_object($content)) {
 			switch ($k){
 				case 'EventDate': {
@@ -1693,7 +1610,7 @@ if (!function_exists('amr_format_value')) {
 
 	}
 }
-/* ------------------------------------------------------------------------------------*/
+ 
 if (!function_exists('amr_wp_format_date')) {
 function amr_wp_format_date( $format, $datestamp, $gmttf) { /* want a  integer timestamp or a date object  */
 
@@ -1725,7 +1642,7 @@ function amr_wp_format_date( $format, $datestamp, $gmttf) { /* want a  integer t
 		}
 }
 }
-/* ------------------------------------------------------------------------------------*/
+ 
 if (!function_exists('amr_show_in_events_timezone')) {
 	function amr_show_in_events_timezone( $amr_globaltz, $e) {  
 	// if we are here, then we want to change global tz to this events tz, change for each event if the event has a tz
@@ -1743,7 +1660,7 @@ if (!function_exists('amr_show_in_events_timezone')) {
 	return ($amr_globaltz);	
 	}
 }
-/* ------------------------------------------------------------------------------------*/
+ 
 if (!function_exists('amr_decide_display_timezone')) {
 	function amr_decide_display_timezone($e) {  // if we want to display event timezones only, then set the global tz here for each event
 	global $amr_globaltz;	
@@ -1751,7 +1668,6 @@ if (!function_exists('amr_decide_display_timezone')) {
 		$amr_globaltz = apply_filters('amr_show_in_events_timezone', $amr_globaltz, $e, 2);
 	}
 }
-/* ------------------------------------------------------------------------------------*/	
 
 if (!function_exists('amr_format_time')) {
 function amr_format_time( $format, $datestamp) { /* want a  integer timestamp or a date object  */
@@ -1768,7 +1684,7 @@ global 	$amr_globaltz;
 		return (amr_format_date( $format, $datestamp))	;
 }
 }
-/* -------------------------------------------------------------------------------------------*/
+
 if (!function_exists('amr_format_date')) {
 function amr_format_date( $format, $datestamp) { /* want a  integer timestamp or a date object  */
 global 	$amr_options,
@@ -1799,7 +1715,7 @@ global 	$amr_options,
 		}
 }
 }
-/*--------------------------------------------------------------------------------*/
+ 
 if (!function_exists('amr_format_duration')) {
 function amr_format_duration ($arr) {
 	/* receive an array of hours, min, sec */
@@ -1849,7 +1765,7 @@ function amr_format_duration ($arr) {
 	return($d);
 	}
 }
-/* --------------------------------------------------------- */
+ 
 if (!function_exists('amr_format_tz')) {  // this is the change timezone icon in the header
 function amr_format_tz ($tzstring) {
 global $amr_globaltz, $amr_options;
@@ -1874,7 +1790,7 @@ global $amr_globaltz, $amr_options;
 		.$text2.'" >'.$t3.' </a>');
 }
 }
-/* --------------------------------------------------------- */
+ 
 if (!function_exists('amr_format_timezone')) {  // this is the change timezone icon in the header
 function amr_format_timezone ($tzobj) {
 global $amr_options;
@@ -1886,10 +1802,225 @@ global $amr_options;
 	return ($tzstring);
 }
 }
-/* ------------------------------------------------------------------------------------*/
+ 
 if (!function_exists('adebug')) {  // we are loading late, so hope fully this should be fine - don't want top long a name
 	function adebug( $text, $whattodebug=true) {
 		if ((isset ($_REQUEST['debug']) ) and ($_REQUEST['debug'] == $whattodebug))
 			echo $text;
+	}
+}
+ 
+if (!function_exists('amr_format_binary'))  {  // amr maybe move to plus ?
+	function amr_format_binary ($name,$binary) {
+// getting error - data not in recognised format in the binary, so skip for now till someone wants it
+		return null;
+				$im = imagecreatefromstring($binary);
+				$filename = ICAL_EVENTS_CACHE_LOCATION.'/ical-events-cache/'.$name.'.jpg';
+				// Save the image as 'simpletext.jpg'
+				imagejpeg($im, $filename);
+				$uploads = wp_upload_dir();
+				$url = $uploads[base_url].'/ical-events-cache/'.$name;
+				return($url);
+	}
+}
+
+if (!function_exists('amr_format_organiser')) {
+	function amr_format_organiser ($org) {/* receive array of hopefully CN and MAILTO, and possibly SENTBY */
+	//	If (ICAL_EVENTS_DEBUG) {echo '<br />Organiser array:    '; var_dump($org);}
+		$text = '';
+	//	if (!(is_array($org))) $org = amr_parseOrganiser('ORGANIZER;'.$org);  // may not have been parsed yet (eg in wp events)
+	//	var_dump($org);
+		if (!empty ($org['CN'])) {
+			if (!empty  ($org['MAILTO']))
+			$text = '<a href="mailto:'.$org['MAILTO'].'" >'.$org['CN'].'</a>';
+			else $text = $org['CN'];
+		}
+		else {
+			if (!empty  ($org['MAILTO'])) $text = '<a href="mailto:'.$org['MAILTO'].'" >'.$org['MAILTO'].'</a>';
+		}
+		if (!empty ($text)) $text .= '&nbsp;';
+		if (!empty ($org['SENT-BY'])) {
+			$text .= __('Sent by ','amr-ical-events-list').'<a href="mailto:'.$org['SENT-BY'].'" >'.$org['SENT-BY'].'</a>';
+		}
+		return($text);
+	}
+}
+/*
+= "ROLE" "="
+                   ("CHAIR"             ; Indicates chair of the
+                                        ; calendar entity
+                  / "REQ-PARTICIPANT"   ; Indicates a participant whose
+                                        ; participation is required
+                  / "OPT-PARTICIPANT"   ; Indicates a participant whose
+                                        ; participation is optional
+                  / "NON-PARTICIPANT"   ; Indicates a participant who
+                                        ; is copied for information
+                                        ; purposes only
+                  / x-name              ; Experimental role
+                  / iana-token)         ; Other IANA role
+       ; Default is REQ-PARTICIPANT
+	   
+"PARTSTAT"  = ("NEEDS-ACTION"    ; Event needs action
+                        / "ACCEPTED"         ; Event accepted
+                        / "DECLINED"         ; Event declined
+                        / "TENTATIVE"        ; Event tentatively
+                                             ; accepted
+                        / "DELEGATED"        ; Event delegated
+                        / x-name             ; Experimental status
+                        / iana-token)        ; Other IANA-registered
+                                             ; status
+       ; These are the participation statuses for a "VEVENT".
+       ; Default is NEEDS-ACTION.
+RSVPPurpose:  To specify whether there is an expectation of a favor of a
+      reply from the calendar user specified by the property value.
+       rsvpparam = "RSVP" "=" ("TRUE" / "FALSE")
+       ; Default is FALSE
+	   
+	   "CUTYPE" "="
+                          ("INDIVIDUAL"   ; An individual
+                         / "GROUP"        ; A group of individuals
+                         / "RESOURCE"     ; A physical resource
+                         / "ROOM"         ; A room resource
+                         / "UNKNOWN"      ; Otherwise not known
+                         / x-name         ; Experimental type
+                         / iana-token)    ; Other IANA-registered
+                                          ; type
+       ; Default is INDIVIDUAL
+	   
+	   
+	   
+ SENT-BY	   
+ DELEGATED-FROM
+ DELEGATED-TO
+ MEMBER
+ DIR 
+ ORGANIZER;DIR="ldap://example.com:6666/o=ABC%20Industries,
+        c=US???(cn=Jim%20Dolittle)":mailto:jimdo@example.com
+
+*/
+
+if (!function_exists('amr_format_attendee_counts ')) {
+	function amr_format_attendee_counts ($status) {
+		//var_dump($status);
+		$text = array();
+		$stattext = array(  
+			'ACCEPTED'=>'&#10004;'
+			,'TENTATIVE' => '?'
+			,'DELEGATED' => '&rarr;&#10004;'
+			,'NEEDS_ACTION' => '&quest;'
+			,'DECLINED' => '&#10008;'
+			,'COMPLETED' => '&#10004;'
+			,'IN-PROCESS' => '~');
+		foreach ($status as $s => $n) {	
+			if (!empty($n)) {
+				$text[] = '<span class="'.$s.'">'.$stattext[$s].' ('.$n.')</span>';
+			}
+		}
+		return implode(' &nbsp; ',$text);
+	}
+}
+
+if (!function_exists('amr_derive_attendee_counts')) {  // given array of attendees 
+	function amr_derive_attendee_counts($attendees) {
+		$text = '';
+
+		$status = array(); //'ACCEPTED','TENTATIVE','DELEGATED','NEEDS_ACTION','DECLINED','COMPLETED','IN-PROCESS'
+		if (is_array($attendees)) {
+			// How should they be sorted ? 
+			// CN alpha? or email alpha or by part stat? or role ?
+			//amr_sort_by_two_cols ('ROLE', 'CN', $attendees); // sort by participaton status, may include all
+		
+			foreach ($attendees as $i => $attendee) {
+				if (empty($attendee['PARTSTAT'])) {
+					if (empty($status['NEEDS-ACTION'])) // the default
+						$status['NEEDS-ACTION'] = 1;
+					else 
+						$status['NEEDS-ACTION']++;  // RFC 5545 default
+				}
+				else {
+	 // add count
+					if (empty($status[$attendee['PARTSTAT']])) 
+						$status[$attendee['PARTSTAT']] = 1;
+					else 
+						$status[$attendee['PARTSTAT']]++;
+				}
+			}
+		}
+		return $status;
+	}	
+}
+
+if (!function_exists('amr_format_attendees') ) {
+	function amr_format_attendees ($attendees) {/* receive array of hopefully attendess[] CN and MAILTO, and possibly other */
+	// in plain ics only individuals and accepted attendees listed and by plain name only
+	// maybe show some stats ? 
+	$text = '';
+
+	$status = array(); //'ACCEPTED','TENTATIVE','DELEGATED','NEEDS_ACTION','DECLINED','COMPLETED','IN-PROCESS'
+	if (is_array($attendees)) {
+		// How should they be sorted ? 
+		// CN alpha? or email alpha or by part stat? or role ?
+		amr_sort_by_two_cols ('ROLE', 'CN', $attendees); // sort by participaton status, may include all
+	
+		foreach ($attendees as $i => $attendee) {
+			if ($attendee['PARTSTAT'] == 'ACCEPTED')  {
+				$list[] = amr_format_attendee ($attendee);
+			}	
+		}
+	
+		if (!empty($list)) {
+			$text .= '<ul><li>'.implode ('</li><li> ',$list).'</li></ul>';
+		}	
+		
+	}
+
+	return($text);
+	}
+}
+
+if (!function_exists('amr_format_PARTSTAT') ) { // called from format attendee
+	function amr_format_PARTSTAT ($participation_status, $attendee) {
+		$text = '';
+		switch ($participation_status) {
+			case 'ACCEPTED': $text = $text. ' &#10004;'; break;
+			case 'DECLINED': $text = $text. ' &#10008;'; break;
+			case 'TENTATIVE': $text = $text. ' ?'; break;
+			case 'DELEGATED': $text = $text. ' &rarr;'; break;
+			case 'NEEDS-ACTION': $text = $text. ' &quest;'; break;
+			}
+		return ($text);	
+	}
+}
+
+if (!function_exists('amr_format_attendee') ) { // format a single attendee - maybe show role, status etc
+	function amr_format_attendee ($attendee) {  // do not show emails for privacy reasons
+// array could have 
+//CUTYPE=INDIVIDUAL
+//ROLE=REQ-PARTICIPANT
+//PARTSTAT=ACCEPTED or PARTSTAT=NEEDS-ACTION  Participation status
+// "ACCEPTED" ,"DECLINED","TENTATIVE", "DELEGATED
+//X-NUM-GUESTS=0
+//CN=Common name
+//DELEGATED-FROM="mailto:bob@example.com
+//SENT-BY=mailto:jan_doe@example.com
+
+	$text = '';
+	if (!empty ($attendee['CN'])) {
+		if (!empty  ($attendee['LINK']))  // internal amr-events representation , not RFC5545 spec
+			$text = '<a href="'.$attendee['LINK'].'" >'.$attendee['CN'].'</a>';
+		else 
+			$text = $attendee['CN'];
+	}
+	else { // we  have no name, maybe just use the bit before the '@'
+		if (!empty($attendee['mailto']))
+			$text = substr($attendee['mailto'],'@', true); // or perhaps lookup by email ?
+		else 
+			$text = __('unknown','amr-ical-events-list');
+	}
+	if (!empty($attendee['PARTSTAT'])) {
+		$text .= ' '.amr_format_PARTSTAT ($attendee['PARTSTAT'], $attendee);
+	}
+
+	return ($text);
 	}
 }

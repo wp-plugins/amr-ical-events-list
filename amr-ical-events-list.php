@@ -4,7 +4,7 @@ Plugin Name: amr events calendar or lists with ical files
 Author: anmari
 Author URI: http://anmari.com/
 Plugin URI: http://icalevents.com
-Version: 4.21
+Version: 4.22
 Text Domain: amr-ical-events-list
 Domain Path: /lang
 
@@ -23,17 +23,18 @@ Description: Display simple or highly customisable and styleable list of events.
 */
 //  NB Change version in code too define('AMR_ICAL_LIST_VERSION', '3.0.1');
 
-define('AMR_ICAL_LIST_VERSION', '4.21');
+define('AMR_ICAL_LIST_VERSION', '4.22');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 define( 'AMR_BASENAME', plugin_basename( __FILE__ ) );
 
 	require_once('includes/amr-ical-groupings.php'); // must be before shortcode function
 	require_once('includes/amr-ical-config.php');
+	require_once('includes/amr-upcoming-events-widget.php');
 	require_once('includes/amr-ical-events-list-main.php');
 	require_once('includes/amr-import-ical.php');
 	require_once('includes/amr-rrule.php');
-	require_once('includes/amr-upcoming-events-widget.php');
+
 	require_once('includes/amr_date_i18n.php');
 	require_once('includes/amr-ical-calendar.php');
 	require_once('includes/amr-ical-pretty-print.php');
@@ -43,6 +44,7 @@ define( 'AMR_BASENAME', plugin_basename( __FILE__ ) );
 
 if (is_admin()	) {  // are we in admin territory
 	require_once('includes/amr-ical-list-admin.php');
+	require_once('includes/amr-ical-fields-admin.php');
 	include('admin/add-ons.php');
 	include('admin/updates-page.php');
 	include('admin/class-amr-license-handler.php');

@@ -3,11 +3,13 @@
 Description: Display a sweet, concise list of events from iCal sources, using a list type from the amr iCal plugin <a href="options-general.php?page=manage_amr_ical">Manage Settings Page</a> and  <a href="widgets.php">Manage Widget</a>
 
 */
-class amr_ical_widget extends WP_widget {
+class amr_ical_widget extends WP_Widget {
     /** constructor */
-    function amr_ical_widget() {
+    public function __construct() {
 		$widget_ops = array ('description'=>__('Upcoming Events', 'amr-ical-events-list' ),'classname'=>'events');
-        $this->WP_Widget(false, __('Upcoming Events List', 'amr-ical-events-list' ), $widget_ops);
+		parent::__construct('amr-ical-upe'
+		, __('Upcoming Events List', 'amr-ical-events-list' )
+		, $widget_ops);
     }
 /* ============================================================================================== */
 	function widget ($args /* the title etc */, $instance /* the params */) { /* this is the piece that actualy does the widget display */
@@ -183,11 +185,11 @@ class amr_ical_widget extends WP_widget {
 class amr_icalendar_widget extends WP_widget {
     /** constructor */
 
-    function amr_icalendar_widget() {
+    public function __construct() {
 		$widget_ops = array ('description'=>__('Upcoming Events', 'amr-ical-events-list' ),
 		'classname'=>'widget_calendar');
 
-        $this->WP_Widget(false, __('Upcoming Events Calendar', 'amr-ical-events-list' ), $widget_ops);
+        parent::__construct(false, __('Upcoming Events Calendar', 'amr-ical-events-list' ), $widget_ops);
 
     }
 
