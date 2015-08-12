@@ -3,7 +3,7 @@ Contributors: anmari
 Tags: event, events, event calendar, events calendar, event manager, diary, schedule, ical, ics, ics calendar, ical feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, agenda, happenings, shows, concerts, conferences, courses, timetable, schedule
 Requires at least: 2.8
 Tested up to: 4.3
-Version: 4.22
+Version: 4.23
 Stable tag: trunk
 
 Event Calendar or Agenda list, combine multiple ics files, handles recurring events. Very customisable.
@@ -98,6 +98,9 @@ amr-events has much additional functionality, including a taxonomy widget.
 
 
 == Changelog ==
+= Version 4.23 =
+*  Fix: little glitch was introduced when a bracket was slightly misplaced. Affected navigation at bottom of page and showed a error message if anyone navigated back/forth.
+*  Change: used to change webcal (unofficial protocol) to http.  Now will only do that for validation, will keep the webcal prefix for echoing at top of calendar (Some sites not sending ics  correctly for http)
 
 = Version 4.22 =
 *  Fix: changed code for recently (wp 4.3) deprecated widget calling

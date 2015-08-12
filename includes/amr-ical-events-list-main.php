@@ -1781,9 +1781,9 @@ function amr_get_params ($attributes=array()) {
 				if (substr($v, 0 ,1) == ':') { /* attempt to maintain old filter compatibity */
 					$shortcode_params['urls'][$i] = substr ($v, 1);
 				}
-				$v = (str_ireplace('webcal://', 'http://',$v));
-				if ((function_exists('filter_var')) and (!filter_var($v, FILTER_VALIDATE_URL))) { /* rejecting a valid URL on php 5.2.14  */
-					echo '<h2>'.sprintf(__('Invalid Ical URL %s','amr-ical-events-list'), $v).'</h2>';
+				$v2 = (str_ireplace('webcal://', 'http://',$v));  //keep the webcal
+				if ((function_exists('filter_var')) and (!filter_var($v2, FILTER_VALIDATE_URL))) { /* rejecting a valid URL on php 5.2.14  */
+					echo '<h2>'.sprintf(__('Invalid Ical URL %s','amr-ical-events-list'), $v2).'</h2>';
 					if (current_user_can('administrator')) {
 						echo '<p>Notes to admin only (does not show if not logged in as admin): 
 						<ul>
@@ -1997,9 +1997,12 @@ function amr_get_params ($attributes=array()) {
 	foreach ($amr_limits as $i => $a) {  // create our date objects
 		if (($i === 'start') or ($i === 'end')) {
 			if (!(is_object($a))) {
-				if (checkdate(substr($a,4,2), /* month */
+				
+				$dateok = checkdate(substr($a,4,2), /* month */
 						substr($a,6,2), /* day*/
-						substr($a,0,4)) /* year */ )
+						substr($a,0,4));/* year */ 
+					
+				if ($dateok) {
 						$amr_limits[$i] = date_create($a,$amr_globaltz);
 						if (!is_object($amr_limits[$i])) {
 							amr_tell_error ($i.' '
@@ -2008,9 +2011,11 @@ function amr_get_params ($attributes=array()) {
 							);
 							var_dump($amr_limits[$i]);
 							var_dump($amr_globaltz);						
-							}
+						}
+				}			
 				else {
 					_e('Invalid Start Date', 'amr-ical-events-list');
+					echo '<br />'.$i.' '.$a;
 					$amr_limits[$i] = date_create('now',$amr_globaltz);
 					}
 			}
