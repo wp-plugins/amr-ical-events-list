@@ -1552,6 +1552,9 @@ if (!function_exists('amr_format_value')) {
 			switch ($k){
 				case 'COMMENT':
 				case 'DESCRIPTION': {
+				
+					//var_dump($content);
+				
 					$htmlcontent = html_entity_decode(amr_click_and_trim(nl2br2(amr_amp($content))));
 					break;
 				}

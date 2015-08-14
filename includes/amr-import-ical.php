@@ -246,11 +246,17 @@ function amr_explodeByColon( $input ) { // rfc 5545 says colons, semicoln and qu
 // and then only if there are quoted strings
 // NOTE PARAMETER VALUES may NOT contain quotes, so can have ="
 // HOWEVER can have colon, semicolon or comma
+// DESCRIPTION with colon does not have to be double quoted
+//  actually I think it's only the first non quoted colon we need ?
 
 	$t = amr_checkQuotedString(':','%3A', $input) ;
 	$t = str_replace('mailto:', 'mailto ', $t);  //stop any other mailtos from exploding
 	//now we can explode by colon
-	$arr = explode(  ':', $t ); 	//else acn treat normally 
+	//$arr = explode(  ':', $t ); 	//only want the first unescaped colon, else colons ok in DESCRIPTION etc  20150814
+	$colon = stripos ( $t , ':' );
+	If (!$colon) return false;
+	$arr[0] = substr ( $t, 0, $colon );
+	$arr[1] = substr ( $t, $colon+1 );
 	return $arr;
 }
 
@@ -1007,7 +1013,7 @@ global $amr_globaltz;
 			$cats = amr_parse_CATEGORIES($parts[1]);
 			return($cats );
 			}
-		default:{
+		default:{	
 			return (amr_parseDefault($prop, $parts));
 		}		
 	}
@@ -1024,7 +1030,7 @@ function amr_parse_component($type)	{	/* so we know we have a vcalendar at lines
 
 	while (($amr_n < $amr_totallines)	)	{
 		$amr_n++;
-		$parts =	amr_explodeByColon($amr_lines[$amr_n]); // 201507
+		$parts =	amr_explodeByColon($amr_lines[$amr_n]); // 201507  
 	
 	if ((!$parts) or ($parts === $amr_lines[$amr_n])) { // ie no colon
 		//

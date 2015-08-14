@@ -816,10 +816,13 @@ function amr_derive_info_for_list_only (&$e) {
 //		$e['Bookmark'] = 'a'.htmlentities(str_replace('http://','',$e['Bookmark'] ).$bookm);
 //	}
 	$e['SUMMARY'] = amr_derive_summary ($e);  // do not hover the description
-	
+
 	
 	// if we need these
 	$e['excerpt'] = amr_make_excerpt_from_description($e);
+	
+	
+	
 	return ($e);
 }
  
