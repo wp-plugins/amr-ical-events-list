@@ -3,7 +3,7 @@ Contributors: anmari
 Tags: event, events, event calendar, events calendar, event manager, diary, schedule, ical, ics, ics calendar, ical feed, ics feed, wordpress-ics-importer, calendar,  upcoming events, google, notes, todo, journal, freebusy, availability, widget, web calendar, agenda, happenings, shows, concerts, conferences, courses, timetable, schedule
 Requires at least: 2.8
 Tested up to: 4.3
-Version: 4.24
+Version: 4.25
 Stable tag: trunk
 
 Event Calendar or Agenda list, combine multiple ics files, handles recurring events. Very customisable.
@@ -42,7 +42,7 @@ Many thanks to the following people for the translations.  Note that I am unable
 *   Polish by Kasia
 *   French by fxbenard aka 3emeOeil
 *   Dutch by Fred Onis
-*   Danish by Georg feom blogso.dk
+*   Danish by Georg Adamsen from wpbureauet.dk
 *   Belorussian by Alexander Ovsov from webhostinggeeks.com/science
 *   Romainian by webgeek
 *   Russian (partial) by ghost (antsar.info)
@@ -98,6 +98,10 @@ amr-events has much additional functionality, including a taxonomy widget.
 
 
 == Changelog ==
+= Version 4.25 =
+*  Fix: calls to get clean url started returning a pagename query parameter on top of the permalink.  THis was causes navogation using that function to fail.   clean url function fixed to avoid that.
+*  Update: of Danish Translation from Georg Adamsen from wpbureauet.dk
+
 = Version 4.24 =
 *  Fix: excessive splitting by colon after impovements for attendee parsing.  DESCRIPTIONS etc can have unescaped colons (eg in http://
 

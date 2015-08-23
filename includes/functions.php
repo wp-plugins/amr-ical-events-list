@@ -153,22 +153,10 @@ function amr_clean_link() { /* get cleaned up version of current url remove othe
 global $page_id;
 global $wp;
 
-	$link = add_query_arg( $wp->query_string, '', home_url( $wp->request ) ); //from https://kovshenin.com/2012/current-url-in-wordpress/
-
+	//$link = add_query_arg( $wp->query_string, '', home_url( $wp->request ) );    this is now returning a pagename query parameter on top of the permalink, which breaks things
 	
-/*	
-	$link = remove_query_arg(array(
-	'months',
-	'hours',
-	'start',
-	'startoffset',
-	'hoursoffset',
-	'eventoffset',
-	'monthsoffset',
-	'calendar',
-	'agenda',
-	'eventmap'));
-*/
+	$link = get_permalink();
+
 	/* not sure if we still need, but some folks with main eventlist on home page with other weird stuff on frontpage  had problems before, so keeping for now  */
 	if (is_front_page() and (!empty($page_id))) {  /* don't use if page_id = 0  v4.0.28*/
 		// use page_id not $post->id, because if have a post on home page too $post gets overwritten
