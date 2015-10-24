@@ -20,8 +20,10 @@ if (!function_exists('amr_ical_showmap')) {
 	function amr_ical_showmap ($text) { /* the address text */
 		global $amr_options;
 			$t1 = __('Show in Google map','amr-ical-events-list');
-			if (isset ($amr_options['no_images']) and $amr_options['no_images']) $t3 = $t1;
-			else $t3 = '<img src="'.IMAGES_LOCATION.MAPIMAGE.'" alt="'.	$t1	.'" class="amr-bling" />';
+				if (isset ($amr_options['no_images']) and $amr_options['no_images']) 
+				$t3 = $t1;
+			else 
+				$t3 = '<img src="'.IMAGES_LOCATION.MAPIMAGE.'" alt="'.	$t1	.'" class="amr-bling" />';
 		/* this is used to determine what should be done if a map is desired - a link to google behind the text ? or some thing else  */
 
 		return('<a class="hrefmap" href="http://maps.google.com/maps?q='
@@ -30,6 +32,13 @@ if (!function_exists('amr_ical_showmap')) {
 	}
 }
 	
+if (!function_exists('amr_format_map')) {
+	function amr_format_map ($text) { /* the address text */
+
+		return(amr_ical_showmap ($text));
+	}
+}	
+
 if (!function_exists('amr_events_sort_later_events_first')) {
 	function amr_events_sort_later_events_first($constrained) {
 		$constrained = amr_reverse_sort_by_key($constrained , 'EventDate');
@@ -450,19 +459,7 @@ if (!function_exists('amr_mimic_taxonomies')) { // only called if we have an ics
 
 }
 
-if (!function_exists ('amr_ical_showmap')) {
-	function amr_ical_showmap ($text) { /* the address text */
-	global $amr_options;
-		$t1 = __('Show in Google map','amr-ical-events-list');
-		if (isset ($amr_options['no_images']) and $amr_options['no_images']) $t3 = $t1;
-		else $t3 = '<img src="'.IMAGES_LOCATION.MAPIMAGE.'" alt="'.	$t1	.'" class="amr-bling" />';
-	/* this is used to determine what should be done if a map is desired - a link to google behind the text ? or some thing else  */
 
-	return('<a class="hrefmap" href="http://maps.google.com/maps?q='
-		.str_replace(' ','%20',($text)).'" target="_BLANK"'   //google wants unencoded
-		.' title="'.__('Show location in Google Maps','amr-ical-events-list').'" >'.$t3.'</a>');
-	}
-}
 
 if (!function_exists('amr_format_allday')) {
 	function amr_format_allday ($content) {
@@ -783,7 +780,7 @@ if (!function_exists('add_cal_to_google')) {
 		else
 			$text2 = '<img src="'.IMAGES_LOCATION.ADDTOGOOGLEIMAGE.'" title="'.$text1.'" alt="'.$text1.'" class="amr-bling" />';
 		return (
-		'<a class= "amr-bling addtogoogle" href="http://www.google.com/calendar/render?cid='.html_entity_decode($cal).'" target="_blank"  title="'.$text1.'">'.$text2.'</a>');
+		'<a class= "amr-bling addtogoogle" href="http://www.google.com/calendar/render?cid='.urlencode(html_entity_decode($cal)).'" target="_blank"  title="'.$text1.'">'.$text2.'</a>');
 	}
 }
  
@@ -1159,6 +1156,7 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 		$amrtotalevents,
 		$amr_globaltz,
 		$amr_groupings,
+		$amr_event_columns, //20151018
 		$change_view_allowed;
 
 		
@@ -1178,7 +1176,8 @@ function amr_list_events($events,  $tid, $class, $show_views=true) {
 		return($html);
 	}
 
-	$columns = prepare_order_and_sequence ($amr_options['listtypes'][$amr_listtype]['compprop']);
+	$columns = 	$amr_event_columns; // 20151018 add so we can use easily//prepare_order_and_sequence ($amr_options['listtypes'][$amr_listtype]['compprop']);
+	
 	if (!$columns) 	return; // no display requested
 	else $no_cols = count($columns);
 

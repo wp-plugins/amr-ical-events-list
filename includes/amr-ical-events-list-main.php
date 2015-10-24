@@ -629,10 +629,15 @@ function amr_add_duration_to_date (&$e, $d) {
   
 function amr_derive_dates (&$e) {
 /* Derive basic date dependent data  - called early on before repeating */
-	if (!isset($e['DTSTART']) ) return (false);
-	if (is_array($e['DTSTART'])) $e['DTSTART'] = $e['DTSTART'][0];
-	if (isset($e['DTEND']) and is_array($e['DTEND'])) $e['DTEND'] = $e['DTEND'][0];
-	if (!is_object($e['DTSTART'])) {echo '<p class="error">Error: Event with no date:'; var_dump($e); echo '</p>'; return($e); }
+
+	if (!isset($e['DTSTART']) ) 
+		return (false);
+	if (is_array($e['DTSTART'])) 
+		$e['DTSTART'] = $e['DTSTART'][0];
+	if (isset($e['DTEND']) and is_array($e['DTEND'])) 
+		$e['DTEND'] = $e['DTEND'][0];
+	if (!is_object($e['DTSTART'])) {
+		echo '<p class="error">Error: Event with no date:'; var_dump($e); echo '</p>'; return($e); }
 	if ((isset ($e['DURATION'])) and (empty ($e['DTEND'])))  {  /*** an array of the duration values, calc the end date or time */
 		$e['DTEND'] = new Datetime(); //if cloning dont need tz
 		$e['DTEND'] = clone ($e['DTSTART']);
@@ -744,18 +749,24 @@ return ($e);
  
 function amr_derive_for_list_or_eventinfo (&$e) {  // should only derive the fields we need
 
-
-	if (amr_need_this_field('map')) {
-		if (isset ($e['GEO'])) {
-			$e['map'] = amr_ical_showmap($e['GEO']);
+	if (amr_need_this_field('_GEO') and empty($e['GEO']) ) { 
+		if (isset ($e['latitude']) and isset( $e['longitude'])) {
+			$e['GEO'] = $e['latitude'].', '.$e['longitude'];
 			}
-		else if ((isset ($e['LOCATION'])) and (!empty($e['LOCATION']))) {
-				$e['map'] = amr_ical_showmap($e['LOCATION']);
-		}
 	}
+	if (amr_need_this_field('_map')) { 	// just prepare with whatever we ha, leave format to later
+		if ((isset ($e['LOCATION'])) and (!empty($e['LOCATION']))) {
+				$e['map'] = $e['LOCATION'];
+		}
+		else	
+		if (isset ($e['GEO'])) {
+			$e['map'] = $e['GEO'];
+			}
+	}
+	
 	// 'TENTATIVE','DELEGATED','NEEDS_ACTION','DECLINED','COMPLETED','IN-PROCESS'
 	
-	if (amr_need_this_field('Attendee-counts')) {
+	if (amr_need_this_field('_Attendee-counts')) {
 		if (isset($e['ATTENDEE'])) { // we have some attendees
 			$e['Attendee-counts'] = amr_derive_attendee_counts($e['ATTENDEE']);
 		}
@@ -1270,9 +1281,12 @@ function amr_generate_repeats(&$event, $astart, $aend, $limit) { /* takes an eve
 				return(false); /* the modification and the instance that it relates to are not in our date range */
 			}
 		}
-		else { /* It is not a recurrence id, may be a repating, or solo */
+		else { /* It is not a recurrence id, may be a repeating, or solo */
 			if (isset($dtstart) ) {
 				if ( amr_is_before ($dtstart, $aend) ) {  /* If the start is after our end limit, then skip this event */
+				
+				//var_dump($event);
+				
 				if (isset($event['RRULE']) or (isset($event['RDATE']))) {
 					/* if have, must use dtstart in case we are dependent on it's characteristics,. We can exclude too early dates later on */
 					$repeats = amr_repeat_anevent($event, $astart, $aend, $limit );  /**** try for a more efficient start? */
@@ -1338,6 +1352,7 @@ global $amr_limits;
 		$newevents = apply_filters('amr_events_after_sort', $newevents);
 
 		if (ICAL_EVENTS_DEBUG) {
+			var_dump($newevents);
 			echo '<br>Sorted  '.count($newevents).' events';
 			echo '<br>first '.$newevents[0]['EventDate']->format('c');
 			echo '<br>last '.$newevents[count($newevents)-1]['EventDate']->format('c');
@@ -1393,6 +1408,7 @@ function amr_process_icalevents($events, $l_start, $aend, $limit) {
 		$astart = amr_newdatetime();  // l_start was getting overwritten somewhere which messed up recurring logic
 		$astart = clone ($l_start);
 		$dates = array();
+		//echo'<br />Check gen repeats '; var_dump($events);
 		foreach ($events as $i=> $event) {
 			amr_derive_dates ($event); /* basic clean up only - removing unnecessary arrays etc */
 			$more = amr_generate_repeats($event, $astart, $aend, $limit);
@@ -1469,7 +1485,7 @@ function suggest_other_icalplugin($featuretext) {
 }
 
  
-function amr_get_events_cache_key ($criteria) {
+function amr_get_events_cache_key ($criteria) { //NLR?
 	global $amr_limits;
 	$string = '';
 	$keys = array_merge($amr_limits,$criteria);
@@ -1493,7 +1509,7 @@ function amr_get_events_cache_key ($criteria) {
 	return ($key);
 }
  
-function amr_get_cached_events_from_db($criteria) {
+function amr_get_cached_events_from_db($criteria) { //NLR ?
 	global $amr_limits;
 
 	if (version_compare(5.3, PHP_VERSION, '>')) {
@@ -1521,7 +1537,7 @@ function amr_get_cached_events_from_db($criteria) {
 	}
 }
  
-function amr_set_cached_events_from_db($criteria, $events) {
+function amr_set_cached_events_from_db($criteria, $events) { //NLR?
 	global $amr_options;  /***  nb when we get back to this -when hosts are on 5.3 or for some other reason, fetch in hours eventscache */
 	global $amr_limits;
 //---- build the key
@@ -1553,45 +1569,29 @@ function amr_process_icalspec($criteria, $l_start, $end, $no_events, $icalno=0) 
 		$w = 'w'; /* so we know if we are in the widget or not */
 	else 
 		$w = '';
-
-	$key = amr_get_events_cache_key ($criteria);
-	if (isset ($amr_one_page_events_cache[$key]))  {
-		$icals 		= $amr_one_page_events_cache[$key]['icals'];
-		$components = $amr_one_page_events_cache[$key]['components'];
-		if (ICAL_EVENTS_DEBUG)   echo ('<h3>Grabbing the one page events cache  '.$key.'</h3>');
-		}
-	else { 
-		if (!empty($criteria['show_in_events_timezone']))  // if we want event timezones, not website timezone
+	
+	if (!empty($criteria['show_in_events_timezone']))  // if we want event timezones, not website timezone
 			add_filter ('amr_show_in_events_timezone', 'amr_show_in_events_timezone', 10, 2);
+			
 		if (!empty($criteria['exclude_in_progress']))
 			add_filter ('amr_events_after_sort_and_constrain', 'amr_events_exclude_in_progress');
+			
 		if (!empty($criteria['sort_later_events_first']))
 			add_filter ('amr_events_after_sort_and_constrain', 'amr_events_sort_later_events_first');	
-		If (isset($_GET['debugcache']))   echo ('<h3>No one page events cache  '.$key.', so start afresh</h3>');
-		if (isset($_GET['debugcache'])) { echo ('<hr>Criteria '); var_dump($criteria);}
+
+	
+
+	
 		if ((isset($amr_limits['eventpoststoo'])) and ($amr_limits['eventpoststoo'])) {
+				
 			if (function_exists('amr_ical_from_posts')) {
-//				$events = amr_get_cached_events_from_db($criteria);
-//				if ($events) {	if (ICAL_EVENTS_DEBUG) echo '<h3>We got some events cached </h3>';}
-//				else {
-
 					$events = amr_ical_from_posts($criteria);
-					//amr_set_cached_events_from_db($criteria, $events);  /*** cannot use till php 5.3 */
-
-//				}
-				if (!empty($events)) {
-					foreach ($events as $i=>$event) {
-						$events[$i] = amr_parse_unparsed($event);
-						$event 		= amr_parseRepeats($event);
-					}
-					if (ICAL_EVENTS_DEBUG) { echo '<br>Events from posts now parsed. Try make calendar';}
-					
 					$icals = amr_make_ical_from_posts($events, $criteria);
 
-					if (ICAL_EVENTS_DEBUG) { echo '<br>Got calendars from posts :'.count($icals).' events='.count($events).'<br>'; }
-				}
-
+					if (ICAL_EVENTS_DEBUG) { echo '<br>Got calendars from posts :'.count($icals).' events='.count($events).'<br>';
+								}
 			}
+
 			else {
 				if (empty($criteria['urls'])) {
 					suggest_other_icalplugin (__('No url entered - did you want events from posts ?','amr-ical-events-list' ));
@@ -1601,7 +1601,7 @@ function amr_process_icalspec($criteria, $l_start, $end, $no_events, $icalno=0) 
 
 		}
 		else if (ICAL_EVENTS_DEBUG) echo '<br />Ignore eventsposts ';
-	}
+	
 	/* ------------------------------  check for urls and do those too, or only */
 		$icals2 = array();
 		if (!empty($criteria['urls'])) {
@@ -1659,10 +1659,6 @@ function amr_process_icalspec($criteria, $l_start, $end, $no_events, $icalno=0) 
 				if (is_object($amr_last_date_time)) echo $amr_last_date_time->format('c');
 				//var_dump($amr_last_date_time);
 			}
-		}
-		if (!isset ($amr_one_page_events_cache[$key])) {
-				$amr_one_page_events_cache[$key]['components'] = $components;
-				$amr_one_page_events_cache[$key]['icals'] = $icals;
 		}
 	
 		amrical_mem_debug('Before listing');
@@ -1733,6 +1729,8 @@ function amr_get_params ($attributes=array()) {
 	$amr_liststyle,
 	$amr_options,
 	$amr_groupings,
+	$amr_fields_needed ,
+	$amr_event_columns, // 20151018 add so we can use easily
 	$amr_formats,
 	$amr_globaltz,
 	$change_view_allowed,
@@ -1740,6 +1738,8 @@ function amr_get_params ($attributes=array()) {
 	$amrW; // indicates if widget, 
 	
 	$amr_options = amr_getset_options();
+	
+
 //
 	$defaults = array( /* defaults array for shortcode , - these override limits if they exist in limit, */
 	'listtype' => $amr_listtype,
@@ -2110,7 +2110,11 @@ function amr_get_params ($attributes=array()) {
 		var_dump($shortcode_params);
 		echo amr_echo_parameters();
 	}
-
+	
+	$amr_event_columns = prepare_order_and_sequence ($amr_options['listtypes'][$amr_listtype]['compprop']);  //do once earlier
+	
+	$amr_fields_needed = amr_extract_fields($amr_event_columns); // setup global
+	
 	return ($shortcode_params);  // only return params needed for wp query ?
 }
  

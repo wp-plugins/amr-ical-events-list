@@ -1,14 +1,84 @@
 <?php //commonly useful functions
 
-function amr_need_this_field($field) {
-	global $amr_options;
-	global $amr_listtype;
+function amr_need_this_field($field) { // can we do away with or replace this now - see below 20151018
+	global  $amr_fields_needed;
+	//$amr_options;	global $amr_listtype;
 	
-	if (isset($amr_options['listtypes'][$amr_listtype]['compprop'][$field]))
+	//20151018 if (!empty($amr_options['listtypes'][$amr_listtype]['compprop'][$field]['column'])) 
+	//amr 20151012 - isset not enough, must check that column is not zero
+
+	if (in_array($field, $amr_fields_needed))
 		return true;
 	else 
 		return false;
 }
+
+function amr_extract_fields($amr_event_columns) { // just get array of fields needed
+global $amr_eventinfo_settings;
+
+
+	$amr_fields_needed = array();
+	
+	if (!empty($amr_eventinfo_settings)) { // we are doing a single post
+		
+		foreach($amr_eventinfo_settings['eventinfo'] as $fld=>$specs) {
+			$amr_fields_needed[] = $fld;
+		}	
+	}	
+	//else echo 'WHY EMPTY';
+	
+	foreach ($amr_event_columns as $col => $fields) {
+		foreach ($fields as $field =>$data) {
+			if (!in_array($field, // these are calculated or derived fields
+				array(
+				'SUMMARY',
+				'DESCRIPTION',
+				'subscribeevent',
+				'subscribeseries',
+				'addevent',
+				'post_tag',
+				'category')))
+				$amr_fields_needed[] = $field;
+		}	
+	}
+	
+	foreach ($amr_fields_needed as $i=>$fld) 
+		$amr_fields_needed[$i] = '_'.$fld;
+	
+	if (function_exists('ical_location_values')  // is in amr-events for events with locations
+		and (in_array('_GEO', $amr_fields_needed) or
+		in_array('_map', $amr_fields_needed) or
+		in_array('_place', $amr_fields_needed) or
+		in_array('_LOCATION', $amr_fields_needed )))
+		{
+
+		$locationfields = ical_location_values();
+		$amr_fields_needed = array_merge ($amr_fields_needed , $locationfields );
+		
+	}
+	// what if using other plugin ? eg geomashup
+
+
+	
+	$amr_fields_needed = array_merge ($amr_fields_needed , 
+	array('_VEVENT',
+		'_tztype',
+		'_timezone',
+		'_allday',
+		'_DTSTART',
+		'_EventDate',
+		'_RRULE',
+		'_EXDATE',
+		'_RDATE',
+		'_DURATION',
+		'_last'));
+	
+	//var_dump($amr_fields_needed);
+	
+return $amr_fields_needed; 
+}
+
+
 //------------------------------------------------------------------------------------------------
 function amr_create_date_time ($datetimestring, $tzobj) { // date time create with exception trap to avoid fatal errors
 		try {	$dt = new DateTime($datetimestring,	$tzobj); }

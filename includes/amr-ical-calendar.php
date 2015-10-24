@@ -142,6 +142,7 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 	global $change_view_allowed;
 	global $wpdb, $wp_locale;
 	global $amr_calendar_url;
+	global $amr_event_columns; //20151018
 
 	$empty = '&nbsp;';
 
@@ -247,7 +248,9 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 			}		
 	}
 
-	$columns = prepare_order_and_sequence ($amr_options['listtypes'][$amr_listtype]['compprop']);
+	$columns = 	$amr_event_columns; // 20151018 add so we can use easily//prepare_order_and_sequence ($amr_options['listtypes'][$amr_listtype]['compprop']);
+	
+	//var_dump($columns);
 	if (empty($columns)) return;
 
 	// now do for each month or week-------------------------------------------------------------------------------------------------------

@@ -767,23 +767,27 @@ function amr_parseRDATE ($string, $tzobj ) {
 
  could be multiple dates after : */
 
-	if (empty($string)) return false; 
-	if (is_object($string)) {/* already parsed */  return($string); }
 
-	if (is_array($string) ) {
+ 
+	if (empty($string)) return false; 
+
+	if (is_object($string)) {/* already parsed */  return($string); }
+//echo '*** Here'; var_dump($string);
+	if (is_array($string) ) {  
 		$rdatearray = array();
 		foreach ($string as $i => $rdatestring) {
 //			$r = $string[0];
 			if (is_object($rdatestring)) {/* already parsed  and is an array of dates */  return($string); }
 			else {
-				//if (isset($_GET['debugexc'])) {echo '<br />Doing next r or exdate '.$i.' '.$rdatestring; }
+				if (isset($_GET['debugexc'])) {echo '<br />***Doing next r or exdate '.$i.' '.$rdatestring; }
 				$rdate = amr_parseRDATE ($rdatestring, $tzobj );
 
 			}
 			if (is_array($rdate)) $rdatearray = array_merge ($rdatearray, $rdate);
 		}
 
-		//if (isset($_GET['debugexc'])) {echo '<br />*** Array of r or exdate '; var_dump($rdatearray); }
+		//if (isset($_GET['debugexc'])) {
+		//echo '<br />*** Array of r or exdate '; var_dump($rdatearray);// }
 		return ($rdatearray);
 	}
 

@@ -714,9 +714,9 @@ function customise_listtype($i)	{ /* sets up some variations of the default list
 			$amr_options['listtypes'][$i]['compprop']['Descriptive']['subscribeevent']['Order'] = 20;
 			$amr_options['listtypes'][$i]['compprop']['Descriptive']['addevent']['Order'] = 22;
 			$amr_options['listtypes'][$i]['compprop']['Descriptive']['LOCATION']
-				= array('Column' => 1, 'Order' => 50, 'Before' => '<address>', 'After' => '');
+				= array('Column' => 1, 'Order' => 50, 'Before' => '<address>', 'After' => '</address>');
 			$amr_options['listtypes'][$i]['compprop']['Descriptive']['map']
-				= array('Column' => 1, 'Order' => 51,'Before' => '&nbsp;', 'After' => '</address>');
+				= array('Column' => 1, 'Order' => 51,'Before' => '&nbsp;', 'After' => '');
 			$amr_options['listtypes'][$i]['compprop']['Descriptive']['DESCRIPTION']
 				= array('Column' => 1, 'Order' => 100, 'Before' => '', 'After' => '');
 
@@ -986,6 +986,7 @@ function customise_listtype($i)	{ /* sets up some variations of the default list
 	
 	$amr_options['listtypes'][$i]['compprop'] = amr_remove_array_level ($amr_options['listtypes'][$i]['compprop']);
 // so now we have both versions - need to unset the other, but can leave for now.
+
 
 	return ( $amr_options['listtypes'][$i]);
 }

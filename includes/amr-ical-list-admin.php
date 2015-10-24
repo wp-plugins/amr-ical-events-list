@@ -307,8 +307,7 @@ function amrical_compropsoption($i) {
 		echo '<tbody>';
 
 		
-		
-		//var_dump($listtype['compprop']);
+
 		$listtype['compprop'] = apply_filters('amr_ics_component_properties', $listtype['compprop']);  
 		// add arrays of field array('Column' => 0, 'Order' => 510, 'Before' => '', 'After' => '');
 		
