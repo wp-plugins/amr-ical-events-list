@@ -1573,26 +1573,31 @@ function amr_process_icalspec($criteria, $l_start, $end, $no_events, $icalno=0) 
 	if (!empty($criteria['show_in_events_timezone']))  // if we want event timezones, not website timezone
 			add_filter ('amr_show_in_events_timezone', 'amr_show_in_events_timezone', 10, 2);
 			
-		if (!empty($criteria['exclude_in_progress']))
-			add_filter ('amr_events_after_sort_and_constrain', 'amr_events_exclude_in_progress');
+	if (!empty($criteria['exclude_in_progress']))
+		add_filter ('amr_events_after_sort_and_constrain', 'amr_events_exclude_in_progress');
 			
-		if (!empty($criteria['sort_later_events_first']))
-			add_filter ('amr_events_after_sort_and_constrain', 'amr_events_sort_later_events_first');	
-
+	if (!empty($criteria['sort_later_events_first']))
+		add_filter ('amr_events_after_sort_and_constrain', 'amr_events_sort_later_events_first');	
 	
-
-	
-		if ((isset($amr_limits['eventpoststoo'])) and ($amr_limits['eventpoststoo'])) {
+	$icals = false;
+	if ((isset($amr_limits['eventpoststoo'])) and ($amr_limits['eventpoststoo'])) {
 				
 			if (function_exists('amr_ical_from_posts')) {
-					$events = amr_ical_from_posts($criteria);
+				$events = amr_ical_from_posts($criteria);
+				if (!empty($events)) {
 					$icals = amr_make_ical_from_posts($events, $criteria);
 
-					if (ICAL_EVENTS_DEBUG) { echo '<br>Got calendars from posts :'.count($icals).' events='.count($events).'<br>';
-								}
+					if (ICAL_EVENTS_DEBUG) { 
+						echo '<br>Got calendars from posts :'.count($icals).' events='.count($events).'<br>';
+					}
+				}
+				else {
+					if (ICAL_EVENTS_DEBUG) { echo '<br>No events found with this criteria<br>';
+					}
+				}	
 			}
-
 			else {
+				if (ICAL_EVENTS_DEBUG) { echo '<br>Function amr_ical_from_posts not found<br>';	}
 				if (empty($criteria['urls'])) {
 					suggest_other_icalplugin (__('No url entered - did you want events from posts ?','amr-ical-events-list' ));
 				}
@@ -1600,39 +1605,42 @@ function amr_process_icalspec($criteria, $l_start, $end, $no_events, $icalno=0) 
 				}
 
 		}
-		else if (ICAL_EVENTS_DEBUG) echo '<br />Ignore eventsposts ';
+	else if (ICAL_EVENTS_DEBUG) echo '<br />Ignore events posts ';
 	
 	/* ------------------------------  check for urls and do those too, or only */
 		$icals2 = array();
 		if (!empty($criteria['urls'])) {
 			foreach ($criteria['urls'] as $i => $url) {
 				$icals2[$i] = process_icalurl($url);
-				if (!(is_array($icals2[$i]))) unset ($icals2[$i]);
+				if (!(is_array($icals2[$i]))) 
+					unset ($icals2[$i]);
 				else if (function_exists('amr_mimic_taxonomies'))
 					$icals2[$i] = amr_mimic_taxonomies ($icals2[$i]) ;	// filter by category_name
 			}
 		}
 
-		if (!empty($icals) ) { 
-			if (isset($icals2) )
-				$icals = array_merge($icals, $icals2 );
+		if (!empty($icals) ) {  // we got some events
+			if (!empty($icals2) )
+				$icals = array_merge($icals, $icals2 ); 
 		}
 		else
-			if (isset($icals2) ) $icals = $icals2;
+			if (!empty($icals2) ) {
+				$icals = $icals2;  // we got no events from posts, just from ics
+			}	
 
 	/* ------------------------------now we have potentially  a bunch of calendars in the ical array, each with properties and items */
 
 		/* Merge then constrain  by options */
 		$components = array();  /* all components actually, not just events */
-		if (isset ($icals) and is_array($icals)) {	/* if we have some parse data */
+		if (isset ($icals) and is_array($icals)) {	/* if we have some parsed data */
 			foreach ($icals as $j => $ical) { /* for each  Ics file within an ICal spec*/
 				if ((!isset($amr_options['listtypes'][$amr_listtype]['component'])) or (count($amr_options['listtypes'][$amr_listtype]['component']) < 1))
 					_e('No ical components requested for display','amr-ical-events-list');
 				else {
 					foreach ($amr_options['listtypes'][$amr_listtype]['component'] as $i => $c) {  /* for each component type requested */
 						if ($c) {		/* If this component was requested, merge the items from Ical items into events */
-							if (isset($ical[$i])) {  /* Eg: if we have an array $ical['VEVENT'] etc*/
-								foreach ($ical[$i] as $k => $a) { /*  save the compenent type so we can style accordingly */
+							if (!empty($ical[$i]) and is_array($ical[$i])) {  /* Eg: if we have an array $ical['VEVENT'] etc*/
+								foreach ($ical[$i] as $k => $a) { /*  save the component type so we can style accordingly */
 									$ical[$i][$k]['type'] = $i;
 									$ical[$i][$k]['name'] = 'cal'.$j; /* save the name for styling */
 								}
@@ -1646,7 +1654,7 @@ function amr_process_icalspec($criteria, $l_start, $end, $no_events, $icalno=0) 
 					}
 				}
 			}
-			If (isset($_REQUEST['debug'])) echo '<br />Got x events '.count($components);
+			If (ICAL_EVENTS_DEBUG) echo '<br />Got x events '.count($components);
 			
 			amrical_mem_debug('Before process');
 			$components = amr_process_icalevents($components, $l_start, $end, $no_events);
