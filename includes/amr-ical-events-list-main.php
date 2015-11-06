@@ -975,10 +975,25 @@ function amr_falls_between($eventdate, $astart, $aend) {
 		 * Return true iff the specified event falls between the given
 		 * start and end times.
 		 */
-		if (($eventdate <= $aend) and
-			($eventdate >= $astart)) return ( true);
-		else return (false);
+		if ((!is_object($eventdate))) {
+			if (is_object($astart)) {
+				$eventdate = amr_newDateTime($eventdate);
+			}
 		}
+		else { // it is an object
+			if (!is_object($astart)) {
+				$astart = amr_newDateTime($astart);
+			}
+			if (!is_object($aend)) {
+				$aend = amr_newDateTime($aend);
+			}			
+		}
+		if (($eventdate <= $aend) and
+			($eventdate >= $astart)) 
+			return ( true);
+		else 
+			return (false);
+}
  
 function amr_event_should_be_shown($event, $astart, $aend) {
 		/*

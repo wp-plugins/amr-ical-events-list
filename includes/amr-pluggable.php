@@ -1828,9 +1828,14 @@ if (!function_exists('amr_format_binary'))  {  // amr maybe move to plus ?
 
 if (!function_exists('amr_format_organiser')) {
 	function amr_format_organiser ($org) {/* receive array of hopefully CN and MAILTO, and possibly SENTBY */
-	//	If (ICAL_EVENTS_DEBUG) {echo '<br />Organiser array:    '; var_dump($org);}
+	
+	If (ICAL_EVENTS_DEBUG) {echo '<br />Organiser array:    '; var_dump($org);}
 		$text = '';
-	//	if (!(is_array($org))) $org = amr_parseOrganiser('ORGANIZER;'.$org);  // may not have been parsed yet (eg in wp events)
+		if (!(is_array($org))) {
+			$org = amr_parseOrganiser('ORGANIZER;'.$org);  // may not have been parsed yet (eg in wp events)
+			//$org = amr_parse_property ('ORGANIZER;'.$org);
+			If (ICAL_EVENTS_DEBUG) var_dump($org);
+		}	
 	//	var_dump($org);
 		if (!empty ($org['CN'])) {
 			if (!empty  ($org['MAILTO']))

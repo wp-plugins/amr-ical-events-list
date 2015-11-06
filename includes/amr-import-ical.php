@@ -339,11 +339,13 @@ function amr_parseOrganiser($arraybysemicolon)    { /* receive full string parse
 	[1] => bagunn@uoguelph.ca":mailto:ovcweb@uoguelph.ca
 
 	*/
-//	if (ICAL_EVENTS_DEBUG) {echo '<br/>Organiser to parse <br />'; var_dump($arraybysemicolon);}
+	
+	
+	if (ICAL_EVENTS_DEBUG) {echo '<br/>Organiser to parse <br />'; var_dump($arraybysemicolon);}
 	$org = array();
 	$p0 = explode(';',$arraybysemicolon[0]);
 	$m = explode(':',$arraybysemicolon[1]);
-//	if (ICAL_EVENTS_DEBUG) {echo '<br/>m : <br />'; var_dump($m); echo '<br/>p0 : <br />'; var_dump($p0);}
+	if (ICAL_EVENTS_DEBUG) {echo '<br/>m : <br />'; var_dump($m); echo '<br/>p0 : <br />'; var_dump($p0);}
 	foreach ($m as $i => $m2) {
 		if (strtoupper($m2) == 'MAILTO') {
 			$mailto = rtrim($m[$i+1],'"');
@@ -367,8 +369,10 @@ function amr_parseOrganiser($arraybysemicolon)    { /* receive full string parse
 		}
 	}
 
-	if (!empty($mailto)) $org['MAILTO'] = $mailto;
-	if (empty($org)) return ($arraybysemicolon);
+	if (!empty($mailto)) 
+		$org['MAILTO'] = $mailto;
+	if (empty($org)) 
+		return ($arraybysemicolon);
 	return ($org);
     }
 /* ---------------------------------------------------------------------- */

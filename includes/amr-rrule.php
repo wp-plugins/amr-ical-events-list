@@ -578,6 +578,7 @@ function amr_get_a_closer_start ($start, // the DTSTART
 	while ($closerstart < $astart ) {
 //		if (isset($_GET['rdebug'])) { echo '<br />Main start= '. $astart->format('c'). ' '. $closerstart->format('c');}
 		$closerstart = amr_increment_datetime ($closerstart, $int) ;
+		if (!$closerstart) return false;
 		if ($closerstart < $astart) {
 			$one_interval_before = $closerstart;  // start at least one interval before, so we don't miss any BYDAYS
 		}
@@ -1126,13 +1127,16 @@ function amr_process_RDATE($p, $start, $end)  {
 	if (is_object ($p))	{
 		if (isset($_REQUEST['debugexc'])) {
 			echo '<br> R or exdate Object passed '. amr_format_date('Y m j, g:i a P',$p);}
-		if (amr_falls_between($p, $start, $end));
-		$repeats[] = $p;
+		if (amr_falls_between($p, $start, $end)) {
+			$repeats[] = $p;
 		}
+	}	
 	else
-	if (is_array($p)) {
+	if (is_array($p)) { //var_dump($p);
 		foreach ($p as $i => $r) {
-			if (amr_falls_between($r, $start, $end))  $repeats[] = $r;
+			if (amr_falls_between($r, $start, $end))  {
+				$repeats[] = $r;
+			}	
 		}
 	}
 	else {

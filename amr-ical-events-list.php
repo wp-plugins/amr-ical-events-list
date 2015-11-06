@@ -1,10 +1,10 @@
 <?php
 /*
-Plugin Name: amr events calendar or lists with ical files
+Plugin Name: amr event lists with ical files
 Author: anmari
 Author URI: http://anmari.com/
 Plugin URI: http://icalevents.com
-Version: 4.31
+Version: 4.32
 Text Domain: amr-ical-events-list
 Domain Path: /lang
 
@@ -23,7 +23,7 @@ Description: Display simple or highly customisable and styleable list of events.
 */
 //  NB Change version in code too define('AMR_ICAL_LIST_VERSION', '3.0.1');
 
-define('AMR_ICAL_LIST_VERSION', '4.31');
+define('AMR_ICAL_LIST_VERSION', '4.32');
 define('AMR_PHPVERSION_REQUIRED', '5.2.0');
 /*  these are  globals that we do not want easily changed -others are in the config file */
 define( 'AMR_BASENAME', plugin_basename( __FILE__ ) );
