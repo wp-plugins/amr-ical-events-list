@@ -50,7 +50,7 @@ global $utczobj;
 
 
 if (!defined ('ICAL_EVENTS_DEBUG')) { 
-	if (isset($_REQUEST["debug"])  
+	if (isset($_GET["debug"])  
 		and ((is_user_logged_in() and current_user_can('administrator') ) or amr_is_trying_to_help()) )
 		{ /* for debug and support - calendar data is public anyway, so no danger*/
 		
@@ -342,7 +342,7 @@ function amr_set_defaults_for_datetime() {
 		if (($a_tz = get_option ('timezone_string') ) and (!empty($a_tz))) {
 				$amr_globaltz = timezone_open($a_tz);
 				//date_default_timezone_set($a_tz);
-				If (isset($_REQUEST['tzdebug'])) {	echo '<br />Tz string:'.$a_tz;}
+				If (isset($_GET['tzdebug'])) {	echo '<br />Tz string:'.$a_tz;}
 			}
 		else {
 			
@@ -350,10 +350,10 @@ function amr_set_defaults_for_datetime() {
 				$a_tz = amr_getTimeZone($gmt_offset);
 				$amr_globaltz = timezone_open($a_tz);
 				//date_default_timezone_set($a_tz);
-				if (isset($_REQUEST['tzdebug'])) {	echo '<h2>Found gmt offset in wordpress options:'.$gmt_offset.'</h2>';}
+				if (isset($_GET['tzdebug'])) {	echo '<h2>Found gmt offset in wordpress options:'.$gmt_offset.'</h2>';}
 			}
 			else {
-				if (isset($_REQUEST['tzdebug'])) {	echo '<h2>Using php default for timezone</h2>';}
+				if (isset($_GET['tzdebug'])) {	echo '<h2>Using php default for timezone</h2>';}
 				$amr_globaltz = timezone_open(date_default_timezone_get()); // this will give UTC as wordpress  ALWAYS uses UTC
 			}
 		}

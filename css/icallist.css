@@ -161,11 +161,11 @@ color: #fff;
 #events_wrap  .largecalendar td.hasevents:hover .day a{
 	color: #fff;
 }
-#events_wrap table.largecalendar td.today a,
+/*#events_wrap table.largecalendar td.today a,
 table.smallcalendar td.selected a,
 table.smallcalendar td.today a {
 	color: #fff;
-}
+}*/
 table.largecalendar td.today a {
 	color: #111;
 }	

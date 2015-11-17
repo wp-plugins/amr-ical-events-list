@@ -40,12 +40,14 @@ function amr_ical_support_links () {
 	_e('Plugin feed', 'amr-ical-events-list');
 	echo '</a>&nbsp;<img src="';
 	echo includes_url(); 
-	echo 'images/rss.png" alt="Rss icon" style="vertical-align:middle;" />&nbsp;&nbsp;
+	echo 'images/rss.png" alt="Rss icon" style="vertical-align:middle;" />';
+	/*echo '&nbsp;&nbsp;
 	<a href="http://icalevents.com/forums/feed">';
 	_e('Forum feed', 'amr-ical-events-list');
 	echo '</a>&nbsp;<img src="';
 	echo includes_url(); 
-	echo 'images/rss.png" alt="Rss icon" style="vertical-align:middle;" /></p>';
+	echo 'images/rss.png" alt="Rss icon" style="vertical-align:middle;" />';*/
+	echo '</p>';
 	echo '</div>';
 
 	}

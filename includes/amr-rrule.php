@@ -672,7 +672,8 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 
 	/* now prepare out "intervals array for date incrementing eg: p[monthly] = 2 etc... Actualy there should only be 1 */
 	if (isset($p['FREQ'])) { /* so know yearly, daily or weekly etc  - setup increments eg 2 yearsly or what */
-		if (!isset ($p['INTERVAL'])) $p['INTERVAL'] = 1;
+		if (!isset ($p['INTERVAL'])) 
+			$p['INTERVAL'] = 1;
 		switch ($p['FREQ']) {
 			case 'WEEKLY': $int['day'] = $p['INTERVAL'] * 7; break;
 			default: {
@@ -686,7 +687,7 @@ function amr_process_RRULE($p, $start, $astart, $aend, $limit )  {
 	/*  use the freq increment to get close to our listing start time.  If we are within one freq of our listing start, we should be safe in calculating the odd rrules. */
 	/* NOTE we can only do this if we do not have the count or a bysetpos !!!!   */
 //	if (empty($int)) var_dump($p);
-	if (empty($p['COUNT']) and empty($p['BYSETPOS'])) {
+	if (empty($p['COUNT']) and empty($p['BYSETPOS']) and !empty($int)) {
 		$next_start = amr_get_a_closer_start($next_start, $astart, $int);				
 	}	
 	// 20110301 the nbydays, especially the negs, require that one initially consider a wider valid range so as not to unintentionally exclude a date before the expand/contract has beeen applied .  Ie we might iterate to 28th and exclude, but actually once one has applied the -2Mo or some such rule, the date would have contracted into the valid range.  So apply restrictions later.	

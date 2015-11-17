@@ -403,7 +403,7 @@ function amrical_mimic_meta_box($id, $title, $callback , $toggleable = true) {
 	}
 
 function amr_check_set_debug() {  // obfuscate a bit so only admin or developer can run debug
-	if (isset($_REQUEST["debug"]) )   /* for debug and support - calendar data is public anyway, so no danger*/
+	if (isset($_GET["debug"]) )   /* for debug and support - calendar data is public anyway, so no danger*/
 			define('ICAL_EVENTS_DEBUG', true);
 	else 	
 			define('ICAL_EVENTS_DEBUG', false);

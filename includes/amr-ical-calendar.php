@@ -182,10 +182,10 @@ function amr_events_as_calendar($liststyle, $events, $id, $class='', $initial = 
 
 	// what was asked for  in url (in case using small calendar as a selector )
 
-	if (!empty($_REQUEST['start']) and is_numeric($_REQUEST['start'] )) {	
-		$selected_day 	= substr($_REQUEST['start'],6,2);
-		$selected_month = substr($_REQUEST['start'],4,2);
-		$selected_year 	= substr($_REQUEST['start'],0,4);
+	if (!empty($_GET['start']) and is_numeric($_GET['start'] )) {	
+		$selected_day 	= substr($_GET['start'],6,2);
+		$selected_month = substr($_GET['start'],4,2);
+		$selected_year 	= substr($_GET['start'],0,4);
 	}
 	else {
 		$selected_day 	= $today_day;

@@ -636,8 +636,13 @@ function amr_derive_dates (&$e) {
 		$e['DTSTART'] = $e['DTSTART'][0];
 	if (isset($e['DTEND']) and is_array($e['DTEND'])) 
 		$e['DTEND'] = $e['DTEND'][0];
-	if (!is_object($e['DTSTART'])) {
-		echo '<p class="error">Error: Event with no date:'; var_dump($e); echo '</p>'; return($e); }
+	if (!is_object($e['DTSTART'])) {  
+		// show error more discretely - some people are working with really dodgy ics files
+		echo '<p class="error"><a title="Error: Event with no date: '.$e['SUMMARY'].'">!</a>'; 
+		echo '</p>';
+		if (ICAL_EVENTS_DEBUG) {echo 'Dumping event record:'; var_dump($e); } 
+		return($e); 
+	}
 	if ((isset ($e['DURATION'])) and (empty ($e['DTEND'])))  {  /*** an array of the duration values, calc the end date or time */
 		$e['DTEND'] = new Datetime(); //if cloning dont need tz
 		$e['DTEND'] = clone ($e['DTSTART']);
@@ -667,7 +672,7 @@ global $amr_globaltz;
 	$now = date_create('now',$amr_globaltz );
 
 	if (isset($e['EventDate'])) { 
-		if (isset($_REQUEST['tzdebug'])) {echo '<br /> date='; var_dump($e['EventDate']);}
+		if (isset($_GET['tzdebug'])) {echo '<br /> date='; var_dump($e['EventDate']);}
 		// 20140209 somehow events have eventdate stored in db
 		if (!is_object($e['EventDate'])) {
 			$e['EventDate'] = amr_convert_date_string_to_object($e['EventDate']);
@@ -904,7 +909,7 @@ function add_querystring_var($url, $key, $value) {
 
 }
  
-function amr_get_htmlstylefile() {
+function amr_GET_htmlstylefile() {
 	global $amr_options;
 	global $amr_listtype;
 
@@ -1036,7 +1041,7 @@ function amr_event_should_be_shown($event, $astart, $aend) {
 					//if (ICAL_EVENTS_DEBUG) echo '..Is Untimed and same day' ;
 					return (true);
 				}
-				else if (isset($_REQUEST['debugall'])) echo '.. Is NOT Untimed or not same day' ;
+				else if (isset($_GET['debugall'])) echo '.. Is NOT Untimed or not same day' ;
 			}
 
 		}
@@ -1048,9 +1053,9 @@ function amr_arrayobj_unique2 (&$arr) { 	/* Process an array of datetime objects
 			Note: Mozilla does not seem to generate a SEQUENCE ID, but does do a X-MOZ-GENERATION.
 		*/
 		$limit = count ($arr);
-		if (isset($_REQUEST['debugexc'])) {echo '<br><br>Check for modifications or exceptions for array of '.$limit.' records<br>'; }
+		if (isset($_GET['debugexc'])) {echo '<br><br>Check for modifications or exceptions for array of '.$limit.' records<br>'; }
 		krsort ($arr);  /***  sort numerically  We can then walk through and "toss" the lower sequence numbers for a given uid and date instance */
-		if (isset($_REQUEST['debugexc'])) {
+		if (isset($_GET['debugexc'])) {
 			echo '<br />Check sorted correctly :';
 			foreach ($arr as $i=> $a) {echo '<br>..'.$i;}  /* Check the sorting */
 			echo '<br />End Check sorted correctly.<br />';
@@ -1063,9 +1068,9 @@ function amr_arrayobj_unique2 (&$arr) { 	/* Process an array of datetime objects
 					$uiddate = substr ($i, 0, $seqstart);
 				}
 				else {
-					if (isset($_REQUEST['debugexc'])) echo '<hr/>Must be a unique event? as key does not match pattern'; break;
+					if (isset($_GET['debugexc'])) echo '<hr/>Must be a unique event? as key does not match pattern'; break;
 				} /* not an ical event, must be a unique post event */
-				if (isset($_REQUEST['debugexc'])) {
+				if (isset($_GET['debugexc'])) {
 					echo '<br />seq='.$seq.' '.substr($i,0,6).'...'.substr($i,$seqstart-26,200);
 					echo '<br />uidate: '.$uiddate;
 					echo '<br />uidprv: '.$uiddateprev;
@@ -1073,24 +1078,24 @@ function amr_arrayobj_unique2 (&$arr) { 	/* Process an array of datetime objects
 				if ($uiddate == $uiddateprev) {
 					if ($seq < $seqprev ) {
 						unset ($arr[$i]);
-						if (isset($_REQUEST['debugexc'])) echo '<br /><b>Delete seq: Seq was ='.$seq.' and $seqprev was: '.$seqprev	.'</b>';
+						if (isset($_GET['debugexc'])) echo '<br /><b>Delete seq: Seq was ='.$seq.' and $seqprev was: '.$seqprev	.'</b>';
 						}
 					else if ($seqprev < $seq) {
 						if (isset ($iprev)) unset ($arr[$iprev]);
-						if (isset($_REQUEST['debugexc']))
+						if (isset($_GET['debugexc']))
 							echo '<br /><b>Delete seqprev Seq was ='.$seq.' and seqprev was: '.$seqprev.'</b>';
 					}
 					else echo '<br ><b>Unexpected inability to sort modification from original.  Please inform administrator. ? seqprev = '.$seqprev.' and seq = '.$seq.'</b>';
 					/* Note that while sequence numbers can be the same for a recurrencid, the plugn will add 999 for a recurrence id */
 				}
 				else {
-					if (isset($_REQUEST['debugexc'])) {echo '<br />No uid and date match.<br />';}
+					if (isset($_GET['debugexc'])) {echo '<br />No uid and date match.<br />';}
 				}
 				$uiddateprev = $uiddate;
 				$seqprev = $seq;
 				$iprev = $i;
 //				if (!(empty($seq)) and (!($seq===" "))) {
-	//				if (isset($_REQUEST['debugexc'])) echo '<br />** Possible exception with seq: '.$seq.' - check for outdated instances for <br />'.substr($i,0,6).'...'.substr($i,$seqstart-26,200);
+	//				if (isset($_GET['debugexc'])) echo '<br />** Possible exception with seq: '.$seq.' - check for outdated instances for <br />'.substr($i,0,6).'...'.substr($i,$seqstart-26,200);
 //				}
 			}
 	}
@@ -1141,14 +1146,14 @@ global $amr_globaltz;
 		}
 
 	if (!empty($event['EXRULE']))	{
-			//if (isset($_REQUEST['debugexc'])) { echo '<br><h3>Have EXRULE </h3>';var_dump($event['EXRULE']);}
+			//if (isset($_GET['debugexc'])) { echo '<br><h3>Have EXRULE </h3>';var_dump($event['EXRULE']);}
 			foreach ($event['EXRULE'] as $i => $exrule) {
 				$reps = amr_process_RRULE($exrule, $repeatstart, $astart, $aend, $limit);
 				if (is_array($reps) and count($reps) > 0) {
 					$exclusions  = $reps;
 				}
 			}
-			//if (isset($_REQUEST['debugexc'])) { echo '<br><h3>Got '.count($exclusions). ' after EXRULE</h3>';}
+			//if (isset($_GET['debugexc'])) { echo '<br><h3>Got '.count($exclusions). ' after EXRULE</h3>';}
 		}
 
 	if (!empty($event['EXDATE']))	{
@@ -1175,13 +1180,13 @@ global $amr_globaltz;
 				date_timezone_set($excl, $amr_globaltz );
 			    foreach ($repeats as $j => $rep) {
 					date_timezone_set($rep, $amr_globaltz );
-					if ((isset($_REQUEST['debugexc']) )) {
+					if ((isset($_GET['debugexc']) )) {
 						echo '<br />Exc:'.$excl->format('c'). ' =? Rep:'.$rep->format('c');
 					}
 				    if ($excl->format('c') == $rep->format('c')) {
 //					if ($excl === $rep) {
 //					if (!($excl < $rep) and !($excl > $rep)) {
-						if (isset($_REQUEST['debugexc'])) {
+						if (isset($_GET['debugexc'])) {
 							echo '<br> Exclusion matches repeat date, so exclude this date '.$j.' '. $rep->format('c');
 						}
 						unset($repeats[$j]); /* will create a gap in the index, but that's okay, not reliant on it  */
@@ -1189,7 +1194,7 @@ global $amr_globaltz;
 				}
 			}
 		}
-		if (isset($_REQUEST['debugexc'])) { echo '<br>Now have '.count($repeats). ' after  exclusions '; }
+		if (isset($_GET['debugexc'])) { echo '<br>Now have '.count($repeats). ' after  exclusions '; }
 
 		return ($repeats);
 
@@ -1305,7 +1310,7 @@ function amr_generate_repeats(&$event, $astart, $aend, $limit) { /* takes an eve
 				if (isset($event['RRULE']) or (isset($event['RDATE']))) {
 					/* if have, must use dtstart in case we are dependent on it's characteristics,. We can exclude too early dates later on */
 					$repeats = amr_repeat_anevent($event, $astart, $aend, $limit );  /**** try for a more efficient start? */
-					if (isset($_REQUEST['rdebug']) or ICAL_EVENTS_DEBUG) {
+					if (isset($_GET['rdebug']) or ICAL_EVENTS_DEBUG) {
 						if (count($repeats) > 0)	echo '<br>Create repeats: '.count($repeats);
 					}
 					/* now need to convert back to a full event by copying the event data for each repeat */
@@ -1386,11 +1391,11 @@ global $amr_limits;
 						(amr_falls_between($start, $event['EventDate'], $event['EndDate'])))) ) /* catch those that start before our start and end after our start */
 				{
 					$constrained[] = $event;
-					if (isset($_REQUEST['debugall'])) {
+					if (isset($_GET['debugall'])) {
 						echo '<br>Choosing no: '.$k.' '. $event['EventDate']->format('c').' ending '. (isset($event['EndDate'])? $event['EndDate']->format('c'): ' no end');		}
 					++$count;
 				}
-				if (isset($_REQUEST['debugall'])) {
+				if (isset($_GET['debugall'])) {
 						echo '<br>Not choosing?'.$k.' '
 						. $event['EventDate']->format('c').' ending '
 						. (isset($event['EndDate'])? $event['EndDate']->format('c'): ' no end');		
@@ -1398,7 +1403,7 @@ global $amr_limits;
 			}
 			else {
 				$constrained[] = $event;
-				if (isset($_REQUEST['debugall'])) {
+				if (isset($_GET['debugall'])) {
 						echo '<br>Whats happening?'; var_dump( $event);		
 				}
 			}	
@@ -1500,7 +1505,7 @@ function suggest_other_icalplugin($featuretext) {
 }
 
  
-function amr_get_events_cache_key ($criteria) { //NLR?
+function amr_GET_events_cache_key ($criteria) { //NLR?
 	global $amr_limits;
 	$string = '';
 	$keys = array_merge($amr_limits,$criteria);
@@ -1519,35 +1524,35 @@ function amr_get_events_cache_key ($criteria) { //NLR?
 		}
 	}
 
-	if (isset($_REQUEST['debugcache'])) echo '<br /><b>string for key of cache = <br/>'.$string.'</b>';
+	if (isset($_GET['debugcache'])) echo '<br /><b>string for key of cache = <br/>'.$string.'</b>';
 	$key = md5( $string );
 	return ($key);
 }
  
-function amr_get_cached_events_from_db($criteria) { //NLR ?
+function amr_GET_cached_events_from_db($criteria) { //NLR ?
 	global $amr_limits;
 
 	if (version_compare(5.3, PHP_VERSION, '>')) {
-		if (isset($_REQUEST['debugcache']))echo '<b>NB: No event transient caching possible yet  because objects do not serialise properly in php < 5.3</b>';
+		if (isset($_GET['debugcache']))echo '<b>NB: No event transient caching possible yet  because objects do not serialise properly in php < 5.3</b>';
 		return(false);
 	}
 	else return (false) ; /* until we upgrade ourselves and can test properly  - icdsoft do not have yet */
 
-	if (isset($_REQUEST['debugcache'])) echo '<h3>Trying cache = </h3>';
+	if (isset($_GET['debugcache'])) echo '<h3>Trying cache = </h3>';
 //---- build the key
-	$key = amr_get_events_cache_key($criteria);
+	$key = amr_GET_events_cache_key($criteria);
 // ----now see if we have a cache
 
 	$cache = get_transient('amr_events');
 
 	if ( is_array($cache) && isset( $cache[ $key ] ) ) {
-		 if (isset($_REQUEST['debugcache'])) echo ('<hr>we got an events cache with key '.$key);
+		 if (isset($_GET['debugcache'])) echo ('<hr>we got an events cache with key '.$key);
 //		 var_dump($cache[ $key ]); die('let see');
 
          return ( $cache[$key] );
 	}
 	else {
-		if (isset($_REQUEST['debugcache'])) echo ('<h3>No events cached - requery </h3>');
+		if (isset($_GET['debugcache'])) echo ('<h3>No events cached - requery </h3>');
 		return false;
 	}
 }
@@ -1556,15 +1561,15 @@ function amr_set_cached_events_from_db($criteria, $events) { //NLR?
 	global $amr_options;  /***  nb when we get back to this -when hosts are on 5.3 or for some other reason, fetch in hours eventscache */
 	global $amr_limits;
 //---- build the key
-	$key = amr_get_events_cache_key($criteria);
-	if (isset($_REQUEST['debugcache'])) echo '<h3>Setting cache with key = '.$key.'</h3>';
+	$key = amr_GET_events_cache_key($criteria);
+	if (isset($_GET['debugcache'])) echo '<h3>Setting cache with key = '.$key.'</h3>';
 // ----now see if we have a cache
 
 	$cache = get_transient('amr_events');
 	$cache[$key] = $events;
 	set_transient('amr_events', $cache, 60*20); /* save transient for 20 mins */
 
-	if (isset($_REQUEST['debugcache']))  echo ('<h3>cache set  '.$key.'</h3>');
+	if (isset($_GET['debugcache']))  echo ('<h3>cache set  '.$key.'</h3>');
 	return true;
 }
  
@@ -1740,7 +1745,7 @@ global $amr_last_date_time;
 // else will not save a last date.
 }
  
-function amr_get_params ($attributes=array()) {
+function amr_GET_params ($attributes=array()) {
 /*  We are passed the widget or shortcode attributes,
       check them, get what we can there, then check for passed parameters (form or query string )
      Anything unset we will get from the default settings for that listtype.
@@ -1760,7 +1765,7 @@ function amr_get_params ($attributes=array()) {
 	$amr_calendar_url,
 	$amrW; // indicates if widget, 
 	
-	$amr_options = amr_getset_options();
+	$amr_options = amr_GETset_options();
 	
 
 //
@@ -1847,7 +1852,7 @@ function amr_get_params ($attributes=array()) {
 		parse_str($_SERVER['QUERY_STRING'], $queryargs); /* Get anything passed in the query string that will override shortcodes */
 		// check for posted values to get around that pesky problem
 
-		if (isset($_REQUEST['start'])) $queryargs['start'] = $_REQUEST['start'];
+		if (isset($_GET['start'])) $queryargs['start'] = $_GET['start'];
 
 		foreach ($queryargs as $i=>$arg) {
 			$queryargs[$i] = filter_var($arg, FILTER_SANITIZE_STRING); //Strip tags,
@@ -1862,7 +1867,7 @@ function amr_get_params ($attributes=array()) {
 
 		unset($queryargs['page_id']);
 		unset($queryargs['debug']);
-		If (isset($_REQUEST['debugq'])) {echo '<hr> Query allowed, attributes/args to consider adding:<br />'; var_dump($queryargs); }
+		If (isset($_GET['debugq'])) {echo '<hr> Query allowed, attributes/args to consider adding:<br />'; var_dump($queryargs); }
 
 		$shortcode_params = array_merge ($shortcode_params, $queryargs);
 	/* If the input arrays have the same string keys, then the later value for that key will overwrite the previous one.
@@ -1871,7 +1876,7 @@ function amr_get_params ($attributes=array()) {
 //		if (ICAL_EVENTS_DEBUG) {echo '<hr>After merge with query args<br />'; var_dump($shortcode_params); }
 		//unset($queryargs['listtype']);
 	}
-	else if (isset($_REQUEST['debugq'])) {echo '<hr>Ignoring most query parameters ';}
+	else if (isset($_GET['debugq'])) {echo '<hr>Ignoring most query parameters ';}
 //
 	// save the global list type first
 	if (!empty($shortcode_params['listtype'])) {
@@ -1913,8 +1918,8 @@ function amr_get_params ($attributes=array()) {
 //	if (in_array ($amr_liststyle, array('smallcalendar','largecalendar', 'weekscalendar'))) {
 		// then query args overeride even if we have ignore query
 	if (!$ignore_query_all) {
-		if (isset($_REQUEST['start'])) 
-			$queryargs['start'] = $_REQUEST['start'];	//need here too
+		if (isset($_GET['start'])) 
+			$queryargs['start'] = $_GET['start'];	//need here too
 		if (!empty($queryargs['start']))  {
 				$shortcode_params['start'] = abs ((int) $queryargs['start']);
 				if (ICAL_EVENTS_DEBUG) {echo '<br />START = '.$shortcode_params['start'];}
@@ -1926,7 +1931,7 @@ function amr_get_params ($attributes=array()) {
 		if (!empty($queryargs['tz']))
 			$shortcode_params['tz'] = filter_var($queryargs['tz'],FILTER_SANITIZE_STRING);
 	}
-	else if (isset($_REQUEST['debugall'])) echo '<br/>** Ignoring all query parameters';
+	else if (isset($_GET['debugall'])) echo '<br/>** Ignoring all query parameters';
 
 //----------------------------------------------------------------------------------------------------------------- now do thelimits array
 	// then get the limits for that list type
@@ -1945,8 +1950,8 @@ function amr_get_params ($attributes=array()) {
 	if (!empty($shortcode_params['grouping']))
 		$gg = ucwords($shortcode_params['grouping']);
 	unset($shortcode_params['grouping']);
-	if (!empty($_REQUEST['grouping']))
-		$gg = ucwords($_REQUEST['grouping']);
+	if (!empty($_GET['grouping']))
+		$gg = ucwords($_GET['grouping']);
 	if (!($gg == '')) {
 		unset($amr_options['listtypes'][$amr_listtype]['grouping']);
 		if (array_key_exists($gg,$amr_groupings)) { // if it is a valid grouping
@@ -2000,9 +2005,9 @@ function amr_get_params ($attributes=array()) {
 	unset ($shortcode_params['preview']);	//clear it out so we do not pass to wp query
 	unset ($shortcode_params['tz']);	//clear it out so we do not pass to wp query
 
-	If (isset($_REQUEST['tzdebug'])) {
+	If (isset($_GET['tzdebug'])) {
 
-		echo '<p>Plugin/Wordpress Timezone:'.timezone_name_get($amr_globaltz);
+		echo '<p>Plugin/Wordpress Timezone:'.timezone_name_GET($amr_globaltz);
 		echo ', current offset is '.$amr_globaltz->getOffset(date_create('now',$amr_globaltz))/(60*60).'</p>';
 		}
 //-------------------------------
@@ -2095,11 +2100,11 @@ function amr_get_params ($attributes=array()) {
 		date_time_set ($amr_limits['start'],0,0,0);
 	}
 	
-	$wkst = ical_get_weekstart(); // get the wp start of week
+	$wkst = ical_GET_weekstart(); // get the wp start of week
 	if (isset($_GET['debugwks'])) echo '<br/>wkst = '.$wkst;
 	if (!empty($amr_limits['weeks'])) { // weeks overrides all else
 				
-		$amr_limits['start'] = amr_get_human_start_of_week ($amr_limits['start'], $wkst); /* set to start of week */
+		$amr_limits['start'] = amr_GET_human_start_of_week ($amr_limits['start'], $wkst); /* set to start of week */
 		$amr_limits['days'] = $amr_limits['weeks'] * 7;
 		unset ($amr_limits['hours']);
 
@@ -2141,7 +2146,7 @@ function amr_get_params ($attributes=array()) {
 	return ($shortcode_params);  // only return params needed for wp query ?
 }
  
-function amr_get_id_for_shortcode () {  // allows for the possibility of multiple shortcodes in one page.
+function amr_GET_id_for_shortcode () {  // allows for the possibility of multiple shortcodes in one page.
 global $amr_icalno;
 
 	if (!(isset($amr_icalno))) $amr_icalno = 0;
@@ -2180,7 +2185,7 @@ global $amr_been_here;
 	else 
 		$atts = array_merge( $defaults, $attributes ) ;
 		
-	$criteria =	amr_get_params ($atts);  /* strip out and set any other attstributes  - they will set the limits table */
+	$criteria =	amr_GET_params ($atts);  /* strip out and set any other attstributes  - they will set the limits table */
 	/* separate out the other possible variables like list type, then just have the urls */
 
 
@@ -2190,7 +2195,7 @@ global $amr_been_here;
 		$amr_limits['end'],
 		$amr_limits['events']);
 
-	$id = amr_get_id_for_shortcode();
+	$id = amr_GET_id_for_shortcode();
 	$html = '<div '.$id.' >'.$content.'</div>';
 	
 	/* we made it out the other end with out looping ?*/
@@ -2224,11 +2229,11 @@ global $amr_limits,
 	if (empty($attributes)) $attributes = array();
 
 	$atts = array_merge( $defaults, $attributes ) ;
-	$criteria =	amr_get_params ($atts);  /* strip out and set any other attstributes  - they will set the limits table */
+	$criteria =	amr_GET_params ($atts);  /* strip out and set any other attstributes  - they will set the limits table */
 		// remove the custom post type parameter as it will cause us to lose all others and just show 1 event
 
 	/* separate out the other possible variables like list type, then just have the urls */
-	$id = amr_get_id_for_shortcode(); // need this to increment icalno
+	$id = amr_GET_id_for_shortcode(); // need this to increment icalno
 
 	$content = amr_process_icalspec(
 		$criteria,
@@ -2274,12 +2279,12 @@ global $amr_limits,
 	if (empty($attributes)) $atts = $defaults;
 	else $atts = array_merge( $defaults, $attributes ) ;
 
-	$criteria =	amr_get_params ($atts);  /* strip out and set any other attstributes  - they will set the limits table */
+	$criteria =	amr_GET_params ($atts);  /* strip out and set any other attstributes  - they will set the limits table */
 
 	/* criteria will be any selection */
 	/* separate out the other possible variables like list type, then just have the urls */
 
-	$id = amr_get_id_for_shortcode(); // need this to increment icalno
+	$id = amr_GET_id_for_shortcode(); // need this to increment icalno
 
 	$content = amr_process_icalspec($criteria,
 		$amr_limits['start'],
@@ -2322,12 +2327,12 @@ global $amr_limits,
 	else 
 		$atts = array_merge( $defaults, $attributes ) ;
 
-	$criteria =	amr_get_params ($atts);  /* strip out and set any other attstributes  - they will set the limits table */
+	$criteria =	amr_GET_params ($atts);  /* strip out and set any other attstributes  - they will set the limits table */
 
 	/* criteria will be any selection */
 	/* separate out the other possible variables like list type, then just have the urls */
 
-	$id = amr_get_id_for_shortcode(); // need this to increment icalno
+	$id = amr_GET_id_for_shortcode(); // need this to increment icalno
 
 	$content = amr_process_icalspec($criteria,
 		$amr_limits['start'],
@@ -2352,10 +2357,10 @@ function amr_first_available_listtype() {
 	return (array_shift($keys));
 }
  
-function amr_get_set_start_for_nav () {  // gets or sets a date object to the begiinging of the curremt month, or the passed date
+function amr_GET_set_start_for_nav () {  // gets or sets a date object to the begiinging of the curremt month, or the passed date
 
-	if (isset($_REQUEST['start'])) {
-		$starttxt = intval ($_REQUEST['start']);
+	if (isset($_GET['start'])) {
+		$starttxt = intval ($_GET['start']);
 		$starttxt = substr($starttxt,0,4).'-'.substr($starttxt,4,2).'-'.substr($starttxt,6,2);
 		$nstart = amr_newDateTime($starttxt);
 		}
